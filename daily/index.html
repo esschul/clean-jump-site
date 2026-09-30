@@ -11,6 +11,7 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--well:#252836;--cell:#2d3040;--tile:#454b64;--edge:#161822;--accent:#9fb0ea;--on-accent:#1b1d27;--soft:#505d93;--guide:#c0ccf7;--gold:#f2c66d;--gold-bright:#f2c66d}}
 :root[data-theme="dark"]{--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--well:#252836;--cell:#2d3040;--tile:#454b64;--edge:#161822;--accent:#9fb0ea;--on-accent:#1b1d27;--soft:#505d93;--guide:#c0ccf7;--gold:#f2c66d;--gold-bright:#f2c66d}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
 main{max-width:480px;margin:0 auto;padding:16px}
 header{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
@@ -42,6 +43,10 @@ svg.guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
 .pill{font:inherit;font-size:14px;padding:9px 16px;border-radius:999px;border:1px solid var(--edge);background:transparent;color:var(--ink);cursor:pointer}
 .pill.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .pill:disabled{opacity:.35;cursor:default}
+.lesson{background:var(--soft);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:14px}
+.lesson .head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:600}
+.lesson .tip{margin-top:4px}
+.linky{background:none;border:0;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
 .info{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:0 2px 8px}
 .done{padding:4px 0}
 .stars{display:flex;gap:8px;font-size:32px;line-height:1;color:var(--gold-bright)}
@@ -73,12 +78,14 @@ footer a{color:var(--accent)}
 <main>
   <header><h1>Hiku<span>.</span></h1><span class="day" id="day"></span></header>
   <p class="rule" id="rule"></p>
+  <div class="lesson" id="lesson" hidden></div>
   <div class="tabs" id="tabs" role="group" aria-label=""></div>
   <div class="info"><span id="left"></span><span id="movesInfo"></span></div>
   <div class="board" id="board" role="group"></div>
   <div class="status" id="status" aria-live="polite"></div>
   <p class="sr" id="said" aria-live="assertive"></p>
   <div class="controls" id="controls"></div>
+  <p class="replay"><button class="linky" id="replay" type="button"></button></p>
   <footer><span id="made"></span><a id="app" class="app" target="_blank" rel="noopener"></a></footer>
 </main>
 <script>
@@ -92,7 +99,8 @@ footer a{color:var(--accent)}
   // The languages of the app, with its own words where it has them. Norwegian unless another is asked for;
   // "no" and "nn" count as Norwegian, and a region such as sv-SE is ignored.
   const LANGS = {
-    nb: {left: k => (k === 1 ? '%d tall igjen' : '%d tall igjen').replace('%d', k), movesText: (n, s) => `${n} trekk · ${s}`, movesA11y: (n, s) => `${n} trekk, ${s} av 3 stjerner mulig`, cleared: 'Brettet er ryddet', flawless: 'Feilfritt!', noUndo: 'Løst uten å angre.', undoText: k => (k === 1 ? 'Med %d angring.' : 'Med %d angringer.').replace('%d', k), streak: k => (k === 1 ? '%d dag på rad' : '%d dager på rad').replace('%d', k), retry: 'Prøv igjen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, blir ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, begge forsvant.`, resultSaid: (s, title, detail) => `${s} av 3 stjerner. ${sentence(title)} ${detail}`,
+    nb: {learn: 'Lær å spille', lessonOf: k => '{k} av 3'.replace('{k}', k), skip: 'Hopp over', next: 'Neste →', toDaily: 'Til dagens brett →', replay: 'Lær å spille på nytt', lessons: [{"name": "Første hopp", "tip": "Dra et tall dit det skal hoppe, eller trykk på tallet og så på målet."}, {"name": "Én vei ut", "tip": "Et tall som bare når ett annet tall, må ta det. Ikke la noen andre ta det først."}, {"name": "Partall", "tip": "Tall som bare når hverandre, forsvinner bare hvis summen er et partall. Er den et oddetall, blir ett tall igjen."}],
+         left: k => (k === 1 ? '%d tall igjen' : '%d tall igjen').replace('%d', k), movesText: (n, s) => `${n} trekk · ${s}`, movesA11y: (n, s) => `${n} trekk, ${s} av 3 stjerner mulig`, cleared: 'Brettet er ryddet', flawless: 'Feilfritt!', noUndo: 'Løst uten å angre.', undoText: k => (k === 1 ? 'Med %d angring.' : 'Med %d angringer.').replace('%d', k), streak: k => (k === 1 ? '%d dag på rad' : '%d dager på rad').replace('%d', k), retry: 'Prøv igjen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, blir ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, begge forsvant.`, resultSaid: (s, title, detail) => `${s} av 3 stjerner. ${sentence(title)} ${detail}`,
          offline: 'Fikk ikke hentet dagens brett. Sjekk nettet og prøv igjen.',
          moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Angret.',
          locale: 'nb-NO', title: 'Dagens Hiku', rule: 'Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.',
@@ -105,7 +113,8 @@ footer a{color:var(--accent)}
          made: 'Nye brett hver dag, kom tilbake i morgen!', app: 'Last ned Hiku for iPhone',
          more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = borte`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    en: {left: k => (k === 1 ? '%d number left' : '%d numbers left').replace('%d', k), movesText: (n, s) => `Moves: ${n} · ${s}`, movesA11y: (n, s) => `Moves: ${n}, ${s} of 3 stars possible`, cleared: 'Board cleared', flawless: 'Flawless!', noUndo: 'Solved without undoing.', undoText: k => (k === 1 ? 'With %d undo.' : 'With %d undos.').replace('%d', k), streak: k => (k === 1 ? '%d day in a row' : '%d days in a row').replace('%d', k), retry: 'Try again', moveSaid: (a, b, sq, left) => `${a} onto ${b} at ${sq}, leaves ${left}.`, goneSaid: (a, b, sq) => `${a} onto ${b} at ${sq}, both gone.`, resultSaid: (s, title, detail) => `${s} of 3 stars. ${sentence(title)} ${detail}`,
+    en: {learn: 'Learn to play', lessonOf: k => '{k} of 3'.replace('{k}', k), skip: 'Skip', next: 'Next →', toDaily: "To today's boards →", replay: 'Learn to play again', lessons: [{"name": "First jump", "tip": "Drag a number to where it jumps, or tap the number and then its target."}, {"name": "One way out", "tip": "A number that can reach only one other must take it. Don't let anything else take it first."}, {"name": "Even numbers", "tip": "Numbers that can only reach each other vanish only if they add up to an even number. If the sum is odd, one is left over."}],
+         left: k => (k === 1 ? '%d number left' : '%d numbers left').replace('%d', k), movesText: (n, s) => `Moves: ${n} · ${s}`, movesA11y: (n, s) => `Moves: ${n}, ${s} of 3 stars possible`, cleared: 'Board cleared', flawless: 'Flawless!', noUndo: 'Solved without undoing.', undoText: k => (k === 1 ? 'With %d undo.' : 'With %d undos.').replace('%d', k), streak: k => (k === 1 ? '%d day in a row' : '%d days in a row').replace('%d', k), retry: 'Try again', moveSaid: (a, b, sq, left) => `${a} onto ${b} at ${sq}, leaves ${left}.`, goneSaid: (a, b, sq) => `${a} onto ${b} at ${sq}, both gone.`, resultSaid: (s, title, detail) => `${s} of 3 stars. ${sentence(title)} ${detail}`,
          offline: "Couldn't fetch today's boards. Check your connection and try again.",
          moved: (a, b, from, to, eq) => `${a} from ${from} onto ${b} on ${to}: ${eq}.`, undone: 'Undone.',
          locale: 'en-GB', title: 'Daily Hiku', rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
@@ -118,7 +127,8 @@ footer a{color:var(--accent)}
          made: 'New boards every day, come back tomorrow!', app: 'Get Hiku for iPhone',
          more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store',
          gone: (a, b) => `${a} − ${b} = gone`, tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`},
-    sv: {left: k => (k === 1 ? '%d tal kvar' : '%d tal kvar').replace('%d', k), movesText: (n, s) => `Drag: ${n} · ${s}`, movesA11y: (n, s) => `Drag: ${n}, ${s} av 3 stjärnor möjliga`, cleared: 'Brädet är tömt', flawless: 'Felfritt!', noUndo: 'Löst utan att ångra.', undoText: k => (k === 1 ? 'Med %d ångring.' : 'Med %d ångringar.').replace('%d', k), streak: k => (k === 1 ? '%d dag i rad' : '%d dagar i rad').replace('%d', k), retry: 'Försök igen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, blir ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, båda försvann.`, resultSaid: (s, title, detail) => `${s} av 3 stjärnor. ${sentence(title)} ${detail}`,
+    sv: {learn: 'Lär dig spela', lessonOf: k => '{k} av 3'.replace('{k}', k), skip: 'Hoppa över', next: 'Nästa →', toDaily: 'Till dagens bräden →', replay: 'Lär dig spela igen', lessons: [{"name": "Första hoppet", "tip": "Dra ett tal dit det ska hoppa, eller tryck på talet och sedan på målet."}, {"name": "En väg ut", "tip": "Ett tal som bara når ett annat tal måste ta det. Låt inget annat ta det först."}, {"name": "Jämna tal", "tip": "Tal som bara når varandra försvinner bara om summan är jämn. Är den udda blir ett tal kvar."}],
+         left: k => (k === 1 ? '%d tal kvar' : '%d tal kvar').replace('%d', k), movesText: (n, s) => `Drag: ${n} · ${s}`, movesA11y: (n, s) => `Drag: ${n}, ${s} av 3 stjärnor möjliga`, cleared: 'Brädet är tömt', flawless: 'Felfritt!', noUndo: 'Löst utan att ångra.', undoText: k => (k === 1 ? 'Med %d ångring.' : 'Med %d ångringar.').replace('%d', k), streak: k => (k === 1 ? '%d dag i rad' : '%d dagar i rad').replace('%d', k), retry: 'Försök igen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, blir ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, båda försvann.`, resultSaid: (s, title, detail) => `${s} av 3 stjärnor. ${sentence(title)} ${detail}`,
          offline: 'Kunde inte hämta dagens bräden. Kontrollera nätet och försök igen.',
          moved: (a, b, from, to, eq) => `${a} från ${from} till ${b} på ${to}: ${eq}.`, undone: 'Ångrat.',
          locale: 'sv-SE', title: 'Dagens Hiku', rule: 'Talet säger hur långt det hoppar. Landar det på ett annat dras de från varandra. Få alla tal att försvinna.',
@@ -131,7 +141,8 @@ footer a{color:var(--accent)}
          made: 'Nya bräden varje dag, kom tillbaka i morgon!', app: 'Ladda ner Hiku för iPhone',
          more: 'Vill du ha mer? Appen har 50 banor till, och de första lär dig knepen:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = borta`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    da: {left: k => (k === 1 ? '%d tal tilbage' : '%d tal tilbage').replace('%d', k), movesText: (n, s) => `Træk: ${n} · ${s}`, movesA11y: (n, s) => `Træk: ${n}, ${s} af 3 stjerner mulige`, cleared: 'Brættet er ryddet', flawless: 'Fejlfrit!', noUndo: 'Løst uden at fortryde.', undoText: k => (k === 1 ? 'Med %d fortrydelse.' : 'Med %d fortrydelser.').replace('%d', k), streak: k => (k === 1 ? '%d dag i træk' : '%d dage i træk').replace('%d', k), retry: 'Prøv igen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, bliver ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, begge forsvandt.`, resultSaid: (s, title, detail) => `${s} af 3 stjerner. ${sentence(title)} ${detail}`,
+    da: {learn: 'Lær at spille', lessonOf: k => '{k} af 3'.replace('{k}', k), skip: 'Spring over', next: 'Næste →', toDaily: 'Til dagens brætter →', replay: 'Lær at spille igen', lessons: [{"name": "Første spring", "tip": "Træk et tal derhen, hvor det skal springe, eller tryk på tallet og så på målet."}, {"name": "Én vej ud", "tip": "Et tal, der kun kan nå ét andet tal, må tage det. Lad ikke noget andet tage det først."}, {"name": "Lige tal", "tip": "Tal, der kun kan nå hinanden, forsvinder kun, hvis summen er lige. Er den ulige, bliver ét tal tilbage."}],
+         left: k => (k === 1 ? '%d tal tilbage' : '%d tal tilbage').replace('%d', k), movesText: (n, s) => `Træk: ${n} · ${s}`, movesA11y: (n, s) => `Træk: ${n}, ${s} af 3 stjerner mulige`, cleared: 'Brættet er ryddet', flawless: 'Fejlfrit!', noUndo: 'Løst uden at fortryde.', undoText: k => (k === 1 ? 'Med %d fortrydelse.' : 'Med %d fortrydelser.').replace('%d', k), streak: k => (k === 1 ? '%d dag i træk' : '%d dage i træk').replace('%d', k), retry: 'Prøv igen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, bliver ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, begge forsvandt.`, resultSaid: (s, title, detail) => `${s} af 3 stjerner. ${sentence(title)} ${detail}`,
          offline: 'Kunne ikke hente dagens brætter. Tjek forbindelsen og prøv igen.',
          moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Fortrudt.',
          locale: 'da-DK', title: 'Dagens Hiku', rule: 'Tallet siger, hvor langt det springer. Lander det på et andet, trækkes de fra hinanden. Få alle tallene til at forsvinde.',
@@ -144,7 +155,8 @@ footer a{color:var(--accent)}
          made: 'Nye brætter hver dag, kom tilbage i morgen!', app: 'Hent Hiku til iPhone',
          more: 'Vil du have mere? Appen har 50 baner mere, og de første lærer dig tricksene:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = væk`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    fi: {left: k => (k === 1 ? '%d luku jäljellä' : '%d lukua jäljellä').replace('%d', k), movesText: (n, s) => `Siirrot: ${n} · ${s}`, movesA11y: (n, s) => `Siirrot: ${n}, ${s}/3 tähteä mahdollista`, cleared: 'Lauta on tyhjä', flawless: 'Virheetön!', noUndo: 'Ratkaistu perumatta.', undoText: k => (k === 1 ? '%d perumisella.' : '%d perumisella.').replace('%d', k), streak: k => (k === 1 ? '%d päivä putkeen' : '%d päivää putkeen').replace('%d', k), retry: 'Yritä uudelleen', moveSaid: (a, b, sq, left) => `${a} lukuun ${b} ruudussa ${sq}, jää ${left}.`, goneSaid: (a, b, sq) => `${a} lukuun ${b} ruudussa ${sq}, molemmat katosivat.`, resultSaid: (s, title, detail) => `${s}/3 tähteä. ${sentence(title)} ${detail}`,
+    fi: {learn: 'Opettele pelaamaan', lessonOf: k => '{k}/3'.replace('{k}', k), skip: 'Ohita', next: 'Seuraava →', toDaily: 'Päivän lautoihin →', replay: 'Opettele uudelleen', lessons: [{"name": "Ensimmäinen hyppy", "tip": "Vedä luku sinne, minne se hyppää, tai napauta lukua ja sitten kohdetta."}, {"name": "Yksi tie ulos", "tip": "Luvun, joka ylettyy vain yhteen toiseen lukuun, on otettava se. Älä anna minkään muun viedä sitä ensin."}, {"name": "Parilliset", "tip": "Vain toisiinsa ylettyvät luvut katoavat vain, jos niiden summa on parillinen. Jos se on pariton, yksi luku jää jäljelle."}],
+         left: k => (k === 1 ? '%d luku jäljellä' : '%d lukua jäljellä').replace('%d', k), movesText: (n, s) => `Siirrot: ${n} · ${s}`, movesA11y: (n, s) => `Siirrot: ${n}, ${s}/3 tähteä mahdollista`, cleared: 'Lauta on tyhjä', flawless: 'Virheetön!', noUndo: 'Ratkaistu perumatta.', undoText: k => (k === 1 ? '%d perumisella.' : '%d perumisella.').replace('%d', k), streak: k => (k === 1 ? '%d päivä putkeen' : '%d päivää putkeen').replace('%d', k), retry: 'Yritä uudelleen', moveSaid: (a, b, sq, left) => `${a} lukuun ${b} ruudussa ${sq}, jää ${left}.`, goneSaid: (a, b, sq) => `${a} lukuun ${b} ruudussa ${sq}, molemmat katosivat.`, resultSaid: (s, title, detail) => `${s}/3 tähteä. ${sentence(title)} ${detail}`,
          offline: 'Päivän lautoja ei saatu haettua. Tarkista yhteys ja yritä uudelleen.',
          moved: (a, b, from, to, eq) => `${a} ruudusta ${from} lukuun ${b} ruudussa ${to}: ${eq}.`, undone: 'Peruttu.',
          locale: 'fi-FI', title: 'Päivän Hiku', rule: 'Luku kertoo, kuinka pitkälle se hyppää. Kun se laskeutuu toiseen, ne vähennetään toisistaan. Saa kaikki luvut katoamaan.',
@@ -157,7 +169,8 @@ footer a{color:var(--accent)}
          made: 'Uudet laudat joka päivä, tule takaisin huomenna!', app: 'Lataa Hiku iPhonelle',
          more: 'Haluatko lisää? Sovelluksessa on 50 tasoa lisää, ja ensimmäiset opettavat niksit:', moreLink: 'Hiku App Storessa',
          gone: (a, b) => `${a} − ${b} = poissa`, tile: (v, sq) => `${v}, ruutu ${sq}`, empty: sq => `${sq}, tyhjä`},
-    de: {left: k => (k === 1 ? 'Noch %d Zahl' : 'Noch %d Zahlen').replace('%d', k), movesText: (n, s) => `Züge: ${n} · ${s}`, movesA11y: (n, s) => `Züge: ${n}, ${s} von 3 Sternen möglich`, cleared: 'Brett geleert', flawless: 'Fehlerfrei!', noUndo: 'Gelöst, ohne einen Zug zurückzunehmen.', undoText: k => (k === 1 ? 'Mit %d zurückgenommenen Zug.' : 'Mit %d zurückgenommenen Zügen.').replace('%d', k), streak: k => (k === 1 ? '%d Tag in Folge' : '%d Tage in Folge').replace('%d', k), retry: 'Noch mal', moveSaid: (a, b, sq, left) => `${a} auf ${b} in ${sq}, ergibt ${left}.`, goneSaid: (a, b, sq) => `${a} auf ${b} in ${sq}, beide weg.`, resultSaid: (s, title, detail) => `${s} von 3 Sternen. ${sentence(title)} ${detail}`,
+    de: {learn: 'Spielen lernen', lessonOf: k => '{k} von 3'.replace('{k}', k), skip: 'Überspringen', next: 'Weiter →', toDaily: 'Zu den Brettern von heute →', replay: 'Noch einmal lernen', lessons: [{"name": "Erster Sprung", "tip": "Zieh eine Zahl dorthin, wohin sie springt, oder tippe erst die Zahl und dann das Ziel an."}, {"name": "Nur ein Ausweg", "tip": "Eine Zahl, die nur eine andere erreicht, muss sie nehmen. Lass keine andere Zahl zuerst dorthin."}, {"name": "Gerade Zahlen", "tip": "Zahlen, die nur einander erreichen, verschwinden nur, wenn ihre Summe gerade ist. Ist sie ungerade, bleibt eine übrig."}],
+         left: k => (k === 1 ? 'Noch %d Zahl' : 'Noch %d Zahlen').replace('%d', k), movesText: (n, s) => `Züge: ${n} · ${s}`, movesA11y: (n, s) => `Züge: ${n}, ${s} von 3 Sternen möglich`, cleared: 'Brett geleert', flawless: 'Fehlerfrei!', noUndo: 'Gelöst, ohne einen Zug zurückzunehmen.', undoText: k => (k === 1 ? 'Mit %d zurückgenommenen Zug.' : 'Mit %d zurückgenommenen Zügen.').replace('%d', k), streak: k => (k === 1 ? '%d Tag in Folge' : '%d Tage in Folge').replace('%d', k), retry: 'Noch mal', moveSaid: (a, b, sq, left) => `${a} auf ${b} in ${sq}, ergibt ${left}.`, goneSaid: (a, b, sq) => `${a} auf ${b} in ${sq}, beide weg.`, resultSaid: (s, title, detail) => `${s} von 3 Sternen. ${sentence(title)} ${detail}`,
          offline: 'Die Bretter von heute ließen sich nicht laden. Prüf die Verbindung und versuch es noch einmal.',
          moved: (a, b, from, to, eq) => `${a} von ${from} auf ${b} auf ${to}: ${eq}.`, undone: 'Zurückgenommen.',
          locale: 'de-DE', title: 'Hiku des Tages', rule: 'Die Zahl sagt, wie weit sie springt. Landet sie auf einer anderen, wird abgezogen. Lass alle Zahlen verschwinden.',
@@ -177,6 +190,12 @@ footer a{color:var(--accent)}
   document.documentElement.lang = lang;
   document.title = T.title;
   const TIERS = ['easy', 'medium', 'hard', 'expert'];
+  // Three of the app's lessons, for a first visit: the first jump, then two tricks. Always here, not daily boards.
+  const LESSONS = [
+    {size: 3, cells: [2, 0, 2, 0, 0, 0, 0, 0, 0]},
+    {size: 4, cells: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 1, 1]},
+    {size: 4, cells: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 2, 0, 2]},
+  ];
 
   // App Store links carry a campaign naming the site the game is played on, so App Store Connect can count
   // visits and downloads per site. Only Apple sees it, and only when a reader follows the link.
@@ -330,7 +349,24 @@ footer a{color:var(--accent)}
     return count;
   }
 
+  let lesson = null;
+  function startLesson(k) {
+    lesson = k;
+    n = LESSONS[k].size; cells = LESSONS[k].cells.slice(); history = []; undos = 0; selected = null; lost = false; lastMove = null;
+    checkToken++;
+    render();
+    const L = T.lessons[k];
+    say(`${T.learn}, ${T.lessonOf(k + 1)}: ${L.name}. ${L.tip}`);
+  }
+  function endLessons() {
+    store.set('learned', true);
+    lesson = null;
+    if (todays) { start(tier); say(`${T.title}, ${T.tiers[tier]}. ${sentence(T.left(remaining()))}`); }
+    else { render(); statusEl.textContent = T.offline; }
+  }
+
   function start(t) {
+    lesson = null;
     tier = t;
     store.set('tier', t);
     const b = boardFor(t);
@@ -347,7 +383,7 @@ footer a{color:var(--accent)}
       cells = moved(cells, from, to);
       selected = null;
       const clear = isClear(cells);
-      if (clear) {
+      if (clear && lesson === null) {
         const best = store.get(resultKey(tier));
         if (!best || best < stars(undos)) store.set(resultKey(tier), stars(undos));
       }
@@ -403,7 +439,7 @@ footer a{color:var(--accent)}
   };
   function check() {
     if (isClear(cells)) return;
-    worker.postMessage({id: ++checkToken, key: tier + dayKey, n, cells});
+    worker.postMessage({id: ++checkToken, key: lesson === null ? tier + dayKey : 'lesson' + lesson, n, cells});
   }
 
   function undo() {
@@ -415,7 +451,8 @@ footer a{color:var(--accent)}
   function restart() {
     if (!history.length) return;
     const spent = undos + 1;
-    start(tier); undos = spent;
+    if (lesson !== null) startLesson(lesson); else start(tier);
+    undos = spent;
     render();
   }
 
@@ -428,6 +465,18 @@ footer a{color:var(--accent)}
 
   function render() {
     renderTabs();
+    const head = el('lesson');
+    tabsEl.hidden = lesson !== null;
+    head.hidden = lesson === null;
+    if (lesson !== null) {
+      const L = T.lessons[lesson];
+      head.innerHTML = `<div class="head"><span>${T.learn} · ${T.lessonOf(lesson + 1)} · ${L.name}</span><button class="linky" type="button" id="skip">${T.skip}</button></div><div class="tip">${L.tip}</div>`;
+      el('skip').onclick = endLessons;
+    }
+    const replay = el('replay');
+    replay.hidden = lesson !== null;
+    replay.textContent = T.replay;
+    replay.onclick = () => startLesson(0);
     el('left').textContent = T.left(remaining());
     const info = el('movesInfo');
     info.textContent = T.movesText(history.length, starText(stars(undos)));
@@ -527,7 +576,7 @@ footer a{color:var(--accent)}
   function renderStatus() {
     statusEl.className = 'status';
     if (isClear(cells)) {
-      const k = stars(undos), days = streak();
+      const k = stars(undos), days = lesson === null ? streak() : 0;
       statusEl.innerHTML = '';
       const box = document.createElement('div');
       box.className = 'done';
@@ -539,12 +588,12 @@ footer a{color:var(--accent)}
         [0, 1, 2].map(j => `<span class="${j < k ? '' : 'off'}" style="animation-delay:${reduced ? 0 : .15 + j * .18}s">${j < k ? '★' : '☆'}</span>`).join('') + '</div>' +
         `<div class="rtitle" aria-hidden="true">${resultTitle()}</div><div class="rdetail" aria-hidden="true">${resultDetail()}</div>` +
         (days > 0 ? `<div class="streak">${flame}${T.streak(days)}</div>` : '') +
-        `<div class="more">${T.more} <a href="${APP_URL}" target="_blank" rel="noopener">${T.moreLink}</a></div>`;
+        (lesson === null ? `<div class="more">${T.more} <a href="${APP_URL}" target="_blank" rel="noopener">${T.moreLink}</a></div>` : '');
       statusEl.appendChild(box);
     } else if (lost) {
       statusEl.className = 'status warn';
       statusEl.textContent = hasMove(cells, n) ? T.lost : T.stuck;
-    } else if (!history.length && selected === null) {
+    } else if (!history.length && selected === null && lesson === null) {
       statusEl.textContent = T.start;
     } else if (selected !== null && !targets(cells, n, selected).length) {
       statusEl.textContent = T.noMove(cells[selected]);
@@ -564,7 +613,11 @@ footer a{color:var(--accent)}
       controlsEl.appendChild(b);
       return b;
     };
-    if (isClear(cells)) {
+    if (isClear(cells) && lesson !== null) {
+      const last = lesson === LESSONS.length - 1;
+      add(last ? T.toDaily : T.next, () => last ? endLessons() : startLesson(lesson + 1), true);
+      if (stars(undos) < 3) add(T.retry, () => startLesson(lesson));
+    } else if (isClear(cells)) {
       const share = add(T.share, async () => {
         const text = `Hiku · ${T.tiers[tier]} · ${now.toLocaleDateString(T.locale, {day: 'numeric', month: 'short'})}\n${'★'.repeat(stars(undos))}${'☆'.repeat(3 - stars(undos))}\n${location.origin}${location.pathname}`;
         try {
@@ -653,8 +706,9 @@ footer a{color:var(--accent)}
 
   fetch(`https://hikupuzzle.com/api/daily?day=${dayKey}`)
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
-    .then(data => { todays = data.boards; start(tier); })
-    .catch(() => { statusEl.textContent = T.offline; });
+    .then(data => { todays = data.boards; if (lesson === null) start(tier); })
+    .catch(() => { if (lesson === null) statusEl.textContent = T.offline; });
+  if (!store.get('learned') && !params.get('level')) startLesson(0);
 })();
 </script>
 </body>
