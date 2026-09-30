@@ -5,7 +5,8 @@
 //
 // Options on the div: data-lang="nb" or "en" (without it, the language of the page around it, else Norwegian),
 // data-theme="light" or "dark", data-level="easy|medium|hard|expert".
-// The game runs in its own frame, sets no cookies and sends nothing anywhere; results stay in the reader's browser.
+// The game runs in its own frame and sets no cookies; no game data or results are sent to us, they stay in the
+// reader's browser. This script only creates the frame and sets its height.
 (function () {
   var script = document.currentScript;
   var base = script ? script.src.replace(/embed\.js.*$/, '') : 'https://esschul.github.io/clean-jump-site/daily/';

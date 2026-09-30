@@ -22,11 +22,12 @@ p,li{color:var(--muted)}
 strong{color:var(--ink)}
 a{color:var(--accent)}
 .lead{font-size:19px;color:var(--ink);margin-top:20px}
-.snippet{position:relative;margin:12px 0}
-pre{background:var(--code);border-radius:12px;padding:16px 18px;padding-right:96px;overflow-x:auto;font-size:14px;line-height:1.55;margin:0;color:var(--ink)}
+.snippet{margin:12px 0;background:var(--code);border-radius:12px;overflow:hidden}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 0 18px;font-size:13px;color:var(--muted)}
+pre{padding:10px 18px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:0;color:var(--ink)}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 p code,li code,td code{background:var(--code);border-radius:5px;padding:1px 5px}
-.copy{position:absolute;top:10px;right:10px;font:600 13px system-ui,sans-serif;border:0;border-radius:999px;padding:6px 12px;background:var(--accent);color:var(--on-accent);cursor:pointer}
+.copy{font:600 13px system-ui,sans-serif;border:0;border-radius:999px;padding:6px 12px;background:var(--accent);color:var(--on-accent);cursor:pointer}
 table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
 th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--edge);vertical-align:top}
 th{color:var(--ink);font-weight:600}
@@ -35,6 +36,7 @@ td{color:var(--muted)}
 .preview{background:var(--card);border-radius:18px;padding:18px;margin-top:14px;box-shadow:0 3px 0 var(--edge)}
 .steps{padding-left:22px}
 .steps li{margin:6px 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </style>
 </head>
@@ -51,9 +53,9 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <li>Publiser. Spillet henter dagens brett selv og tilpasser høyden sin.</li>
 </ol>
 <div class="snippet">
+<div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopier</button></div>
 <pre><code id="code-basic">&lt;div data-hiku&gt;&lt;/div&gt;
 &lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
-<button class="copy" data-copy="code-basic">Kopier</button>
 </div>
 <p>Skriptet trenger bare å stå én gang per side, selv om du har flere spill på samme side.</p>
 
@@ -74,28 +76,46 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </div>
 <p>Eksempel, alltid lyst og med Middels først:</p>
 <div class="snippet">
+<div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Kopier</button></div>
 <pre><code id="code-options">&lt;div data-hiku data-lang="nb" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
 &lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
-<button class="copy" data-copy="code-options">Kopier</button>
 </div>
 
 <h3>Uten skript</h3>
 <p>Tillater ikke publiseringssystemet skript, kan spillet legges inn som en vanlig <code>iframe</code>. Da tilpasser ikke høyden seg selv, så sett den fast. 860 piksler gir plass til hele spillet, også når et brett er løst; spillet er aldri bredere enn 480 piksler.</p>
 <div class="snippet">
+<div class="bar"><span>HTML uten skript</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Kopier</button></div>
 <pre><code id="code-iframe">&lt;iframe src="https://esschul.github.io/clean-jump-site/daily/?lang=nb"
   title="Dagens Hiku" loading="lazy"
   style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
-<button class="copy" data-copy="code-iframe">Kopier</button>
 </div>
 <p>Valgene settes da i adressen: <code>?lang=en</code>, <code>&amp;theme=dark</code>, <code>&amp;level=hard</code>.</p>
 
 <h2>Personvern og drift</h2>
 <ul>
-  <li><strong>Ingen informasjonskapsler og ingen sporing.</strong> Spillet sender ingenting noe sted. Resultatene og stjernene lagres bare i leserens egen nettleser.</li>
-  <li><strong>Egen ramme.</strong> Spillet kjører i en <code>iframe</code> fra en annen adresse, så det kan ikke lese eller påvirke siden rundt seg.</li>
+  <li><strong>Ingen informasjonskapsler og ingen sporing.</strong> Ingen spilldata eller resultater sendes til oss. Resultater og stjerner lagres bare i leserens egen nettleser. Vertstjenesten mottar vanlige tekniske forespørsler når filene lastes, som for alle nettsider.</li>
+  <li><strong>Isolert spill.</strong> Selve spillet kjører i en <code>iframe</code> fra en annen adresse og kan ikke lese eller påvirke siden rundt seg. Det lille innlastingsskriptet, <code>embed.js</code>, kjører på avisens side som andre eksterne skript: det oppretter rammen og tilpasser høyden, og gjør ikke noe annet. Kildekoden er kort og kan leses på <a href="embed.js">embed.js</a>. Redaksjoner som ikke tillater eksterne skript, bruker iframe-versjonen.</li>
   <li><strong>Lett.</strong> Første gang lastes rundt 70 kB komprimert. Rammen lastes først når leseren nærmer seg den.</li>
   <li><strong>Nye brett ved midnatt</strong> i leserens tidssone. Biblioteket rekker i tre år, og brettene er de samme som i appen.</li>
-  <li><strong>Driftes på GitHub Pages.</strong> Som for alle nettsider ser vertstjenesten leserens IP-adresse når filene lastes.</li>
+  <li><strong>Driftes på GitHub Pages.</strong> Vertstjenesten ser leserens IP-adresse når filene lastes, som for alle nettsider.</li>
+</ul>
+
+<h2>For tekniske redaksjoner</h2>
+<h3>Anbefalt for strenge sikkerhetskrav</h3>
+<p>Bruk iframe-versjonen over. Da kjører ingen kode fra oss på deres side, bare i rammen. Det eneste dere mister, er at høyden ikke tilpasser seg selv.</p>
+<h3>Content Security Policy</h3>
+<p>Med innlastingsskriptet trengs begge disse; med ren iframe bare den siste:</p>
+<div class="snippet">
+<div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Kopier</button></div>
+<pre><code id="code-csp">script-src https://esschul.github.io;
+frame-src https://esschul.github.io;</code></pre>
+</div>
+<p>Legg dem til i de eksisterende direktivene deres. Spillet i rammen henter bare filer fra samme adresse.</p>
+<h3>Stabilitet</h3>
+<ul>
+  <li>Adressene <code>…/daily/embed.js</code> og <code>…/daily/</code>, og attributtene i tabellen over, blir stående. Nye valg legges til uten å endre de eksisterende.</li>
+  <li>Skriptet lastes med <code>async</code> og holder aldri igjen resten av siden.</li>
+  <li>Er GitHub Pages utilgjengelig, blir plassen der spillet skulle stått tom. Siden rundt påvirkes ikke.</li>
 </ul>
 
 <h2>Vilkår</h2>
@@ -104,6 +124,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <h2>Kontakt</h2>
 <p>Har du spørsmål, eller vil du vite mer før dere tar det i bruk? Send en e-post til <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
 
+<p id="copied" class="sr" aria-live="polite"></p>
 <footer><a href="./">Spill Dagens Hiku</a> · <a href="../">Om Hiku</a> · <a href="https://apps.apple.com/app/id6816387508">Hiku for iPhone</a></footer>
 </main>
 <script src="embed.js" async></script>
@@ -111,8 +132,9 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 document.querySelectorAll('.copy').forEach(function (button) {
   button.addEventListener('click', async function () {
     var text = document.getElementById(button.dataset.copy).textContent;
-    try { await navigator.clipboard.writeText(text); button.textContent = 'Kopiert!'; }
-    catch (e) { button.textContent = 'Merk og kopier'; }
+    var status = document.getElementById('copied');
+    try { await navigator.clipboard.writeText(text); button.textContent = 'Kopiert!'; status.textContent = 'Koden er kopiert.'; }
+    catch (e) { button.textContent = 'Merk og kopier'; status.textContent = 'Kunne ikke kopiere. Merk koden og kopier den selv.'; }
     setTimeout(function () { button.textContent = 'Kopier'; }, 2000);
   });
 });

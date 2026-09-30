@@ -24,7 +24,7 @@ h1 span{color:var(--gold-bright)}
 .tabs .mark{font-size:12px;line-height:1;opacity:.8;min-height:12px}
 .board{position:relative;width:100%;aspect-ratio:1;background:var(--well);border-radius:18px;touch-action:none;user-select:none;-webkit-user-select:none}
 .sq{position:absolute;border-radius:16%;background:var(--cell)}
-.tile{position:absolute;border-radius:16%;background:var(--tile);box-shadow:0 3px 0 var(--edge);display:flex;align-items:center;justify-content:center;font-weight:500;font-variant-numeric:tabular-nums;cursor:grab;transition:transform .2s,opacity .4s,background .2s;border:0;color:var(--ink);padding:0;font-family:inherit}
+.tile{position:absolute;z-index:1;border-radius:16%;background:var(--tile);box-shadow:0 3px 0 var(--edge);display:flex;align-items:center;justify-content:center;font-weight:500;font-variant-numeric:tabular-nums;cursor:grab;transition:transform .2s,opacity .4s,background .2s;border:0;color:var(--ink);padding:0;font-family:inherit}
 .tile .dots{position:absolute;bottom:10%;left:0;right:0;display:flex;justify-content:center;gap:2px;opacity:.35}
 .tile .dots i{border-radius:50%;background:currentColor;display:block}
 .tile.sel{background:var(--accent);color:var(--on-accent)}
@@ -54,8 +54,8 @@ footer a{color:var(--accent)}
 <main>
   <header><h1>Hiku<span>.</span></h1><span class="day" id="day"></span></header>
   <p class="rule" id="rule"></p>
-  <div class="tabs" id="tabs" role="group"></div>
-  <div class="board" id="board" role="grid"></div>
+  <div class="tabs" id="tabs" role="group" aria-label=""></div>
+  <div class="board" id="board" role="group"></div>
   <div class="status" id="status" aria-live="polite"></div>
   <div class="controls" id="controls"></div>
   <footer><span id="made"></span><a id="app" class="app" href="https://apps.apple.com/app/id6816387508" target="_blank" rel="noopener"></a></footer>
@@ -204,6 +204,7 @@ footer a{color:var(--accent)}
   const el = id => document.getElementById(id);
   const boardEl = el('board'), statusEl = el('status'), controlsEl = el('controls'), tabsEl = el('tabs');
   el('rule').textContent = T.rule;
+  tabsEl.setAttribute('aria-label', lang === 'nb' ? 'Vanskelighetsgrad' : 'Difficulty');
   el('day').textContent = now.toLocaleDateString(lang === 'nb' ? 'nb-NO' : 'en-GB', T.date);
   el('made').textContent = T.made;
   el('app').innerHTML = '<svg width="13" height="15" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>' + T.app;
@@ -272,18 +273,18 @@ footer a{color:var(--accent)}
     boardEl.innerHTML = '';
     boardEl.classList.toggle('lost', lost);
     boardEl.setAttribute('aria-label', T.tiers[tier]);
+    // One element per square in reading order, A1, B1, C1 … row by row, so a screen reader follows the board:
+    // an empty square is a labelled cell, a number is a button above it.
+    const tgts = selected !== null ? targets(cells, n, selected) : [];
     cells.forEach((v, i) => {
       const p = L.at(i);
       const sq = document.createElement('div');
       sq.className = 'sq';
       Object.assign(sq.style, {left: p.x + 'px', top: p.y + 'px', width: L.side + 'px', height: L.side + 'px'});
-      if (!v) { sq.setAttribute('role', 'gridcell'); sq.setAttribute('aria-label', T.empty(squareName(i))); }
+      if (v) sq.setAttribute('aria-hidden', 'true');
+      else { sq.setAttribute('role', 'img'); sq.setAttribute('aria-label', T.empty(squareName(i))); }
       boardEl.appendChild(sq);
-    });
-    const tgts = selected !== null ? targets(cells, n, selected) : [];
-    cells.forEach((v, i) => {
       if (!v) return;
-      const p = L.at(i);
       const b = document.createElement('button');
       b.className = 'tile' + (i === selected ? ' sel' : '') + (tgts.includes(i) ? ' target' : '');
       b.dataset.i = i;
@@ -348,7 +349,8 @@ footer a{color:var(--accent)}
       const b = document.createElement('button');
       const done = store.get(resultKey(t));
       b.setAttribute('aria-pressed', t === tier);
-      b.innerHTML = `<span>${T.tiers[t]}</span><span class="mark">${done ? '★'.repeat(done) : ''}</span>`;
+      b.setAttribute('aria-label', T.tiers[t] + (done ? `, ${done}/3 ★` : ''));
+      b.innerHTML = `<span aria-hidden="true">${T.tiers[t]}</span><span class="mark" aria-hidden="true">${done ? '★'.repeat(done) : ''}</span>`;
       b.onclick = () => { if (t !== tier) start(t); };
       tabsEl.appendChild(b);
     }
