@@ -23,17 +23,17 @@ TITLE = {"nb": "et rolig tallspill", "en": "a calm number puzzle", "sv": "ett lu
 
 UI = {
 "nb": dict(
-  a11y_title='Tilgjengelig for alle', a11y_lead='Hiku kan spilles uten å se brettet. Hver rute har et navn, som B2, og hvert tall kan leses opp med hvor det kan hoppe. Hvert trekk leses opp med hva som skjedde og hvor mange tall som er igjen.', a11y_items=['<strong>Appen</strong> støtter VoiceOver, Stemmestyring («trykk på B2»), mørk modus, tydelig kontrast og redusert bevegelse. Farger er aldri eneste kjennetegn: tallene og prikkene sier alltid hvor langt et tall hopper.', '<strong>Nettversjonen</strong> kan spilles med skjermleser og bare tastatur, følger lys og mørk modus og slår av animasjoner for den som har bedt om det. Den er laget etter WCAG 2.2 nivå AA og testet med axe-verktøyet.'],
+  a11y_title='Tilgjengelig for alle', a11y_lead='Du trenger ikke se brettet for å spille Hiku. Hver rute har et navn, som B2, og skjermleseren forteller hvor hvert tall kan hoppe. Etter hvert trekk får du høre hva som skjedde og hvor mange tall som er igjen.', a11y_items=['<strong>Appen</strong> støtter VoiceOver, Stemmestyring («trykk på B2»), mørk modus, tydelig kontrast og redusert bevegelse. Du trenger aldri skille farger: tallene og prikkene viser alltid hvor langt et tall hopper.', '<strong>Nettversjonen</strong> kan spilles med skjermleser eller bare tastatur. Den følger lys og mørk modus og slår av animasjoner hvis du har bedt om det. Den er laget etter WCAG 2.2 nivå AA og testet med verktøyet axe.'],
   skip="Hopp til innholdet", nav_label="Meny", shots_label="Skjermbilder fra appen",
   theme_auto="Automatisk", theme_light="Lys", theme_dark="Mørk", theme_label="Lys eller mørk",
-  description="Hiku er et rolig tallspill: tallet sier hvor langt det hopper. Fire nye brett hver dag, i nettleseren og i appen for iPhone.",
+  description="Liker du sudoku? Prøv Hiku. Enkle regler, utfordrende brett og fire nye oppgaver hver dag, i nettleseren og i appen for iPhone.",
   nav_play="Spill", nav_app="Appen", nav_news="For aviser", nav_math="Matematikken",
-  play_cta="Spill dagens brett", app_cta="Last ned for iPhone", today="Dagens Hiku", today_note="Fire nye brett hver dag, fra lett til ekspert. Nye ved midnatt.",
-  app_title="Appen for iPhone", app_extra="I appen er det 50 brett i tillegg til Dagens Hiku, og de første lærer deg knepene ett for ett.",
+  play_cta="Spill dagens brett", app_cta="Last ned for iPhone", today="Dagens Hiku", today_note="Fire nye brett hver dag, fra lett til ekspert. Nye brett kommer ved midnatt.",
+  app_title="Appen for iPhone", app_extra="I appen får du også 50 brett å øve på. De første lærer deg reglene, ett knep om gangen.",
   shots=["Startsiden med Dagens Hiku", "Et brett med buene som viser hvor tallet kan hoppe", "Mørk modus"],
-  news_title="For aviser og nettsteder", news_text="Dagens Hiku kan bygges inn gratis på en nettavis eller nettside med to linjer kode. Ingen informasjonskapsler, ingen sporing, og spillet er på seks språk.",
+  news_title="For aviser og nettsteder", news_text="Nettaviser og andre nettsteder kan legge inn Dagens Hiku gratis med to linjer kode. Ingen informasjonskapsler, ingen sporing, og spillet finnes på seks språk.",
   news_link="Slik bygger du det inn", news_try="Prøv innstillingene",
-  math_title="Matematikken bak Hiku", math_text="Hvorfor går noen brett ikke opp, og hvor langt fram må du se på et ekspertbrett? Artikkelen viser at summen alltid beholder sin paritet, at brettet deler seg i grupper som aldri møtes igjen, og at tallene i hver gruppe må kunne deles i to hauger med lik sum. Om spillet er NP-komplett, er fortsatt åpent.",
+  math_title="Matematikken bak Hiku", math_text="Hvorfor går ikke alle brett opp, og hvor langt fram må du tenke på et ekspertbrett? Artikkelen viser at summen av tallene er partall eller oddetall hele spillet gjennom, at brettet deler seg i grupper som aldri møtes igjen, og at tallene i hver gruppe må kunne deles i to hauger med like stor sum. Om spillet er NP-komplett, vet ingen ennå.",
   math_link="Les artikkelen (engelsk, PDF)",
   privacy_title="Personvern",
   privacy=["<strong>Hiku samler ingen personopplysninger.</strong> Appen har ingen konto og ingen reklame, og den sporer deg ikke på tvers av apper eller nettsteder.",
@@ -147,8 +147,9 @@ UI = {
 
 def store_text(lang):
     """The App Store description and promotional text, split into the parts the page uses."""
-    file = "en" if lang == "en" else lang
-    s = (APP_REPO / f"AppStore/1.3/metadata/{file}.md").read_text(encoding="utf-8")
+    # The newest version that has a text in this language.
+    versions = sorted((APP_REPO / "AppStore").glob(f"*/metadata/{lang}.md"), key=lambda p: [int(x) for x in p.parts[-3].split(".")])
+    s = versions[-1].read_text(encoding="utf-8")
     promo = re.search(r"\*\*Reklametekst\*\*[^\n]*\n(.*?)\n\n", s, re.S).group(1).strip()
     desc = re.search(r"\*\*Beskrivelse\*\*[^\n]*\n(.*?)\n\n\*\*Nøkkelord", s, re.S).group(1)
     blocks = desc.split("\n\n")
@@ -168,7 +169,7 @@ def build(lang, template):
     v = dict(t)
     v.update(
         lang=lang, root=root, canonical=here, title="Hiku – " + TITLE[lang],
-        tagline=st["tagline"], rule=st["rule"], promo=st["promo"], how_title=st["how_title"], name_title=st["name_title"],
+        tagline=st["tagline"], rule=st["rule"], promo="" if st["promo"] == st["tagline"] else f'<p>{st["promo"]}</p>', how_title=st["how_title"], name_title=st["name_title"],
         bullets="".join(f"<li>{b}</li>" for b in st["bullets"]),
         how="".join(f"<p>{p}</p>" for p in st["how"]),
         name="".join(f"<p>{p}</p>" for p in st["name"]),
