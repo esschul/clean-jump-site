@@ -95,6 +95,9 @@ footer a{color:var(--accent)}
   if (params.get('theme') === 'dark' || params.get('theme') === 'light') document.documentElement.dataset.theme = params.get('theme');
   // ?compact=1: no title or rule, for a page that already shows them.
   if (params.get('compact') === '1') document.documentElement.classList.add('compact');
+  // In a frame the page around sets the height, so a scrollbar here would only flicker in and out as the content
+  // grows, changing the board's width and redrawing it under the reader's finger.
+  if (parent !== window) document.documentElement.style.overflow = 'hidden';
 
   // The languages of the app, with its own words where it has them. Norwegian unless another is asked for;
   // "no" and "nn" count as Norwegian, and a region such as sv-SE is ignored.
@@ -604,15 +607,24 @@ footer a{color:var(--accent)}
     }
   }
 
+  // The buttons are kept between redraws and only updated. A redraw can land while a button is being pressed (the
+  // lost-board check answering, or the frame resizing); a new button there would swallow the click.
   function renderControls() {
-    controlsEl.innerHTML = '';
+    let used = 0;
     const add = (label, fn, primary, disabled) => {
-      const b = document.createElement('button');
+      let b = controlsEl.children[used];
+      if (!b) { b = document.createElement('button'); controlsEl.appendChild(b); }
+      used++;
       b.className = 'pill' + (primary ? ' primary' : '');
-      b.textContent = label; b.onclick = fn; b.disabled = !!disabled;
-      controlsEl.appendChild(b);
+      if (b.textContent !== label) b.textContent = label;
+      b.onclick = fn; b.disabled = !!disabled;
       return b;
     };
+    fillControls(add);
+    while (controlsEl.children.length > used) controlsEl.lastChild.remove();
+  }
+
+  function fillControls(add) {
     if (isClear(cells) && lesson !== null) {
       const last = lesson === LESSONS.length - 1;
       add(last ? T.toDaily : T.next, () => last ? endLessons() : startLesson(lesson + 1), true);
