@@ -1,0 +1,10 @@
+// Cloudflare serves this repository as a static site on hikupuzzle.com. Nothing runs on the server: every file is
+// sent as it is. Files in .assetsignore (the tools that build the pages, and this file) are not published.
+{
+  "name": "hikupuzzle",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "404-page"
+  }
+}
