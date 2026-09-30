@@ -11,9 +11,9 @@ import pathlib
 
 # Where the game is served from. The embed script works out its own address, so snippets already pasted keep
 # working wherever they point, as long as that host still serves the files.
-BASE = "https://esschul.github.io/clean-jump-site/daily/"
-HOST = "https://esschul.github.io"
-HOST_NAME = "GitHub Pages"
+BASE = "https://hikupuzzle.com/daily/"
+HOST = "https://hikupuzzle.com"
+HOST_NAME = "Cloudflare"
 APP = "https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-guide&amp;mt=8"
 
 LANGS = ["nb", "en", "sv", "da", "fi", "de"]

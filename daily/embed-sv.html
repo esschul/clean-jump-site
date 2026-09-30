@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dagens Hiku på din webbplats</title>
 <meta name="description" content="Så bäddar du in Dagens Hiku, ett dagligt sifferspel, på en nyhetssajt eller webbplats: två rader kod, inga kakor.">
-<link rel="alternate" hreflang="nb" href="https://esschul.github.io/clean-jump-site/daily/embed.html">
-<link rel="alternate" hreflang="en" href="https://esschul.github.io/clean-jump-site/daily/embed-en.html">
-<link rel="alternate" hreflang="sv" href="https://esschul.github.io/clean-jump-site/daily/embed-sv.html">
-<link rel="alternate" hreflang="da" href="https://esschul.github.io/clean-jump-site/daily/embed-da.html">
-<link rel="alternate" hreflang="fi" href="https://esschul.github.io/clean-jump-site/daily/embed-fi.html">
-<link rel="alternate" hreflang="de" href="https://esschul.github.io/clean-jump-site/daily/embed-de.html">
+<link rel="alternate" hreflang="nb" href="https://hikupuzzle.com/daily/embed.html">
+<link rel="alternate" hreflang="en" href="https://hikupuzzle.com/daily/embed-en.html">
+<link rel="alternate" hreflang="sv" href="https://hikupuzzle.com/daily/embed-sv.html">
+<link rel="alternate" hreflang="da" href="https://hikupuzzle.com/daily/embed-da.html">
+<link rel="alternate" hreflang="fi" href="https://hikupuzzle.com/daily/embed-fi.html">
+<link rel="alternate" hreflang="de" href="https://hikupuzzle.com/daily/embed-de.html">
 <link rel="icon" href="../icon.png">
 <style>
 :root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--code:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a}
@@ -70,7 +70,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopiera</button></div>
 <pre><code id="code-basic">&lt;div data-hiku data-lang="sv"&gt;&lt;/div&gt;
-&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 <p>Skriptet behöver bara finnas en gång per sida, även om sidan har flera spel.</p>
 
@@ -117,14 +117,14 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Kopiera</button></div>
 <pre><code id="code-options">&lt;div data-hiku data-lang="sv" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
-&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 
 <h3>Utan skript</h3>
 <p>Tillåter inte publiceringssystemet skript kan spelet läggas in som en vanlig <code>iframe</code>. Då anpassar sig inte höjden själv, så ange den. 860 pixlar räcker för hela spelet, även när ett bräde är löst; spelet är aldrig bredare än 480 pixlar.</p>
 <div class="snippet">
 <div class="bar"><span>HTML utan skript</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Kopiera</button></div>
-<pre><code id="code-iframe">&lt;iframe src="https://esschul.github.io/clean-jump-site/daily/?lang=sv"
+<pre><code id="code-iframe">&lt;iframe src="https://hikupuzzle.com/daily/?lang=sv"
   title="Dagens Hiku" loading="lazy"
   style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
 </div>
@@ -136,7 +136,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <li><strong>Isolerat spel.</strong> Själva spelet körs i en <code>iframe</code> från en annan adress och kan inte läsa eller påverka sidan runt omkring. Det lilla laddningsskriptet, <code>embed.js</code>, körs på er sida som andra externa skript: det skapar ramen och anpassar höjden, och gör inget annat. Källkoden är kort och kan läsas på <a href="embed.js">embed.js</a>. Redaktioner som inte tillåter externa skript använder iframe-versionen.</li>
   <li><strong>Lätt.</strong> Första gången laddas cirka 70 kB komprimerat. Ramen laddas först när läsaren närmar sig den.</li>
   <li><strong>Nya bräden vid midnatt</strong> i läsarens tidszon. Biblioteket räcker i tre år, och bräden är desamma som i appen.</li>
-  <li><strong>Driftas på GitHub Pages.</strong> Värdtjänsten ser läsarens IP-adress när filerna laddas, som för alla webbsidor.</li>
+  <li><strong>Driftas på Cloudflare.</strong> Värdtjänsten ser läsarens IP-adress när filerna laddas, som för alla webbsidor.</li>
 </ul>
 
 <h2>För tekniska redaktioner</h2>
@@ -146,15 +146,15 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <p>Med laddningsskriptet behövs båda; med ren iframe bara den sista:</p>
 <div class="snippet">
 <div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Kopiera</button></div>
-<pre><code id="code-csp">script-src https://esschul.github.io;
-frame-src https://esschul.github.io;</code></pre>
+<pre><code id="code-csp">script-src https://hikupuzzle.com;
+frame-src https://hikupuzzle.com;</code></pre>
 </div>
 <p>Lägg till dem i era befintliga direktiv. Spelet i ramen hämtar bara filer från samma adress.</p>
 <h3>Stabilitet</h3>
 <ul>
   <li>Adresserna <code>…/daily/embed.js</code> och <code>…/daily/</code>, och attributen i tabellen ovan, ligger kvar. Nya inställningar läggs till utan att ändra de befintliga.</li>
   <li>Skriptet laddas med <code>async</code> och håller aldrig upp resten av sidan.</li>
-  <li>Är GitHub Pages otillgängligt blir platsen där spelet skulle stå tom. Sidan runt omkring påverkas inte.</li>
+  <li>Är Cloudflare otillgängligt blir platsen där spelet skulle stå tom. Sidan runt omkring påverkas inte.</li>
 </ul>
 
 <h2>Villkor</h2>
@@ -171,7 +171,7 @@ frame-src https://esschul.github.io;</code></pre>
 // The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
 (function () {
   var form = document.getElementById('config'), stage = document.getElementById('stage');
-  var base = 'https://esschul.github.io/clean-jump-site/daily/', pageLang = 'sv';
+  var base = 'https://hikupuzzle.com/daily/', pageLang = 'sv';
   var words = {script: 'HTML', iframe: 'HTML utan skript', title: 'Dagens Hiku'};
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function update() {

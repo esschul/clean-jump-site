@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hiku des Tages auf Ihrer Website</title>
 <meta name="description" content="So binden Sie Hiku des Tages, ein tägliches Zahlenrätsel, in eine Nachrichtenseite oder Website ein: zwei Zeilen Code, keine Cookies.">
-<link rel="alternate" hreflang="nb" href="https://esschul.github.io/clean-jump-site/daily/embed.html">
-<link rel="alternate" hreflang="en" href="https://esschul.github.io/clean-jump-site/daily/embed-en.html">
-<link rel="alternate" hreflang="sv" href="https://esschul.github.io/clean-jump-site/daily/embed-sv.html">
-<link rel="alternate" hreflang="da" href="https://esschul.github.io/clean-jump-site/daily/embed-da.html">
-<link rel="alternate" hreflang="fi" href="https://esschul.github.io/clean-jump-site/daily/embed-fi.html">
-<link rel="alternate" hreflang="de" href="https://esschul.github.io/clean-jump-site/daily/embed-de.html">
+<link rel="alternate" hreflang="nb" href="https://hikupuzzle.com/daily/embed.html">
+<link rel="alternate" hreflang="en" href="https://hikupuzzle.com/daily/embed-en.html">
+<link rel="alternate" hreflang="sv" href="https://hikupuzzle.com/daily/embed-sv.html">
+<link rel="alternate" hreflang="da" href="https://hikupuzzle.com/daily/embed-da.html">
+<link rel="alternate" hreflang="fi" href="https://hikupuzzle.com/daily/embed-fi.html">
+<link rel="alternate" hreflang="de" href="https://hikupuzzle.com/daily/embed-de.html">
 <link rel="icon" href="../icon.png">
 <style>
 :root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--code:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a}
@@ -70,7 +70,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopieren</button></div>
 <pre><code id="code-basic">&lt;div data-hiku data-lang="de"&gt;&lt;/div&gt;
-&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 <p>Das Skript muss nur einmal pro Seite stehen, auch wenn die Seite mehrere Spiele enthält.</p>
 
@@ -117,14 +117,14 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Kopieren</button></div>
 <pre><code id="code-options">&lt;div data-hiku data-lang="de" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
-&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 
 <h3>Ohne Skript</h3>
 <p>Erlaubt Ihr Redaktionssystem keine Skripte, binden Sie das Spiel als einfaches <code>iframe</code> ein. Die Höhe passt sich dann nicht selbst an, also legen Sie sie fest. 860 Pixel reichen für das ganze Spiel, auch mit gelöstem Brett; das Spiel ist nie breiter als 480 Pixel.</p>
 <div class="snippet">
 <div class="bar"><span>HTML ohne Skript</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Kopieren</button></div>
-<pre><code id="code-iframe">&lt;iframe src="https://esschul.github.io/clean-jump-site/daily/?lang=de"
+<pre><code id="code-iframe">&lt;iframe src="https://hikupuzzle.com/daily/?lang=de"
   title="Hiku des Tages" loading="lazy"
   style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
 </div>
@@ -136,7 +136,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <li><strong>Isoliertes Spiel.</strong> Das Spiel selbst läuft in einem <code>iframe</code> von einer anderen Adresse und kann die umgebende Seite weder lesen noch beeinflussen. Das kleine Ladeskript <code>embed.js</code> läuft auf Ihrer Seite wie andere externe Skripte: Es erstellt den Rahmen und passt die Höhe an, sonst nichts. Der Quelltext ist kurz und unter <a href="embed.js">embed.js</a> einsehbar. Redaktionen, die keine externen Skripte erlauben, nutzen die iframe-Variante.</li>
   <li><strong>Leicht.</strong> Beim ersten Mal werden etwa 70 kB komprimiert geladen. Der Rahmen lädt erst, wenn der Leser sich ihm nähert.</li>
   <li><strong>Neue Bretter um Mitternacht</strong> in der Zeitzone des Lesers. Die Bibliothek reicht für drei Jahre, und die Bretter sind dieselben wie in der App.</li>
-  <li><strong>Gehostet bei GitHub Pages.</strong> Der Hoster sieht beim Laden der Dateien die IP-Adresse des Lesers, wie bei jeder Website.</li>
+  <li><strong>Gehostet bei Cloudflare.</strong> Der Hoster sieht beim Laden der Dateien die IP-Adresse des Lesers, wie bei jeder Website.</li>
 </ul>
 
 <h2>Für technische Teams</h2>
@@ -146,15 +146,15 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <p>Mit dem Ladeskript werden beide benötigt, mit reinem iframe nur die zweite:</p>
 <div class="snippet">
 <div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Kopieren</button></div>
-<pre><code id="code-csp">script-src https://esschul.github.io;
-frame-src https://esschul.github.io;</code></pre>
+<pre><code id="code-csp">script-src https://hikupuzzle.com;
+frame-src https://hikupuzzle.com;</code></pre>
 </div>
 <p>Ergänzen Sie Ihre bestehenden Direktiven. Das Spiel im Rahmen lädt nur Dateien von derselben Adresse.</p>
 <h3>Stabilität</h3>
 <ul>
   <li>Die Adressen <code>…/daily/embed.js</code> und <code>…/daily/</code> sowie die Attribute in der Tabelle oben bleiben bestehen. Neue Optionen kommen hinzu, ohne bestehende zu ändern.</li>
   <li>Das Skript lädt mit <code>async</code> und hält den Rest der Seite nie auf.</li>
-  <li>Ist GitHub Pages nicht erreichbar, bleibt der Platz für das Spiel leer. Die umgebende Seite ist nicht betroffen.</li>
+  <li>Ist Cloudflare nicht erreichbar, bleibt der Platz für das Spiel leer. Die umgebende Seite ist nicht betroffen.</li>
 </ul>
 
 <h2>Bedingungen</h2>
@@ -171,7 +171,7 @@ frame-src https://esschul.github.io;</code></pre>
 // The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
 (function () {
   var form = document.getElementById('config'), stage = document.getElementById('stage');
-  var base = 'https://esschul.github.io/clean-jump-site/daily/', pageLang = 'de';
+  var base = 'https://hikupuzzle.com/daily/', pageLang = 'de';
   var words = {script: 'HTML', iframe: 'HTML ohne Skript', title: 'Hiku des Tages'};
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function update() {

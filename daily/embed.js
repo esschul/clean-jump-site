@@ -1,7 +1,7 @@
 // Dagens Hiku on any page. Put this where the game should appear:
 //
 //   <div data-hiku></div>
-//   <script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async></script>
+//   <script src="https://hikupuzzle.com/daily/embed.js" async></script>
 //
 // Options on the div: data-lang="nb", "en", "sv", "da", "fi" or "de" (without it, the language of the page around
 // it, else Norwegian), data-theme="light" or "dark", data-level="easy|medium|hard|expert", and data-align="left"
@@ -10,7 +10,7 @@
 // reader's browser. This script only creates the frame and sets its height.
 (function () {
   var script = document.currentScript;
-  var base = script ? script.src.replace(/embed\.js.*$/, '') : 'https://esschul.github.io/clean-jump-site/daily/';
+  var base = script ? script.src.replace(/embed\.js.*$/, '') : 'https://hikupuzzle.com/daily/';
   function mount(host) {
     if (host.dataset.hikuMounted) return;
     host.dataset.hikuMounted = '1';

@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Päivän Hiku sivustollesi</title>
 <meta name="description" content="Näin upotat Päivän Hikun, päivittäisen numeropelin, uutissivustolle tai verkkosivulle: kaksi riviä koodia, ei evästeitä.">
-<link rel="alternate" hreflang="nb" href="https://esschul.github.io/clean-jump-site/daily/embed.html">
-<link rel="alternate" hreflang="en" href="https://esschul.github.io/clean-jump-site/daily/embed-en.html">
-<link rel="alternate" hreflang="sv" href="https://esschul.github.io/clean-jump-site/daily/embed-sv.html">
-<link rel="alternate" hreflang="da" href="https://esschul.github.io/clean-jump-site/daily/embed-da.html">
-<link rel="alternate" hreflang="fi" href="https://esschul.github.io/clean-jump-site/daily/embed-fi.html">
-<link rel="alternate" hreflang="de" href="https://esschul.github.io/clean-jump-site/daily/embed-de.html">
+<link rel="alternate" hreflang="nb" href="https://hikupuzzle.com/daily/embed.html">
+<link rel="alternate" hreflang="en" href="https://hikupuzzle.com/daily/embed-en.html">
+<link rel="alternate" hreflang="sv" href="https://hikupuzzle.com/daily/embed-sv.html">
+<link rel="alternate" hreflang="da" href="https://hikupuzzle.com/daily/embed-da.html">
+<link rel="alternate" hreflang="fi" href="https://hikupuzzle.com/daily/embed-fi.html">
+<link rel="alternate" hreflang="de" href="https://hikupuzzle.com/daily/embed-de.html">
 <link rel="icon" href="../icon.png">
 <style>
 :root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--code:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a}
@@ -70,7 +70,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopioi</button></div>
 <pre><code id="code-basic">&lt;div data-hiku data-lang="fi"&gt;&lt;/div&gt;
-&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 <p>Skriptin tarvitsee olla sivulla vain kerran, vaikka sivulla olisi useita pelejä.</p>
 
@@ -117,14 +117,14 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Kopioi</button></div>
 <pre><code id="code-options">&lt;div data-hiku data-lang="fi" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
-&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 
 <h3>Ilman skriptiä</h3>
 <p>Jos julkaisujärjestelmä ei salli skriptejä, pelin voi upottaa tavallisena <code>iframe</code>-kehyksenä. Silloin korkeus ei säädy itsestään, joten aseta se. 860 pikseliä riittää koko peliin myös ratkaistun laudan kanssa; peli ei ole koskaan yli 480 pikseliä leveä.</p>
 <div class="snippet">
 <div class="bar"><span>HTML ilman skriptiä</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Kopioi</button></div>
-<pre><code id="code-iframe">&lt;iframe src="https://esschul.github.io/clean-jump-site/daily/?lang=fi"
+<pre><code id="code-iframe">&lt;iframe src="https://hikupuzzle.com/daily/?lang=fi"
   title="Päivän Hiku" loading="lazy"
   style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
 </div>
@@ -136,7 +136,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <li><strong>Eristetty peli.</strong> Itse peli toimii <code>iframe</code>-kehyksessä toisesta osoitteesta eikä voi lukea tai muuttaa ympäröivää sivua. Pieni latausskripti, <code>embed.js</code>, toimii sivullanne kuten muutkin ulkoiset skriptit: se luo kehyksen ja säätää sen korkeuden eikä tee muuta. Sen lähdekoodi on lyhyt ja luettavissa osoitteessa <a href="embed.js">embed.js</a>. Toimitukset, jotka eivät salli ulkoisia skriptejä, käyttävät iframe-versiota.</li>
   <li><strong>Kevyt.</strong> Ensimmäisellä kerralla ladataan noin 70 kt pakattuna. Kehys latautuu vasta, kun lukija lähestyy sitä.</li>
   <li><strong>Uudet laudat keskiyöllä</strong> lukijan aikavyöhykkeellä. Kirjasto riittää kolmeksi vuodeksi, ja laudat ovat samat kuin sovelluksessa.</li>
-  <li><strong>Ylläpitopalvelu on GitHub Pages.</strong> Palvelin näkee lukijan IP-osoitteen, kun tiedostot latautuvat, kuten kaikilla verkkosivuilla.</li>
+  <li><strong>Ylläpitopalvelu on Cloudflare.</strong> Palvelin näkee lukijan IP-osoitteen, kun tiedostot latautuvat, kuten kaikilla verkkosivuilla.</li>
 </ul>
 
 <h2>Teknisille toimituksille</h2>
@@ -146,15 +146,15 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <p>Latausskriptin kanssa tarvitaan molemmat; pelkän iframen kanssa vain jälkimmäinen:</p>
 <div class="snippet">
 <div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Kopioi</button></div>
-<pre><code id="code-csp">script-src https://esschul.github.io;
-frame-src https://esschul.github.io;</code></pre>
+<pre><code id="code-csp">script-src https://hikupuzzle.com;
+frame-src https://hikupuzzle.com;</code></pre>
 </div>
 <p>Lisää ne nykyisiin direktiiveihinne. Kehyksessä oleva peli lataa tiedostoja vain samasta osoitteesta.</p>
 <h3>Vakaus</h3>
 <ul>
   <li>Osoitteet <code>…/daily/embed.js</code> ja <code>…/daily/</code> sekä yllä olevan taulukon attribuutit pysyvät. Uusia asetuksia lisätään muuttamatta nykyisiä.</li>
   <li>Skripti ladataan <code>async</code>-määreellä eikä koskaan hidasta muuta sivua.</li>
-  <li>Jos GitHub Pages ei ole käytettävissä, pelin paikka jää tyhjäksi. Ympäröivä sivu ei kärsi.</li>
+  <li>Jos Cloudflare ei ole käytettävissä, pelin paikka jää tyhjäksi. Ympäröivä sivu ei kärsi.</li>
 </ul>
 
 <h2>Ehdot</h2>
@@ -171,7 +171,7 @@ frame-src https://esschul.github.io;</code></pre>
 // The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
 (function () {
   var form = document.getElementById('config'), stage = document.getElementById('stage');
-  var base = 'https://esschul.github.io/clean-jump-site/daily/', pageLang = 'fi';
+  var base = 'https://hikupuzzle.com/daily/', pageLang = 'fi';
   var words = {script: 'HTML', iframe: 'HTML ilman skriptiä', title: 'Päivän Hiku'};
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function update() {

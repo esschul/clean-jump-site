@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Daily Hiku on your site</title>
 <meta name="description" content="How to embed Daily Hiku, a daily number puzzle, on a news site or any web page: two lines of code, no cookies.">
-<link rel="alternate" hreflang="nb" href="https://esschul.github.io/clean-jump-site/daily/embed.html">
-<link rel="alternate" hreflang="en" href="https://esschul.github.io/clean-jump-site/daily/embed-en.html">
-<link rel="alternate" hreflang="sv" href="https://esschul.github.io/clean-jump-site/daily/embed-sv.html">
-<link rel="alternate" hreflang="da" href="https://esschul.github.io/clean-jump-site/daily/embed-da.html">
-<link rel="alternate" hreflang="fi" href="https://esschul.github.io/clean-jump-site/daily/embed-fi.html">
-<link rel="alternate" hreflang="de" href="https://esschul.github.io/clean-jump-site/daily/embed-de.html">
+<link rel="alternate" hreflang="nb" href="https://hikupuzzle.com/daily/embed.html">
+<link rel="alternate" hreflang="en" href="https://hikupuzzle.com/daily/embed-en.html">
+<link rel="alternate" hreflang="sv" href="https://hikupuzzle.com/daily/embed-sv.html">
+<link rel="alternate" hreflang="da" href="https://hikupuzzle.com/daily/embed-da.html">
+<link rel="alternate" hreflang="fi" href="https://hikupuzzle.com/daily/embed-fi.html">
+<link rel="alternate" hreflang="de" href="https://hikupuzzle.com/daily/embed-de.html">
 <link rel="icon" href="../icon.png">
 <style>
 :root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--code:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a}
@@ -70,7 +70,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Copy</button></div>
 <pre><code id="code-basic">&lt;div data-hiku data-lang="en"&gt;&lt;/div&gt;
-&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 <p>The script only needs to appear once per page, even with several games on the same page.</p>
 
@@ -117,14 +117,14 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Copy</button></div>
 <pre><code id="code-options">&lt;div data-hiku data-lang="en" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
-&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 
 <h3>Without script</h3>
 <p>If your publishing system does not allow scripts, embed the game as a plain <code>iframe</code>. Its height then does not adjust itself, so set it. 860 pixels fits the whole game, including a solved board; the game is never wider than 480 pixels.</p>
 <div class="snippet">
 <div class="bar"><span>HTML without script</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Copy</button></div>
-<pre><code id="code-iframe">&lt;iframe src="https://esschul.github.io/clean-jump-site/daily/?lang=en"
+<pre><code id="code-iframe">&lt;iframe src="https://hikupuzzle.com/daily/?lang=en"
   title="Daily Hiku" loading="lazy"
   style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
 </div>
@@ -136,7 +136,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <li><strong>An isolated game.</strong> The game itself runs in an <code>iframe</code> from another address and cannot read or affect the page around it. The small loader script, <code>embed.js</code>, runs on your page like any other external script: it creates the frame and sets its height, and does nothing else. Its source is short and can be read at <a href="embed.js">embed.js</a>. Newsrooms that do not allow external scripts use the iframe version.</li>
   <li><strong>Light.</strong> The first load is about 70 kB compressed. The frame only loads as the reader approaches it.</li>
   <li><strong>New boards at midnight</strong> in the reader's time zone. The library lasts three years, and the boards are the same as in the app.</li>
-  <li><strong>Hosted on GitHub Pages.</strong> The host sees the reader's IP address when the files load, as with any web page.</li>
+  <li><strong>Hosted on Cloudflare.</strong> The host sees the reader's IP address when the files load, as with any web page.</li>
 </ul>
 
 <h2>For technical teams</h2>
@@ -146,15 +146,15 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <p>With the loader script both are needed; with a plain iframe only the second:</p>
 <div class="snippet">
 <div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Copy</button></div>
-<pre><code id="code-csp">script-src https://esschul.github.io;
-frame-src https://esschul.github.io;</code></pre>
+<pre><code id="code-csp">script-src https://hikupuzzle.com;
+frame-src https://hikupuzzle.com;</code></pre>
 </div>
 <p>Add them to your existing directives. The game in the frame only loads files from the same address.</p>
 <h3>Stability</h3>
 <ul>
   <li>The addresses <code>…/daily/embed.js</code> and <code>…/daily/</code>, and the attributes in the table above, will stay. New options are added without changing existing ones.</li>
   <li>The script loads with <code>async</code> and never holds up the rest of the page.</li>
-  <li>If GitHub Pages is unavailable, the space where the game would be stays empty. The page around it is not affected.</li>
+  <li>If Cloudflare is unavailable, the space where the game would be stays empty. The page around it is not affected.</li>
 </ul>
 
 <h2>Terms</h2>
@@ -171,7 +171,7 @@ frame-src https://esschul.github.io;</code></pre>
 // The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
 (function () {
   var form = document.getElementById('config'), stage = document.getElementById('stage');
-  var base = 'https://esschul.github.io/clean-jump-site/daily/', pageLang = 'en';
+  var base = 'https://hikupuzzle.com/daily/', pageLang = 'en';
   var words = {script: 'HTML', iframe: 'HTML without script', title: 'Daily Hiku'};
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function update() {

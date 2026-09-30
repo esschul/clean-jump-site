@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hiku – et roligt talspil</title>
+<meta name="description" content="Hiku er et roligt talspil: tallet siger, hvor langt det springer. Fire nye brætter hver dag, i browseren og i appen til iPhone.">
+<link rel="canonical" href="https://hikupuzzle.com/da/">
+<link rel="alternate" hreflang="nb" href="https://hikupuzzle.com/">
+<link rel="alternate" hreflang="en" href="https://hikupuzzle.com/en/">
+<link rel="alternate" hreflang="sv" href="https://hikupuzzle.com/sv/">
+<link rel="alternate" hreflang="da" href="https://hikupuzzle.com/da/">
+<link rel="alternate" hreflang="fi" href="https://hikupuzzle.com/fi/">
+<link rel="alternate" hreflang="de" href="https://hikupuzzle.com/de/">
+<link rel="icon" href="../icon.png">
+<link rel="apple-touch-icon" href="../icon.png">
+<meta property="og:title" content="Hiku">
+<meta property="og:description" content="Hiku er et roligt talspil: tallet siger, hvor langt det springer. Fire nye brætter hver dag, i browseren og i appen til iPhone.">
+<meta property="og:image" content="https://hikupuzzle.com/img/da/1-regel.jpg">
+<meta name="apple-itunes-app" content="app-id=6816387508">
+<script>try { var t = localStorage.getItem('hiku:site-theme'); if (t && t !== 'auto') document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<style>
+:root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--well:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a;--guide:#a86e0e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--edge:#343748;--card:#252836;--well:#2d3040;--accent:#9fb0ea;--on-accent:#1b1d27;--gold:#f2c66d;--guide:#f2c66d}}
+:root[data-theme="dark"]{--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--edge:#343748;--card:#252836;--well:#2d3040;--accent:#9fb0ea;--on-accent:#1b1d27;--gold:#f2c66d;--guide:#f2c66d}
+.theme{font:inherit;font-size:15px;color:var(--muted);background:none;border:1px solid var(--edge);border-radius:999px;padding:4px 12px;cursor:pointer}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+nav.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:400 26px Georgia,serif}
+.brand img{width:34px;height:34px;border-radius:8px}
+.brand span{color:var(--gold)}
+.links{display:flex;gap:18px;flex-wrap:wrap;font-size:15px}
+.links a{color:var(--muted);text-decoration:none}
+.links a:hover{color:var(--ink)}
+.hero{display:grid;grid-template-columns:1fr minmax(300px,480px);gap:48px;align-items:start;padding:36px 0 64px}
+.hero h1{font:400 clamp(64px,11vw,112px)/.95 Georgia,serif;letter-spacing:-3px;margin:0;position:relative;display:inline-block}
+.hero h1 span{color:var(--gold)}
+.arc{position:absolute;left:100%;top:-8px;width:120px;height:90px;margin-left:-10px}
+.tagline{font-size:22px;line-height:1.45;margin:22px 0 10px}
+.rule{color:var(--muted);font-size:18px;margin:0 0 26px;max-width:34em}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.ghost{border:1px solid var(--edge);color:var(--ink)}
+.game{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 3px 0 var(--edge)}
+.game h2{font:400 22px Georgia,serif;margin:4px 6px 2px}
+.game p{margin:0 6px 10px;color:var(--muted);font-size:14px}
+section{padding:56px 0;border-top:1px solid var(--edge)}
+section h2{font:400 34px/1.15 Georgia,serif;margin:0 0 14px;letter-spacing:-.5px}
+section p,section li{color:var(--muted);max-width:40em}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.bullets{padding-left:20px}
+.bullets li{margin:6px 0}
+.shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x mandatory}
+.shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 3px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{background:var(--card);border-radius:18px;padding:22px 24px;box-shadow:0 3px 0 var(--edge)}
+.card h2{font-size:26px}
+.card p{margin:0 0 12px}
+.card a{font-weight:600}
+.en h3{font:400 22px Georgia,serif;margin:28px 0 6px;color:var(--ink)}
+footer{padding:32px 0 48px;border-top:1px solid var(--edge);font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
+@media (max-width:820px){.hero,.two{grid-template-columns:1fr}.hero{gap:28px;padding-top:20px}.arc{width:84px;height:64px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="top">
+  <a class="brand" href=".././"><img src="../icon.png" alt=""><b style="font-weight:400">Hiku<span>.</span></b></a>
+  <div class="links"><a href="#spill">Spil</a><a href="#appen">Appen</a><a href="#aviser">For medier</a><a href="#matematikk">Matematikken</a><button class="theme" id="theme" type="button"></button></div>
+</nav>
+
+<div class="hero">
+  <div>
+    <h1>Hiku<span>.</span><svg class="arc" viewBox="0 0 120 90" aria-hidden="true"><path d="M10 80 Q60 -10 110 80" fill="none" stroke="var(--guide)" stroke-width="5" stroke-linecap="round" stroke-dasharray="9 11"/><circle cx="110" cy="80" r="7" fill="var(--ink)"/></svg></h1>
+    <p class="tagline">Hiku er et roligt talspil for dig, der kan lide sudoku: ren logik, intet gætteri.</p>
+    <p class="rule">Tallet siger, hvor langt det springer. Lander det på et andet, trækkes de fra hinanden. Få alle tallene til at forsvinde.</p>
+    <div class="ctas">
+      <a class="btn primary" href="#spill">Spil dagens brætter ↓</a>
+      <a class="btn ghost" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-da&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Hent til iPhone</a>
+    </div>
+  </div>
+  <div class="game" id="spill">
+    <h2>Dagens Hiku</h2>
+    <p>De samme fire brætter for alle, hver dag. Nye ved midnat.</p>
+    <div data-hiku data-lang="da"></div>
+  </div>
+</div>
+</div>
+
+<section id="appen"><div class="wrap two">
+  <div>
+    <h2>Appen til iPhone</h2>
+    <p>Kan du lide sudoku? Hiku er ren logik med én regel: tallet siger, hvor langt det springer. Fire nye brætter hver dag, fra let til ekspert.</p>
+    <ul class="bullets"><li>Dagens Hiku: fire nye brætter hver dag, fra let til ekspert – de samme for alle</li><li>50 baner, alle gratis, med tre øvelsesbaner, der lærer dig tricksene</li><li>Let, Middel, Svær og Ekspert</li><li>Alle baner kan løses – du skal bare finde rækkefølgen</li><li>Tre stjerner, hvis du klarer det uden at fortryde</li><li>Indstillinger for tip, påmindelse, farver og lyst eller mørkt</li><li>Ingen reklamer, intet tidspres, ingen konto. Virker uden net.</li></ul>
+    <p>I appen er der 50 baner ud over Dagens Hiku, og de første lærer dig tricksene ét ad gangen.</p>
+    <p><a class="btn primary" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-da&amp;mt=8">Hent til iPhone</a></p>
+  </div>
+  <div class="shots"><img src="../img/da/0-hjem.jpg" alt="Forsiden med Dagens Hiku" width="480" height="1043" loading="lazy"><img src="../img/da/1-regel.jpg" alt="Et bræt med buerne, der viser, hvor tallet kan springe" width="480" height="1043" loading="lazy"><img src="../img/da/5-morkt.jpg" alt="Mørk tilstand" width="480" height="1043" loading="lazy"></div>
+</div></section>
+
+<section id="slik"><div class="wrap">
+  <h2>Sådan springer du</h2>
+  <p>Et tal springer lige så mange felter, som det siger, vandret eller lodret. Et 1-tal når naboen, et 3-tal når tre felter væk. Det springer over alt imellem, men skal lande på et andet tal.</p><p>Det mindste trækkes fra det største, og resten bliver, hvor du landede. Ens tal forsvinder begge to. Når et tal bliver mindre, bliver springet kortere.</p><p>Alle baner kan løses. Den forkerte rækkefølge kan efterlade tal, der ikke kan nå hinanden. Fortryd frit og prøv en anden vej.</p><p>Løser du banen uden at fortryde, får du tre stjerner. Med en eller to fortrydelser får du to, ellers én. At starte forfra tæller som én fortrydelse.</p>
+</div></section>
+
+<section><div class="wrap cards">
+  <div class="card" id="aviser"><span id="daglig"></span>
+    <h2>For medier og websites</h2>
+    <p>Dagens Hiku kan indlejres gratis på et netmedie eller website med to linjer kode. Ingen cookies, ingen sporing, og spillet findes på seks sprog.</p>
+    <p><a href="../daily/embed-da.html">Sådan indlejrer du det →</a><br><a href="../daily/embed-da.html#prov">Prøv indstillingerne →</a></p>
+  </div>
+  <div class="card" id="matematikk">
+    <h2>Matematikken bag Hiku</h2>
+    <p>Hvorfor kan nogle brætter ikke løses, og hvor langt frem skal du se på et ekspertbræt? Artiklen viser, at summens paritet aldrig ændrer sig, at brættet deler sig i grupper, der aldrig mødes igen, og at tallene i hver gruppe skal kunne deles i to bunker med samme sum. Om spillet er NP-komplet, er stadig et åbent spørgsmål.</p>
+    <p><a href="../hiku-matematikk.pdf">Læs artiklen (engelsk, PDF) →</a></p>
+  </div>
+</div></section>
+
+<section id="navnet"><div class="wrap">
+  <h2>Om navnet</h2>
+  <p>Hiku (引く) er japansk og betyder ”at trække”. Det er også ordet for minus: 5 引く 2 は 3 betyder ”fem minus to er tre”.</p><p>Tegnet 引 består af 弓, en bue, og 丨, en streg: en buestreng, der trækkes. Det er den samme bue, du ser, når et tal springer.</p>
+</div></section>
+
+<section id="personvern"><div class="wrap">
+  <h2>Privatliv</h2>
+  <p><strong>Hiku indsamler ingen personoplysninger.</strong> Appen har ingen konto og ingen reklamer, og den sporer dig ikke på tværs af apps eller websites.</p><p>Hvilke baner du har løst, dine stjerner og Dagens Hiku gemmes kun på din egen telefon. Widgetten læser de samme tal der. Alt slettes, hvis du sletter appen.</p><p>Fra version 1.2 sender appen nogle få anonyme milepæle, så vi kan se, hvor langt spillerne når: når du har løst 1, 9, 10, 20, 30, 40 eller 50 baner (og 100, 150 og 200), når du løser et bræt i Dagens Hiku og på hvilket niveau, og når din stime med Dagens Hiku når 3, 7, 14, 30 dage eller mere. Milepælene sendes til <a href="https://telemetrydeck.com/privacy">TelemetryDeck</a>, en europæisk analysetjeneste bygget til privatliv. De indeholder intet navn, ingen e-mail, ingen placering eller andet, der kan kobles til dig; installationen får et tilfældigt nummer, der laves om til en envejskode, før det sendes. Vi bruger kun tallene til at gøre spillet bedre.</p><p>Dagens Hiku i browseren sætter ingen cookies og sender ingen spildata. Dine resultater gemmes kun i din browser.</p>
+  <h2 id="support" style="margin-top:36px">Support</h2>
+  <p>Har du spørgsmål, har du fundet en fejl, eller sidder du fast på et bræt? Skriv til <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
+  
+</div></section>
+
+<div class="wrap">
+<footer>
+  <span>Lavet i Norge af Espen Schulstad.</span>
+  <nav aria-label="Sprog"><a href="../" hreflang="nb" lang="nb">Norsk</a> · <a href="../en/" hreflang="en" lang="en">English</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a> · <a href="../da/" hreflang="da" lang="da" aria-current="page">Dansk</a> · <a href="../fi/" hreflang="fi" lang="fi">Suomi</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a></nav>
+</footer>
+</div>
+<script>
+// Light or dark: automatic by default, or the reader's own choice, remembered in this browser. The game follows.
+(function () {
+  var names = {auto: 'Automatisk', light: 'Lyst', dark: 'Mørkt'}, order = ['auto', 'light', 'dark'];
+  var button = document.getElementById('theme'), game = document.querySelector('[data-hiku]');
+  var choice = 'auto';
+  try { choice = localStorage.getItem('hiku:site-theme') || 'auto'; } catch (e) {}
+  function apply(remount) {
+    if (choice === 'auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = choice;
+    button.textContent = (choice === 'dark' ? '☾ ' : choice === 'light' ? '☀ ' : '◐ ') + names[choice];
+    button.setAttribute('aria-label', 'Lyst eller mørkt: ' + names[choice]);
+    if (choice === 'auto') delete game.dataset.theme; else game.dataset.theme = choice;
+    if (remount && window.Hiku) { game.innerHTML = ''; delete game.dataset.hikuMounted; window.Hiku.mount(); }
+  }
+  button.addEventListener('click', function () {
+    choice = order[(order.indexOf(choice) + 1) % order.length];
+    try { localStorage.setItem('hiku:site-theme', choice); } catch (e) {}
+    apply(true);
+  });
+  apply(false);
+})();
+</script>
+<script src="../daily/embed.js" async></script>
+</body>
+</html>
