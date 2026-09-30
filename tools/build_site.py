@@ -23,6 +23,7 @@ TITLE = {"nb": "et rolig tallspill", "en": "a calm number puzzle", "sv": "ett lu
 
 UI = {
 "nb": dict(
+  skip="Hopp til innholdet", nav_label="Meny", shots_label="Skjermbilder fra appen",
   theme_auto="Automatisk", theme_light="Lys", theme_dark="Mørk", theme_label="Lys eller mørk",
   description="Hiku er et rolig tallspill: tallet sier hvor langt det hopper. Fire nye brett hver dag, i nettleseren og i appen for iPhone.",
   nav_play="Spill", nav_app="Appen", nav_news="For aviser", nav_math="Matematikken",
@@ -41,6 +42,7 @@ UI = {
   support_title="Support", support_text="Har du spørsmål, har du funnet en feil, eller sitter du fast på et brett? Send en e-post til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Språk", made="Laget i Norge av Espen Schulstad."),
 "en": dict(
+  skip="Skip to content", nav_label="Menu", shots_label="Screenshots of the app",
   theme_auto="Automatic", theme_light="Light", theme_dark="Dark", theme_label="Light or dark",
   description="Hiku is a calm number puzzle: the number says how far it jumps. Four new boards every day, in the browser and in the iPhone app.",
   nav_play="Play", nav_app="The app", nav_news="For publishers", nav_math="The maths",
@@ -59,6 +61,7 @@ UI = {
   support_title="Support", support_text="Questions, found a bug, or stuck on a board? Email <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Language", made="Made in Norway by Espen Schulstad."),
 "sv": dict(
+  skip="Hoppa till innehållet", nav_label="Meny", shots_label="Skärmbilder från appen",
   theme_auto="Automatiskt", theme_light="Ljust", theme_dark="Mörkt", theme_label="Ljust eller mörkt",
   description="Hiku är ett lugnt sifferspel: talet säger hur långt det hoppar. Fyra nya bräden varje dag, i webbläsaren och i appen för iPhone.",
   nav_play="Spela", nav_app="Appen", nav_news="För tidningar", nav_math="Matematiken",
@@ -77,6 +80,7 @@ UI = {
   support_title="Support", support_text="Har du frågor, har du hittat ett fel, eller sitter du fast på ett bräde? Skicka e-post till <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Språk", made="Gjort i Norge av Espen Schulstad."),
 "da": dict(
+  skip="Spring til indholdet", nav_label="Menu", shots_label="Skærmbilleder fra appen",
   theme_auto="Automatisk", theme_light="Lyst", theme_dark="Mørkt", theme_label="Lyst eller mørkt",
   description="Hiku er et roligt talspil: tallet siger, hvor langt det springer. Fire nye brætter hver dag, i browseren og i appen til iPhone.",
   nav_play="Spil", nav_app="Appen", nav_news="For medier", nav_math="Matematikken",
@@ -95,6 +99,7 @@ UI = {
   support_title="Support", support_text="Har du spørgsmål, har du fundet en fejl, eller sidder du fast på et bræt? Skriv til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Sprog", made="Lavet i Norge af Espen Schulstad."),
 "fi": dict(
+  skip="Siirry sisältöön", nav_label="Valikko", shots_label="Kuvakaappauksia sovelluksesta",
   theme_auto="Automaattinen", theme_light="Vaalea", theme_dark="Tumma", theme_label="Vaalea vai tumma",
   description="Hiku on rauhallinen numeropeli: luku kertoo, kuinka pitkälle se hyppää. Neljä uutta lautaa joka päivä selaimessa ja iPhone-sovelluksessa.",
   nav_play="Pelaa", nav_app="Sovellus", nav_news="Medioille", nav_math="Matematiikka",
@@ -113,6 +118,7 @@ UI = {
   support_title="Tuki", support_text="Kysyttävää, löysitkö virheen, vai oletko jumissa laudalla? Lähetä sähköpostia osoitteeseen <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Kieli", made="Tehty Norjassa, tekijänä Espen Schulstad."),
 "de": dict(
+  skip="Zum Inhalt springen", nav_label="Menü", shots_label="Bildschirmfotos der App",
   theme_auto="Automatisch", theme_light="Hell", theme_dark="Dunkel", theme_label="Hell oder dunkel",
   description="Hiku ist ein ruhiges Zahlenrätsel: Die Zahl sagt, wie weit sie springt. Jeden Tag vier neue Bretter, im Browser und in der App für iPhone.",
   nav_play="Spielen", nav_app="Die App", nav_news="Für Verlage", nav_math="Die Mathematik",

@@ -25,6 +25,7 @@ a{color:var(--accent)}
 .lead{font-size:19px;color:var(--ink);margin-top:20px}
 .snippet{margin:12px 0;background:var(--code);border-radius:12px;overflow:hidden}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 0 18px;font-size:13px;color:var(--muted)}
+pre:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
 pre{padding:10px 18px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:0;color:var(--ink)}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 p code,li code,td code{background:var(--code);border-radius:5px;padding:1px 5px}
@@ -63,8 +64,8 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <li>{{step2}}</li>
 </ol>
 <div class="snippet">
-<div class="bar"><span>{{html_label}}</span><button class="copy" data-copy="code-basic" aria-describedby="copied">{{copy}}</button></div>
-<pre><code id="code-basic">&lt;div data-hiku data-lang="{{lang}}"&gt;&lt;/div&gt;
+<div class="bar"><span id="code-basic-label">{{html_label}}</span><button class="copy" data-copy="code-basic" aria-describedby="copied">{{copy}}</button></div>
+<pre tabindex="0" aria-labelledby="code-basic-label"><code id="code-basic">&lt;div data-hiku data-lang="{{lang}}"&gt;&lt;/div&gt;
 {{host_code}}</code></pre>
 </div>
 <p>{{once}}</p>
@@ -93,8 +94,8 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </form>
 <div class="stage" id="stage"><div id="preview"></div></div>
 <div class="snippet">
-<div class="bar"><span id="code-label">{{code}}</span><button class="copy" data-copy="code-custom" aria-describedby="copied">{{copy}}</button></div>
-<pre><code id="code-custom"></code></pre>
+<div class="bar"><span id="code-custom-label">{{code}}</span><button class="copy" data-copy="code-custom" aria-describedby="copied">{{copy}}</button></div>
+<pre tabindex="0" aria-labelledby="code-custom-label"><code id="code-custom"></code></pre>
 </div>
 
 <h2>{{options}}</h2>
@@ -110,16 +111,16 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </div>
 <p>{{example}}</p>
 <div class="snippet">
-<div class="bar"><span>{{html_label}}</span><button class="copy" data-copy="code-options" aria-describedby="copied">{{copy}}</button></div>
-<pre><code id="code-options">&lt;div data-hiku data-lang="{{lang}}" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
+<div class="bar"><span id="code-options-label">{{html_label}}</span><button class="copy" data-copy="code-options" aria-describedby="copied">{{copy}}</button></div>
+<pre tabindex="0" aria-labelledby="code-options-label"><code id="code-options">&lt;div data-hiku data-lang="{{lang}}" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
 {{host_code}}</code></pre>
 </div>
 
 <h3>{{noscript}}</h3>
 <p>{{noscript_lead}}</p>
 <div class="snippet">
-<div class="bar"><span>{{html_noscript}}</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">{{copy}}</button></div>
-<pre><code id="code-iframe">&lt;iframe src="{{base}}?lang={{lang}}"
+<div class="bar"><span id="code-iframe-label">{{html_noscript}}</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">{{copy}}</button></div>
+<pre tabindex="0" aria-labelledby="code-iframe-label"><code id="code-iframe">&lt;iframe src="{{base}}?lang={{lang}}"
   title="{{game_title}}" loading="lazy"
   style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
 </div>
@@ -140,8 +141,8 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <h3>Content Security Policy</h3>
 <p>{{csp_lead}}</p>
 <div class="snippet">
-<div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">{{copy}}</button></div>
-<pre><code id="code-csp">script-src {{host}};
+<div class="bar"><span id="code-csp-label">CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">{{copy}}</button></div>
+<pre tabindex="0" aria-labelledby="code-csp-label"><code id="code-csp">script-src {{host}};
 frame-src {{host}};</code></pre>
 </div>
 <p>{{csp_after}}</p>
@@ -187,7 +188,7 @@ frame-src {{host}};</code></pre>
       if (window.Hiku) window.Hiku.mount();
     }
     document.getElementById('code-custom').innerHTML = esc(code);
-    document.getElementById('code-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
+    document.getElementById('code-custom-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
   }
   form.addEventListener('change', update);
   update();

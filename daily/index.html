@@ -18,6 +18,8 @@ h1{font:400 30px/1.1 Georgia,serif;margin:0;letter-spacing:-.5px}
 h1 span{color:var(--gold-bright)}
 .day{color:var(--muted);font-size:14px}
 .rule{color:var(--muted);font-size:14px;margin:6px 0 14px}
+.compact header,.compact .rule{display:none}
+.compact main{padding-top:4px}
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
 .tabs button{font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--cell);border:0;border-radius:10px;padding:8px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
 .tabs button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
@@ -48,6 +50,7 @@ footer a{color:var(--accent)}
 .more{margin-top:8px;font-size:14px;color:var(--muted)}
 .more a{color:var(--accent);font-weight:600}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
@@ -57,6 +60,7 @@ footer a{color:var(--accent)}
   <div class="tabs" id="tabs" role="group" aria-label=""></div>
   <div class="board" id="board" role="group"></div>
   <div class="status" id="status" aria-live="polite"></div>
+  <p class="sr" id="said" aria-live="assertive"></p>
   <div class="controls" id="controls"></div>
   <footer><span id="made"></span><a id="app" class="app" target="_blank" rel="noopener"></a></footer>
 </main>
@@ -66,11 +70,14 @@ footer a{color:var(--accent)}
   // ---- Settings from the address: ?lang=nb|en|sv|da|fi|de, ?theme=dark|light, ?level=easy|medium|hard|expert
   const params = new URLSearchParams(location.search);
   if (params.get('theme') === 'dark' || params.get('theme') === 'light') document.documentElement.dataset.theme = params.get('theme');
+  // ?compact=1: no title or rule, for a page that already shows them.
+  if (params.get('compact') === '1') document.documentElement.classList.add('compact');
 
   // The languages of the app, with its own words where it has them. Norwegian unless another is asked for;
   // "no" and "nn" count as Norwegian, and a region such as sv-SE is ignored.
   const LANGS = {
-    nb: {locale: 'nb-NO', title: 'Dagens Hiku', rule: 'Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.',
+    nb: {moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Angret.',
+         locale: 'nb-NO', title: 'Dagens Hiku', rule: 'Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.',
          tiers: {easy: 'Lett', medium: 'Middels', hard: 'Vanskelig', expert: 'Ekspert'}, tabs: 'Vanskelighetsgrad',
          start: 'Dra et tall dit det skal hoppe, eller trykk på tallet og så på målet.',
          pick: 'Trykk på et av de markerte tallene.', noMove: v => `${v} når ikke noe tall herfra. Velg et annet.`,
@@ -80,7 +87,8 @@ footer a{color:var(--accent)}
          made: 'Nye brett hver dag, kom tilbake i morgen!', app: 'Last ned Hiku for iPhone',
          more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = borte`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    en: {locale: 'en-GB', title: 'Daily Hiku', rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
+    en: {moved: (a, b, from, to, eq) => `${a} from ${from} onto ${b} on ${to}: ${eq}.`, undone: 'Undone.',
+         locale: 'en-GB', title: 'Daily Hiku', rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
          tiers: {easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert'}, tabs: 'Difficulty',
          start: 'Drag a number to where it jumps, or tap the number and then its target.',
          pick: 'Tap one of the marked numbers.', noMove: v => `${v} can’t reach any number from here. Pick another.`,
@@ -90,7 +98,8 @@ footer a{color:var(--accent)}
          made: 'New boards every day, come back tomorrow!', app: 'Get Hiku for iPhone',
          more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store',
          gone: (a, b) => `${a} − ${b} = gone`, tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`},
-    sv: {locale: 'sv-SE', title: 'Dagens Hiku', rule: 'Talet säger hur långt det hoppar. Landar det på ett annat dras de från varandra. Få alla tal att försvinna.',
+    sv: {moved: (a, b, from, to, eq) => `${a} från ${from} till ${b} på ${to}: ${eq}.`, undone: 'Ångrat.',
+         locale: 'sv-SE', title: 'Dagens Hiku', rule: 'Talet säger hur långt det hoppar. Landar det på ett annat dras de från varandra. Få alla tal att försvinna.',
          tiers: {easy: 'Lätt', medium: 'Medel', hard: 'Svår', expert: 'Expert'}, tabs: 'Svårighetsgrad',
          start: 'Dra ett tal dit det ska hoppa, eller tryck på talet och sedan på målet.',
          pick: 'Tryck på ett av de markerade talen.', noMove: v => `${v} når inget tal härifrån. Välj ett annat.`,
@@ -100,7 +109,8 @@ footer a{color:var(--accent)}
          made: 'Nya bräden varje dag, kom tillbaka i morgon!', app: 'Ladda ner Hiku för iPhone',
          more: 'Vill du ha mer? Appen har 50 banor till, och de första lär dig knepen:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = borta`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    da: {locale: 'da-DK', title: 'Dagens Hiku', rule: 'Tallet siger, hvor langt det springer. Lander det på et andet, trækkes de fra hinanden. Få alle tallene til at forsvinde.',
+    da: {moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Fortrudt.',
+         locale: 'da-DK', title: 'Dagens Hiku', rule: 'Tallet siger, hvor langt det springer. Lander det på et andet, trækkes de fra hinanden. Få alle tallene til at forsvinde.',
          tiers: {easy: 'Let', medium: 'Middel', hard: 'Svær', expert: 'Ekspert'}, tabs: 'Sværhedsgrad',
          start: 'Træk et tal derhen, hvor det skal springe, eller tryk på tallet og så på målet.',
          pick: 'Tryk på et af de markerede tal.', noMove: v => `${v} kan ikke nå et tal herfra. Vælg et andet.`,
@@ -110,7 +120,8 @@ footer a{color:var(--accent)}
          made: 'Nye brætter hver dag, kom tilbage i morgen!', app: 'Hent Hiku til iPhone',
          more: 'Vil du have mere? Appen har 50 baner mere, og de første lærer dig tricksene:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = væk`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    fi: {locale: 'fi-FI', title: 'Päivän Hiku', rule: 'Luku kertoo, kuinka pitkälle se hyppää. Kun se laskeutuu toiseen, ne vähennetään toisistaan. Saa kaikki luvut katoamaan.',
+    fi: {moved: (a, b, from, to, eq) => `${a} ruudusta ${from} lukuun ${b} ruudussa ${to}: ${eq}.`, undone: 'Peruttu.',
+         locale: 'fi-FI', title: 'Päivän Hiku', rule: 'Luku kertoo, kuinka pitkälle se hyppää. Kun se laskeutuu toiseen, ne vähennetään toisistaan. Saa kaikki luvut katoamaan.',
          tiers: {easy: 'Helppo', medium: 'Keskitaso', hard: 'Vaikea', expert: 'Asiantuntija'}, tabs: 'Vaikeustaso',
          start: 'Vedä luku sinne, minne se hyppää, tai napauta lukua ja sitten kohdetta.',
          pick: 'Napauta yhtä merkityistä luvuista.', noMove: v => `Luku ${v} ei ylety täältä mihinkään lukuun. Valitse toinen.`,
@@ -120,7 +131,8 @@ footer a{color:var(--accent)}
          made: 'Uudet laudat joka päivä, tule takaisin huomenna!', app: 'Lataa Hiku iPhonelle',
          more: 'Haluatko lisää? Sovelluksessa on 50 tasoa lisää, ja ensimmäiset opettavat niksit:', moreLink: 'Hiku App Storessa',
          gone: (a, b) => `${a} − ${b} = poissa`, tile: (v, sq) => `${v}, ruutu ${sq}`, empty: sq => `${sq}, tyhjä`},
-    de: {locale: 'de-DE', title: 'Hiku des Tages', rule: 'Die Zahl sagt, wie weit sie springt. Landet sie auf einer anderen, wird abgezogen. Lass alle Zahlen verschwinden.',
+    de: {moved: (a, b, from, to, eq) => `${a} von ${from} auf ${b} auf ${to}: ${eq}.`, undone: 'Zurückgenommen.',
+         locale: 'de-DE', title: 'Hiku des Tages', rule: 'Die Zahl sagt, wie weit sie springt. Landet sie auf einer anderen, wird abgezogen. Lass alle Zahlen verschwinden.',
          tiers: {easy: 'Leicht', medium: 'Mittel', hard: 'Schwer', expert: 'Experte'}, tabs: 'Schwierigkeitsgrad',
          start: 'Zieh eine Zahl dorthin, wohin sie springt, oder tippe erst die Zahl und dann das Ziel an.',
          pick: 'Tippe eine der markierten Zahlen an.', noMove: v => `Die ${v} erreicht von hier keine Zahl. Wähle eine andere.`,
@@ -282,6 +294,7 @@ footer a{color:var(--accent)}
     history.push(cells);
     lastMove = {from, to, a: cells[from], b: cells[to]};
     cells = moved(cells, from, to);
+    say(T.moved(lastMove.a, lastMove.b, squareName(from), squareName(to), equation(lastMove)));
     selected = null;
     if (isClear(cells)) {
       const best = store.get(resultKey(tier));
@@ -306,6 +319,7 @@ footer a{color:var(--accent)}
   function undo() {
     if (!history.length) return;
     cells = history.pop(); undos++; selected = null; lost = false; lastMove = null; checkToken++;
+    say(T.undone);
     render();
   }
   function restart() {
@@ -388,10 +402,15 @@ footer a{color:var(--accent)}
   }
   const pattern = len => { const parts = []; for (let d = 0; d < len; d += 11) parts.push(Math.min(5, len - d), 6); return parts.join(' '); };
 
+  const equation = m => m.a === m.b ? T.gone(m.a, m.b) : `${Math.max(m.a, m.b)} − ${Math.min(m.a, m.b)} = ${Math.abs(m.a - m.b)}`;
+  // Spoken right away, ahead of the status line, so a move is heard as it is made.
+  function say(text) { const el = document.getElementById('said'); el.textContent = ''; setTimeout(() => { el.textContent = text; }, 30); }
+
   function showSum(m, L) {
     const p = L.at(m.to), eq = document.createElement('div');
     eq.className = 'eq';
-    eq.textContent = m.a === m.b ? T.gone(m.a, m.b) : `${Math.max(m.a, m.b)} − ${Math.min(m.a, m.b)} = ${Math.abs(m.a - m.b)}`;
+    eq.textContent = equation(m);
+    eq.setAttribute('aria-hidden', 'true');
     Object.assign(eq.style, {left: p.x + L.side / 2 + 'px', top: Math.max(34, p.y - 6) + 'px'});
     boardEl.appendChild(eq);
     const shown = m;
@@ -419,7 +438,7 @@ footer a{color:var(--accent)}
       const box = document.createElement('div');
       box.className = 'done';
       box.style.width = '100%';
-      box.innerHTML = `<div class="stars" aria-label="${s}/3">${'★'.repeat(s)}${'☆'.repeat(3 - s)}</div><div><strong>${T.solved[s]}</strong> ${T.undos(undos)}</div>` +
+      box.innerHTML = `<div class="stars" role="img" aria-label="${s}/3 ★">${'★'.repeat(s)}${'☆'.repeat(3 - s)}</div><div><strong>${T.solved[s]}</strong> ${T.undos(undos)}</div>` +
         `<div class="more">${T.more} <a href="${APP_URL}" target="_blank" rel="noopener">${T.moreLink}</a></div>`;
       statusEl.appendChild(box);
     } else if (lost) {

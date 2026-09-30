@@ -30,6 +30,7 @@ a{color:var(--accent)}
 .lead{font-size:19px;color:var(--ink);margin-top:20px}
 .snippet{margin:12px 0;background:var(--code);border-radius:12px;overflow:hidden}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 0 18px;font-size:13px;color:var(--muted)}
+pre:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
 pre{padding:10px 18px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:0;color:var(--ink)}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 p code,li code,td code{background:var(--code);border-radius:5px;padding:1px 5px}
@@ -68,8 +69,8 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <li>Veröffentlichen. Das Spiel lädt die Bretter des Tages selbst und passt seine Höhe an.</li>
 </ol>
 <div class="snippet">
-<div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopieren</button></div>
-<pre><code id="code-basic">&lt;div data-hiku data-lang="de"&gt;&lt;/div&gt;
+<div class="bar"><span id="code-basic-label">HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopieren</button></div>
+<pre tabindex="0" aria-labelledby="code-basic-label"><code id="code-basic">&lt;div data-hiku data-lang="de"&gt;&lt;/div&gt;
 &lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 <p>Das Skript muss nur einmal pro Seite stehen, auch wenn die Seite mehrere Spiele enthält.</p>
@@ -98,8 +99,8 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </form>
 <div class="stage" id="stage"><div id="preview"></div></div>
 <div class="snippet">
-<div class="bar"><span id="code-label">Code</span><button class="copy" data-copy="code-custom" aria-describedby="copied">Kopieren</button></div>
-<pre><code id="code-custom"></code></pre>
+<div class="bar"><span id="code-custom-label">Code</span><button class="copy" data-copy="code-custom" aria-describedby="copied">Kopieren</button></div>
+<pre tabindex="0" aria-labelledby="code-custom-label"><code id="code-custom"></code></pre>
 </div>
 
 <h2>Optionen</h2>
@@ -115,16 +116,16 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </div>
 <p>Beispiel, immer hell und mit Mittel zuerst:</p>
 <div class="snippet">
-<div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Kopieren</button></div>
-<pre><code id="code-options">&lt;div data-hiku data-lang="de" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
+<div class="bar"><span id="code-options-label">HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Kopieren</button></div>
+<pre tabindex="0" aria-labelledby="code-options-label"><code id="code-options">&lt;div data-hiku data-lang="de" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
 &lt;script src="https://hikupuzzle.com/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 
 <h3>Ohne Skript</h3>
 <p>Erlaubt Ihr Redaktionssystem keine Skripte, binden Sie das Spiel als einfaches <code>iframe</code> ein. Die Höhe passt sich dann nicht selbst an, also legen Sie sie fest. 860 Pixel reichen für das ganze Spiel, auch mit gelöstem Brett; das Spiel ist nie breiter als 480 Pixel.</p>
 <div class="snippet">
-<div class="bar"><span>HTML ohne Skript</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Kopieren</button></div>
-<pre><code id="code-iframe">&lt;iframe src="https://hikupuzzle.com/daily/?lang=de"
+<div class="bar"><span id="code-iframe-label">HTML ohne Skript</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Kopieren</button></div>
+<pre tabindex="0" aria-labelledby="code-iframe-label"><code id="code-iframe">&lt;iframe src="https://hikupuzzle.com/daily/?lang=de"
   title="Hiku des Tages" loading="lazy"
   style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
 </div>
@@ -145,8 +146,8 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <h3>Content Security Policy</h3>
 <p>Mit dem Ladeskript werden beide benötigt, mit reinem iframe nur die zweite:</p>
 <div class="snippet">
-<div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Kopieren</button></div>
-<pre><code id="code-csp">script-src https://hikupuzzle.com;
+<div class="bar"><span id="code-csp-label">CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Kopieren</button></div>
+<pre tabindex="0" aria-labelledby="code-csp-label"><code id="code-csp">script-src https://hikupuzzle.com;
 frame-src https://hikupuzzle.com;</code></pre>
 </div>
 <p>Ergänzen Sie Ihre bestehenden Direktiven. Das Spiel im Rahmen lädt Dateien von derselben Adresse und das Zählskript von <code>static.cloudflareinsights.com</code>. Das geschieht im Rahmen und berührt Ihre Richtlinie nicht.</p>
@@ -192,7 +193,7 @@ frame-src https://hikupuzzle.com;</code></pre>
       if (window.Hiku) window.Hiku.mount();
     }
     document.getElementById('code-custom').innerHTML = esc(code);
-    document.getElementById('code-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
+    document.getElementById('code-custom-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
   }
   form.addEventListener('change', update);
   update();

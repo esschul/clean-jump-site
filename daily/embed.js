@@ -5,7 +5,7 @@
 //
 // Options on the div: data-lang="nb", "en", "sv", "da", "fi" or "de" (without it, the language of the page around
 // it, else Norwegian), data-theme="light" or "dark", data-level="easy|medium|hard|expert", and data-align="left"
-// to put the game at the left instead of in the middle.
+// to put the game at the left instead of in the middle, and data-compact to leave out the game's own title and rule.
 // The game runs in its own frame and sets no cookies; no game data or results are sent to us, they stay in the
 // reader's browser. This script only creates the frame and sets its height.
 (function () {
@@ -19,6 +19,7 @@
     var lang = host.dataset.lang || document.documentElement.lang || 'nb';
     query.push('lang=' + encodeURIComponent(lang));
     ['theme', 'level'].forEach(function (k) { if (host.dataset[k]) query.push(k + '=' + encodeURIComponent(host.dataset[k])); });
+    if (host.dataset.compact === 'true' || host.dataset.compact === '') query.push('compact=1');
     var frame = document.createElement('iframe');
     frame.src = base + (query.length ? '?' + query.join('&') : '');
     var titles = {en: 'Daily Hiku', fi: 'Päivän Hiku', de: 'Hiku des Tages'};
