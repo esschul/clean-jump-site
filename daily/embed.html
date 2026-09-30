@@ -132,7 +132,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 
 <h2>Personvern og drift</h2>
 <ul>
-  <li><strong>Ingen informasjonskapsler og ingen sporing.</strong> Ingen spilldata eller resultater sendes til oss. Resultater og stjerner lagres bare i leserens egen nettleser. Lenken til App Store inneholder navnet på nettstedet spillet står på, slik at vi i App Store Connect kan se samlet hvor mange som kom fra hver side. Den informasjonen går bare til Apple, og bare hvis leseren trykker på lenken. Vertstjenesten mottar vanlige tekniske forespørsler når filene lastes, som for alle nettsider.</li>
+  <li><strong>Ingen informasjonskapsler og ingen sporing.</strong> Ingen spilldata eller resultater sendes til oss. Resultater og stjerner lagres bare i leserens egen nettleser. Lenken til App Store inneholder navnet på nettstedet spillet står på, slik at vi i App Store Connect kan se samlet hvor mange som kom fra hver side. Den informasjonen går bare til Apple, og bare hvis leseren trykker på lenken. Vi teller visninger med Cloudflare Web Analytics, uten informasjonskapsler og uten å følge enkeltpersoner: vi ser hvor mange som åpnet spillet og på hvilket nettsted, ikke hvem. Vertstjenesten mottar ellers vanlige tekniske forespørsler når filene lastes, som for alle nettsider.</li>
   <li><strong>Isolert spill.</strong> Selve spillet kjører i en <code>iframe</code> fra en annen adresse og kan ikke lese eller påvirke siden rundt seg. Det lille innlastingsskriptet, <code>embed.js</code>, kjører på avisens side som andre eksterne skript: det oppretter rammen og tilpasser høyden, og gjør ikke noe annet. Kildekoden er kort og kan leses på <a href="embed.js">embed.js</a>. Redaksjoner som ikke tillater eksterne skript, bruker iframe-versjonen.</li>
   <li><strong>Lett.</strong> Første gang lastes rundt 70 kB komprimert. Rammen lastes først når leseren nærmer seg den.</li>
   <li><strong>Nye brett ved midnatt</strong> i leserens tidssone. Biblioteket rekker i tre år, og brettene er de samme som i appen.</li>
@@ -149,7 +149,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <pre><code id="code-csp">script-src https://hikupuzzle.com;
 frame-src https://hikupuzzle.com;</code></pre>
 </div>
-<p>Legg dem til i de eksisterende direktivene deres. Spillet i rammen henter bare filer fra samme adresse.</p>
+<p>Legg dem til i de eksisterende direktivene deres. Spillet i rammen henter filer fra samme adresse, og telleskriptet fra <code>static.cloudflareinsights.com</code>. Det skjer inne i rammen og berører ikke deres regler.</p>
 <h3>Stabilitet</h3>
 <ul>
   <li>Adressene <code>…/daily/embed.js</code> og <code>…/daily/</code>, og attributtene i tabellen over, blir stående. Nye valg legges til uten å endre de eksisterende.</li>

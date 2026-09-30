@@ -37,7 +37,7 @@ UI = {
   privacy=["<strong>Hiku samler ingen personopplysninger.</strong> Appen har ingen konto og ingen reklame, og den sporer deg ikke på tvers av apper eller nettsteder.",
            "Hvilke brett du har løst, stjernene dine og Dagens Hiku lagres bare på din egen telefon. Widgeten leser de samme tallene der. Alt slettes hvis du sletter appen.",
            "Fra versjon 1.2 sender appen noen få anonyme milepæler, slik at vi kan se hvor langt spillerne kommer: når du har løst 1, 9, 10, 20, 30, 40 eller 50 brett (og 100, 150 og 200), når du løser et brett i Dagens Hiku og på hvilket nivå, og når rekken din med Dagens Hiku når 3, 7, 14, 30 dager eller mer. Milepælene sendes til <a href=\"https://telemetrydeck.com/privacy\">TelemetryDeck</a>, en europeisk analysetjeneste laget for personvern. De inneholder ingen navn, e-post, posisjon eller annet som kan knyttes til deg; installasjonen får et tilfeldig nummer som gjøres om til en enveis-kode før det sendes. Vi bruker tallene bare til å gjøre spillet bedre.",
-           "Dagens Hiku i nettleseren setter ingen informasjonskapsler og sender ingen spilldata. Resultatene dine lagres bare i nettleseren din."],
+           "Dagens Hiku i nettleseren setter ingen informasjonskapsler og sender ingen spilldata. Resultatene dine lagres bare i nettleseren din. Nettsiden teller besøk med Cloudflare Web Analytics, som ikke bruker informasjonskapsler og ikke følger deg mellom nettsider: vi ser hvor mange som kom og fra hvilket nettsted, ikke hvem."],
   support_title="Support", support_text="Har du spørsmål, har du funnet en feil, eller sitter du fast på et brett? Send en e-post til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Språk", made="Laget i Norge av Espen Schulstad."),
 "en": dict(
@@ -55,7 +55,7 @@ UI = {
   privacy=["<strong>Hiku collects no personal data.</strong> There is no account and no advertising, and it does not track you across apps or websites.",
            "Your solved levels, your stars and your Daily Hiku results stay on your phone; the widget reads them there. Everything is deleted if you delete the app.",
            "From version 1.2 the app sends a few anonymous milestones so we can see how far players get: reaching 1, 9, 10, 20, 30, 40 or 50 cleared levels (and 100, 150, 200), solving a Daily Hiku board and its difficulty, and a Daily Hiku streak of 3, 7, 14, 30 days or more. They go to <a href=\"https://telemetrydeck.com/privacy\">TelemetryDeck</a>, a privacy-focused European analytics service, and contain nothing that identifies you: the install gets a random number that is hashed one way before it is sent. We use the numbers only to improve the game.",
-           "Daily Hiku in the browser sets no cookies and sends no game data. Your results stay in your browser."],
+           "Daily Hiku in the browser sets no cookies and sends no game data. Your results stay in your browser. The site counts visits with Cloudflare Web Analytics, which uses no cookies and does not follow you between sites: we see how many came and from which site, not who."],
   support_title="Support", support_text="Questions, found a bug, or stuck on a board? Email <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Language", made="Made in Norway by Espen Schulstad."),
 "sv": dict(
@@ -73,7 +73,7 @@ UI = {
   privacy=["<strong>Hiku samlar inga personuppgifter.</strong> Appen har inget konto och ingen reklam, och den spårar dig inte mellan appar eller webbplatser.",
            "Vilka banor du har löst, dina stjärnor och Dagens Hiku sparas bara på din egen telefon. Widgeten läser samma siffror där. Allt raderas om du tar bort appen.",
            "Från version 1.2 skickar appen några få anonyma milstolpar så att vi kan se hur långt spelarna kommer: när du har löst 1, 9, 10, 20, 30, 40 eller 50 banor (och 100, 150 och 200), när du löser ett bräde i Dagens Hiku och på vilken nivå, och när din svit med Dagens Hiku når 3, 7, 14, 30 dagar eller mer. Milstolparna skickas till <a href=\"https://telemetrydeck.com/privacy\">TelemetryDeck</a>, en europeisk analystjänst byggd för integritet. De innehåller inget namn, ingen e-post, ingen plats eller annat som kan kopplas till dig; installationen får ett slumpat nummer som görs om till en envägskod innan det skickas. Vi använder siffrorna bara för att göra spelet bättre.",
-           "Dagens Hiku i webbläsaren sätter inga kakor och skickar inga speldata. Dina resultat sparas bara i din webbläsare."],
+           "Dagens Hiku i webbläsaren sätter inga kakor och skickar inga speldata. Dina resultat sparas bara i din webbläsare. Webbplatsen räknar besök med Cloudflare Web Analytics, som inte använder kakor och inte följer dig mellan webbplatser: vi ser hur många som kom och från vilken webbplats, inte vem."],
   support_title="Support", support_text="Har du frågor, har du hittat ett fel, eller sitter du fast på ett bräde? Skicka e-post till <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Språk", made="Gjort i Norge av Espen Schulstad."),
 "da": dict(
@@ -91,7 +91,7 @@ UI = {
   privacy=["<strong>Hiku indsamler ingen personoplysninger.</strong> Appen har ingen konto og ingen reklamer, og den sporer dig ikke på tværs af apps eller websites.",
            "Hvilke baner du har løst, dine stjerner og Dagens Hiku gemmes kun på din egen telefon. Widgetten læser de samme tal der. Alt slettes, hvis du sletter appen.",
            "Fra version 1.2 sender appen nogle få anonyme milepæle, så vi kan se, hvor langt spillerne når: når du har løst 1, 9, 10, 20, 30, 40 eller 50 baner (og 100, 150 og 200), når du løser et bræt i Dagens Hiku og på hvilket niveau, og når din stime med Dagens Hiku når 3, 7, 14, 30 dage eller mere. Milepælene sendes til <a href=\"https://telemetrydeck.com/privacy\">TelemetryDeck</a>, en europæisk analysetjeneste bygget til privatliv. De indeholder intet navn, ingen e-mail, ingen placering eller andet, der kan kobles til dig; installationen får et tilfældigt nummer, der laves om til en envejskode, før det sendes. Vi bruger kun tallene til at gøre spillet bedre.",
-           "Dagens Hiku i browseren sætter ingen cookies og sender ingen spildata. Dine resultater gemmes kun i din browser."],
+           "Dagens Hiku i browseren sætter ingen cookies og sender ingen spildata. Dine resultater gemmes kun i din browser. Websitet tæller besøg med Cloudflare Web Analytics, som ikke bruger cookies og ikke følger dig mellem websites: vi ser, hvor mange der kom og fra hvilket website, ikke hvem."],
   support_title="Support", support_text="Har du spørgsmål, har du fundet en fejl, eller sidder du fast på et bræt? Skriv til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Sprog", made="Lavet i Norge af Espen Schulstad."),
 "fi": dict(
@@ -109,7 +109,7 @@ UI = {
   privacy=["<strong>Hiku ei kerää henkilötietoja.</strong> Sovelluksessa ei ole tiliä eikä mainoksia, eikä se seuraa sinua sovellusten tai verkkosivustojen välillä.",
            "Ratkaisemasi tasot, tähtesi ja Päivän Hikun tulokset tallentuvat vain omaan puhelimeesi. Widget lukee samat tiedot sieltä. Kaikki poistuu, jos poistat sovelluksen.",
            "Versiosta 1.2 alkaen sovellus lähettää muutaman nimettömän virstanpylvään, jotta näemme, kuinka pitkälle pelaajat etenevät: kun olet ratkaissut 1, 9, 10, 20, 30, 40 tai 50 tasoa (sekä 100, 150 ja 200), kun ratkaiset Päivän Hikun laudan ja millä tasolla, ja kun Päivän Hiku -putkesi saavuttaa 3, 7, 14, 30 päivää tai enemmän. Ne lähetetään <a href=\"https://telemetrydeck.com/privacy\">TelemetryDeckille</a>, tietosuojaa varten tehdylle eurooppalaiselle analytiikkapalvelulle. Niissä ei ole nimeä, sähköpostia, sijaintia tai muuta, joka voitaisiin yhdistää sinuun; asennus saa satunnaisen numeron, josta tehdään yksisuuntainen tiiviste ennen lähettämistä. Käytämme lukuja vain pelin parantamiseen.",
-           "Selaimen Päivän Hiku ei aseta evästeitä eikä lähetä pelitietoja. Tuloksesi tallentuvat vain selaimeesi."],
+           "Selaimen Päivän Hiku ei aseta evästeitä eikä lähetä pelitietoja. Tuloksesi tallentuvat vain selaimeesi. Sivusto laskee käynnit Cloudflare Web Analyticsilla, joka ei käytä evästeitä eikä seuraa sinua sivustolta toiselle: näemme, kuinka moni tuli ja miltä sivustolta, emme sitä, kuka."],
   support_title="Tuki", support_text="Kysyttävää, löysitkö virheen, vai oletko jumissa laudalla? Lähetä sähköpostia osoitteeseen <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Kieli", made="Tehty Norjassa, tekijänä Espen Schulstad."),
 "de": dict(
@@ -127,7 +127,7 @@ UI = {
   privacy=["<strong>Hiku erhebt keine personenbezogenen Daten.</strong> Die App hat kein Konto und keine Werbung und verfolgt dich nicht über Apps oder Websites hinweg.",
            "Welche Level du gelöst hast, deine Sterne und Hiku des Tages werden nur auf deinem Telefon gespeichert. Das Widget liest dieselben Daten dort. Alles wird gelöscht, wenn du die App löschst.",
            "Ab Version 1.2 sendet die App einige anonyme Meilensteine, damit wir sehen, wie weit Spieler kommen: wenn du 1, 9, 10, 20, 30, 40 oder 50 Level gelöst hast (und 100, 150 und 200), wenn du ein Brett von Hiku des Tages löst und auf welchem Level, und wenn deine Serie bei Hiku des Tages 3, 7, 14, 30 Tage oder mehr erreicht. Sie gehen an <a href=\"https://telemetrydeck.com/privacy\">TelemetryDeck</a>, einen europäischen, auf Datenschutz ausgelegten Analysedienst. Sie enthalten keinen Namen, keine E-Mail, keinen Standort und nichts, was sich dir zuordnen lässt; die Installation erhält eine Zufallsnummer, die vor dem Senden einweg-gehasht wird. Wir nutzen die Zahlen nur, um das Spiel zu verbessern.",
-           "Hiku des Tages im Browser setzt keine Cookies und sendet keine Spieldaten. Deine Ergebnisse bleiben in deinem Browser."],
+           "Hiku des Tages im Browser setzt keine Cookies und sendet keine Spieldaten. Deine Ergebnisse bleiben in deinem Browser. Die Website zählt Besuche mit Cloudflare Web Analytics, das keine Cookies nutzt und dich nicht über Websites hinweg verfolgt: Wir sehen, wie viele kamen und von welcher Website, nicht wer."],
   support_title="Support", support_text="Fragen, einen Fehler gefunden oder bei einem Brett festgesteckt? Schreib an <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Sprache", made="Gemacht in Norwegen von Espen Schulstad."),
 }

@@ -132,7 +132,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 
 <h2>Integritet och drift</h2>
 <ul>
-  <li><strong>Inga kakor och ingen spårning.</strong> Inga speldata eller resultat skickas till oss. Resultat och stjärnor sparas bara i läsarens egen webbläsare. Länken till App Store innehåller namnet på webbplatsen spelet finns på, så att vi i App Store Connect kan se hur många som kom från varje sida totalt. Bara Apple får den uppgiften, och bara om läsaren trycker på länken. Värdtjänsten tar emot vanliga tekniska förfrågningar när filerna laddas, som för alla webbsidor.</li>
+  <li><strong>Inga kakor och ingen spårning.</strong> Inga speldata eller resultat skickas till oss. Resultat och stjärnor sparas bara i läsarens egen webbläsare. Länken till App Store innehåller namnet på webbplatsen spelet finns på, så att vi i App Store Connect kan se hur många som kom från varje sida totalt. Bara Apple får den uppgiften, och bara om läsaren trycker på länken. Vi räknar visningar med Cloudflare Web Analytics, utan kakor och utan att följa enskilda personer: vi ser hur många som öppnade spelet och på vilken webbplats, inte vem. I övrigt tar värdtjänsten emot vanliga tekniska förfrågningar när filerna laddas, som för alla webbsidor.</li>
   <li><strong>Isolerat spel.</strong> Själva spelet körs i en <code>iframe</code> från en annan adress och kan inte läsa eller påverka sidan runt omkring. Det lilla laddningsskriptet, <code>embed.js</code>, körs på er sida som andra externa skript: det skapar ramen och anpassar höjden, och gör inget annat. Källkoden är kort och kan läsas på <a href="embed.js">embed.js</a>. Redaktioner som inte tillåter externa skript använder iframe-versionen.</li>
   <li><strong>Lätt.</strong> Första gången laddas cirka 70 kB komprimerat. Ramen laddas först när läsaren närmar sig den.</li>
   <li><strong>Nya bräden vid midnatt</strong> i läsarens tidszon. Biblioteket räcker i tre år, och bräden är desamma som i appen.</li>
@@ -149,7 +149,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <pre><code id="code-csp">script-src https://hikupuzzle.com;
 frame-src https://hikupuzzle.com;</code></pre>
 </div>
-<p>Lägg till dem i era befintliga direktiv. Spelet i ramen hämtar bara filer från samma adress.</p>
+<p>Lägg till dem i era befintliga direktiv. Spelet i ramen hämtar filer från samma adress, och räkneskriptet från <code>static.cloudflareinsights.com</code>. Det sker inne i ramen och påverkar inte era regler.</p>
 <h3>Stabilitet</h3>
 <ul>
   <li>Adresserna <code>…/daily/embed.js</code> och <code>…/daily/</code>, och attributen i tabellen ovan, ligger kvar. Nya inställningar läggs till utan att ändra de befintliga.</li>
