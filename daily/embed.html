@@ -37,6 +37,12 @@ td{color:var(--muted)}
 .steps{padding-left:22px}
 .steps li{margin:6px 0}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.config{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px;margin:16px 0}
+.config label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;color:var(--ink)}
+.config select{font:inherit;font-weight:400;font-size:15px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--card);color:var(--ink)}
+.stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
+.stage.light{background:#ffffff}
+.stage.dark{background:#15161c}
 footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </style>
 </head>
@@ -59,9 +65,36 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </div>
 <p>Skriptet trenger bare å stå én gang per side, selv om du har flere spill på samme side.</p>
 
-<h2>Slik ser det ut</h2>
-<div class="preview">
-  <div data-hiku></div>
+<h2>Prøv og kopier</h2>
+<p>Velg innstillingene, se spillet endre seg, og kopier koden når dere er fornøyde.</p>
+<form class="config" id="config" onsubmit="return false">
+  <label>Språk
+    <select name="lang">
+      <option value="">Sidens eget språk</option>
+      <option value="nb">Norsk</option><option value="en">Engelsk</option><option value="sv">Svensk</option>
+      <option value="da">Dansk</option><option value="fi">Finsk</option><option value="de">Tysk</option>
+    </select>
+  </label>
+  <label>Farger
+    <select name="theme"><option value="">Følg leseren</option><option value="light">Alltid lyst</option><option value="dark">Alltid mørkt</option></select>
+  </label>
+  <label>Første brett
+    <select name="level"><option value="">Lett</option><option value="medium">Middels</option><option value="hard">Vanskelig</option><option value="expert">Ekspert</option></select>
+  </label>
+  <label>Plassering
+    <select name="align"><option value="">Midtstilt</option><option value="left">Venstre</option></select>
+  </label>
+  <label>Type
+    <select name="kind"><option value="script">Med skript (anbefalt)</option><option value="iframe">Bare iframe</option></select>
+  </label>
+  <label>Bakgrunn i forhåndsvisningen
+    <select name="page"><option value="light">Lys avisside</option><option value="dark">Mørk avisside</option></select>
+  </label>
+</form>
+<div class="stage" id="stage"><div id="preview"></div></div>
+<div class="snippet">
+<div class="bar"><span id="code-label">Kode</span><button class="copy" data-copy="code-custom" aria-describedby="copied">Kopier</button></div>
+<pre><code id="code-custom"></code></pre>
 </div>
 
 <h2>Valg</h2>
@@ -130,6 +163,35 @@ frame-src https://esschul.github.io;</code></pre>
 </main>
 <script src="embed.js" async></script>
 <script>
+// The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
+(function () {
+  var form = document.getElementById('config'), stage = document.getElementById('stage');
+  var base = 'https://esschul.github.io/clean-jump-site/daily/';
+  function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function update() {
+    var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
+    stage.className = 'stage ' + o.page;
+    var attrs = ['lang', 'theme', 'level', 'align'].filter(function (k) { return o[k]; })
+      .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
+    var code;
+    if (o.kind === 'iframe') {
+      var q = ['lang=' + (o.lang || 'nb')];
+      if (o.theme) q.push('theme=' + o.theme);
+      if (o.level) q.push('level=' + o.level);
+      code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="Dagens Hiku" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
+      document.getElementById('preview').innerHTML = code;
+    } else {
+      code = '<div data-hiku' + attrs + '></div>\n<script src="' + base + 'embed.js" async></' + 'script>';
+      document.getElementById('preview').innerHTML = '<div data-hiku' + attrs + '></div>';
+      if (window.Hiku) window.Hiku.mount();
+    }
+    document.getElementById('code-custom').innerHTML = esc(code);
+    document.getElementById('code-label').textContent = o.kind === 'iframe' ? 'HTML uten skript' : 'HTML';
+  }
+  form.addEventListener('change', update);
+  update();
+})();
+
 document.querySelectorAll('.copy').forEach(function (button) {
   button.addEventListener('click', async function () {
     var text = document.getElementById(button.dataset.copy).textContent;

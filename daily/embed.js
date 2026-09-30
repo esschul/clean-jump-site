@@ -35,6 +35,14 @@
       if (frames[i].contentWindow === e.source) frames[i].style.height = Math.ceil(e.data.height) + 'px';
     }
   });
-  var hosts = document.querySelectorAll('[data-hiku]');
-  for (var i = 0; i < hosts.length; i++) mount(hosts[i]);
+  function mountAll(root) {
+    var hosts = (root || document).querySelectorAll('[data-hiku]');
+    for (var i = 0; i < hosts.length; i++) mount(hosts[i]);
+  }
+  mountAll();
+  // Pages that add articles after loading, as many news sites do, get their games too.
+  if (window.MutationObserver) {
+    new MutationObserver(function () { mountAll(); }).observe(document.documentElement, {childList: true, subtree: true});
+  }
+  window.Hiku = {mount: mountAll};
 })();
