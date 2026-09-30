@@ -560,7 +560,7 @@ footer a{color:var(--accent)}
     Object.assign(eq.style, {left: p.x + L.side / 2 + 'px', top: Math.max(34, p.y - 6) + 'px'});
     boardEl.appendChild(eq);
     const shown = m;
-    setTimeout(() => { if (lastMove === shown) { eq.style.opacity = 0; } }, 1100);
+    setTimeout(() => { if (lastMove === shown) { eq.style.opacity = 0; setTimeout(() => eq.remove(), 350); } }, 1100);
   }
 
   function renderTabs() {
@@ -677,14 +677,16 @@ footer a{color:var(--accent)}
       eq.remove();
     }
   });
+  // The board is redrawn only once the touch has ended. Redrawn at once, the number under the finger is gone before
+  // iOS delivers the end of the touch, and iOS then swallows the next tap whole: a button or a number needed two.
   boardEl.addEventListener('pointerup', e => {
     if (!drag) return;
     const d = drag; drag = null;
-    if (!d.moved) { tap(d.i); return; }
+    if (!d.moved) { setTimeout(() => tap(d.i)); return; }
     const r = boardEl.getBoundingClientRect(), L = layout();
     const x = e.clientX - r.left, y = e.clientY - r.top;
     const over = cells.findIndex((_, i) => { const p = L.at(i); return x >= p.x && x <= p.x + L.side && y >= p.y && y <= p.y + L.side; });
-    if (over < 0 || !play(d.i, over, true)) { selected = null; render(); }
+    setTimeout(() => { if (over < 0 || !play(d.i, over, true)) { selected = null; render(); } });
   });
   boardEl.addEventListener('pointercancel', () => { drag = null; selected = null; render(); });
 
@@ -721,6 +723,22 @@ footer a{color:var(--accent)}
     .then(data => { todays = data.boards; if (lesson === null) start(tier); })
     .catch(() => { if (lesson === null) statusEl.textContent = T.offline; });
   if (!store.get('learned') && !params.get('level')) startLesson(0);
+})();
+</script>
+<script>
+// ?debug=1 shows every touch, pointer and click event at the top of the page, for finding lost taps on phones.
+if (new URLSearchParams(location.search).get('debug') === '1') (function () {
+  var box = document.createElement('div'), lines = [], t0 = performance.now();
+  box.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99;font:11px/1.3 monospace;background:rgba(255,255,200,.95);color:#000;max-height:40vh;overflow:hidden;pointer-events:none;white-space:pre;padding:4px';
+  document.body.appendChild(box);
+  function log(text) { lines.unshift(Math.round(performance.now() - t0) + ' ' + text); lines = lines.slice(0, 18); box.textContent = lines.join('\n'); }
+  ['touchstart', 'touchend', 'touchcancel', 'pointerdown', 'pointerup', 'pointercancel', 'click'].forEach(function (type) {
+    document.addEventListener(type, function (e) {
+      var el = e.target, p = e.changedTouches ? e.changedTouches[0] : e;
+      log(type + ' ' + ((el.className && el.className.baseVal === undefined ? el.className : el.tagName) || el.tagName) + ' "' + (el.textContent || '').trim().slice(0, 8) + '" y=' + Math.round(p.clientY) + (el.isConnected ? '' : ' (removed)'));
+    }, true);
+  });
+  window.addEventListener('scroll', function () { log('scroll ' + Math.round(scrollY)); });
 })();
 </script>
 </body>
