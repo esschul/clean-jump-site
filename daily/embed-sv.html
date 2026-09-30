@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dagens Hiku på din webbplats</title>
+<meta name="description" content="Så bäddar du in Dagens Hiku, ett dagligt sifferspel, på en nyhetssajt eller webbplats: två rader kod, inga kakor.">
+<link rel="alternate" hreflang="nb" href="https://esschul.github.io/clean-jump-site/daily/embed.html">
+<link rel="alternate" hreflang="en" href="https://esschul.github.io/clean-jump-site/daily/embed-en.html">
+<link rel="alternate" hreflang="sv" href="https://esschul.github.io/clean-jump-site/daily/embed-sv.html">
+<link rel="alternate" hreflang="da" href="https://esschul.github.io/clean-jump-site/daily/embed-da.html">
+<link rel="alternate" hreflang="fi" href="https://esschul.github.io/clean-jump-site/daily/embed-fi.html">
+<link rel="alternate" hreflang="de" href="https://esschul.github.io/clean-jump-site/daily/embed-de.html">
+<link rel="icon" href="../icon.png">
+<style>
+:root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--code:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--edge:#343748;--card:#252836;--code:#2d3040;--accent:#9fb0ea;--on-accent:#1b1d27;--gold:#f2c66d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:auto;padding:48px 20px 80px}
+header{display:flex;align-items:center;gap:16px}
+header img{width:56px;height:56px;border-radius:13px;flex-shrink:0}
+h1{font:400 38px/1.15 Georgia,serif;letter-spacing:-1px;margin:0}
+h1 span{color:var(--gold)}
+h2{font:400 26px/1.2 Georgia,serif;margin:48px 0 10px}
+h3{font-size:17px;margin:28px 0 6px}
+p,li{color:var(--muted)}
+strong{color:var(--ink)}
+a{color:var(--accent)}
+.lead{font-size:19px;color:var(--ink);margin-top:20px}
+.snippet{margin:12px 0;background:var(--code);border-radius:12px;overflow:hidden}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 0 18px;font-size:13px;color:var(--muted)}
+pre{padding:10px 18px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:0;color:var(--ink)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+p code,li code,td code{background:var(--code);border-radius:5px;padding:1px 5px}
+.copy{font:600 13px system-ui,sans-serif;border:0;border-radius:999px;padding:6px 12px;background:var(--accent);color:var(--on-accent);cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--edge);vertical-align:top}
+th{color:var(--ink);font-weight:600}
+td{color:var(--muted)}
+.table{overflow-x:auto}
+.preview{background:var(--card);border-radius:18px;padding:18px;margin-top:14px;box-shadow:0 3px 0 var(--edge)}
+.steps{padding-left:22px}
+.steps li{margin:6px 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.config{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px;margin:16px 0}
+.config label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;color:var(--ink)}
+.config select{font:inherit;font-weight:400;font-size:15px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--card);color:var(--ink)}
+.stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
+.stage.light{background:#ffffff}
+.stage.dark{background:#15161c}
+.langs{margin-top:14px;font-size:14px;color:var(--muted)}
+.langs a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
+footer{margin-top:56px;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<header><img src="../icon.png" alt=""><h1>Dagens Hiku på din webbplats<span>.</span></h1></header>
+<nav class="langs" aria-label="Språk"><a href="embed.html" hreflang="nb" lang="nb">Norsk</a> · <a href="embed-en.html" hreflang="en" lang="en">English</a> · <a href="embed-sv.html" hreflang="sv" lang="sv" aria-current="page">Svenska</a> · <a href="embed-da.html" hreflang="da" lang="da">Dansk</a> · <a href="embed-fi.html" hreflang="fi" lang="fi">Suomi</a> · <a href="embed-de.html" hreflang="de" lang="de">Deutsch</a></nav>
+
+<p class="lead">Dagens Hiku är ett lugnt sifferspel med fyra nya bräden varje dag, från lätt till expert. Det är gratis att bädda in på en nyhetssajt eller webbplats, med två rader kod.</p>
+<p>Regeln är kort: talet säger hur långt det hoppar, vågrätt eller lodrätt. Landar det på ett annat tal dras det mindre från det större. Målet är att få alla tal att försvinna. Bräden är desamma för alla läsare varje dag, och desamma som i Hiku-appen för iPhone.</p>
+
+<h2>Så gör du</h2>
+<ol class="steps">
+  <li>Klistra in koden nedan där spelet ska synas, till exempel i en artikel eller på en egen spelsida.</li>
+  <li>Publicera. Spelet hämtar dagens bräden själv och anpassar sin höjd.</li>
+</ol>
+<div class="snippet">
+<div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopiera</button></div>
+<pre><code id="code-basic">&lt;div data-hiku data-lang="sv"&gt;&lt;/div&gt;
+&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+</div>
+<p>Skriptet behöver bara finnas en gång per sida, även om sidan har flera spel.</p>
+
+<h2 id="prov">Prova och kopiera</h2>
+<p>Välj inställningar, se spelet ändras och kopiera koden när ni är nöjda.</p>
+<form class="config" id="config" onsubmit="return false">
+  <label>Språk
+    <select name="lang"><option value="">Sidans eget språk</option><option value="nb">Norska</option><option value="en">Engelska</option><option value="sv">Svenska</option><option value="da">Danska</option><option value="fi">Finska</option><option value="de">Tyska</option></select>
+  </label>
+  <label>Färger
+    <select name="theme"><option value="">Följ läsaren</option><option value="light">Alltid ljust</option><option value="dark">Alltid mörkt</option></select>
+  </label>
+  <label>Första brädet
+    <select name="level"><option value="">Läsarens senaste nivå</option><option value="easy">Lätt</option><option value="medium">Medel</option><option value="hard">Svår</option><option value="expert">Expert</option></select>
+  </label>
+  <label>Placering
+    <select name="align"><option value="">Centrerat</option><option value="left">Vänster</option></select>
+  </label>
+  <label>Typ
+    <select name="kind"><option value="script">Med skript (rekommenderas)</option><option value="iframe">Endast iframe</option></select>
+  </label>
+  <label>Bakgrund i förhandsvisningen
+    <select name="page"><option value="light">Ljus nyhetssida</option><option value="dark">Mörk nyhetssida</option></select>
+  </label>
+</form>
+<div class="stage" id="stage"><div id="preview"></div></div>
+<div class="snippet">
+<div class="bar"><span id="code-label">Kod</span><button class="copy" data-copy="code-custom" aria-describedby="copied">Kopiera</button></div>
+<pre><code id="code-custom"></code></pre>
+</div>
+
+<h2>Inställningar</h2>
+<p>Inställningarna anges som attribut på <code>&lt;div data-hiku&gt;</code>.</p>
+<div class="table">
+<table>
+  <tr><th>Attribut</th><th>Värden</th><th>Vad det gör</th></tr>
+  <tr><td><code>data-lang</code></td><td><code>nb</code>, <code>en</code>, <code>sv</code>, <code>da</code>, <code>fi</code>, <code>de</code></td><td>Spelets språk: norska, engelska, svenska, danska, finska eller tyska. Utan detta används sidans eget språk (<code>&lt;html lang="…"&gt;</code>), annars norska.</td></tr>
+  <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Låser färgerna. Utan detta följer spelet läsarens ljusa eller mörka läge.</td></tr>
+  <tr><td><code>data-align</code></td><td><code>left</code></td><td>Placerar spelet till vänster. Utan detta står det centrerat i det utrymme det får och är aldrig bredare än 480 pixlar.</td></tr>
+  <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Vilket av dagens fyra bräden som visas först. Utan detta öppnar spelet på den nivå läsaren spelade senast, annars på Lätt. Läsaren kan alltid byta.</td></tr>
+</table>
+</div>
+<p>Exempel, alltid ljust och med Medel först:</p>
+<div class="snippet">
+<div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Kopiera</button></div>
+<pre><code id="code-options">&lt;div data-hiku data-lang="sv" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
+&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+</div>
+
+<h3>Utan skript</h3>
+<p>Tillåter inte publiceringssystemet skript kan spelet läggas in som en vanlig <code>iframe</code>. Då anpassar sig inte höjden själv, så ange den. 860 pixlar räcker för hela spelet, även när ett bräde är löst; spelet är aldrig bredare än 480 pixlar.</p>
+<div class="snippet">
+<div class="bar"><span>HTML utan skript</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Kopiera</button></div>
+<pre><code id="code-iframe">&lt;iframe src="https://esschul.github.io/clean-jump-site/daily/?lang=sv"
+  title="Dagens Hiku" loading="lazy"
+  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
+</div>
+<p>Inställningarna anges då i adressen: <code>?lang=sv</code>, <code>&amp;theme=dark</code>, <code>&amp;level=hard</code>. Placeringen styrs av ramens stil; ta bort <code>margin:0 auto</code> för att lägga den till vänster.</p>
+
+<h2>Integritet och drift</h2>
+<ul>
+  <li><strong>Inga kakor och ingen spårning.</strong> Inga speldata eller resultat skickas till oss. Resultat och stjärnor sparas bara i läsarens egen webbläsare. Länken till App Store innehåller namnet på webbplatsen spelet finns på, så att vi i App Store Connect kan se hur många som kom från varje sida totalt. Bara Apple får den uppgiften, och bara om läsaren trycker på länken. Värdtjänsten tar emot vanliga tekniska förfrågningar när filerna laddas, som för alla webbsidor.</li>
+  <li><strong>Isolerat spel.</strong> Själva spelet körs i en <code>iframe</code> från en annan adress och kan inte läsa eller påverka sidan runt omkring. Det lilla laddningsskriptet, <code>embed.js</code>, körs på er sida som andra externa skript: det skapar ramen och anpassar höjden, och gör inget annat. Källkoden är kort och kan läsas på <a href="embed.js">embed.js</a>. Redaktioner som inte tillåter externa skript använder iframe-versionen.</li>
+  <li><strong>Lätt.</strong> Första gången laddas cirka 70 kB komprimerat. Ramen laddas först när läsaren närmar sig den.</li>
+  <li><strong>Nya bräden vid midnatt</strong> i läsarens tidszon. Biblioteket räcker i tre år, och bräden är desamma som i appen.</li>
+  <li><strong>Driftas på GitHub Pages.</strong> Värdtjänsten ser läsarens IP-adress när filerna laddas, som för alla webbsidor.</li>
+</ul>
+
+<h2>För tekniska redaktioner</h2>
+<h3>Rekommenderas vid höga säkerhetskrav</h3>
+<p>Använd iframe-versionen ovan. Då körs ingen kod från oss på er sida, bara i ramen. Det enda ni förlorar är att höjden inte anpassar sig själv.</p>
+<h3>Content Security Policy</h3>
+<p>Med laddningsskriptet behövs båda; med ren iframe bara den sista:</p>
+<div class="snippet">
+<div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Kopiera</button></div>
+<pre><code id="code-csp">script-src https://esschul.github.io;
+frame-src https://esschul.github.io;</code></pre>
+</div>
+<p>Lägg till dem i era befintliga direktiv. Spelet i ramen hämtar bara filer från samma adress.</p>
+<h3>Stabilitet</h3>
+<ul>
+  <li>Adresserna <code>…/daily/embed.js</code> och <code>…/daily/</code>, och attributen i tabellen ovan, ligger kvar. Nya inställningar läggs till utan att ändra de befintliga.</li>
+  <li>Skriptet laddas med <code>async</code> och håller aldrig upp resten av sidan.</li>
+  <li>Är GitHub Pages otillgängligt blir platsen där spelet skulle stå tom. Sidan runt omkring påverkas inte.</li>
+</ul>
+
+<h2>Villkor</h2>
+<p><strong>Dagens Hiku är gratis att använda</strong> på nyhetssajter, bloggar och andra webbplatser. Det enda kravet är att länken till Hiku-appen i spelet står kvar som den är: dölj, ta bort eller täck inte över den.</p>
+
+<h2>Kontakt</h2>
+<p>Har du frågor eller vill veta mer innan ni börjar? Skicka e-post till <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
+
+<p id="copied" class="sr" aria-live="polite"></p>
+<footer><a href="./?lang=sv">Spela Dagens Hiku</a> · <a href="../">Om Hiku</a> · <a href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-guide&amp;mt=8">Hiku for iPhone</a></footer>
+</main>
+<script src="embed.js" async></script>
+<script>
+// The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
+(function () {
+  var form = document.getElementById('config'), stage = document.getElementById('stage');
+  var base = 'https://esschul.github.io/clean-jump-site/daily/', pageLang = 'sv';
+  var words = {script: 'HTML', iframe: 'HTML utan skript', title: 'Dagens Hiku'};
+  function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function update() {
+    var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
+    stage.className = 'stage ' + o.page;
+    var attrs = ['lang', 'theme', 'level', 'align'].filter(function (k) { return o[k]; })
+      .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
+    var code;
+    if (o.kind === 'iframe') {
+      var q = ['lang=' + (o.lang || pageLang)];
+      if (o.theme) q.push('theme=' + o.theme);
+      if (o.level) q.push('level=' + o.level);
+      code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="' + words.title + '" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
+      document.getElementById('preview').innerHTML = code;
+    } else {
+      code = '<div data-hiku' + attrs + '></div>\n<script src="' + base + 'embed.js" async></' + 'script>';
+      document.getElementById('preview').innerHTML = '<div data-hiku' + attrs + '></div>';
+      if (window.Hiku) window.Hiku.mount();
+    }
+    document.getElementById('code-custom').innerHTML = esc(code);
+    document.getElementById('code-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
+  }
+  form.addEventListener('change', update);
+  update();
+})();
+
+document.querySelectorAll('.copy').forEach(function (button) {
+  button.addEventListener('click', async function () {
+    var text = document.getElementById(button.dataset.copy).textContent;
+    var status = document.getElementById('copied');
+    try { await navigator.clipboard.writeText(text); button.textContent = 'Kopierat!'; status.textContent = 'Koden är kopierad.'; }
+    catch (e) { button.textContent = 'Markera och kopiera'; status.textContent = 'Kunde inte kopiera. Markera koden och kopiera den själv.'; }
+    setTimeout(function () { button.textContent = 'Kopiera'; }, 2000);
+  });
+});
+</script>
+</body>
+</html>

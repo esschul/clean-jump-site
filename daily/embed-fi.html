@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Päivän Hiku sivustollesi</title>
+<meta name="description" content="Näin upotat Päivän Hikun, päivittäisen numeropelin, uutissivustolle tai verkkosivulle: kaksi riviä koodia, ei evästeitä.">
+<link rel="alternate" hreflang="nb" href="https://esschul.github.io/clean-jump-site/daily/embed.html">
+<link rel="alternate" hreflang="en" href="https://esschul.github.io/clean-jump-site/daily/embed-en.html">
+<link rel="alternate" hreflang="sv" href="https://esschul.github.io/clean-jump-site/daily/embed-sv.html">
+<link rel="alternate" hreflang="da" href="https://esschul.github.io/clean-jump-site/daily/embed-da.html">
+<link rel="alternate" hreflang="fi" href="https://esschul.github.io/clean-jump-site/daily/embed-fi.html">
+<link rel="alternate" hreflang="de" href="https://esschul.github.io/clean-jump-site/daily/embed-de.html">
+<link rel="icon" href="../icon.png">
+<style>
+:root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--code:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--edge:#343748;--card:#252836;--code:#2d3040;--accent:#9fb0ea;--on-accent:#1b1d27;--gold:#f2c66d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:auto;padding:48px 20px 80px}
+header{display:flex;align-items:center;gap:16px}
+header img{width:56px;height:56px;border-radius:13px;flex-shrink:0}
+h1{font:400 38px/1.15 Georgia,serif;letter-spacing:-1px;margin:0}
+h1 span{color:var(--gold)}
+h2{font:400 26px/1.2 Georgia,serif;margin:48px 0 10px}
+h3{font-size:17px;margin:28px 0 6px}
+p,li{color:var(--muted)}
+strong{color:var(--ink)}
+a{color:var(--accent)}
+.lead{font-size:19px;color:var(--ink);margin-top:20px}
+.snippet{margin:12px 0;background:var(--code);border-radius:12px;overflow:hidden}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 0 18px;font-size:13px;color:var(--muted)}
+pre{padding:10px 18px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:0;color:var(--ink)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+p code,li code,td code{background:var(--code);border-radius:5px;padding:1px 5px}
+.copy{font:600 13px system-ui,sans-serif;border:0;border-radius:999px;padding:6px 12px;background:var(--accent);color:var(--on-accent);cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--edge);vertical-align:top}
+th{color:var(--ink);font-weight:600}
+td{color:var(--muted)}
+.table{overflow-x:auto}
+.preview{background:var(--card);border-radius:18px;padding:18px;margin-top:14px;box-shadow:0 3px 0 var(--edge)}
+.steps{padding-left:22px}
+.steps li{margin:6px 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.config{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px;margin:16px 0}
+.config label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;color:var(--ink)}
+.config select{font:inherit;font-weight:400;font-size:15px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--card);color:var(--ink)}
+.stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
+.stage.light{background:#ffffff}
+.stage.dark{background:#15161c}
+.langs{margin-top:14px;font-size:14px;color:var(--muted)}
+.langs a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
+footer{margin-top:56px;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<header><img src="../icon.png" alt=""><h1>Päivän Hiku sivustollesi<span>.</span></h1></header>
+<nav class="langs" aria-label="Kieli"><a href="embed.html" hreflang="nb" lang="nb">Norsk</a> · <a href="embed-en.html" hreflang="en" lang="en">English</a> · <a href="embed-sv.html" hreflang="sv" lang="sv">Svenska</a> · <a href="embed-da.html" hreflang="da" lang="da">Dansk</a> · <a href="embed-fi.html" hreflang="fi" lang="fi" aria-current="page">Suomi</a> · <a href="embed-de.html" hreflang="de" lang="de">Deutsch</a></nav>
+
+<p class="lead">Päivän Hiku on rauhallinen numeropeli, jossa on neljä uutta lautaa joka päivä helposta asiantuntijaan. Sen voi upottaa maksutta uutissivustolle tai verkkosivulle kahdella rivillä koodia.</p>
+<p>Sääntö on lyhyt: luku kertoo, kuinka pitkälle se hyppää vaaka- tai pystysuunnassa. Kun se laskeutuu toiseen lukuun, pienempi vähennetään suuremmasta. Tavoitteena on saada kaikki luvut katoamaan. Laudat ovat samat kaikille lukijoille joka päivä, ja samat kuin iPhonen Hiku-sovelluksessa.</p>
+
+<h2>Näin teet sen</h2>
+<ol class="steps">
+  <li>Liitä alla oleva koodi kohtaan, jossa pelin pitää näkyä, esimerkiksi artikkeliin tai omalle pelisivulle.</li>
+  <li>Julkaise. Peli hakee päivän laudat itse ja säätää korkeutensa.</li>
+</ol>
+<div class="snippet">
+<div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopioi</button></div>
+<pre><code id="code-basic">&lt;div data-hiku data-lang="fi"&gt;&lt;/div&gt;
+&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+</div>
+<p>Skriptin tarvitsee olla sivulla vain kerran, vaikka sivulla olisi useita pelejä.</p>
+
+<h2 id="prov">Kokeile ja kopioi</h2>
+<p>Valitse asetukset, katso miten peli muuttuu, ja kopioi koodi, kun olet tyytyväinen.</p>
+<form class="config" id="config" onsubmit="return false">
+  <label>Kieli
+    <select name="lang"><option value="">Sivun oma kieli</option><option value="nb">Norja</option><option value="en">Englanti</option><option value="sv">Ruotsi</option><option value="da">Tanska</option><option value="fi">Suomi</option><option value="de">Saksa</option></select>
+  </label>
+  <label>Värit
+    <select name="theme"><option value="">Lukijan mukaan</option><option value="light">Aina vaalea</option><option value="dark">Aina tumma</option></select>
+  </label>
+  <label>Ensimmäinen lauta
+    <select name="level"><option value="">Lukijan edellinen taso</option><option value="easy">Helppo</option><option value="medium">Keskitaso</option><option value="hard">Vaikea</option><option value="expert">Asiantuntija</option></select>
+  </label>
+  <label>Sijainti
+    <select name="align"><option value="">Keskellä</option><option value="left">Vasemmalla</option></select>
+  </label>
+  <label>Tyyppi
+    <select name="kind"><option value="script">Skriptillä (suositus)</option><option value="iframe">Pelkkä iframe</option></select>
+  </label>
+  <label>Esikatselun tausta
+    <select name="page"><option value="light">Vaalea uutissivu</option><option value="dark">Tumma uutissivu</option></select>
+  </label>
+</form>
+<div class="stage" id="stage"><div id="preview"></div></div>
+<div class="snippet">
+<div class="bar"><span id="code-label">Koodi</span><button class="copy" data-copy="code-custom" aria-describedby="copied">Kopioi</button></div>
+<pre><code id="code-custom"></code></pre>
+</div>
+
+<h2>Asetukset</h2>
+<p>Asetukset annetaan <code>&lt;div data-hiku&gt;</code>-elementin attribuutteina.</p>
+<div class="table">
+<table>
+  <tr><th>Attribuutti</th><th>Arvot</th><th>Mitä se tekee</th></tr>
+  <tr><td><code>data-lang</code></td><td><code>nb</code>, <code>en</code>, <code>sv</code>, <code>da</code>, <code>fi</code>, <code>de</code></td><td>Pelin kieli: norja, englanti, ruotsi, tanska, suomi tai saksa. Ilman tätä käytetään ympäröivän sivun kieltä (<code>&lt;html lang="…"&gt;</code>), muuten norjaa.</td></tr>
+  <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Lukitsee värit. Ilman tätä peli seuraa lukijan vaaleaa tai tummaa tilaa.</td></tr>
+  <tr><td><code>data-align</code></td><td><code>left</code></td><td>Sijoittaa pelin vasemmalle. Ilman tätä peli on keskellä sille annettua tilaa eikä ole koskaan yli 480 pikseliä leveä.</td></tr>
+  <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Mikä päivän neljästä laudasta näytetään ensin. Ilman tätä peli aukeaa tasolla, jota lukija pelasi viimeksi, muuten Helppo-tasolla. Lukija voi aina vaihtaa.</td></tr>
+</table>
+</div>
+<p>Esimerkki, aina vaalea ja Keskitaso ensin:</p>
+<div class="snippet">
+<div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Kopioi</button></div>
+<pre><code id="code-options">&lt;div data-hiku data-lang="fi" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
+&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+</div>
+
+<h3>Ilman skriptiä</h3>
+<p>Jos julkaisujärjestelmä ei salli skriptejä, pelin voi upottaa tavallisena <code>iframe</code>-kehyksenä. Silloin korkeus ei säädy itsestään, joten aseta se. 860 pikseliä riittää koko peliin myös ratkaistun laudan kanssa; peli ei ole koskaan yli 480 pikseliä leveä.</p>
+<div class="snippet">
+<div class="bar"><span>HTML ilman skriptiä</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Kopioi</button></div>
+<pre><code id="code-iframe">&lt;iframe src="https://esschul.github.io/clean-jump-site/daily/?lang=fi"
+  title="Päivän Hiku" loading="lazy"
+  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
+</div>
+<p>Asetukset annetaan silloin osoitteessa: <code>?lang=sv</code>, <code>&amp;theme=dark</code>, <code>&amp;level=hard</code>. Sijainti määräytyy kehyksen tyylistä; poista <code>margin:0 auto</code>, niin kehys on vasemmalla.</p>
+
+<h2>Tietosuoja ja ylläpito</h2>
+<ul>
+  <li><strong>Ei evästeitä eikä seurantaa.</strong> Meille ei lähetetä pelitietoja eikä tuloksia. Tulokset ja tähdet tallentuvat vain lukijan omaan selaimeen. App Store -linkki sisältää sen sivuston nimen, jolla peli on, jotta näemme App Store Connectissa, kuinka moni tuli kultakin sivulta yhteensä. Tieto menee vain Applelle ja vain, jos lukija avaa linkin. Palvelin vastaanottaa tavallisia teknisiä pyyntöjä, kun tiedostot latautuvat, kuten kaikilla verkkosivuilla.</li>
+  <li><strong>Eristetty peli.</strong> Itse peli toimii <code>iframe</code>-kehyksessä toisesta osoitteesta eikä voi lukea tai muuttaa ympäröivää sivua. Pieni latausskripti, <code>embed.js</code>, toimii sivullanne kuten muutkin ulkoiset skriptit: se luo kehyksen ja säätää sen korkeuden eikä tee muuta. Sen lähdekoodi on lyhyt ja luettavissa osoitteessa <a href="embed.js">embed.js</a>. Toimitukset, jotka eivät salli ulkoisia skriptejä, käyttävät iframe-versiota.</li>
+  <li><strong>Kevyt.</strong> Ensimmäisellä kerralla ladataan noin 70 kt pakattuna. Kehys latautuu vasta, kun lukija lähestyy sitä.</li>
+  <li><strong>Uudet laudat keskiyöllä</strong> lukijan aikavyöhykkeellä. Kirjasto riittää kolmeksi vuodeksi, ja laudat ovat samat kuin sovelluksessa.</li>
+  <li><strong>Ylläpitopalvelu on GitHub Pages.</strong> Palvelin näkee lukijan IP-osoitteen, kun tiedostot latautuvat, kuten kaikilla verkkosivuilla.</li>
+</ul>
+
+<h2>Teknisille toimituksille</h2>
+<h3>Suositus tiukkoihin tietoturvavaatimuksiin</h3>
+<p>Käytä yllä olevaa iframe-versiota. Silloin sivullanne ei suoriteta meidän koodiamme, vain kehyksessä. Menetätte ainoastaan automaattisen korkeuden.</p>
+<h3>Content Security Policy</h3>
+<p>Latausskriptin kanssa tarvitaan molemmat; pelkän iframen kanssa vain jälkimmäinen:</p>
+<div class="snippet">
+<div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Kopioi</button></div>
+<pre><code id="code-csp">script-src https://esschul.github.io;
+frame-src https://esschul.github.io;</code></pre>
+</div>
+<p>Lisää ne nykyisiin direktiiveihinne. Kehyksessä oleva peli lataa tiedostoja vain samasta osoitteesta.</p>
+<h3>Vakaus</h3>
+<ul>
+  <li>Osoitteet <code>…/daily/embed.js</code> ja <code>…/daily/</code> sekä yllä olevan taulukon attribuutit pysyvät. Uusia asetuksia lisätään muuttamatta nykyisiä.</li>
+  <li>Skripti ladataan <code>async</code>-määreellä eikä koskaan hidasta muuta sivua.</li>
+  <li>Jos GitHub Pages ei ole käytettävissä, pelin paikka jää tyhjäksi. Ympäröivä sivu ei kärsi.</li>
+</ul>
+
+<h2>Ehdot</h2>
+<p><strong>Päivän Hiku on maksuton</strong> uutissivustoilla, blogeissa ja muilla verkkosivuilla. Ainoa vaatimus on, että pelin linkki Hiku-sovellukseen pysyy ennallaan: älä piilota, poista tai peitä sitä.</p>
+
+<h2>Yhteystiedot</h2>
+<p>Kysyttävää, tai haluatko tietää lisää ennen käyttöönottoa? Lähetä sähköpostia osoitteeseen <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
+
+<p id="copied" class="sr" aria-live="polite"></p>
+<footer><a href="./?lang=fi">Pelaa Päivän Hikua</a> · <a href="../">Tietoa Hikusta</a> · <a href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-guide&amp;mt=8">Hiku for iPhone</a></footer>
+</main>
+<script src="embed.js" async></script>
+<script>
+// The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
+(function () {
+  var form = document.getElementById('config'), stage = document.getElementById('stage');
+  var base = 'https://esschul.github.io/clean-jump-site/daily/', pageLang = 'fi';
+  var words = {script: 'HTML', iframe: 'HTML ilman skriptiä', title: 'Päivän Hiku'};
+  function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function update() {
+    var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
+    stage.className = 'stage ' + o.page;
+    var attrs = ['lang', 'theme', 'level', 'align'].filter(function (k) { return o[k]; })
+      .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
+    var code;
+    if (o.kind === 'iframe') {
+      var q = ['lang=' + (o.lang || pageLang)];
+      if (o.theme) q.push('theme=' + o.theme);
+      if (o.level) q.push('level=' + o.level);
+      code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="' + words.title + '" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
+      document.getElementById('preview').innerHTML = code;
+    } else {
+      code = '<div data-hiku' + attrs + '></div>\n<script src="' + base + 'embed.js" async></' + 'script>';
+      document.getElementById('preview').innerHTML = '<div data-hiku' + attrs + '></div>';
+      if (window.Hiku) window.Hiku.mount();
+    }
+    document.getElementById('code-custom').innerHTML = esc(code);
+    document.getElementById('code-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
+  }
+  form.addEventListener('change', update);
+  update();
+})();
+
+document.querySelectorAll('.copy').forEach(function (button) {
+  button.addEventListener('click', async function () {
+    var text = document.getElementById(button.dataset.copy).textContent;
+    var status = document.getElementById('copied');
+    try { await navigator.clipboard.writeText(text); button.textContent = 'Kopioitu!'; status.textContent = 'Koodi on kopioitu.'; }
+    catch (e) { button.textContent = 'Valitse ja kopioi'; status.textContent = 'Kopiointi ei onnistunut. Valitse koodi ja kopioi se itse.'; }
+    setTimeout(function () { button.textContent = 'Kopioi'; }, 2000);
+  });
+});
+</script>
+</body>
+</html>

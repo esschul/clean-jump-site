@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Daily Hiku on your site</title>
+<meta name="description" content="How to embed Daily Hiku, a daily number puzzle, on a news site or any web page: two lines of code, no cookies.">
+<link rel="alternate" hreflang="nb" href="https://esschul.github.io/clean-jump-site/daily/embed.html">
+<link rel="alternate" hreflang="en" href="https://esschul.github.io/clean-jump-site/daily/embed-en.html">
+<link rel="alternate" hreflang="sv" href="https://esschul.github.io/clean-jump-site/daily/embed-sv.html">
+<link rel="alternate" hreflang="da" href="https://esschul.github.io/clean-jump-site/daily/embed-da.html">
+<link rel="alternate" hreflang="fi" href="https://esschul.github.io/clean-jump-site/daily/embed-fi.html">
+<link rel="alternate" hreflang="de" href="https://esschul.github.io/clean-jump-site/daily/embed-de.html">
+<link rel="icon" href="../icon.png">
+<style>
+:root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--code:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--edge:#343748;--card:#252836;--code:#2d3040;--accent:#9fb0ea;--on-accent:#1b1d27;--gold:#f2c66d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:auto;padding:48px 20px 80px}
+header{display:flex;align-items:center;gap:16px}
+header img{width:56px;height:56px;border-radius:13px;flex-shrink:0}
+h1{font:400 38px/1.15 Georgia,serif;letter-spacing:-1px;margin:0}
+h1 span{color:var(--gold)}
+h2{font:400 26px/1.2 Georgia,serif;margin:48px 0 10px}
+h3{font-size:17px;margin:28px 0 6px}
+p,li{color:var(--muted)}
+strong{color:var(--ink)}
+a{color:var(--accent)}
+.lead{font-size:19px;color:var(--ink);margin-top:20px}
+.snippet{margin:12px 0;background:var(--code);border-radius:12px;overflow:hidden}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 0 18px;font-size:13px;color:var(--muted)}
+pre{padding:10px 18px 16px;overflow-x:auto;font-size:14px;line-height:1.55;margin:0;color:var(--ink)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+p code,li code,td code{background:var(--code);border-radius:5px;padding:1px 5px}
+.copy{font:600 13px system-ui,sans-serif;border:0;border-radius:999px;padding:6px 12px;background:var(--accent);color:var(--on-accent);cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:10px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--edge);vertical-align:top}
+th{color:var(--ink);font-weight:600}
+td{color:var(--muted)}
+.table{overflow-x:auto}
+.preview{background:var(--card);border-radius:18px;padding:18px;margin-top:14px;box-shadow:0 3px 0 var(--edge)}
+.steps{padding-left:22px}
+.steps li{margin:6px 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.config{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px;margin:16px 0}
+.config label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;color:var(--ink)}
+.config select{font:inherit;font-weight:400;font-size:15px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--card);color:var(--ink)}
+.stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
+.stage.light{background:#ffffff}
+.stage.dark{background:#15161c}
+.langs{margin-top:14px;font-size:14px;color:var(--muted)}
+.langs a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
+footer{margin-top:56px;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<header><img src="../icon.png" alt=""><h1>Daily Hiku on your site<span>.</span></h1></header>
+<nav class="langs" aria-label="Language"><a href="embed.html" hreflang="nb" lang="nb">Norsk</a> · <a href="embed-en.html" hreflang="en" lang="en" aria-current="page">English</a> · <a href="embed-sv.html" hreflang="sv" lang="sv">Svenska</a> · <a href="embed-da.html" hreflang="da" lang="da">Dansk</a> · <a href="embed-fi.html" hreflang="fi" lang="fi">Suomi</a> · <a href="embed-de.html" hreflang="de" lang="de">Deutsch</a></nav>
+
+<p class="lead">Daily Hiku is a calm number puzzle with four new boards every day, from easy to expert. It is free to embed on a news site or any web page, with two lines of code.</p>
+<p>The rule is short: the number says how far it jumps, across or up and down. When it lands on another number, the smaller is taken from the larger. The goal is to make every number disappear. The boards are the same for every reader each day, and the same as in the Hiku app for iPhone.</p>
+
+<h2>How to do it</h2>
+<ol class="steps">
+  <li>Paste the code below where the game should appear, for example in an article or on a puzzle page of its own.</li>
+  <li>Publish. The game fetches today's boards itself and adjusts its height.</li>
+</ol>
+<div class="snippet">
+<div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Copy</button></div>
+<pre><code id="code-basic">&lt;div data-hiku data-lang="en"&gt;&lt;/div&gt;
+&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+</div>
+<p>The script only needs to appear once per page, even with several games on the same page.</p>
+
+<h2 id="prov">Try and copy</h2>
+<p>Pick the settings, watch the game change, and copy the code when you are happy with it.</p>
+<form class="config" id="config" onsubmit="return false">
+  <label>Language
+    <select name="lang"><option value="">The page's own language</option><option value="nb">Norwegian</option><option value="en">English</option><option value="sv">Swedish</option><option value="da">Danish</option><option value="fi">Finnish</option><option value="de">German</option></select>
+  </label>
+  <label>Colours
+    <select name="theme"><option value="">Follow the reader</option><option value="light">Always light</option><option value="dark">Always dark</option></select>
+  </label>
+  <label>First board
+    <select name="level"><option value="">The reader's last level</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option><option value="expert">Expert</option></select>
+  </label>
+  <label>Position
+    <select name="align"><option value="">Centred</option><option value="left">Left</option></select>
+  </label>
+  <label>Type
+    <select name="kind"><option value="script">With script (recommended)</option><option value="iframe">Iframe only</option></select>
+  </label>
+  <label>Preview background
+    <select name="page"><option value="light">Light news page</option><option value="dark">Dark news page</option></select>
+  </label>
+</form>
+<div class="stage" id="stage"><div id="preview"></div></div>
+<div class="snippet">
+<div class="bar"><span id="code-label">Code</span><button class="copy" data-copy="code-custom" aria-describedby="copied">Copy</button></div>
+<pre><code id="code-custom"></code></pre>
+</div>
+
+<h2>Options</h2>
+<p>Options are set as attributes on <code>&lt;div data-hiku&gt;</code>.</p>
+<div class="table">
+<table>
+  <tr><th>Attribute</th><th>Values</th><th>What it does</th></tr>
+  <tr><td><code>data-lang</code></td><td><code>nb</code>, <code>en</code>, <code>sv</code>, <code>da</code>, <code>fi</code>, <code>de</code></td><td>The game's language: Norwegian, English, Swedish, Danish, Finnish or German. Without it, the language of the surrounding page (<code>&lt;html lang="…"&gt;</code>) is used, and otherwise Norwegian.</td></tr>
+  <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Fixes the colours. Without it, the game follows the reader's light or dark mode.</td></tr>
+  <tr><td><code>data-align</code></td><td><code>left</code></td><td>Puts the game at the left. Without it, the game is centred in the space it is given, and is never wider than 480 pixels.</td></tr>
+  <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Which of today's four boards is shown first. Without it, the game opens on the level the reader played last, and otherwise on Easy. The reader can always switch.</td></tr>
+</table>
+</div>
+<p>Example, always light and with Medium first:</p>
+<div class="snippet">
+<div class="bar"><span>HTML</span><button class="copy" data-copy="code-options" aria-describedby="copied">Copy</button></div>
+<pre><code id="code-options">&lt;div data-hiku data-lang="en" data-theme="light" data-level="medium"&gt;&lt;/div&gt;
+&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+</div>
+
+<h3>Without script</h3>
+<p>If your publishing system does not allow scripts, embed the game as a plain <code>iframe</code>. Its height then does not adjust itself, so set it. 860 pixels fits the whole game, including a solved board; the game is never wider than 480 pixels.</p>
+<div class="snippet">
+<div class="bar"><span>HTML without script</span><button class="copy" data-copy="code-iframe" aria-describedby="copied">Copy</button></div>
+<pre><code id="code-iframe">&lt;iframe src="https://esschul.github.io/clean-jump-site/daily/?lang=en"
+  title="Daily Hiku" loading="lazy"
+  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:0 auto"&gt;&lt;/iframe&gt;</code></pre>
+</div>
+<p>Options then go in the address: <code>?lang=sv</code>, <code>&amp;theme=dark</code>, <code>&amp;level=hard</code>. The position is set by the frame's style; remove <code>margin:0 auto</code> to put it at the left.</p>
+
+<h2>Privacy and operation</h2>
+<ul>
+  <li><strong>No cookies and no tracking.</strong> No game data or results are sent to us. Results and stars are stored only in the reader's own browser. The App Store link carries the name of the site the game is on, so we can see in App Store Connect how many came from each site in total. Only Apple receives it, and only if the reader follows the link. The host receives ordinary technical requests when the files load, as with any web page.</li>
+  <li><strong>An isolated game.</strong> The game itself runs in an <code>iframe</code> from another address and cannot read or affect the page around it. The small loader script, <code>embed.js</code>, runs on your page like any other external script: it creates the frame and sets its height, and does nothing else. Its source is short and can be read at <a href="embed.js">embed.js</a>. Newsrooms that do not allow external scripts use the iframe version.</li>
+  <li><strong>Light.</strong> The first load is about 70 kB compressed. The frame only loads as the reader approaches it.</li>
+  <li><strong>New boards at midnight</strong> in the reader's time zone. The library lasts three years, and the boards are the same as in the app.</li>
+  <li><strong>Hosted on GitHub Pages.</strong> The host sees the reader's IP address when the files load, as with any web page.</li>
+</ul>
+
+<h2>For technical teams</h2>
+<h3>Recommended for strict security requirements</h3>
+<p>Use the iframe version above. Then no code of ours runs on your page, only inside the frame. All you lose is the automatic height.</p>
+<h3>Content Security Policy</h3>
+<p>With the loader script both are needed; with a plain iframe only the second:</p>
+<div class="snippet">
+<div class="bar"><span>CSP</span><button class="copy" data-copy="code-csp" aria-describedby="copied">Copy</button></div>
+<pre><code id="code-csp">script-src https://esschul.github.io;
+frame-src https://esschul.github.io;</code></pre>
+</div>
+<p>Add them to your existing directives. The game in the frame only loads files from the same address.</p>
+<h3>Stability</h3>
+<ul>
+  <li>The addresses <code>…/daily/embed.js</code> and <code>…/daily/</code>, and the attributes in the table above, will stay. New options are added without changing existing ones.</li>
+  <li>The script loads with <code>async</code> and never holds up the rest of the page.</li>
+  <li>If GitHub Pages is unavailable, the space where the game would be stays empty. The page around it is not affected.</li>
+</ul>
+
+<h2>Terms</h2>
+<p><strong>Daily Hiku is free to use</strong> on news sites, blogs and any other web pages. The only requirement is that the link to the Hiku app inside the game stays as it is: do not hide, remove or cover it.</p>
+
+<h2>Contact</h2>
+<p>Questions, or want to know more before you start? Email <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
+
+<p id="copied" class="sr" aria-live="polite"></p>
+<footer><a href="./?lang=en">Play Daily Hiku</a> · <a href="../">About Hiku</a> · <a href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-guide&amp;mt=8">Hiku for iPhone</a></footer>
+</main>
+<script src="embed.js" async></script>
+<script>
+// The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
+(function () {
+  var form = document.getElementById('config'), stage = document.getElementById('stage');
+  var base = 'https://esschul.github.io/clean-jump-site/daily/', pageLang = 'en';
+  var words = {script: 'HTML', iframe: 'HTML without script', title: 'Daily Hiku'};
+  function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function update() {
+    var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
+    stage.className = 'stage ' + o.page;
+    var attrs = ['lang', 'theme', 'level', 'align'].filter(function (k) { return o[k]; })
+      .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
+    var code;
+    if (o.kind === 'iframe') {
+      var q = ['lang=' + (o.lang || pageLang)];
+      if (o.theme) q.push('theme=' + o.theme);
+      if (o.level) q.push('level=' + o.level);
+      code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="' + words.title + '" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
+      document.getElementById('preview').innerHTML = code;
+    } else {
+      code = '<div data-hiku' + attrs + '></div>\n<script src="' + base + 'embed.js" async></' + 'script>';
+      document.getElementById('preview').innerHTML = '<div data-hiku' + attrs + '></div>';
+      if (window.Hiku) window.Hiku.mount();
+    }
+    document.getElementById('code-custom').innerHTML = esc(code);
+    document.getElementById('code-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
+  }
+  form.addEventListener('change', update);
+  update();
+})();
+
+document.querySelectorAll('.copy').forEach(function (button) {
+  button.addEventListener('click', async function () {
+    var text = document.getElementById(button.dataset.copy).textContent;
+    var status = document.getElementById('copied');
+    try { await navigator.clipboard.writeText(text); button.textContent = 'Copied!'; status.textContent = 'The code is copied.'; }
+    catch (e) { button.textContent = 'Select and copy'; status.textContent = 'Could not copy. Select the code and copy it yourself.'; }
+    setTimeout(function () { button.textContent = 'Copy'; }, 2000);
+  });
+});
+</script>
+</body>
+</html>

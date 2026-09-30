@@ -4,7 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dagens Hiku på din nettside</title>
-<meta name="description" content="Slik bygger du inn Dagens Hiku, et daglig tallspill, på en nettavis eller nettside: én linje kode, ingen informasjonskapsler.">
+<meta name="description" content="Slik bygger du inn Dagens Hiku, et daglig tallspill, på en nettavis eller nettside: to linjer kode, ingen informasjonskapsler.">
+<link rel="alternate" hreflang="nb" href="https://esschul.github.io/clean-jump-site/daily/embed.html">
+<link rel="alternate" hreflang="en" href="https://esschul.github.io/clean-jump-site/daily/embed-en.html">
+<link rel="alternate" hreflang="sv" href="https://esschul.github.io/clean-jump-site/daily/embed-sv.html">
+<link rel="alternate" hreflang="da" href="https://esschul.github.io/clean-jump-site/daily/embed-da.html">
+<link rel="alternate" hreflang="fi" href="https://esschul.github.io/clean-jump-site/daily/embed-fi.html">
+<link rel="alternate" hreflang="de" href="https://esschul.github.io/clean-jump-site/daily/embed-de.html">
 <link rel="icon" href="../icon.png">
 <style>
 :root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--edge:#cbc2b3;--card:#fffaf2;--code:#e7e1d6;--accent:#3b4a7a;--on-accent:#f3eee6;--gold:#e0a43a}
@@ -43,12 +49,15 @@ td{color:var(--muted)}
 .stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
 .stage.light{background:#ffffff}
 .stage.dark{background:#15161c}
+.langs{margin-top:14px;font-size:14px;color:var(--muted)}
+.langs a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </style>
 </head>
 <body>
 <main>
 <header><img src="../icon.png" alt=""><h1>Dagens Hiku på din nettside<span>.</span></h1></header>
+<nav class="langs" aria-label="Språk"><a href="embed.html" hreflang="nb" lang="nb" aria-current="page">Norsk</a> · <a href="embed-en.html" hreflang="en" lang="en">English</a> · <a href="embed-sv.html" hreflang="sv" lang="sv">Svenska</a> · <a href="embed-da.html" hreflang="da" lang="da">Dansk</a> · <a href="embed-fi.html" hreflang="fi" lang="fi">Suomi</a> · <a href="embed-de.html" hreflang="de" lang="de">Deutsch</a></nav>
 
 <p class="lead">Dagens Hiku er et rolig tallspill med fire nye brett hver dag, fra lett til ekspert. Det er gratis å bygge inn på en nettavis eller nettside, med to linjer kode.</p>
 <p>Regelen er kort: tallet sier hvor langt det hopper, vannrett eller loddrett. Lander det på et annet tall, trekkes de fra hverandre. Målet er å få alle tallene til å forsvinne. Brettene er de samme for alle lesere hver dag, og de samme som i Hiku-appen for iPhone.</p>
@@ -60,7 +69,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 </ol>
 <div class="snippet">
 <div class="bar"><span>HTML</span><button class="copy" data-copy="code-basic" aria-describedby="copied">Kopier</button></div>
-<pre><code id="code-basic">&lt;div data-hiku&gt;&lt;/div&gt;
+<pre><code id="code-basic">&lt;div data-hiku data-lang="nb"&gt;&lt;/div&gt;
 &lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
 </div>
 <p>Skriptet trenger bare å stå én gang per side, selv om du har flere spill på samme side.</p>
@@ -69,11 +78,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <p>Velg innstillingene, se spillet endre seg, og kopier koden når dere er fornøyde.</p>
 <form class="config" id="config" onsubmit="return false">
   <label>Språk
-    <select name="lang">
-      <option value="">Sidens eget språk</option>
-      <option value="nb">Norsk</option><option value="en">Engelsk</option><option value="sv">Svensk</option>
-      <option value="da">Dansk</option><option value="fi">Finsk</option><option value="de">Tysk</option>
-    </select>
+    <select name="lang"><option value="">Sidens eget språk</option><option value="nb">Norsk</option><option value="en">Engelsk</option><option value="sv">Svensk</option><option value="da">Dansk</option><option value="fi">Finsk</option><option value="de">Tysk</option></select>
   </label>
   <label>Farger
     <select name="theme"><option value="">Følg leseren</option><option value="light">Alltid lyst</option><option value="dark">Alltid mørkt</option></select>
@@ -159,14 +164,15 @@ frame-src https://esschul.github.io;</code></pre>
 <p>Har du spørsmål, eller vil du vite mer før dere tar det i bruk? Send en e-post til <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
 
 <p id="copied" class="sr" aria-live="polite"></p>
-<footer><a href="./">Spill Dagens Hiku</a> · <a href="../">Om Hiku</a> · <a href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-guide&amp;mt=8">Hiku for iPhone</a></footer>
+<footer><a href="./?lang=nb">Spill Dagens Hiku</a> · <a href="../">Om Hiku</a> · <a href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-guide&amp;mt=8">Hiku for iPhone</a></footer>
 </main>
 <script src="embed.js" async></script>
 <script>
 // The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
 (function () {
   var form = document.getElementById('config'), stage = document.getElementById('stage');
-  var base = 'https://esschul.github.io/clean-jump-site/daily/';
+  var base = 'https://esschul.github.io/clean-jump-site/daily/', pageLang = 'nb';
+  var words = {script: 'HTML', iframe: 'HTML uten skript', title: 'Dagens Hiku'};
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function update() {
     var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
@@ -175,10 +181,10 @@ frame-src https://esschul.github.io;</code></pre>
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
     var code;
     if (o.kind === 'iframe') {
-      var q = ['lang=' + (o.lang || 'nb')];
+      var q = ['lang=' + (o.lang || pageLang)];
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
-      code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="Dagens Hiku" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
+      code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="' + words.title + '" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
       document.getElementById('preview').innerHTML = code;
     } else {
       code = '<div data-hiku' + attrs + '></div>\n<script src="' + base + 'embed.js" async></' + 'script>';
@@ -186,7 +192,7 @@ frame-src https://esschul.github.io;</code></pre>
       if (window.Hiku) window.Hiku.mount();
     }
     document.getElementById('code-custom').innerHTML = esc(code);
-    document.getElementById('code-label').textContent = o.kind === 'iframe' ? 'HTML uten skript' : 'HTML';
+    document.getElementById('code-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
   }
   form.addEventListener('change', update);
   update();
