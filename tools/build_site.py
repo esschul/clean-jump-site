@@ -26,7 +26,7 @@ UI = {
   theme_auto="Automatisk", theme_light="Lys", theme_dark="Mørk", theme_label="Lys eller mørk",
   description="Hiku er et rolig tallspill: tallet sier hvor langt det hopper. Fire nye brett hver dag, i nettleseren og i appen for iPhone.",
   nav_play="Spill", nav_app="Appen", nav_news="For aviser", nav_math="Matematikken",
-  play_cta="Spill dagens brett", app_cta="Last ned for iPhone", today="Dagens Hiku", today_note="De samme fire brettene for alle, hver dag. Nye ved midnatt.",
+  play_cta="Spill dagens brett", app_cta="Last ned for iPhone", today="Dagens Hiku", today_note="Fire nye brett hver dag, fra lett til ekspert. Nye ved midnatt.",
   app_title="Appen for iPhone", app_extra="I appen er det 50 brett i tillegg til Dagens Hiku, og de første lærer deg knepene ett for ett.",
   shots=["Startsiden med Dagens Hiku", "Et brett med buene som viser hvor tallet kan hoppe", "Mørk modus"],
   news_title="For aviser og nettsteder", news_text="Dagens Hiku kan bygges inn gratis på en nettavis eller nettside med to linjer kode. Ingen informasjonskapsler, ingen sporing, og spillet er på seks språk.",
@@ -44,7 +44,7 @@ UI = {
   theme_auto="Automatic", theme_light="Light", theme_dark="Dark", theme_label="Light or dark",
   description="Hiku is a calm number puzzle: the number says how far it jumps. Four new boards every day, in the browser and in the iPhone app.",
   nav_play="Play", nav_app="The app", nav_news="For publishers", nav_math="The maths",
-  play_cta="Play today's boards", app_cta="Get it for iPhone", today="Daily Hiku", today_note="The same four boards for everyone, every day. New ones at midnight.",
+  play_cta="Play today's boards", app_cta="Get it for iPhone", today="Daily Hiku", today_note="Four new boards every day, from easy to expert. New ones at midnight.",
   app_title="The iPhone app", app_extra="The app has 50 levels on top of Daily Hiku, and the first ones teach you the tricks one at a time.",
   shots=["The home screen with Daily Hiku", "A board with the arcs showing where a number can jump", "Dark mode"],
   news_title="For news sites and publishers", news_text="Daily Hiku can be embedded for free on a news site or any web page with two lines of code. No cookies, no tracking, and the game speaks six languages.",
@@ -62,7 +62,7 @@ UI = {
   theme_auto="Automatiskt", theme_light="Ljust", theme_dark="Mörkt", theme_label="Ljust eller mörkt",
   description="Hiku är ett lugnt sifferspel: talet säger hur långt det hoppar. Fyra nya bräden varje dag, i webbläsaren och i appen för iPhone.",
   nav_play="Spela", nav_app="Appen", nav_news="För tidningar", nav_math="Matematiken",
-  play_cta="Spela dagens bräden", app_cta="Hämta för iPhone", today="Dagens Hiku", today_note="Samma fyra bräden för alla, varje dag. Nya vid midnatt.",
+  play_cta="Spela dagens bräden", app_cta="Hämta för iPhone", today="Dagens Hiku", today_note="Fyra nya bräden varje dag, från lätt till expert. Nya vid midnatt.",
   app_title="Appen för iPhone", app_extra="I appen finns 50 banor utöver Dagens Hiku, och de första lär dig knepen ett i taget.",
   shots=["Startsidan med Dagens Hiku", "Ett bräde med bågarna som visar vart talet kan hoppa", "Mörkt läge"],
   news_title="För tidningar och webbplatser", news_text="Dagens Hiku kan bäddas in gratis på en nyhetssajt eller webbplats med två rader kod. Inga kakor, ingen spårning, och spelet finns på sex språk.",
@@ -80,7 +80,7 @@ UI = {
   theme_auto="Automatisk", theme_light="Lyst", theme_dark="Mørkt", theme_label="Lyst eller mørkt",
   description="Hiku er et roligt talspil: tallet siger, hvor langt det springer. Fire nye brætter hver dag, i browseren og i appen til iPhone.",
   nav_play="Spil", nav_app="Appen", nav_news="For medier", nav_math="Matematikken",
-  play_cta="Spil dagens brætter", app_cta="Hent til iPhone", today="Dagens Hiku", today_note="De samme fire brætter for alle, hver dag. Nye ved midnat.",
+  play_cta="Spil dagens brætter", app_cta="Hent til iPhone", today="Dagens Hiku", today_note="Fire nye brætter hver dag, fra let til ekspert. Nye ved midnat.",
   app_title="Appen til iPhone", app_extra="I appen er der 50 baner ud over Dagens Hiku, og de første lærer dig tricksene ét ad gangen.",
   shots=["Forsiden med Dagens Hiku", "Et bræt med buerne, der viser, hvor tallet kan springe", "Mørk tilstand"],
   news_title="For medier og websites", news_text="Dagens Hiku kan indlejres gratis på et netmedie eller website med to linjer kode. Ingen cookies, ingen sporing, og spillet findes på seks sprog.",
@@ -98,7 +98,7 @@ UI = {
   theme_auto="Automaattinen", theme_light="Vaalea", theme_dark="Tumma", theme_label="Vaalea vai tumma",
   description="Hiku on rauhallinen numeropeli: luku kertoo, kuinka pitkälle se hyppää. Neljä uutta lautaa joka päivä selaimessa ja iPhone-sovelluksessa.",
   nav_play="Pelaa", nav_app="Sovellus", nav_news="Medioille", nav_math="Matematiikka",
-  play_cta="Pelaa päivän lautoja", app_cta="Lataa iPhonelle", today="Päivän Hiku", today_note="Samat neljä lautaa kaikille, joka päivä. Uudet keskiyöllä.",
+  play_cta="Pelaa päivän lautoja", app_cta="Lataa iPhonelle", today="Päivän Hiku", today_note="Neljä uutta lautaa joka päivä, helposta asiantuntijaan. Uudet keskiyöllä.",
   app_title="Sovellus iPhonelle", app_extra="Sovelluksessa on Päivän Hikun lisäksi 50 tasoa, ja ensimmäiset opettavat niksit yksi kerrallaan.",
   shots=["Etusivu ja Päivän Hiku", "Lauta, jonka kaaret näyttävät, minne luku voi hypätä", "Tumma tila"],
   news_title="Uutissivustoille ja julkaisijoille", news_text="Päivän Hikun voi upottaa maksutta uutissivustolle tai verkkosivulle kahdella rivillä koodia. Ei evästeitä, ei seurantaa, ja peli toimii kuudella kielellä.",
@@ -116,7 +116,7 @@ UI = {
   theme_auto="Automatisch", theme_light="Hell", theme_dark="Dunkel", theme_label="Hell oder dunkel",
   description="Hiku ist ein ruhiges Zahlenrätsel: Die Zahl sagt, wie weit sie springt. Jeden Tag vier neue Bretter, im Browser und in der App für iPhone.",
   nav_play="Spielen", nav_app="Die App", nav_news="Für Verlage", nav_math="Die Mathematik",
-  play_cta="Die Bretter von heute spielen", app_cta="Für iPhone laden", today="Hiku des Tages", today_note="Dieselben vier Bretter für alle, jeden Tag. Neue um Mitternacht.",
+  play_cta="Die Bretter von heute spielen", app_cta="Für iPhone laden", today="Hiku des Tages", today_note="Vier neue Bretter jeden Tag, von leicht bis Experte. Neue um Mitternacht.",
   app_title="Die App für iPhone", app_extra="Die App hat 50 Level zusätzlich zu Hiku des Tages, und die ersten zeigen dir die Kniffe einen nach dem anderen.",
   shots=["Die Startseite mit Hiku des Tages", "Ein Brett mit den Bögen, die zeigen, wohin eine Zahl springen kann", "Dunkler Modus"],
   news_title="Für Nachrichtenseiten und Verlage", news_text="Hiku des Tages lässt sich kostenlos mit zwei Zeilen Code in eine Nachrichtenseite oder Website einbinden. Keine Cookies, kein Tracking, und das Spiel spricht sechs Sprachen.",
@@ -141,6 +141,7 @@ def store_text(lang):
     desc = re.search(r"\*\*Beskrivelse\*\*[^\n]*\n(.*?)\n\n\*\*Nøkkelord", s, re.S).group(1)
     blocks = desc.split("\n\n")
     bullets = [b[2:] for b in blocks[2].split("\n") if b.startswith("• ")]
+    bullets[0] = bullets[0].split(" – ")[0]
     how_title, how_first = blocks[3].split("\n", 1)
     name_title, name_first = blocks[7].split("\n", 1)
     return dict(tagline=blocks[0], rule=blocks[1], bullets=bullets, promo=promo,
