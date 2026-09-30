@@ -379,6 +379,7 @@ footer a{color:var(--accent)}
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
     svg.setAttribute('class', 'guides');
+    boardEl.appendChild(svg);
     const c = i => { const p = L.at(i); return {x: p.x + L.side / 2, y: p.y + L.side / 2}; };
     for (const to of targets(cells, n, from)) {
       const s = c(from), e = c(to), dist = Math.hypot(e.x - s.x, e.y - s.y), lift = dist * 0.28;
@@ -392,15 +393,14 @@ footer a{color:var(--accent)}
       path.setAttribute('stroke-linecap', 'round');
       path.setAttribute('stroke-dasharray', '5 6');
       svg.appendChild(path);
-      // Trim both ends by about half a tile.
-      requestAnimationFrame(() => {
-        const len = path.getTotalLength(), cut = Math.min(len * 0.45, L.side * 0.62);
-        path.setAttribute('stroke-dasharray', `0 ${cut} ${pattern(len - 2 * cut)} ${len}`);
-      });
+      // Only the part between the two tiles is drawn: the curve is traced from half a tile past the start to half a
+      // tile before the end, so the dashes run evenly and never cover a number.
+      const len = path.getTotalLength(), cut = Math.min(len * 0.45, L.side * 0.62), points = [];
+      for (let k = 0; k <= 24; k++) { const pt = path.getPointAtLength(cut + (len - 2 * cut) * k / 24); points.push(`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`); }
+      path.setAttribute('d', 'M' + points.join(' L'));
     }
     boardEl.appendChild(svg);
   }
-  const pattern = len => { const parts = []; for (let d = 0; d < len; d += 11) parts.push(Math.min(5, len - d), 6); return parts.join(' '); };
 
   const equation = m => m.a === m.b ? T.gone(m.a, m.b) : `${Math.max(m.a, m.b)} − ${Math.min(m.a, m.b)} = ${Math.abs(m.a - m.b)}`;
   // Spoken right away, ahead of the status line, so a move is heard as it is made.
