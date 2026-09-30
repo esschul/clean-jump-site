@@ -64,7 +64,6 @@ footer a{color:var(--accent)}
   <div class="controls" id="controls"></div>
   <footer><span id="made"></span><a id="app" class="app" target="_blank" rel="noopener"></a></footer>
 </main>
-<script src="boards.js"></script>
 <script>
 (() => {
   // ---- Settings from the address: ?lang=nb|en|sv|da|fi|de, ?theme=dark|light, ?level=easy|medium|hard|expert
@@ -539,6 +538,11 @@ footer a{color:var(--accent)}
   let lastWidth = 0;
   new ResizeObserver(() => { if (boardEl.clientWidth !== lastWidth) { lastWidth = boardEl.clientWidth; if (cells) render(); } }).observe(boardEl);
 
+  if (!window.HIKU_BOARDS) {
+    boardEl.innerHTML = '';
+    statusEl.textContent = lang === 'nb' ? 'Dagens Hiku er straks tilbake.' : 'Daily Hiku will be back shortly.';
+    return;
+  }
   start(tier);
 })();
 </script>
