@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dagens Hiku</title>
+<meta name="description" content="Dagens Hiku: fire nye tallbrett hver dag, fra lett til ekspert. Tallet sier hvor langt det hopper.">
+<link rel="icon" href="../icon.png">
+<style>
+:root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--well:#e7e1d6;--cell:#ddd6ca;--tile:#fffaf2;--edge:#cbc2b3;--accent:#3b4a7a;--on-accent:#f3eee6;--soft:#dfe4f4;--guide:#6874a3;--gold:#a86e0e;--gold-bright:#e0a43a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--well:#252836;--cell:#2d3040;--tile:#454b64;--edge:#161822;--accent:#9fb0ea;--on-accent:#1b1d27;--soft:#505d93;--guide:#c0ccf7;--gold:#f2c66d;--gold-bright:#f2c66d}}
+:root[data-theme="dark"]{--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--well:#252836;--cell:#2d3040;--tile:#454b64;--edge:#161822;--accent:#9fb0ea;--on-accent:#1b1d27;--soft:#505d93;--guide:#c0ccf7;--gold:#f2c66d;--gold-bright:#f2c66d}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
+main{max-width:480px;margin:0 auto;padding:16px}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+h1{font:400 30px/1.1 Georgia,serif;margin:0;letter-spacing:-.5px}
+h1 span{color:var(--gold-bright)}
+.day{color:var(--muted);font-size:14px}
+.rule{color:var(--muted);font-size:14px;margin:6px 0 14px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.tabs button{font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--cell);border:0;border-radius:10px;padding:8px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabs button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.tabs .mark{font-size:12px;line-height:1;opacity:.8;min-height:12px}
+.board{position:relative;width:100%;aspect-ratio:1;background:var(--well);border-radius:18px;touch-action:none;user-select:none;-webkit-user-select:none}
+.sq{position:absolute;border-radius:16%;background:var(--cell)}
+.tile{position:absolute;border-radius:16%;background:var(--tile);box-shadow:0 3px 0 var(--edge);display:flex;align-items:center;justify-content:center;font-weight:500;font-variant-numeric:tabular-nums;cursor:grab;transition:transform .2s,opacity .4s,background .2s;border:0;color:var(--ink);padding:0;font-family:inherit}
+.tile .dots{position:absolute;bottom:10%;left:0;right:0;display:flex;justify-content:center;gap:2px;opacity:.35}
+.tile .dots i{border-radius:50%;background:currentColor;display:block}
+.tile.sel{background:var(--accent);color:var(--on-accent)}
+.tile.target{background:var(--soft);outline:3px solid var(--guide);outline-offset:3px}
+.tile.lifted{z-index:5;box-shadow:0 10px 20px rgba(0,0,0,.2);transition:none;cursor:grabbing}
+.tile:focus-visible{outline:3px solid var(--gold-bright);outline-offset:3px}
+.lost .tile{opacity:.45}
+svg.guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.eq{position:absolute;z-index:6;background:var(--accent);color:var(--on-accent);font-weight:600;padding:6px 12px;border-radius:10px;transform:translate(-50%,-100%);pointer-events:none;white-space:nowrap;transition:opacity .3s}
+.status{min-height:48px;margin:12px 0 8px;font-size:15px;display:flex;align-items:center;gap:10px}
+.status.warn{background:var(--soft);border-radius:12px;padding:10px 14px}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font:inherit;font-size:14px;padding:9px 16px;border-radius:999px;border:1px solid var(--edge);background:transparent;color:var(--ink);cursor:pointer}
+.pill.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.pill:disabled{opacity:.35;cursor:default}
+.done{text-align:center;padding:6px 0}
+.stars{font-size:34px;letter-spacing:4px;color:var(--gold-bright)}
+footer{margin-top:18px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:var(--accent)}
+.app{display:inline-flex;align-items:center;gap:6px;font-weight:600;text-decoration:none;border:1px solid var(--edge);border-radius:999px;padding:6px 12px}
+.more{margin-top:8px;font-size:14px;color:var(--muted)}
+.more a{color:var(--accent);font-weight:600}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<main>
+  <header><h1>Hiku<span>.</span></h1><span class="day" id="day"></span></header>
+  <p class="rule" id="rule"></p>
+  <div class="tabs" id="tabs" role="group"></div>
+  <div class="board" id="board" role="grid"></div>
+  <div class="status" id="status" aria-live="polite"></div>
+  <div class="controls" id="controls"></div>
+  <footer><span id="made"></span><a id="app" class="app" href="https://apps.apple.com/app/id6816387508" target="_blank" rel="noopener"></a></footer>
+</main>
+<script src="boards.js"></script>
+<script>
+(() => {
+  // ---- Settings from the address: ?lang=en, ?theme=dark|light, ?level=easy|medium|hard|expert
+  const params = new URLSearchParams(location.search);
+  const lang = (params.get('lang') || (navigator.language || 'nb')).toLowerCase().startsWith('en') ? 'en' : 'nb';
+  if (params.get('theme') === 'dark' || params.get('theme') === 'light') document.documentElement.dataset.theme = params.get('theme');
+  document.documentElement.lang = lang;
+
+  const T = {
+    nb: {rule: 'Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.',
+         tiers: {easy: 'Lett', medium: 'Middels', hard: 'Vanskelig', expert: 'Ekspert'},
+         start: 'Dra et tall dit det hopper, eller trykk på tallet og så på målet.',
+         pick: 'Trykk på et av de markerte tallene.', noMove: 'Dette tallet kan ikke hoppe nå. Velg et annet.',
+         lost: 'Brettet kan ikke lenger ryddes. Angre et trekk.', stuck: 'Ingen trekk igjen. Angre eller start på nytt.',
+         undo: 'Angre', restart: 'Start på nytt', share: 'Del resultat', copied: 'Kopiert!',
+         solved: {3: 'Feilfritt!', 2: 'Godt løst!', 1: 'Løst!'}, undos: n => n === 0 ? 'Uten å angre.' : n === 1 ? 'Med én angring.' : `Med ${n} angringer.`,
+         made: 'Nye brett hver dag, de samme for alle.', app: 'Last ned Hiku for iPhone', more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store', gone: (a, b) => `${a} − ${b} = 0 · borte`,
+         tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`, date: {weekday: 'long', day: 'numeric', month: 'long'}},
+    en: {rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
+         tiers: {easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert'},
+         start: 'Drag a number to where it jumps, or tap the number and then its target.',
+         pick: 'Tap one of the marked numbers.', noMove: "This number can't jump right now. Pick another.",
+         lost: 'The board can no longer be cleared. Undo a move.', stuck: 'No moves left. Undo or start over.',
+         undo: 'Undo', restart: 'Start over', share: 'Share result', copied: 'Copied!',
+         solved: {3: 'Flawless!', 2: 'Well solved!', 1: 'Solved!'}, undos: n => n === 0 ? 'Without undoing.' : n === 1 ? 'With one undo.' : `With ${n} undos.`,
+         made: 'New boards every day, the same for everyone.', app: 'Get Hiku for iPhone', more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store', gone: (a, b) => `${a} − ${b} = 0 · gone`,
+         tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`, date: {weekday: 'long', day: 'numeric', month: 'long'}},
+  }[lang];
+  const TIERS = ['easy', 'medium', 'hard', 'expert'];
+
+  // ---- Today's boards: the same as the app, counted in days from 1 October 2026 in the player's own time zone.
+  const now = new Date();
+  const dayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const days = Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(2026, 9, 1)) / 86400000);
+  function boardFor(tier) {
+    const list = window.HIKU_BOARDS[tier];
+    const entry = list[((days % list.length) + list.length) % list.length];
+    return {size: +entry[0], cells: [...entry.slice(1)].map(Number)};
+  }
+
+  // ---- Results stay in this browser only.
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem('hiku:' + k)); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem('hiku:' + k, JSON.stringify(v)); } catch {} },
+  };
+
+  // ---- Rules and solver. The same source runs here and in a worker, which checks whether a board can still be
+  // cleared without ever holding up the page.
+  const ENGINE = String.raw`
+  // ---- Rules
+  const DIRS = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+  function targets(cells, n, i) {
+    const v = cells[i], r = Math.floor(i / n), c = i % n, out = [];
+    if (!v) return out;
+    for (const [dr, dc] of DIRS) {
+      const rr = r + dr * v, cc = c + dc * v;
+      if (rr >= 0 && rr < n && cc >= 0 && cc < n && cells[rr * n + cc] > 0) out.push(rr * n + cc);
+    }
+    return out;
+  }
+  function moved(cells, from, to) {
+    const next = cells.slice();
+    next[to] = Math.abs(cells[from] - cells[to]);
+    next[from] = 0;
+    return next;
+  }
+  const hasMove = (cells, n) => cells.some((v, i) => v && targets(cells, n, i).length);
+  const isClear = cells => cells.every(v => v === 0);
+
+  // ---- Can the board still be cleared? Numbers that share no row or column never meet, so each such group is
+  // solved on its own; a group with one number or an odd sum is lost at once. Gives up (null) past a budget.
+  function groups(cells, n) {
+    const parent = [...Array(2 * n).keys()];
+    const find = x => { while (parent[x] !== x) x = parent[x] = parent[parent[x]]; return x; };
+    const occ = [];
+    cells.forEach((v, i) => { if (v) { occ.push(i); const a = find(Math.floor(i / n)), b = find(n + i % n); if (a !== b) parent[a] = b; } });
+    const by = new Map();
+    for (const i of occ) { const k = find(Math.floor(i / n)); if (!by.has(k)) by.set(k, []); by.get(k).push(i); }
+    return [...by.values()];
+  }
+  function solvable(cells, n, memo, budget) {
+    let left = budget;
+    function search(p) {
+      const key = p.join('');
+      if (memo.has(key)) return memo.get(key);
+      if (isClear(p)) return true;
+      if (left <= 0) return null;
+      left--;
+      const parts = groups(p, n);
+      if (parts.length > 1 || parts[0].length === 1) {
+        let gaveUp = false;
+        for (const part of parts) {
+          const sum = part.reduce((s, i) => s + p[i], 0);
+          if (part.length === 1 || sum % 2) { memo.set(key, false); return false; }
+        }
+        if (parts.length > 1) {
+          for (const part of parts.sort((a, b) => a.length - b.length)) {
+            const q = new Array(p.length).fill(0);
+            for (const i of part) q[i] = p[i];
+            const r = search(q);
+            if (r === false) { memo.set(key, false); return false; }
+            if (r === null) gaveUp = true;
+          }
+          if (gaveUp) return null;
+          memo.set(key, true);
+          return true;
+        }
+      }
+      let gaveUp = false;
+      for (let i = 0; i < p.length; i++) {
+        for (const t of targets(p, n, i)) {
+          const r = search(moved(p, i, t));
+          if (r === true) { memo.set(key, true); return true; }
+          if (r === null) gaveUp = true;
+        }
+      }
+      if (gaveUp) return null;
+      memo.set(key, false);
+      return false;
+    }
+    return search(cells);
+  }
+
+`;
+  new Function(ENGINE + '; Object.assign(self.__hiku = {}, {targets, moved, hasMove, isClear});')();
+  const {targets, moved, hasMove, isClear} = self.__hiku;
+  const worker = new Worker(URL.createObjectURL(new Blob([ENGINE + `
+    let memo = new Map(), board = null;
+    onmessage = e => {
+      const {id, key, n, cells} = e.data;
+      if (key !== board) { memo = new Map(); board = key; }
+      const answer = hasMove(cells, n) ? solvable(cells, n, memo, 150000) : false;
+      postMessage({id, answer});
+    };`], {type: 'text/javascript'})));
+
+  // ---- State
+  let tier = TIERS.includes(params.get('level')) ? params.get('level') : (store.get('tier') || 'easy');
+  let n, cells, history, undos, selected = null, lost = false, lastMove = null, checkToken = 0;
+
+  const el = id => document.getElementById(id);
+  const boardEl = el('board'), statusEl = el('status'), controlsEl = el('controls'), tabsEl = el('tabs');
+  el('rule').textContent = T.rule;
+  el('day').textContent = now.toLocaleDateString(lang === 'nb' ? 'nb-NO' : 'en-GB', T.date);
+  el('made').textContent = T.made;
+  el('app').innerHTML = '<svg width="13" height="15" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>' + T.app;
+
+  const squareName = i => String.fromCharCode(65 + i % n) + (Math.floor(i / n) + 1);
+  const resultKey = t => `${dayKey}/${t}`;
+  const stars = u => u === 0 ? 3 : u <= 2 ? 2 : 1;
+
+  function start(t) {
+    tier = t;
+    store.set('tier', t);
+    const b = boardFor(t);
+    n = b.size; cells = b.cells; history = []; undos = 0; selected = null; lost = false; lastMove = null;
+    checkToken++;
+    render();
+  }
+
+  function play(from, to) {
+    if (lost || !targets(cells, n, from).includes(to)) return false;
+    history.push(cells);
+    lastMove = {from, to, a: cells[from], b: cells[to]};
+    cells = moved(cells, from, to);
+    selected = null;
+    if (isClear(cells)) {
+      const best = store.get(resultKey(tier));
+      if (!best || best < stars(undos)) store.set(resultKey(tier), stars(undos));
+    }
+    render();
+    check();
+    return true;
+  }
+
+  // The check runs in the worker; an answer for a board the player has already moved on from is dropped.
+  worker.onmessage = e => {
+    if (e.data.id !== checkToken) return;
+    lost = e.data.answer === false;
+    if (lost) render();
+  };
+  function check() {
+    if (isClear(cells)) return;
+    worker.postMessage({id: ++checkToken, key: tier + dayKey, n, cells});
+  }
+
+  function undo() {
+    if (!history.length) return;
+    cells = history.pop(); undos++; selected = null; lost = false; lastMove = null; checkToken++;
+    render();
+  }
+  function restart() {
+    if (!history.length) return;
+    const spent = undos + 1;
+    start(tier); undos = spent;
+    render();
+  }
+
+  // ---- Drawing
+  function layout() {
+    const w = boardEl.clientWidth, pad = w * 0.03, gap = w * 0.02;
+    const side = (w - pad * 2 - gap * (n - 1)) / n;
+    return {side, at: i => ({x: pad + (i % n) * (side + gap), y: pad + Math.floor(i / n) * (side + gap)})};
+  }
+
+  function render() {
+    renderTabs();
+    const L = layout();
+    boardEl.innerHTML = '';
+    boardEl.classList.toggle('lost', lost);
+    boardEl.setAttribute('aria-label', T.tiers[tier]);
+    cells.forEach((v, i) => {
+      const p = L.at(i);
+      const sq = document.createElement('div');
+      sq.className = 'sq';
+      Object.assign(sq.style, {left: p.x + 'px', top: p.y + 'px', width: L.side + 'px', height: L.side + 'px'});
+      if (!v) { sq.setAttribute('role', 'gridcell'); sq.setAttribute('aria-label', T.empty(squareName(i))); }
+      boardEl.appendChild(sq);
+    });
+    const tgts = selected !== null ? targets(cells, n, selected) : [];
+    cells.forEach((v, i) => {
+      if (!v) return;
+      const p = L.at(i);
+      const b = document.createElement('button');
+      b.className = 'tile' + (i === selected ? ' sel' : '') + (tgts.includes(i) ? ' target' : '');
+      b.dataset.i = i;
+      b.setAttribute('aria-label', T.tile(v, squareName(i)));
+      Object.assign(b.style, {left: p.x + 'px', top: p.y + 'px', width: L.side + 'px', height: L.side + 'px', fontSize: L.side * 0.4 + 'px'});
+      b.textContent = v;
+      const dots = document.createElement('span');
+      dots.className = 'dots';
+      const d = Math.min(4, L.side * 0.07);
+      for (let k = 0; k < v; k++) { const dot = document.createElement('i'); dot.style.width = dot.style.height = d + 'px'; dots.appendChild(dot); }
+      b.appendChild(dots);
+      if (lost) b.disabled = true;
+      boardEl.appendChild(b);
+    });
+    if (selected !== null) drawGuides(selected, L);
+    if (lastMove) showSum(lastMove, L);
+    renderStatus();
+    renderControls();
+  }
+
+  // Dashed arcs from the picked number to where it can land, stopping at the tile edges.
+  function drawGuides(from, L) {
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('class', 'guides');
+    const c = i => { const p = L.at(i); return {x: p.x + L.side / 2, y: p.y + L.side / 2}; };
+    for (const to of targets(cells, n, from)) {
+      const s = c(from), e = c(to), dist = Math.hypot(e.x - s.x, e.y - s.y), lift = dist * 0.28;
+      const m = {x: (s.x + e.x) / 2, y: (s.y + e.y) / 2};
+      const ctrl = s.x === e.x ? {x: m.x - lift, y: m.y} : {x: m.x, y: m.y - lift};
+      const path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', `M${s.x},${s.y} Q${ctrl.x},${ctrl.y} ${e.x},${e.y}`);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', 'var(--guide)');
+      path.setAttribute('stroke-width', '2');
+      path.setAttribute('stroke-linecap', 'round');
+      path.setAttribute('stroke-dasharray', '5 6');
+      svg.appendChild(path);
+      // Trim both ends by about half a tile.
+      requestAnimationFrame(() => {
+        const len = path.getTotalLength(), cut = Math.min(len * 0.45, L.side * 0.62);
+        path.setAttribute('stroke-dasharray', `0 ${cut} ${pattern(len - 2 * cut)} ${len}`);
+      });
+    }
+    boardEl.appendChild(svg);
+  }
+  const pattern = len => { const parts = []; for (let d = 0; d < len; d += 11) parts.push(Math.min(5, len - d), 6); return parts.join(' '); };
+
+  function showSum(m, L) {
+    const p = L.at(m.to), eq = document.createElement('div');
+    eq.className = 'eq';
+    eq.textContent = m.a === m.b ? T.gone(m.a, m.b) : `${Math.max(m.a, m.b)} − ${Math.min(m.a, m.b)} = ${Math.abs(m.a - m.b)}`;
+    Object.assign(eq.style, {left: p.x + L.side / 2 + 'px', top: Math.max(34, p.y - 6) + 'px'});
+    boardEl.appendChild(eq);
+    const shown = m;
+    setTimeout(() => { if (lastMove === shown) { eq.style.opacity = 0; } }, 1100);
+  }
+
+  function renderTabs() {
+    tabsEl.innerHTML = '';
+    for (const t of TIERS) {
+      const b = document.createElement('button');
+      const done = store.get(resultKey(t));
+      b.setAttribute('aria-pressed', t === tier);
+      b.innerHTML = `<span>${T.tiers[t]}</span><span class="mark">${done ? '★'.repeat(done) : ''}</span>`;
+      b.onclick = () => { if (t !== tier) start(t); };
+      tabsEl.appendChild(b);
+    }
+  }
+
+  function renderStatus() {
+    statusEl.className = 'status';
+    if (isClear(cells)) {
+      const s = stars(undos);
+      statusEl.innerHTML = '';
+      const box = document.createElement('div');
+      box.className = 'done';
+      box.style.width = '100%';
+      box.innerHTML = `<div class="stars" aria-label="${s}/3">${'★'.repeat(s)}${'☆'.repeat(3 - s)}</div><div><strong>${T.solved[s]}</strong> ${T.undos(undos)}</div>` +
+        `<div class="more">${T.more} <a href="https://apps.apple.com/app/id6816387508" target="_blank" rel="noopener">${T.moreLink}</a></div>`;
+      statusEl.appendChild(box);
+    } else if (lost) {
+      statusEl.className = 'status warn';
+      statusEl.textContent = hasMove(cells, n) ? T.lost : T.stuck;
+    } else if (!history.length && selected === null) {
+      statusEl.textContent = T.start;
+    } else if (selected !== null && !targets(cells, n, selected).length) {
+      statusEl.textContent = T.noMove;
+    } else if (selected !== null) {
+      statusEl.textContent = T.pick;
+    } else {
+      statusEl.textContent = '';
+    }
+  }
+
+  function renderControls() {
+    controlsEl.innerHTML = '';
+    const add = (label, fn, primary, disabled) => {
+      const b = document.createElement('button');
+      b.className = 'pill' + (primary ? ' primary' : '');
+      b.textContent = label; b.onclick = fn; b.disabled = !!disabled;
+      controlsEl.appendChild(b);
+      return b;
+    };
+    if (isClear(cells)) {
+      const share = add(T.share, async () => {
+        const text = `Hiku · ${T.tiers[tier]} · ${now.toLocaleDateString(lang === 'nb' ? 'nb-NO' : 'en-GB', {day: 'numeric', month: 'short'})}\n${'★'.repeat(stars(undos))}${'☆'.repeat(3 - stars(undos))}\n${location.origin}${location.pathname}`;
+        try {
+          if (navigator.share) await navigator.share({text});
+          else { await navigator.clipboard.writeText(text); share.textContent = T.copied; }
+        } catch {}
+      }, true);
+      add(T.restart, () => { start(tier); });
+    } else {
+      add(T.undo, undo, lost, !history.length);
+      add(T.restart, restart, false, !history.length);
+    }
+  }
+
+  // ---- Input: tap a number then its target, or drag it there.
+  let drag = null;
+  boardEl.addEventListener('pointerdown', e => {
+    const tile = e.target.closest('.tile');
+    if (!tile || lost) return;
+    drag = {i: +tile.dataset.i, el: tile, x: e.clientX, y: e.clientY, moved: false};
+    tile.setPointerCapture(e.pointerId);
+  });
+  boardEl.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.moved && Math.hypot(dx, dy) < 6) return;
+    if (!drag.moved) {
+      drag.moved = true;
+      selected = drag.i; lastMove = null;
+      render();
+      drag.el = boardEl.querySelector(`.tile[data-i="${drag.i}"]`);
+      drag.el.classList.add('lifted');
+    }
+    drag.el.style.transform = `translate(${dx}px,${dy}px) scale(1.06)`;
+  });
+  boardEl.addEventListener('pointerup', e => {
+    if (!drag) return;
+    const d = drag; drag = null;
+    if (!d.moved) { tap(d.i); return; }
+    const r = boardEl.getBoundingClientRect(), L = layout();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const over = cells.findIndex((_, i) => { const p = L.at(i); return x >= p.x && x <= p.x + L.side && y >= p.y && y <= p.y + L.side; });
+    if (over < 0 || !play(d.i, over)) { selected = null; render(); }
+  });
+  boardEl.addEventListener('pointercancel', () => { drag = null; selected = null; render(); });
+
+  // Enter or space on a focused number, for keyboards and screen readers.
+  boardEl.addEventListener('click', e => {
+    const tile = e.target.closest('.tile');
+    if (tile && e.detail === 0) tap(+tile.dataset.i);
+  });
+
+  function tap(i) {
+    if (lost) return;
+    if (selected !== null && selected !== i && play(selected, i)) return;
+    selected = selected === i ? null : i;
+    lastMove = null;
+    render();
+  }
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'z') { e.preventDefault(); undo(); }
+    if (e.key === 'Escape' && selected !== null) { selected = null; render(); }
+  });
+
+  // ---- Embedding: tell the page around us how tall we are, so the frame can fit.
+  function reportHeight() {
+    if (parent !== window) parent.postMessage({type: 'hiku:height', height: document.documentElement.scrollHeight}, '*');
+  }
+  new ResizeObserver(() => { reportHeight(); }).observe(document.body);
+  let lastWidth = 0;
+  new ResizeObserver(() => { if (boardEl.clientWidth !== lastWidth) { lastWidth = boardEl.clientWidth; if (cells) render(); } }).observe(boardEl);
+
+  start(tier);
+})();
+</script>
+</body>
+</html>

@@ -20,6 +20,8 @@ h2{font:400 26px/1.2 Georgia,serif;margin:44px 0 8px}
 p,li{color:var(--muted)}
 strong{color:var(--ink);font-weight:600}
 a{color:var(--accent)}
+pre{background:var(--edge);border-radius:10px;padding:12px 14px;overflow-x:auto;font-size:13px;color:var(--ink)}
+code{font-size:.9em}
 hr{border:0;border-top:1px solid var(--edge);margin:48px 0}
 .en h2{font-size:22px}
 footer{margin-top:48px;font-size:13px;color:var(--muted)}
@@ -29,6 +31,13 @@ footer{margin-top:48px;font-size:13px;color:var(--muted)}
 <main>
 <header><img src="icon.png" alt=""><h1>Hiku<span>.</span></h1></header>
 <p>Et rolig tallspill for iPhone, tidligere kalt Clean Jump. Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.</p>
+
+<h2 id="daglig">Dagens Hiku i nettleseren</h2>
+<p>Dagens fire brett kan også spilles <a href="daily/">rett i nettleseren</a>, de samme som i appen.</p>
+<p>Vil du ha Dagens Hiku på din egen nettside? Lim inn dette der spillet skal stå:</p>
+<pre><code>&lt;div data-hiku&gt;&lt;/div&gt;
+&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code></pre>
+<p>Rammen tilpasser høyden selv. Legg til <code>data-lang="en"</code> for engelsk, <code>data-theme="light"</code> eller <code>"dark"</code> for fast farge, og <code>data-level="hard"</code> for å starte på et bestemt nivå. Spillet setter ingen informasjonskapsler og sender ingenting: resultatene blir i leserens nettleser.</p>
 
 <h2 id="matematikk">Matematikken bak Hiku</h2>
 <p>Hvorfor går noen brett ikke opp, og hvor langt fram må du se på et ekspertbrett? I <a href="hiku-matematikk.pdf">en artikkel om spillet</a> (engelsk, PDF, utkast) viser vi at summen alltid beholder sin paritet, at brettet deler seg i grupper som aldri møtes igjen, og at tallene i hver gruppe må kunne deles i to hauger med lik sum. Knepene i spillet følger av dette. Vi måler også hvordan løsningene ser ut og hvor mange trekk fram en spiller må se på hver vanskelighetsgrad. Om spillet er NP-komplett, er fortsatt et åpent spørsmål.</p>
@@ -44,6 +53,8 @@ footer{margin-top:48px;font-size:13px;color:var(--muted)}
 <hr>
 
 <section class="en" lang="en">
+<h2>Daily Hiku in the browser</h2>
+<p>Today's four boards can also be played <a href="daily/?lang=en">in the browser</a>, the same as in the app. To put it on your own site, paste <code>&lt;div data-hiku data-lang="en"&gt;&lt;/div&gt;</code> and <code>&lt;script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async&gt;&lt;/script&gt;</code> where it should appear. It sets no cookies and sends nothing anywhere.</p>
 <h2>The mathematics of Hiku</h2>
 <p>Why do some boards go wrong, and how far ahead must you look on an expert board? <a href="hiku-matematikk.pdf">A paper on the game</a> (PDF, draft) shows that the sum always keeps its parity, that a board splits into groups that never meet again, and that the numbers of each group must split into two piles with equal sums. The game's tricks follow from that. It also measures what solutions look like and how many moves ahead a player must look on each difficulty. Whether the game is NP-complete is still open.</p>
 <h2>Privacy</h2>
