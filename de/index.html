@@ -51,6 +51,7 @@ nav.top .links{margin-left:auto}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px}
 .btn.primary{background:var(--accent);color:var(--on-accent)}
 .btn.ghost{border:1px solid var(--edge);color:var(--ink)}
+@media (min-width:821px){.play-down{display:none}}
 .game{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 3px 0 var(--edge)}
 .game h2{font:400 22px Georgia,serif;margin:4px 6px 2px}
 .game p{margin:0 6px 10px;color:var(--muted);font-size:14px}
@@ -93,7 +94,7 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
     <p class="tagline">Hiku ist ein ruhiges Zahlenrätsel für alle, die Sudoku mögen: reine Logik, kein Raten.</p>
     <p class="rule">Die Zahl sagt, wie weit sie springt. Landet sie auf einer anderen, wird abgezogen. Lass alle Zahlen verschwinden.</p>
     <div class="ctas">
-      <a class="btn primary" href="#spill">Die Bretter von heute spielen <span aria-hidden="true">↓</span></a>
+      <a class="btn primary play-down" href="#spill">Die Bretter von heute spielen <span aria-hidden="true">↓</span></a>
       <a class="btn ghost" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-de&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Für iPhone laden</a>
     </div>
   </div>
@@ -119,6 +120,12 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 <section id="slik"><div class="wrap">
   <h2>So wird gesprungen</h2>
   <p>Eine Zahl springt so viele Felder weit, wie sie sagt, waagerecht oder senkrecht. Eine 1 erreicht ihren Nachbarn, eine 3 das Feld drei weiter. Sie springt über alles dazwischen, muss aber auf einer anderen Zahl landen.</p><p>Die kleinere Zahl wird von der größeren abgezogen, und der Rest bleibt, wo du gelandet bist. Gleiche Zahlen verschwinden beide. Wird eine Zahl kleiner, wird ihr Sprung kürzer.</p><p>Jedes Level ist lösbar. Die falsche Reihenfolge kann Zahlen übrig lassen, die sich nicht mehr erreichen. Nimm Züge beliebig zurück und probier einen anderen Weg.</p><p>Löst du ein Level, ohne einen Zug zurückzunehmen, bekommst du drei Sterne. Mit ein oder zwei zurückgenommenen Zügen gibt es zwei, sonst einen. Neu starten zählt wie ein zurückgenommener Zug.</p>
+</div></section>
+
+<section id="tilgjengelig"><div class="wrap">
+  <h2>Für alle zugänglich</h2>
+  <p>Hiku lässt sich spielen, ohne das Brett zu sehen. Jedes Feld hat einen Namen wie B2, und jede Zahl lässt sich vorlesen, samt wohin sie springen kann. Jeder Zug wird vorgelesen: was passiert ist und wie viele Zahlen übrig sind.</p>
+  <ul class="bullets"><li><strong>Die App</strong> unterstützt VoiceOver, Sprachsteuerung („tippe auf B2“), dunklen Modus, starken Kontrast und reduzierte Bewegung. Farbe ist nie das einzige Merkmal: Ziffern und Punkte zeigen immer, wie weit eine Zahl springt.</li><li><strong>Die Webversion</strong> lässt sich mit Screenreader und allein mit der Tastatur spielen, folgt hellem und dunklem Modus und schaltet Animationen ab, wenn weniger Bewegung gewünscht ist. Sie ist nach WCAG 2.2 Stufe AA gebaut und mit dem Werkzeug axe geprüft.</li></ul>
 </div></section>
 
 <section><div class="wrap cards">

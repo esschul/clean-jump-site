@@ -51,6 +51,7 @@ nav.top .links{margin-left:auto}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px}
 .btn.primary{background:var(--accent);color:var(--on-accent)}
 .btn.ghost{border:1px solid var(--edge);color:var(--ink)}
+@media (min-width:821px){.play-down{display:none}}
 .game{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 3px 0 var(--edge)}
 .game h2{font:400 22px Georgia,serif;margin:4px 6px 2px}
 .game p{margin:0 6px 10px;color:var(--muted);font-size:14px}
@@ -93,7 +94,7 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
     <p class="tagline">Hiku er et roligt talspil for dig, der kan lide sudoku: ren logik, intet gætteri.</p>
     <p class="rule">Tallet siger, hvor langt det springer. Lander det på et andet, trækkes de fra hinanden. Få alle tallene til at forsvinde.</p>
     <div class="ctas">
-      <a class="btn primary" href="#spill">Spil dagens brætter <span aria-hidden="true">↓</span></a>
+      <a class="btn primary play-down" href="#spill">Spil dagens brætter <span aria-hidden="true">↓</span></a>
       <a class="btn ghost" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-da&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Hent til iPhone</a>
     </div>
   </div>
@@ -119,6 +120,12 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 <section id="slik"><div class="wrap">
   <h2>Sådan springer du</h2>
   <p>Et tal springer lige så mange felter, som det siger, vandret eller lodret. Et 1-tal når naboen, et 3-tal når tre felter væk. Det springer over alt imellem, men skal lande på et andet tal.</p><p>Det mindste trækkes fra det største, og resten bliver, hvor du landede. Ens tal forsvinder begge to. Når et tal bliver mindre, bliver springet kortere.</p><p>Alle baner kan løses. Den forkerte rækkefølge kan efterlade tal, der ikke kan nå hinanden. Fortryd frit og prøv en anden vej.</p><p>Løser du banen uden at fortryde, får du tre stjerner. Med en eller to fortrydelser får du to, ellers én. At starte forfra tæller som én fortrydelse.</p>
+</div></section>
+
+<section id="tilgjengelig"><div class="wrap">
+  <h2>Tilgængeligt for alle</h2>
+  <p>Hiku kan spilles uden at se brættet. Hvert felt har et navn, som B2, og hvert tal kan læses op med, hvor det kan springe. Hvert træk læses op med, hvad der skete, og hvor mange tal der er tilbage.</p>
+  <ul class="bullets"><li><strong>Appen</strong> understøtter VoiceOver, Stemmestyring (”tryk på B2”), mørk tilstand, tydelig kontrast og reduceret bevægelse. Farve er aldrig det eneste kendetegn: cifrene og prikkerne viser altid, hvor langt et tal springer.</li><li><strong>Webversionen</strong> kan spilles med skærmlæser og kun tastatur, følger lys og mørk tilstand og slår animationer fra for dem, der har bedt om det. Den er bygget efter WCAG 2.2 niveau AA og testet med værktøjet axe.</li></ul>
 </div></section>
 
 <section><div class="wrap cards">

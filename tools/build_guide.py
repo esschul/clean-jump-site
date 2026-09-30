@@ -23,6 +23,7 @@ GAME_TITLE = {"nb": "Dagens Hiku", "en": "Daily Hiku", "sv": "Dagens Hiku", "da"
 
 T = {
 "nb": dict(
+  p_a11y='<strong>Universell utforming.</strong> Spillet kan spilles med skjermleser og bare tastatur: hver rute har et navn, og hvert trekk leses opp. Det følger lys og mørk modus, slår av animasjoner for den som har bedt om det, og er laget etter WCAG 2.2 nivå AA og testet med axe-verktøyet. Det gjør det enklere for dere å oppfylle kravene til universell utforming.',
   title="Dagens Hiku på din nettside",
   description="Slik bygger du inn Dagens Hiku, et daglig tallspill, på en nettavis eller nettside: to linjer kode, ingen informasjonskapsler.",
   lead="Dagens Hiku er et rolig tallspill med fire nye brett hver dag, fra lett til ekspert. Det er gratis å bygge inn på en nettavis eller nettside, med to linjer kode.",
@@ -76,6 +77,7 @@ T = {
   language="Språk",
 ),
 "en": dict(
+  p_a11y='<strong>Accessibility.</strong> The game can be played with a screen reader or the keyboard alone: every square has a name and every move is read out. It follows light and dark mode, turns animations off for anyone who has asked for less motion, and is built to WCAG 2.2 level AA and tested with the axe tool. That makes it easier for you to meet accessibility requirements such as the European Accessibility Act.',
   title="Daily Hiku on your site",
   description="How to embed Daily Hiku, a daily number puzzle, on a news site or any web page: two lines of code, no cookies.",
   lead="Daily Hiku is a calm number puzzle with four new boards every day, from easy to expert. It is free to embed on a news site or any web page, with two lines of code.",
@@ -129,6 +131,7 @@ T = {
   language="Language",
 ),
 "sv": dict(
+  p_a11y='<strong>Tillgänglighet.</strong> Spelet kan spelas med skärmläsare och enbart tangentbord: varje ruta har ett namn och varje drag läses upp. Det följer ljust och mörkt läge, stänger av animationer för den som bett om det och är byggt enligt WCAG 2.2 nivå AA och testat med verktyget axe. Det gör det lättare för er att uppfylla kraven på tillgänglighet.',
   title="Dagens Hiku på din webbplats",
   description="Så bäddar du in Dagens Hiku, ett dagligt sifferspel, på en nyhetssajt eller webbplats: två rader kod, inga kakor.",
   lead="Dagens Hiku är ett lugnt sifferspel med fyra nya bräden varje dag, från lätt till expert. Det är gratis att bädda in på en nyhetssajt eller webbplats, med två rader kod.",
@@ -182,6 +185,7 @@ T = {
   language="Språk",
 ),
 "da": dict(
+  p_a11y='<strong>Tilgængelighed.</strong> Spillet kan spilles med skærmlæser og kun tastatur: hvert felt har et navn, og hvert træk læses op. Det følger lys og mørk tilstand, slår animationer fra for dem, der har bedt om det, og er bygget efter WCAG 2.2 niveau AA og testet med værktøjet axe. Det gør det lettere for jer at opfylde kravene til tilgængelighed.',
   title="Dagens Hiku på dit website",
   description="Sådan indlejrer du Dagens Hiku, et dagligt talspil, på et netmedie eller website: to linjer kode, ingen cookies.",
   lead="Dagens Hiku er et roligt talspil med fire nye brætter hver dag, fra let til ekspert. Det er gratis at indlejre på et netmedie eller website, med to linjer kode.",
@@ -235,6 +239,7 @@ T = {
   language="Sprog",
 ),
 "fi": dict(
+  p_a11y='<strong>Saavutettavuus.</strong> Peliä voi pelata ruudunlukijalla ja pelkällä näppäimistöllä: jokaisella ruudulla on nimi ja jokainen siirto luetaan ääneen. Se seuraa vaaleaa ja tummaa tilaa, poistaa animaatiot, jos niin on pyydetty, ja on tehty WCAG 2.2 AA -tason mukaan ja testattu axe-työkalulla. Se helpottaa saavutettavuusvaatimusten täyttämistä.',
   title="Päivän Hiku sivustollesi",
   description="Näin upotat Päivän Hikun, päivittäisen numeropelin, uutissivustolle tai verkkosivulle: kaksi riviä koodia, ei evästeitä.",
   lead="Päivän Hiku on rauhallinen numeropeli, jossa on neljä uutta lautaa joka päivä helposta asiantuntijaan. Sen voi upottaa maksutta uutissivustolle tai verkkosivulle kahdella rivillä koodia.",
@@ -288,6 +293,7 @@ T = {
   language="Kieli",
 ),
 "de": dict(
+  p_a11y='<strong>Barrierefreiheit.</strong> Das Spiel lässt sich mit Screenreader und allein mit der Tastatur spielen: Jedes Feld hat einen Namen, und jeder Zug wird vorgelesen. Es folgt hellem und dunklem Modus, schaltet Animationen ab, wenn weniger Bewegung gewünscht ist, und ist nach WCAG 2.2 Stufe AA gebaut und mit dem Werkzeug axe geprüft. Das erleichtert Ihnen, Anforderungen an Barrierefreiheit wie den European Accessibility Act zu erfüllen.',
   title="Hiku des Tages auf Ihrer Website",
   description="So binden Sie Hiku des Tages, ein tägliches Zahlenrätsel, in eine Nachrichtenseite oder Website ein: zwei Zeilen Code, keine Cookies.",
   lead="Hiku des Tages ist ein ruhiges Zahlenrätsel mit vier neuen Brettern jeden Tag, von leicht bis Experte. Es lässt sich kostenlos in eine Nachrichtenseite oder Website einbinden, mit zwei Zeilen Code.",

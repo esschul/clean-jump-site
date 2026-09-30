@@ -51,6 +51,7 @@ nav.top .links{margin-left:auto}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px}
 .btn.primary{background:var(--accent);color:var(--on-accent)}
 .btn.ghost{border:1px solid var(--edge);color:var(--ink)}
+@media (min-width:821px){.play-down{display:none}}
 .game{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 3px 0 var(--edge)}
 .game h2{font:400 22px Georgia,serif;margin:4px 6px 2px}
 .game p{margin:0 6px 10px;color:var(--muted);font-size:14px}
@@ -93,7 +94,7 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
     <p class="tagline">Hiku on rauhallinen numeropeli sudokun ystäville: puhdasta logiikkaa, ei arvailua.</p>
     <p class="rule">Luku kertoo, kuinka pitkälle se hyppää. Kun se laskeutuu toiseen, ne vähennetään toisistaan. Saa kaikki luvut katoamaan.</p>
     <div class="ctas">
-      <a class="btn primary" href="#spill">Pelaa päivän lautoja <span aria-hidden="true">↓</span></a>
+      <a class="btn primary play-down" href="#spill">Pelaa päivän lautoja <span aria-hidden="true">↓</span></a>
       <a class="btn ghost" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-fi&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Lataa iPhonelle</a>
     </div>
   </div>
@@ -119,6 +120,12 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 <section id="slik"><div class="wrap">
   <h2>Näin hypätään</h2>
   <p>Luku hyppää niin monta ruutua kuin se sanoo, vaaka- tai pystysuunnassa. Ykkönen ylettyy naapuriin, kolmonen kolmen ruudun päähän. Se hyppää kaiken välissä olevan yli, mutta sen on laskeuduttava toiseen lukuun.</p><p>Pienempi vähennetään suuremmasta, ja erotus jää siihen, mihin laskeuduit. Samat luvut katoavat molemmat. Kun luku pienenee, hyppy lyhenee.</p><p>Jokainen taso on ratkaistavissa. Väärä järjestys voi jättää lukuja, jotka eivät ylety toisiinsa. Peru vapaasti ja kokeile toista tietä.</p><p>Kun ratkaiset tason perumatta, saat kolme tähteä. Yhdellä tai kahdella perumisella saat kaksi, muuten yhden. Alusta aloittaminen lasketaan yhdeksi perumiseksi.</p>
+</div></section>
+
+<section id="tilgjengelig"><div class="wrap">
+  <h2>Saavutettava kaikille</h2>
+  <p>Hikua voi pelata näkemättä lautaa. Jokaisella ruudulla on nimi, kuten B2, ja jokaisen luvun voi kuulla ääneen sekä sen, minne se voi hypätä. Jokainen siirto luetaan ääneen: mitä tapahtui ja montako lukua on jäljellä.</p>
+  <ul class="bullets"><li><strong>Sovellus</strong> tukee VoiceOveria, Äänellä ohjausta (”napauta B2”), tummaa tilaa, selkeää kontrastia ja vähennettyä liikettä. Väri ei ole koskaan ainoa vihje: numerot ja pisteet kertovat aina, kuinka pitkälle luku hyppää.</li><li><strong>Verkkoversiota</strong> voi pelata ruudunlukijalla ja pelkällä näppäimistöllä, se seuraa vaaleaa ja tummaa tilaa ja poistaa animaatiot, jos niin on pyydetty. Se on tehty WCAG 2.2 AA -tason mukaan ja testattu axe-työkalulla.</li></ul>
 </div></section>
 
 <section><div class="wrap cards">

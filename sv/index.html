@@ -51,6 +51,7 @@ nav.top .links{margin-left:auto}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px}
 .btn.primary{background:var(--accent);color:var(--on-accent)}
 .btn.ghost{border:1px solid var(--edge);color:var(--ink)}
+@media (min-width:821px){.play-down{display:none}}
 .game{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 3px 0 var(--edge)}
 .game h2{font:400 22px Georgia,serif;margin:4px 6px 2px}
 .game p{margin:0 6px 10px;color:var(--muted);font-size:14px}
@@ -93,7 +94,7 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
     <p class="tagline">Hiku är ett lugnt sifferspel för dig som gillar sudoku: ren logik, inget gissande.</p>
     <p class="rule">Talet säger hur långt det hoppar. Landar det på ett annat dras de från varandra. Få alla tal att försvinna.</p>
     <div class="ctas">
-      <a class="btn primary" href="#spill">Spela dagens bräden <span aria-hidden="true">↓</span></a>
+      <a class="btn primary play-down" href="#spill">Spela dagens bräden <span aria-hidden="true">↓</span></a>
       <a class="btn ghost" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-sv&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Hämta för iPhone</a>
     </div>
   </div>
@@ -119,6 +120,12 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 <section id="slik"><div class="wrap">
   <h2>Så hoppar du</h2>
   <p>Ett tal hoppar lika många rutor som det säger, vågrätt eller lodrätt. En 1:a når grannen, en 3:a når tre rutor bort. Det hoppar över allt som ligger emellan, men måste landa på ett annat tal.</p><p>Det minsta dras från det största, och resten blir kvar där du landade. Lika tal försvinner båda två. När ett tal blir mindre blir hoppet kortare.</p><p>Alla banor går att lösa. Fel ordning kan lämna tal som inte når varandra. Ångra fritt och prova en annan väg.</p><p>Löser du banan utan att ångra får du tre stjärnor. Med en eller två ångringar får du två, annars en. Att börja om räknas som en ångring.</p>
+</div></section>
+
+<section id="tilgjengelig"><div class="wrap">
+  <h2>Tillgängligt för alla</h2>
+  <p>Hiku kan spelas utan att se brädet. Varje ruta har ett namn, som B2, och varje tal kan läsas upp med vart det kan hoppa. Varje drag läses upp med vad som hände och hur många tal som är kvar.</p>
+  <ul class="bullets"><li><strong>Appen</strong> stöder VoiceOver, Röststyrning (”tryck på B2”), mörkt läge, tydlig kontrast och minskad rörelse. Färg är aldrig det enda kännetecknet: siffrorna och prickarna visar alltid hur långt ett tal hoppar.</li><li><strong>Webbversionen</strong> kan spelas med skärmläsare och enbart tangentbord, följer ljust och mörkt läge och stänger av animationer för den som bett om det. Den är byggd enligt WCAG 2.2 nivå AA och testad med verktyget axe.</li></ul>
 </div></section>
 
 <section><div class="wrap cards">

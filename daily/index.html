@@ -42,8 +42,24 @@ svg.guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
 .pill{font:inherit;font-size:14px;padding:9px 16px;border-radius:999px;border:1px solid var(--edge);background:transparent;color:var(--ink);cursor:pointer}
 .pill.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .pill:disabled{opacity:.35;cursor:default}
-.done{text-align:center;padding:6px 0}
-.stars{font-size:34px;letter-spacing:4px;color:var(--gold-bright)}
+.info{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:0 2px 8px}
+.done{padding:4px 0}
+.stars{display:flex;gap:8px;font-size:32px;line-height:1;color:var(--gold-bright)}
+.stars span{display:inline-block;animation:pop .45s cubic-bezier(.3,1.6,.5,1) both}
+.stars span.off{color:var(--muted);opacity:.6}
+.stars.glow span{animation:pop .45s cubic-bezier(.3,1.6,.5,1) both,glow 2.2s ease-in-out .9s infinite alternate}
+.rtitle{font:400 28px/1.2 Georgia,serif;margin:10px 0 2px;color:var(--ink)}
+.rdetail{color:var(--muted);font-size:14px}
+.streak{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;margin-top:6px;color:var(--ink)}
+.streak svg{color:var(--gold-bright)}
+@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes glow{from{text-shadow:0 0 4px rgba(224,164,58,.4)}to{text-shadow:0 0 16px rgba(224,164,58,.95)}}
+.tile.land{animation:land .28s cubic-bezier(.3,1.5,.5,1)}
+@keyframes land{from{transform:scale(.72)}to{transform:scale(1)}}
+.ghost{position:absolute;border-radius:16%;background:var(--tile);box-shadow:0 3px 0 var(--edge);pointer-events:none;animation:vanish .3s ease-in forwards;z-index:2}
+@keyframes vanish{to{transform:scale(.3);opacity:0}}
+.spark{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--gold-bright);pointer-events:none;z-index:7;animation:spark .9s ease-out forwards}
+@keyframes spark{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
 footer{margin-top:18px;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer a{color:var(--accent)}
 .app{display:inline-flex;align-items:center;gap:6px;font-weight:600;text-decoration:none;border:1px solid var(--edge);border-radius:999px;padding:6px 12px}
@@ -58,6 +74,7 @@ footer a{color:var(--accent)}
   <header><h1>Hiku<span>.</span></h1><span class="day" id="day"></span></header>
   <p class="rule" id="rule"></p>
   <div class="tabs" id="tabs" role="group" aria-label=""></div>
+  <div class="info"><span id="left"></span><span id="movesInfo"></span></div>
   <div class="board" id="board" role="group"></div>
   <div class="status" id="status" aria-live="polite"></div>
   <p class="sr" id="said" aria-live="assertive"></p>
@@ -75,7 +92,8 @@ footer a{color:var(--accent)}
   // The languages of the app, with its own words where it has them. Norwegian unless another is asked for;
   // "no" and "nn" count as Norwegian, and a region such as sv-SE is ignored.
   const LANGS = {
-    nb: {offline: 'Fikk ikke hentet dagens brett. Sjekk nettet og prøv igjen.',
+    nb: {left: k => (k === 1 ? '%d tall igjen' : '%d tall igjen').replace('%d', k), movesText: (n, s) => `${n} trekk · ${s}`, movesA11y: (n, s) => `${n} trekk, ${s} av 3 stjerner mulig`, cleared: 'Brettet er ryddet', flawless: 'Feilfritt!', noUndo: 'Løst uten å angre.', undoText: k => (k === 1 ? 'Med %d angring.' : 'Med %d angringer.').replace('%d', k), streak: k => (k === 1 ? '%d dag på rad' : '%d dager på rad').replace('%d', k), retry: 'Prøv igjen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, blir ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, begge forsvant.`, resultSaid: (s, title, detail) => `${s} av 3 stjerner. ${sentence(title)} ${detail}`,
+         offline: 'Fikk ikke hentet dagens brett. Sjekk nettet og prøv igjen.',
          moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Angret.',
          locale: 'nb-NO', title: 'Dagens Hiku', rule: 'Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.',
          tiers: {easy: 'Lett', medium: 'Middels', hard: 'Vanskelig', expert: 'Ekspert'}, tabs: 'Vanskelighetsgrad',
@@ -87,7 +105,8 @@ footer a{color:var(--accent)}
          made: 'Nye brett hver dag, kom tilbake i morgen!', app: 'Last ned Hiku for iPhone',
          more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = borte`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    en: {offline: "Couldn't fetch today's boards. Check your connection and try again.",
+    en: {left: k => (k === 1 ? '%d number left' : '%d numbers left').replace('%d', k), movesText: (n, s) => `Moves: ${n} · ${s}`, movesA11y: (n, s) => `Moves: ${n}, ${s} of 3 stars possible`, cleared: 'Board cleared', flawless: 'Flawless!', noUndo: 'Solved without undoing.', undoText: k => (k === 1 ? 'With %d undo.' : 'With %d undos.').replace('%d', k), streak: k => (k === 1 ? '%d day in a row' : '%d days in a row').replace('%d', k), retry: 'Try again', moveSaid: (a, b, sq, left) => `${a} onto ${b} at ${sq}, leaves ${left}.`, goneSaid: (a, b, sq) => `${a} onto ${b} at ${sq}, both gone.`, resultSaid: (s, title, detail) => `${s} of 3 stars. ${sentence(title)} ${detail}`,
+         offline: "Couldn't fetch today's boards. Check your connection and try again.",
          moved: (a, b, from, to, eq) => `${a} from ${from} onto ${b} on ${to}: ${eq}.`, undone: 'Undone.',
          locale: 'en-GB', title: 'Daily Hiku', rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
          tiers: {easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert'}, tabs: 'Difficulty',
@@ -99,7 +118,8 @@ footer a{color:var(--accent)}
          made: 'New boards every day, come back tomorrow!', app: 'Get Hiku for iPhone',
          more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store',
          gone: (a, b) => `${a} − ${b} = gone`, tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`},
-    sv: {offline: 'Kunde inte hämta dagens bräden. Kontrollera nätet och försök igen.',
+    sv: {left: k => (k === 1 ? '%d tal kvar' : '%d tal kvar').replace('%d', k), movesText: (n, s) => `Drag: ${n} · ${s}`, movesA11y: (n, s) => `Drag: ${n}, ${s} av 3 stjärnor möjliga`, cleared: 'Brädet är tömt', flawless: 'Felfritt!', noUndo: 'Löst utan att ångra.', undoText: k => (k === 1 ? 'Med %d ångring.' : 'Med %d ångringar.').replace('%d', k), streak: k => (k === 1 ? '%d dag i rad' : '%d dagar i rad').replace('%d', k), retry: 'Försök igen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, blir ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, båda försvann.`, resultSaid: (s, title, detail) => `${s} av 3 stjärnor. ${sentence(title)} ${detail}`,
+         offline: 'Kunde inte hämta dagens bräden. Kontrollera nätet och försök igen.',
          moved: (a, b, from, to, eq) => `${a} från ${from} till ${b} på ${to}: ${eq}.`, undone: 'Ångrat.',
          locale: 'sv-SE', title: 'Dagens Hiku', rule: 'Talet säger hur långt det hoppar. Landar det på ett annat dras de från varandra. Få alla tal att försvinna.',
          tiers: {easy: 'Lätt', medium: 'Medel', hard: 'Svår', expert: 'Expert'}, tabs: 'Svårighetsgrad',
@@ -111,7 +131,8 @@ footer a{color:var(--accent)}
          made: 'Nya bräden varje dag, kom tillbaka i morgon!', app: 'Ladda ner Hiku för iPhone',
          more: 'Vill du ha mer? Appen har 50 banor till, och de första lär dig knepen:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = borta`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    da: {offline: 'Kunne ikke hente dagens brætter. Tjek forbindelsen og prøv igen.',
+    da: {left: k => (k === 1 ? '%d tal tilbage' : '%d tal tilbage').replace('%d', k), movesText: (n, s) => `Træk: ${n} · ${s}`, movesA11y: (n, s) => `Træk: ${n}, ${s} af 3 stjerner mulige`, cleared: 'Brættet er ryddet', flawless: 'Fejlfrit!', noUndo: 'Løst uden at fortryde.', undoText: k => (k === 1 ? 'Med %d fortrydelse.' : 'Med %d fortrydelser.').replace('%d', k), streak: k => (k === 1 ? '%d dag i træk' : '%d dage i træk').replace('%d', k), retry: 'Prøv igen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, bliver ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, begge forsvandt.`, resultSaid: (s, title, detail) => `${s} af 3 stjerner. ${sentence(title)} ${detail}`,
+         offline: 'Kunne ikke hente dagens brætter. Tjek forbindelsen og prøv igen.',
          moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Fortrudt.',
          locale: 'da-DK', title: 'Dagens Hiku', rule: 'Tallet siger, hvor langt det springer. Lander det på et andet, trækkes de fra hinanden. Få alle tallene til at forsvinde.',
          tiers: {easy: 'Let', medium: 'Middel', hard: 'Svær', expert: 'Ekspert'}, tabs: 'Sværhedsgrad',
@@ -123,7 +144,8 @@ footer a{color:var(--accent)}
          made: 'Nye brætter hver dag, kom tilbage i morgen!', app: 'Hent Hiku til iPhone',
          more: 'Vil du have mere? Appen har 50 baner mere, og de første lærer dig tricksene:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = væk`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    fi: {offline: 'Päivän lautoja ei saatu haettua. Tarkista yhteys ja yritä uudelleen.',
+    fi: {left: k => (k === 1 ? '%d luku jäljellä' : '%d lukua jäljellä').replace('%d', k), movesText: (n, s) => `Siirrot: ${n} · ${s}`, movesA11y: (n, s) => `Siirrot: ${n}, ${s}/3 tähteä mahdollista`, cleared: 'Lauta on tyhjä', flawless: 'Virheetön!', noUndo: 'Ratkaistu perumatta.', undoText: k => (k === 1 ? '%d perumisella.' : '%d perumisella.').replace('%d', k), streak: k => (k === 1 ? '%d päivä putkeen' : '%d päivää putkeen').replace('%d', k), retry: 'Yritä uudelleen', moveSaid: (a, b, sq, left) => `${a} lukuun ${b} ruudussa ${sq}, jää ${left}.`, goneSaid: (a, b, sq) => `${a} lukuun ${b} ruudussa ${sq}, molemmat katosivat.`, resultSaid: (s, title, detail) => `${s}/3 tähteä. ${sentence(title)} ${detail}`,
+         offline: 'Päivän lautoja ei saatu haettua. Tarkista yhteys ja yritä uudelleen.',
          moved: (a, b, from, to, eq) => `${a} ruudusta ${from} lukuun ${b} ruudussa ${to}: ${eq}.`, undone: 'Peruttu.',
          locale: 'fi-FI', title: 'Päivän Hiku', rule: 'Luku kertoo, kuinka pitkälle se hyppää. Kun se laskeutuu toiseen, ne vähennetään toisistaan. Saa kaikki luvut katoamaan.',
          tiers: {easy: 'Helppo', medium: 'Keskitaso', hard: 'Vaikea', expert: 'Asiantuntija'}, tabs: 'Vaikeustaso',
@@ -135,7 +157,8 @@ footer a{color:var(--accent)}
          made: 'Uudet laudat joka päivä, tule takaisin huomenna!', app: 'Lataa Hiku iPhonelle',
          more: 'Haluatko lisää? Sovelluksessa on 50 tasoa lisää, ja ensimmäiset opettavat niksit:', moreLink: 'Hiku App Storessa',
          gone: (a, b) => `${a} − ${b} = poissa`, tile: (v, sq) => `${v}, ruutu ${sq}`, empty: sq => `${sq}, tyhjä`},
-    de: {offline: 'Die Bretter von heute ließen sich nicht laden. Prüf die Verbindung und versuch es noch einmal.',
+    de: {left: k => (k === 1 ? 'Noch %d Zahl' : 'Noch %d Zahlen').replace('%d', k), movesText: (n, s) => `Züge: ${n} · ${s}`, movesA11y: (n, s) => `Züge: ${n}, ${s} von 3 Sternen möglich`, cleared: 'Brett geleert', flawless: 'Fehlerfrei!', noUndo: 'Gelöst, ohne einen Zug zurückzunehmen.', undoText: k => (k === 1 ? 'Mit %d zurückgenommenen Zug.' : 'Mit %d zurückgenommenen Zügen.').replace('%d', k), streak: k => (k === 1 ? '%d Tag in Folge' : '%d Tage in Folge').replace('%d', k), retry: 'Noch mal', moveSaid: (a, b, sq, left) => `${a} auf ${b} in ${sq}, ergibt ${left}.`, goneSaid: (a, b, sq) => `${a} auf ${b} in ${sq}, beide weg.`, resultSaid: (s, title, detail) => `${s} von 3 Sternen. ${sentence(title)} ${detail}`,
+         offline: 'Die Bretter von heute ließen sich nicht laden. Prüf die Verbindung und versuch es noch einmal.',
          moved: (a, b, from, to, eq) => `${a} von ${from} auf ${b} auf ${to}: ${eq}.`, undone: 'Zurückgenommen.',
          locale: 'de-DE', title: 'Hiku des Tages', rule: 'Die Zahl sagt, wie weit sie springt. Landet sie auf einer anderen, wird abgezogen. Lass alle Zahlen verschwinden.',
          tiers: {easy: 'Leicht', medium: 'Mittel', hard: 'Schwer', expert: 'Experte'}, tabs: 'Schwierigkeitsgrad',
@@ -286,6 +309,26 @@ footer a{color:var(--accent)}
   const squareName = i => String.fromCharCode(65 + i % n) + (Math.floor(i / n) + 1);
   const resultKey = t => `${dayKey}/${t}`;
   const stars = u => u === 0 ? 3 : u <= 2 ? 2 : 1;
+  const starText = k => '★'.repeat(k) + '☆'.repeat(3 - k);
+  const remaining = () => cells.filter(v => v > 0).length;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let busy = false;
+  const resultTitle = () => stars(undos) === 3 ? T.flawless : T.cleared;
+  // Ends a spoken sentence once: "Feilfritt!" keeps its own mark, "8 tall igjen" gets a full stop.
+  const sentence = t => /[.!?]$/.test(t) ? t : t + '.';
+  const resultDetail = () => undos === 0 ? T.noUndo : T.undoText(undos);
+
+  // Days in a row with a daily board solved in this browser, counting back from today, or from yesterday while
+  // today's are still open.
+  function streak() {
+    const key = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const solved = d => TIERS.some(t => store.get(`${key(d)}/${t}`));
+    let day = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (!solved(day)) day.setDate(day.getDate() - 1);
+    let count = 0;
+    while (solved(day)) { count++; day.setDate(day.getDate() - 1); }
+    return count;
+  }
 
   function start(t) {
     tier = t;
@@ -296,20 +339,60 @@ footer a{color:var(--accent)}
     render();
   }
 
-  function play(from, to) {
-    if (lost || !targets(cells, n, from).includes(to)) return false;
-    history.push(cells);
-    lastMove = {from, to, a: cells[from], b: cells[to]};
-    cells = moved(cells, from, to);
-    say(T.moved(lastMove.a, lastMove.b, squareName(from), squareName(to), equation(lastMove)));
-    selected = null;
-    if (isClear(cells)) {
-      const best = store.get(resultKey(tier));
-      if (!best || best < stars(undos)) store.set(resultKey(tier), stars(undos));
-    }
-    render();
-    check();
+  function play(from, to, dragged) {
+    if (busy || lost || !targets(cells, n, from).includes(to)) return false;
+    const finish = () => {
+      history.push(cells);
+      lastMove = {from, to, a: cells[from], b: cells[to]};
+      cells = moved(cells, from, to);
+      selected = null;
+      const clear = isClear(cells);
+      if (clear) {
+        const best = store.get(resultKey(tier));
+        if (!best || best < stars(undos)) store.set(resultKey(tier), stars(undos));
+      }
+      const m = lastMove, sq = squareName(to);
+      const said = m.a === m.b ? T.goneSaid(m.a, m.b, sq) : T.moveSaid(m.a, m.b, sq, Math.abs(m.a - m.b));
+      say(said + ' ' + (clear ? T.resultSaid(stars(undos), resultTitle(), resultDetail()) : sentence(T.left(remaining()))));
+      render();
+      if (!reduced) landed(m, clear);
+      check();
+    };
+    const el = boardEl.querySelector(`.tile[data-i="${from}"]`);
+    if (dragged || reduced || !el) { finish(); return true; }
+    // The number slides over to where it lands before the board changes.
+    const L = layout(), a = L.at(from), b = L.at(to);
+    busy = true;
+    el.style.zIndex = 5;
+    el.style.transition = 'transform .18s ease-out';
+    el.style.transform = `translate(${b.x - a.x}px,${b.y - a.y}px)`;
+    setTimeout(() => { busy = false; finish(); }, 180);
     return true;
+  }
+
+  // What is left on the landing square settles in; equal numbers shrink away; a cleared board sparkles.
+  function landed(m, clear) {
+    const L = layout(), p = L.at(m.to);
+    if (m.a !== m.b) {
+      boardEl.querySelector(`.tile[data-i="${m.to}"]`)?.classList.add('land');
+    } else {
+      const ghost = document.createElement('div');
+      ghost.className = 'ghost';
+      Object.assign(ghost.style, {left: p.x + 'px', top: p.y + 'px', width: L.side + 'px', height: L.side + 'px'});
+      boardEl.appendChild(ghost);
+      setTimeout(() => ghost.remove(), 320);
+    }
+    if (!clear) return;
+    for (let k = 0; k < 22; k++) {
+      const spark = document.createElement('i');
+      spark.className = 'spark';
+      const angle = Math.random() * Math.PI * 2, reach = 40 + Math.random() * 90;
+      Object.assign(spark.style, {left: p.x + L.side / 2 + 'px', top: p.y + L.side / 2 + 'px', animationDelay: Math.random() * .15 + 's'});
+      spark.style.setProperty('--dx', Math.cos(angle) * reach + 'px');
+      spark.style.setProperty('--dy', Math.sin(angle) * reach + 'px');
+      boardEl.appendChild(spark);
+      setTimeout(() => spark.remove(), 1200);
+    }
   }
 
   // The check runs in the worker; an answer for a board the player has already moved on from is dropped.
@@ -326,7 +409,7 @@ footer a{color:var(--accent)}
   function undo() {
     if (!history.length) return;
     cells = history.pop(); undos++; selected = null; lost = false; lastMove = null; checkToken++;
-    say(T.undone);
+    say(T.undone + ' ' + sentence(T.left(remaining())));
     render();
   }
   function restart() {
@@ -345,6 +428,10 @@ footer a{color:var(--accent)}
 
   function render() {
     renderTabs();
+    el('left').textContent = T.left(remaining());
+    const info = el('movesInfo');
+    info.textContent = T.movesText(history.length, starText(stars(undos)));
+    info.setAttribute('aria-label', T.movesA11y(history.length, stars(undos)));
     const L = layout();
     boardEl.innerHTML = '';
     boardEl.classList.toggle('lost', lost);
@@ -432,7 +519,7 @@ footer a{color:var(--accent)}
       b.setAttribute('aria-pressed', t === tier);
       b.setAttribute('aria-label', T.tiers[t] + (done ? `, ${done}/3 ★` : ''));
       b.innerHTML = `<span aria-hidden="true">${T.tiers[t]}</span><span class="mark" aria-hidden="true">${done ? '★'.repeat(done) : ''}</span>`;
-      b.onclick = () => { if (t !== tier) start(t); };
+      b.onclick = () => { if (t !== tier) { start(t); say(`${T.title}, ${T.tiers[t]}. ${sentence(T.left(remaining()))}`); } };
       tabsEl.appendChild(b);
     }
   }
@@ -440,12 +527,18 @@ footer a{color:var(--accent)}
   function renderStatus() {
     statusEl.className = 'status';
     if (isClear(cells)) {
-      const s = stars(undos);
+      const k = stars(undos), days = streak();
       statusEl.innerHTML = '';
       const box = document.createElement('div');
       box.className = 'done';
       box.style.width = '100%';
-      box.innerHTML = `<div class="stars" role="img" aria-label="${s}/3 ★">${'★'.repeat(s)}${'☆'.repeat(3 - s)}</div><div><strong>${T.solved[s]}</strong> ${T.undos(undos)}</div>` +
+      box.setAttribute('role', 'group');
+      box.setAttribute('aria-label', T.resultSaid(k, resultTitle(), resultDetail()));
+      const flame = '<svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path fill="currentColor" d="M7 0c.6 2.6 3.9 4.2 3.9 8.3A3.9 3.9 0 0 1 7 12.2c-1.2 0-2.3-.6-2.9-1.5-.5 1.2-.3 2.5.4 3.5C2.3 13.6 1 11.6 1 9.4 1 5.5 5.6 4.3 7 0z"/></svg>';
+      box.innerHTML = `<div class="stars${k === 3 && !reduced ? ' glow' : ''}" aria-hidden="true">` +
+        [0, 1, 2].map(j => `<span class="${j < k ? '' : 'off'}" style="animation-delay:${reduced ? 0 : .15 + j * .18}s">${j < k ? '★' : '☆'}</span>`).join('') + '</div>' +
+        `<div class="rtitle" aria-hidden="true">${resultTitle()}</div><div class="rdetail" aria-hidden="true">${resultDetail()}</div>` +
+        (days > 0 ? `<div class="streak">${flame}${T.streak(days)}</div>` : '') +
         `<div class="more">${T.more} <a href="${APP_URL}" target="_blank" rel="noopener">${T.moreLink}</a></div>`;
       statusEl.appendChild(box);
     } else if (lost) {
@@ -479,7 +572,7 @@ footer a{color:var(--accent)}
           else { await navigator.clipboard.writeText(text); share.textContent = T.copied; }
         } catch {}
       }, true);
-      add(T.restart, () => { start(tier); });
+      if (stars(undos) < 3) add(T.retry, () => { start(tier); say(`${T.title}, ${T.tiers[tier]}. ${sentence(T.left(remaining()))}`); });
     } else {
       add(T.undo, undo, lost, !history.length);
       add(T.restart, restart, false, !history.length);
@@ -506,6 +599,18 @@ footer a{color:var(--accent)}
       drag.el.classList.add('lifted');
     }
     drag.el.style.transform = `translate(${dx}px,${dy}px) scale(1.06)`;
+    // Over a number it can land on, the sum shows above the lifted number, as in the app.
+    const r = boardEl.getBoundingClientRect(), L = layout(), x = e.clientX - r.left, y = e.clientY - r.top;
+    const over = cells.findIndex((_, i) => { const p = L.at(i); return x >= p.x && x <= p.x + L.side && y >= p.y && y <= p.y + L.side; });
+    let eq = boardEl.querySelector('.eq.dragging');
+    if (over >= 0 && targets(cells, n, drag.i).includes(over)) {
+      if (!eq) { eq = document.createElement('div'); eq.className = 'eq dragging'; eq.setAttribute('aria-hidden', 'true'); boardEl.appendChild(eq); }
+      eq.textContent = equation({a: cells[drag.i], b: cells[over]});
+      const p = L.at(drag.i);
+      Object.assign(eq.style, {left: p.x + L.side / 2 + dx + 'px', top: Math.max(34, p.y + dy - 6) + 'px'});
+    } else if (eq) {
+      eq.remove();
+    }
   });
   boardEl.addEventListener('pointerup', e => {
     if (!drag) return;
@@ -514,7 +619,7 @@ footer a{color:var(--accent)}
     const r = boardEl.getBoundingClientRect(), L = layout();
     const x = e.clientX - r.left, y = e.clientY - r.top;
     const over = cells.findIndex((_, i) => { const p = L.at(i); return x >= p.x && x <= p.x + L.side && y >= p.y && y <= p.y + L.side; });
-    if (over < 0 || !play(d.i, over)) { selected = null; render(); }
+    if (over < 0 || !play(d.i, over, true)) { selected = null; render(); }
   });
   boardEl.addEventListener('pointercancel', () => { drag = null; selected = null; render(); });
 

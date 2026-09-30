@@ -23,6 +23,7 @@ TITLE = {"nb": "et rolig tallspill", "en": "a calm number puzzle", "sv": "ett lu
 
 UI = {
 "nb": dict(
+  a11y_title='Tilgjengelig for alle', a11y_lead='Hiku kan spilles uten å se brettet. Hver rute har et navn, som B2, og hvert tall kan leses opp med hvor det kan hoppe. Hvert trekk leses opp med hva som skjedde og hvor mange tall som er igjen.', a11y_items=['<strong>Appen</strong> støtter VoiceOver, Stemmestyring («trykk på B2»), mørk modus, tydelig kontrast og redusert bevegelse. Farger er aldri eneste kjennetegn: tallene og prikkene sier alltid hvor langt et tall hopper.', '<strong>Nettversjonen</strong> kan spilles med skjermleser og bare tastatur, følger lys og mørk modus og slår av animasjoner for den som har bedt om det. Den er laget etter WCAG 2.2 nivå AA og testet med axe-verktøyet.'],
   skip="Hopp til innholdet", nav_label="Meny", shots_label="Skjermbilder fra appen",
   theme_auto="Automatisk", theme_light="Lys", theme_dark="Mørk", theme_label="Lys eller mørk",
   description="Hiku er et rolig tallspill: tallet sier hvor langt det hopper. Fire nye brett hver dag, i nettleseren og i appen for iPhone.",
@@ -42,6 +43,7 @@ UI = {
   support_title="Support", support_text="Har du spørsmål, har du funnet en feil, eller sitter du fast på et brett? Send en e-post til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Språk", made="Laget i Norge av Espen Schulstad."),
 "en": dict(
+  a11y_title='Accessible to everyone', a11y_lead='Hiku can be played without seeing the board. Every square has a name, like B2, and every number can be read out with where it can jump. Each move is read out with what happened and how many numbers are left.', a11y_items=['<strong>The app</strong> supports VoiceOver, Voice Control (“tap B2”), dark mode, strong contrast and reduced motion. Colour is never the only cue: the digits and dots always say how far a number jumps.', '<strong>The web version</strong> can be played with a screen reader or the keyboard alone, follows light and dark mode, and turns animations off for anyone who has asked for less motion. It is built to WCAG 2.2 level AA and tested with the axe tool.'],
   skip="Skip to content", nav_label="Menu", shots_label="Screenshots of the app",
   theme_auto="Automatic", theme_light="Light", theme_dark="Dark", theme_label="Light or dark",
   description="Hiku is a calm number puzzle: the number says how far it jumps. Four new boards every day, in the browser and in the iPhone app.",
@@ -61,6 +63,7 @@ UI = {
   support_title="Support", support_text="Questions, found a bug, or stuck on a board? Email <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Language", made="Made in Norway by Espen Schulstad."),
 "sv": dict(
+  a11y_title='Tillgängligt för alla', a11y_lead='Hiku kan spelas utan att se brädet. Varje ruta har ett namn, som B2, och varje tal kan läsas upp med vart det kan hoppa. Varje drag läses upp med vad som hände och hur många tal som är kvar.', a11y_items=['<strong>Appen</strong> stöder VoiceOver, Röststyrning (”tryck på B2”), mörkt läge, tydlig kontrast och minskad rörelse. Färg är aldrig det enda kännetecknet: siffrorna och prickarna visar alltid hur långt ett tal hoppar.', '<strong>Webbversionen</strong> kan spelas med skärmläsare och enbart tangentbord, följer ljust och mörkt läge och stänger av animationer för den som bett om det. Den är byggd enligt WCAG 2.2 nivå AA och testad med verktyget axe.'],
   skip="Hoppa till innehållet", nav_label="Meny", shots_label="Skärmbilder från appen",
   theme_auto="Automatiskt", theme_light="Ljust", theme_dark="Mörkt", theme_label="Ljust eller mörkt",
   description="Hiku är ett lugnt sifferspel: talet säger hur långt det hoppar. Fyra nya bräden varje dag, i webbläsaren och i appen för iPhone.",
@@ -80,6 +83,7 @@ UI = {
   support_title="Support", support_text="Har du frågor, har du hittat ett fel, eller sitter du fast på ett bräde? Skicka e-post till <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Språk", made="Gjort i Norge av Espen Schulstad."),
 "da": dict(
+  a11y_title='Tilgængeligt for alle', a11y_lead='Hiku kan spilles uden at se brættet. Hvert felt har et navn, som B2, og hvert tal kan læses op med, hvor det kan springe. Hvert træk læses op med, hvad der skete, og hvor mange tal der er tilbage.', a11y_items=['<strong>Appen</strong> understøtter VoiceOver, Stemmestyring (”tryk på B2”), mørk tilstand, tydelig kontrast og reduceret bevægelse. Farve er aldrig det eneste kendetegn: cifrene og prikkerne viser altid, hvor langt et tal springer.', '<strong>Webversionen</strong> kan spilles med skærmlæser og kun tastatur, følger lys og mørk tilstand og slår animationer fra for dem, der har bedt om det. Den er bygget efter WCAG 2.2 niveau AA og testet med værktøjet axe.'],
   skip="Spring til indholdet", nav_label="Menu", shots_label="Skærmbilleder fra appen",
   theme_auto="Automatisk", theme_light="Lyst", theme_dark="Mørkt", theme_label="Lyst eller mørkt",
   description="Hiku er et roligt talspil: tallet siger, hvor langt det springer. Fire nye brætter hver dag, i browseren og i appen til iPhone.",
@@ -99,6 +103,7 @@ UI = {
   support_title="Support", support_text="Har du spørgsmål, har du fundet en fejl, eller sidder du fast på et bræt? Skriv til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Sprog", made="Lavet i Norge af Espen Schulstad."),
 "fi": dict(
+  a11y_title='Saavutettava kaikille', a11y_lead='Hikua voi pelata näkemättä lautaa. Jokaisella ruudulla on nimi, kuten B2, ja jokaisen luvun voi kuulla ääneen sekä sen, minne se voi hypätä. Jokainen siirto luetaan ääneen: mitä tapahtui ja montako lukua on jäljellä.', a11y_items=['<strong>Sovellus</strong> tukee VoiceOveria, Äänellä ohjausta (”napauta B2”), tummaa tilaa, selkeää kontrastia ja vähennettyä liikettä. Väri ei ole koskaan ainoa vihje: numerot ja pisteet kertovat aina, kuinka pitkälle luku hyppää.', '<strong>Verkkoversiota</strong> voi pelata ruudunlukijalla ja pelkällä näppäimistöllä, se seuraa vaaleaa ja tummaa tilaa ja poistaa animaatiot, jos niin on pyydetty. Se on tehty WCAG 2.2 AA -tason mukaan ja testattu axe-työkalulla.'],
   skip="Siirry sisältöön", nav_label="Valikko", shots_label="Kuvakaappauksia sovelluksesta",
   theme_auto="Automaattinen", theme_light="Vaalea", theme_dark="Tumma", theme_label="Vaalea vai tumma",
   description="Hiku on rauhallinen numeropeli: luku kertoo, kuinka pitkälle se hyppää. Neljä uutta lautaa joka päivä selaimessa ja iPhone-sovelluksessa.",
@@ -118,6 +123,7 @@ UI = {
   support_title="Tuki", support_text="Kysyttävää, löysitkö virheen, vai oletko jumissa laudalla? Lähetä sähköpostia osoitteeseen <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.",
   language="Kieli", made="Tehty Norjassa, tekijänä Espen Schulstad."),
 "de": dict(
+  a11y_title='Für alle zugänglich', a11y_lead='Hiku lässt sich spielen, ohne das Brett zu sehen. Jedes Feld hat einen Namen wie B2, und jede Zahl lässt sich vorlesen, samt wohin sie springen kann. Jeder Zug wird vorgelesen: was passiert ist und wie viele Zahlen übrig sind.', a11y_items=['<strong>Die App</strong> unterstützt VoiceOver, Sprachsteuerung („tippe auf B2“), dunklen Modus, starken Kontrast und reduzierte Bewegung. Farbe ist nie das einzige Merkmal: Ziffern und Punkte zeigen immer, wie weit eine Zahl springt.', '<strong>Die Webversion</strong> lässt sich mit Screenreader und allein mit der Tastatur spielen, folgt hellem und dunklem Modus und schaltet Animationen ab, wenn weniger Bewegung gewünscht ist. Sie ist nach WCAG 2.2 Stufe AA gebaut und mit dem Werkzeug axe geprüft.'],
   skip="Zum Inhalt springen", nav_label="Menü", shots_label="Bildschirmfotos der App",
   theme_auto="Automatisch", theme_light="Hell", theme_dark="Dunkel", theme_label="Hell oder dunkel",
   description="Hiku ist ein ruhiges Zahlenrätsel: Die Zahl sagt, wie weit sie springt. Jeden Tag vier neue Bretter, im Browser und in der App für iPhone.",
@@ -167,6 +173,7 @@ def build(lang, template):
         how="".join(f"<p>{p}</p>" for p in st["how"]),
         name="".join(f"<p>{p}</p>" for p in st["name"]),
         privacy="".join(f"<p>{p}</p>" for p in t["privacy"]),
+        a11y_items="".join(f"<li>{p}</li>" for p in t["a11y_items"]),
         shots="".join(f'<img src="{root}img/{lang}/{f}.jpg" alt="{a}" width="480" height="1043" loading="lazy">'
                       for f, a in zip(["0-hjem", "1-regel", "5-morkt"], t["shots"])),
         app=APP.format(lang=lang), guide=f"{root}daily/{GUIDE[lang]}",

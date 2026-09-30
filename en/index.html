@@ -51,6 +51,7 @@ nav.top .links{margin-left:auto}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px}
 .btn.primary{background:var(--accent);color:var(--on-accent)}
 .btn.ghost{border:1px solid var(--edge);color:var(--ink)}
+@media (min-width:821px){.play-down{display:none}}
 .game{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 3px 0 var(--edge)}
 .game h2{font:400 22px Georgia,serif;margin:4px 6px 2px}
 .game p{margin:0 6px 10px;color:var(--muted);font-size:14px}
@@ -93,7 +94,7 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
     <p class="tagline">Hiku is a calm number puzzle for people who love sudoku: pure logic, no guessing.</p>
     <p class="rule">The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.</p>
     <div class="ctas">
-      <a class="btn primary" href="#spill">Play today's boards <span aria-hidden="true">↓</span></a>
+      <a class="btn primary play-down" href="#spill">Play today's boards <span aria-hidden="true">↓</span></a>
       <a class="btn ghost" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-en&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Get it for iPhone</a>
     </div>
   </div>
@@ -119,6 +120,12 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 <section id="slik"><div class="wrap">
   <h2>How to jump</h2>
   <p>A number jumps as many squares as it says, across or up and down. A 1 reaches its neighbour, a 3 reaches three squares away. It jumps over anything in between, but must land on another number.</p><p>The smaller is taken from the larger, and the rest stays where it landed. Equal numbers both vanish. When a number gets smaller, its jump gets shorter.</p><p>Every level can be solved. The wrong order can leave numbers that cannot reach each other. Undo freely and try another way.</p><p>Clear a level without undoing to earn three stars. One or two undos earn two, more earn one. Starting over counts as one undo.</p>
+</div></section>
+
+<section id="tilgjengelig"><div class="wrap">
+  <h2>Accessible to everyone</h2>
+  <p>Hiku can be played without seeing the board. Every square has a name, like B2, and every number can be read out with where it can jump. Each move is read out with what happened and how many numbers are left.</p>
+  <ul class="bullets"><li><strong>The app</strong> supports VoiceOver, Voice Control (“tap B2”), dark mode, strong contrast and reduced motion. Colour is never the only cue: the digits and dots always say how far a number jumps.</li><li><strong>The web version</strong> can be played with a screen reader or the keyboard alone, follows light and dark mode, and turns animations off for anyone who has asked for less motion. It is built to WCAG 2.2 level AA and tested with the axe tool.</li></ul>
 </div></section>
 
 <section><div class="wrap cards">
