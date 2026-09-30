@@ -75,7 +75,8 @@ footer a{color:var(--accent)}
   // The languages of the app, with its own words where it has them. Norwegian unless another is asked for;
   // "no" and "nn" count as Norwegian, and a region such as sv-SE is ignored.
   const LANGS = {
-    nb: {moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Angret.',
+    nb: {offline: 'Fikk ikke hentet dagens brett. Sjekk nettet og prøv igjen.',
+         moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Angret.',
          locale: 'nb-NO', title: 'Dagens Hiku', rule: 'Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.',
          tiers: {easy: 'Lett', medium: 'Middels', hard: 'Vanskelig', expert: 'Ekspert'}, tabs: 'Vanskelighetsgrad',
          start: 'Dra et tall dit det skal hoppe, eller trykk på tallet og så på målet.',
@@ -86,7 +87,8 @@ footer a{color:var(--accent)}
          made: 'Nye brett hver dag, kom tilbake i morgen!', app: 'Last ned Hiku for iPhone',
          more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = borte`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    en: {moved: (a, b, from, to, eq) => `${a} from ${from} onto ${b} on ${to}: ${eq}.`, undone: 'Undone.',
+    en: {offline: "Couldn't fetch today's boards. Check your connection and try again.",
+         moved: (a, b, from, to, eq) => `${a} from ${from} onto ${b} on ${to}: ${eq}.`, undone: 'Undone.',
          locale: 'en-GB', title: 'Daily Hiku', rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
          tiers: {easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert'}, tabs: 'Difficulty',
          start: 'Drag a number to where it jumps, or tap the number and then its target.',
@@ -97,7 +99,8 @@ footer a{color:var(--accent)}
          made: 'New boards every day, come back tomorrow!', app: 'Get Hiku for iPhone',
          more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store',
          gone: (a, b) => `${a} − ${b} = gone`, tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`},
-    sv: {moved: (a, b, from, to, eq) => `${a} från ${from} till ${b} på ${to}: ${eq}.`, undone: 'Ångrat.',
+    sv: {offline: 'Kunde inte hämta dagens bräden. Kontrollera nätet och försök igen.',
+         moved: (a, b, from, to, eq) => `${a} från ${from} till ${b} på ${to}: ${eq}.`, undone: 'Ångrat.',
          locale: 'sv-SE', title: 'Dagens Hiku', rule: 'Talet säger hur långt det hoppar. Landar det på ett annat dras de från varandra. Få alla tal att försvinna.',
          tiers: {easy: 'Lätt', medium: 'Medel', hard: 'Svår', expert: 'Expert'}, tabs: 'Svårighetsgrad',
          start: 'Dra ett tal dit det ska hoppa, eller tryck på talet och sedan på målet.',
@@ -108,7 +111,8 @@ footer a{color:var(--accent)}
          made: 'Nya bräden varje dag, kom tillbaka i morgon!', app: 'Ladda ner Hiku för iPhone',
          more: 'Vill du ha mer? Appen har 50 banor till, och de första lär dig knepen:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = borta`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    da: {moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Fortrudt.',
+    da: {offline: 'Kunne ikke hente dagens brætter. Tjek forbindelsen og prøv igen.',
+         moved: (a, b, from, to, eq) => `${a} fra ${from} til ${b} på ${to}: ${eq}.`, undone: 'Fortrudt.',
          locale: 'da-DK', title: 'Dagens Hiku', rule: 'Tallet siger, hvor langt det springer. Lander det på et andet, trækkes de fra hinanden. Få alle tallene til at forsvinde.',
          tiers: {easy: 'Let', medium: 'Middel', hard: 'Svær', expert: 'Ekspert'}, tabs: 'Sværhedsgrad',
          start: 'Træk et tal derhen, hvor det skal springe, eller tryk på tallet og så på målet.',
@@ -119,7 +123,8 @@ footer a{color:var(--accent)}
          made: 'Nye brætter hver dag, kom tilbage i morgen!', app: 'Hent Hiku til iPhone',
          more: 'Vil du have mere? Appen har 50 baner mere, og de første lærer dig tricksene:', moreLink: 'Hiku i App Store',
          gone: (a, b) => `${a} − ${b} = væk`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
-    fi: {moved: (a, b, from, to, eq) => `${a} ruudusta ${from} lukuun ${b} ruudussa ${to}: ${eq}.`, undone: 'Peruttu.',
+    fi: {offline: 'Päivän lautoja ei saatu haettua. Tarkista yhteys ja yritä uudelleen.',
+         moved: (a, b, from, to, eq) => `${a} ruudusta ${from} lukuun ${b} ruudussa ${to}: ${eq}.`, undone: 'Peruttu.',
          locale: 'fi-FI', title: 'Päivän Hiku', rule: 'Luku kertoo, kuinka pitkälle se hyppää. Kun se laskeutuu toiseen, ne vähennetään toisistaan. Saa kaikki luvut katoamaan.',
          tiers: {easy: 'Helppo', medium: 'Keskitaso', hard: 'Vaikea', expert: 'Asiantuntija'}, tabs: 'Vaikeustaso',
          start: 'Vedä luku sinne, minne se hyppää, tai napauta lukua ja sitten kohdetta.',
@@ -130,7 +135,8 @@ footer a{color:var(--accent)}
          made: 'Uudet laudat joka päivä, tule takaisin huomenna!', app: 'Lataa Hiku iPhonelle',
          more: 'Haluatko lisää? Sovelluksessa on 50 tasoa lisää, ja ensimmäiset opettavat niksit:', moreLink: 'Hiku App Storessa',
          gone: (a, b) => `${a} − ${b} = poissa`, tile: (v, sq) => `${v}, ruutu ${sq}`, empty: sq => `${sq}, tyhjä`},
-    de: {moved: (a, b, from, to, eq) => `${a} von ${from} auf ${b} auf ${to}: ${eq}.`, undone: 'Zurückgenommen.',
+    de: {offline: 'Die Bretter von heute ließen sich nicht laden. Prüf die Verbindung und versuch es noch einmal.',
+         moved: (a, b, from, to, eq) => `${a} von ${from} auf ${b} auf ${to}: ${eq}.`, undone: 'Zurückgenommen.',
          locale: 'de-DE', title: 'Hiku des Tages', rule: 'Die Zahl sagt, wie weit sie springt. Landet sie auf einer anderen, wird abgezogen. Lass alle Zahlen verschwinden.',
          tiers: {easy: 'Leicht', medium: 'Mittel', hard: 'Schwer', expert: 'Experte'}, tabs: 'Schwierigkeitsgrad',
          start: 'Zieh eine Zahl dorthin, wohin sie springt, oder tippe erst die Zahl und dann das Ziel an.',
@@ -161,9 +167,11 @@ footer a{color:var(--accent)}
   const now = new Date();
   const dayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   const days = Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(2026, 9, 1)) / 86400000);
+  // Today's boards come from hikupuzzle.com, which only gives out the day that has come somewhere in the world;
+  // the library itself is never sent.
+  let todays = null;
   function boardFor(tier) {
-    const list = window.HIKU_BOARDS[tier];
-    const entry = list[((days % list.length) + list.length) % list.length];
+    const entry = todays[tier];
     return {size: +entry[0], cells: [...entry.slice(1)].map(Number)};
   }
 
@@ -538,12 +546,10 @@ footer a{color:var(--accent)}
   let lastWidth = 0;
   new ResizeObserver(() => { if (boardEl.clientWidth !== lastWidth) { lastWidth = boardEl.clientWidth; if (cells) render(); } }).observe(boardEl);
 
-  if (!window.HIKU_BOARDS) {
-    boardEl.innerHTML = '';
-    statusEl.textContent = lang === 'nb' ? 'Dagens Hiku er straks tilbake.' : 'Daily Hiku will be back shortly.';
-    return;
-  }
-  start(tier);
+  fetch(`https://hikupuzzle.com/api/daily?day=${dayKey}`)
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(data => { todays = data.boards; start(tier); })
+    .catch(() => { statusEl.textContent = T.offline; });
 })();
 </script>
 </body>
