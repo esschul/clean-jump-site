@@ -454,10 +454,12 @@ footer a{color:var(--accent)}
   });
 
   // ---- Embedding: tell the page around us how tall we are, so the frame can fit.
+  // The content's own height, not the page's: the page is never shorter than the frame, so it could only grow.
+  const mainEl = document.querySelector('main');
   function reportHeight() {
-    if (parent !== window) parent.postMessage({type: 'hiku:height', height: document.documentElement.scrollHeight}, '*');
+    if (parent !== window) parent.postMessage({type: 'hiku:height', height: mainEl.offsetTop + mainEl.offsetHeight}, '*');
   }
-  new ResizeObserver(() => { reportHeight(); }).observe(document.body);
+  new ResizeObserver(() => { reportHeight(); }).observe(mainEl);
   let lastWidth = 0;
   new ResizeObserver(() => { if (boardEl.clientWidth !== lastWidth) { lastWidth = boardEl.clientWidth; if (cells) render(); } }).observe(boardEl);
 
