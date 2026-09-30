@@ -3,7 +3,8 @@
 //   <div data-hiku></div>
 //   <script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async></script>
 //
-// Options on the div: data-lang="en", data-theme="light" or "dark", data-level="easy|medium|hard|expert".
+// Options on the div: data-lang="nb" or "en" (without it, the language of the page around it, else Norwegian),
+// data-theme="light" or "dark", data-level="easy|medium|hard|expert".
 // The game runs in its own frame, sets no cookies and sends nothing anywhere; results stay in the reader's browser.
 (function () {
   var script = document.currentScript;
@@ -12,10 +13,13 @@
     if (host.dataset.hikuMounted) return;
     host.dataset.hikuMounted = '1';
     var query = [];
-    ['lang', 'theme', 'level'].forEach(function (k) { if (host.dataset[k]) query.push(k + '=' + encodeURIComponent(host.dataset[k])); });
+    // The language is the one asked for, or else the page's own: a Norwegian page gets the game in Norwegian.
+    var lang = host.dataset.lang || document.documentElement.lang || 'nb';
+    query.push('lang=' + encodeURIComponent(lang));
+    ['theme', 'level'].forEach(function (k) { if (host.dataset[k]) query.push(k + '=' + encodeURIComponent(host.dataset[k])); });
     var frame = document.createElement('iframe');
     frame.src = base + (query.length ? '?' + query.join('&') : '');
-    frame.title = host.dataset.lang === 'en' ? 'Daily Hiku' : 'Dagens Hiku';
+    frame.title = /^en/i.test(lang) ? 'Daily Hiku' : 'Dagens Hiku';
     frame.loading = 'lazy';
     frame.style.cssText = 'display:block;width:100%;max-width:480px;height:720px;border:0;margin:0 auto;';
     host.appendChild(frame);

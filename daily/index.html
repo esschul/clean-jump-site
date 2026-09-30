@@ -63,9 +63,10 @@ footer a{color:var(--accent)}
 <script src="boards.js"></script>
 <script>
 (() => {
-  // ---- Settings from the address: ?lang=en, ?theme=dark|light, ?level=easy|medium|hard|expert
+  // ---- Settings from the address: ?lang=nb|en, ?theme=dark|light, ?level=easy|medium|hard|expert
   const params = new URLSearchParams(location.search);
-  const lang = (params.get('lang') || (navigator.language || 'nb')).toLowerCase().startsWith('en') ? 'en' : 'nb';
+  // Norwegian unless English is asked for: ?lang=en. Norwegian codes (nb, no, nn) and anything else give Norwegian.
+  const lang = (params.get('lang') || 'nb').toLowerCase().startsWith('en') ? 'en' : 'nb';
   if (params.get('theme') === 'dark' || params.get('theme') === 'light') document.documentElement.dataset.theme = params.get('theme');
   document.documentElement.lang = lang;
 
