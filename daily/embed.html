@@ -79,7 +79,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
     <select name="theme"><option value="">Følg leseren</option><option value="light">Alltid lyst</option><option value="dark">Alltid mørkt</option></select>
   </label>
   <label>Første brett
-    <select name="level"><option value="">Lett</option><option value="medium">Middels</option><option value="hard">Vanskelig</option><option value="expert">Ekspert</option></select>
+    <select name="level"><option value="">Leserens forrige nivå</option><option value="easy">Lett</option><option value="medium">Middels</option><option value="hard">Vanskelig</option><option value="expert">Ekspert</option></select>
   </label>
   <label>Plassering
     <select name="align"><option value="">Midtstilt</option><option value="left">Venstre</option></select>
@@ -105,7 +105,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <tr><td><code>data-lang</code></td><td><code>nb</code>, <code>en</code>, <code>sv</code>, <code>da</code>, <code>fi</code>, <code>de</code></td><td>Språket i spillet: norsk, engelsk, svensk, dansk, finsk eller tysk. Uten dette brukes språket på siden rundt (<code>&lt;html lang="…"&gt;</code>), og ellers norsk.</td></tr>
   <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Låser fargene. Uten dette følger spillet leserens lyse eller mørke modus.</td></tr>
   <tr><td><code>data-align</code></td><td><code>left</code></td><td>Plasserer spillet til venstre. Uten dette står det midt i plassen det får, og er aldri bredere enn 480 piksler.</td></tr>
-  <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Hvilket av dagens fire brett som vises først. Leseren kan fortsatt bytte.</td></tr>
+  <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Hvilket av dagens fire brett som vises først. Uten dette åpner spillet på nivået leseren spilte sist, og ellers på Lett. Leseren kan alltid bytte.</td></tr>
 </table>
 </div>
 <p>Eksempel, alltid lyst og med Middels først:</p>
