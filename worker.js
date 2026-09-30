@@ -1,9 +1,9 @@
 // hikupuzzle.com: the site's files are served as they are; only /api/daily runs here.
 //
 // GET /api/daily?day=YYYY-MM-DD gives that day's four boards, the same as the app picks. The library itself is kept
-// in the LIBRARY store (Cloudflare KV, key "boards") and never published, and only yesterday, today and tomorrow in
-// UTC are given out: enough for every time zone to have its own today, and no more, so the boards cannot be read
-// ahead or collected.
+// in the LIBRARY store (Cloudflare KV, key "boards") and never published, and a day is only given out while it is
+// today somewhere in the world: every time zone gets its own today, and no board can be read further ahead or
+// collected.
 
 const FIRST_DAY = Date.UTC(2026, 9, 1);
 const DAY = 86400000;
@@ -26,8 +26,10 @@ async function daily(url, env) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(day);
   if (!match) return json({error: "day"}, 400);
   const asked = Date.UTC(+match[1], +match[2] - 1, +match[3]);
-  const today = Math.floor(Date.now() / DAY) * DAY;
-  if (Math.abs(asked - today) > DAY) return json({error: "not today"}, 403, {"cache-control": "no-store"});
+  // A day is given out only while it is today somewhere: from when it starts at UTC+14 until it ends at UTC−12.
+  const now = Date.now();
+  const earliest = Math.floor((now - 12 * 3600000) / DAY) * DAY, latest = Math.floor((now + 14 * 3600000) / DAY) * DAY;
+  if (asked < earliest || asked > latest) return json({error: "not today"}, 403, {"cache-control": "no-store"});
 
   library ??= await env.LIBRARY.get("boards", "json");
   if (!library) return json({error: "library"}, 503);
