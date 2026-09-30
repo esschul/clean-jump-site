@@ -3,8 +3,9 @@
 //   <div data-hiku></div>
 //   <script src="https://esschul.github.io/clean-jump-site/daily/embed.js" async></script>
 //
-// Options on the div: data-lang="nb" or "en" (without it, the language of the page around it, else Norwegian),
-// data-theme="light" or "dark", data-level="easy|medium|hard|expert".
+// Options on the div: data-lang="nb", "en", "sv", "da", "fi" or "de" (without it, the language of the page around
+// it, else Norwegian), data-theme="light" or "dark", data-level="easy|medium|hard|expert", and data-align="left"
+// to put the game at the left instead of in the middle.
 // The game runs in its own frame and sets no cookies; no game data or results are sent to us, they stay in the
 // reader's browser. This script only creates the frame and sets its height.
 (function () {
@@ -20,9 +21,11 @@
     ['theme', 'level'].forEach(function (k) { if (host.dataset[k]) query.push(k + '=' + encodeURIComponent(host.dataset[k])); });
     var frame = document.createElement('iframe');
     frame.src = base + (query.length ? '?' + query.join('&') : '');
-    frame.title = /^en/i.test(lang) ? 'Daily Hiku' : 'Dagens Hiku';
+    var titles = {en: 'Daily Hiku', fi: 'Päivän Hiku', de: 'Hiku des Tages'};
+    frame.title = titles[lang.slice(0, 2).toLowerCase()] || 'Dagens Hiku';
     frame.loading = 'lazy';
-    frame.style.cssText = 'display:block;width:100%;max-width:480px;height:720px;border:0;margin:0 auto;';
+    // At most 480 pixels wide, in the middle of the space it is given unless asked to sit at the left.
+    frame.style.cssText = 'display:block;width:100%;max-width:480px;height:720px;border:0;margin:' + (host.dataset.align === 'left' ? '0' : '0 auto') + ';';
     host.appendChild(frame);
   }
   window.addEventListener('message', function (e) {

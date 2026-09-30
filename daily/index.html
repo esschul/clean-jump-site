@@ -63,33 +63,79 @@ footer a{color:var(--accent)}
 <script src="boards.js"></script>
 <script>
 (() => {
-  // ---- Settings from the address: ?lang=nb|en, ?theme=dark|light, ?level=easy|medium|hard|expert
+  // ---- Settings from the address: ?lang=nb|en|sv|da|fi|de, ?theme=dark|light, ?level=easy|medium|hard|expert
   const params = new URLSearchParams(location.search);
-  // Norwegian unless English is asked for: ?lang=en. Norwegian codes (nb, no, nn) and anything else give Norwegian.
-  const lang = (params.get('lang') || 'nb').toLowerCase().startsWith('en') ? 'en' : 'nb';
   if (params.get('theme') === 'dark' || params.get('theme') === 'light') document.documentElement.dataset.theme = params.get('theme');
-  document.documentElement.lang = lang;
 
-  const T = {
-    nb: {rule: 'Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.',
-         tiers: {easy: 'Lett', medium: 'Middels', hard: 'Vanskelig', expert: 'Ekspert'},
-         start: 'Dra et tall dit det hopper, eller trykk på tallet og så på målet.',
-         pick: 'Trykk på et av de markerte tallene.', noMove: 'Dette tallet kan ikke hoppe nå. Velg et annet.',
-         lost: 'Brettet kan ikke lenger ryddes. Angre et trekk.', stuck: 'Ingen trekk igjen. Angre eller start på nytt.',
+  // The languages of the app, with its own words where it has them. Norwegian unless another is asked for;
+  // "no" and "nn" count as Norwegian, and a region such as sv-SE is ignored.
+  const LANGS = {
+    nb: {locale: 'nb-NO', title: 'Dagens Hiku', rule: 'Tallet sier hvor langt det hopper. Lander det på et annet, trekkes de fra hverandre. Få alle tallene til å forsvinne.',
+         tiers: {easy: 'Lett', medium: 'Middels', hard: 'Vanskelig', expert: 'Ekspert'}, tabs: 'Vanskelighetsgrad',
+         start: 'Dra et tall dit det skal hoppe, eller trykk på tallet og så på målet.',
+         pick: 'Trykk på et av de markerte tallene.', noMove: v => `${v} når ikke noe tall herfra. Velg et annet.`,
+         lost: 'Brettet kan ikke lenger løses. Angre for å gå tilbake.', stuck: 'Ingen tall når hverandre lenger. Angre for å gå tilbake.',
          undo: 'Angre', restart: 'Start på nytt', share: 'Del resultat', copied: 'Kopiert!',
          solved: {3: 'Feilfritt!', 2: 'Godt løst!', 1: 'Løst!'}, undos: n => n === 0 ? 'Uten å angre.' : n === 1 ? 'Med én angring.' : `Med ${n} angringer.`,
-         made: 'Nye brett hver dag, kom tilbake i morgen!', app: 'Last ned Hiku for iPhone', more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store', gone: (a, b) => `${a} − ${b} = 0 · borte`,
-         tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`, date: {weekday: 'long', day: 'numeric', month: 'long'}},
-    en: {rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
-         tiers: {easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert'},
+         made: 'Nye brett hver dag, kom tilbake i morgen!', app: 'Last ned Hiku for iPhone',
+         more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store',
+         gone: (a, b) => `${a} − ${b} = borte`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
+    en: {locale: 'en-GB', title: 'Daily Hiku', rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
+         tiers: {easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert'}, tabs: 'Difficulty',
          start: 'Drag a number to where it jumps, or tap the number and then its target.',
-         pick: 'Tap one of the marked numbers.', noMove: "This number can't jump right now. Pick another.",
-         lost: 'The board can no longer be cleared. Undo a move.', stuck: 'No moves left. Undo or start over.',
+         pick: 'Tap one of the marked numbers.', noMove: v => `${v} can’t reach any number from here. Pick another.`,
+         lost: 'This board can no longer be cleared. Undo to go back.', stuck: 'No numbers can reach each other any more. Undo to go back.',
          undo: 'Undo', restart: 'Start over', share: 'Share result', copied: 'Copied!',
          solved: {3: 'Flawless!', 2: 'Well solved!', 1: 'Solved!'}, undos: n => n === 0 ? 'Without undoing.' : n === 1 ? 'With one undo.' : `With ${n} undos.`,
-         made: 'New boards every day, come back tomorrow!', app: 'Get Hiku for iPhone', more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store', gone: (a, b) => `${a} − ${b} = 0 · gone`,
-         tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`, date: {weekday: 'long', day: 'numeric', month: 'long'}},
-  }[lang];
+         made: 'New boards every day, come back tomorrow!', app: 'Get Hiku for iPhone',
+         more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store',
+         gone: (a, b) => `${a} − ${b} = gone`, tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`},
+    sv: {locale: 'sv-SE', title: 'Dagens Hiku', rule: 'Talet säger hur långt det hoppar. Landar det på ett annat dras de från varandra. Få alla tal att försvinna.',
+         tiers: {easy: 'Lätt', medium: 'Medel', hard: 'Svår', expert: 'Expert'}, tabs: 'Svårighetsgrad',
+         start: 'Dra ett tal dit det ska hoppa, eller tryck på talet och sedan på målet.',
+         pick: 'Tryck på ett av de markerade talen.', noMove: v => `${v} når inget tal härifrån. Välj ett annat.`,
+         lost: 'Brädet går inte längre att lösa. Ångra för att gå tillbaka.', stuck: 'Inga tal når varandra längre. Ångra för att gå tillbaka.',
+         undo: 'Ångra', restart: 'Börja om', share: 'Dela resultat', copied: 'Kopierat!',
+         solved: {3: 'Felfritt!', 2: 'Bra löst!', 1: 'Löst!'}, undos: n => n === 0 ? 'Utan att ångra.' : n === 1 ? 'Med en ångring.' : `Med ${n} ångringar.`,
+         made: 'Nya bräden varje dag, kom tillbaka i morgon!', app: 'Ladda ner Hiku för iPhone',
+         more: 'Vill du ha mer? Appen har 50 banor till, och de första lär dig knepen:', moreLink: 'Hiku i App Store',
+         gone: (a, b) => `${a} − ${b} = borta`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
+    da: {locale: 'da-DK', title: 'Dagens Hiku', rule: 'Tallet siger, hvor langt det springer. Lander det på et andet, trækkes de fra hinanden. Få alle tallene til at forsvinde.',
+         tiers: {easy: 'Let', medium: 'Middel', hard: 'Svær', expert: 'Ekspert'}, tabs: 'Sværhedsgrad',
+         start: 'Træk et tal derhen, hvor det skal springe, eller tryk på tallet og så på målet.',
+         pick: 'Tryk på et af de markerede tal.', noMove: v => `${v} kan ikke nå et tal herfra. Vælg et andet.`,
+         lost: 'Brættet kan ikke længere løses. Fortryd for at gå tilbage.', stuck: 'Ingen tal kan nå hinanden længere. Fortryd for at gå tilbage.',
+         undo: 'Fortryd', restart: 'Start forfra', share: 'Del resultat', copied: 'Kopieret!',
+         solved: {3: 'Fejlfrit!', 2: 'Godt løst!', 1: 'Løst!'}, undos: n => n === 0 ? 'Uden at fortryde.' : n === 1 ? 'Med én fortrydelse.' : `Med ${n} fortrydelser.`,
+         made: 'Nye brætter hver dag, kom tilbage i morgen!', app: 'Hent Hiku til iPhone',
+         more: 'Vil du have mere? Appen har 50 baner mere, og de første lærer dig tricksene:', moreLink: 'Hiku i App Store',
+         gone: (a, b) => `${a} − ${b} = væk`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
+    fi: {locale: 'fi-FI', title: 'Päivän Hiku', rule: 'Luku kertoo, kuinka pitkälle se hyppää. Kun se laskeutuu toiseen, ne vähennetään toisistaan. Saa kaikki luvut katoamaan.',
+         tiers: {easy: 'Helppo', medium: 'Keskitaso', hard: 'Vaikea', expert: 'Asiantuntija'}, tabs: 'Vaikeustaso',
+         start: 'Vedä luku sinne, minne se hyppää, tai napauta lukua ja sitten kohdetta.',
+         pick: 'Napauta yhtä merkityistä luvuista.', noMove: v => `Luku ${v} ei ylety täältä mihinkään lukuun. Valitse toinen.`,
+         lost: 'Lautaa ei voi enää ratkaista. Palaa takaisin perumalla.', stuck: 'Mikään luku ei enää ylety toiseen. Palaa takaisin perumalla.',
+         undo: 'Peru', restart: 'Aloita alusta', share: 'Jaa tulos', copied: 'Kopioitu!',
+         solved: {3: 'Virheetön!', 2: 'Hyvin ratkaistu!', 1: 'Ratkaistu!'}, undos: n => n === 0 ? 'Perumatta.' : n === 1 ? 'Yhdellä perumisella.' : `${n} perumisella.`,
+         made: 'Uudet laudat joka päivä, tule takaisin huomenna!', app: 'Lataa Hiku iPhonelle',
+         more: 'Haluatko lisää? Sovelluksessa on 50 tasoa lisää, ja ensimmäiset opettavat niksit:', moreLink: 'Hiku App Storessa',
+         gone: (a, b) => `${a} − ${b} = poissa`, tile: (v, sq) => `${v}, ruutu ${sq}`, empty: sq => `${sq}, tyhjä`},
+    de: {locale: 'de-DE', title: 'Hiku des Tages', rule: 'Die Zahl sagt, wie weit sie springt. Landet sie auf einer anderen, wird abgezogen. Lass alle Zahlen verschwinden.',
+         tiers: {easy: 'Leicht', medium: 'Mittel', hard: 'Schwer', expert: 'Experte'}, tabs: 'Schwierigkeitsgrad',
+         start: 'Zieh eine Zahl dorthin, wohin sie springt, oder tippe erst die Zahl und dann das Ziel an.',
+         pick: 'Tippe eine der markierten Zahlen an.', noMove: v => `Die ${v} erreicht von hier keine Zahl. Wähle eine andere.`,
+         lost: 'Dieses Brett ist nicht mehr lösbar. Nimm den Zug zurück.', stuck: 'Keine Zahl erreicht mehr eine andere. Nimm den Zug zurück.',
+         undo: 'Zurück', restart: 'Neu starten', share: 'Ergebnis teilen', copied: 'Kopiert!',
+         solved: {3: 'Fehlerfrei!', 2: 'Gut gelöst!', 1: 'Gelöst!'}, undos: n => n === 0 ? 'Ohne einen Zug zurückzunehmen.' : n === 1 ? 'Mit einem zurückgenommenen Zug.' : `Mit ${n} zurückgenommenen Zügen.`,
+         made: 'Jeden Tag neue Bretter – komm morgen wieder!', app: 'Hiku für iPhone laden',
+         more: 'Lust auf mehr? Die App hat 50 weitere Level, und die ersten zeigen dir die Kniffe:', moreLink: 'Hiku im App Store',
+         gone: (a, b) => `${a} − ${b} = weg`, tile: (v, sq) => `${v} auf ${sq}`, empty: sq => `${sq}, leer`},
+  };
+  const asked = (params.get('lang') || 'nb').toLowerCase().slice(0, 2);
+  const lang = LANGS[asked] ? asked : asked === 'no' || asked === 'nn' ? 'nb' : 'nb';
+  const T = {...LANGS[lang], date: {weekday: 'long', day: 'numeric', month: 'long'}};
+  document.documentElement.lang = lang;
+  document.title = T.title;
   const TIERS = ['easy', 'medium', 'hard', 'expert'];
 
   // App Store links carry a campaign naming the site the game is played on, so App Store Connect can count
@@ -212,8 +258,8 @@ footer a{color:var(--accent)}
   const el = id => document.getElementById(id);
   const boardEl = el('board'), statusEl = el('status'), controlsEl = el('controls'), tabsEl = el('tabs');
   el('rule').textContent = T.rule;
-  tabsEl.setAttribute('aria-label', lang === 'nb' ? 'Vanskelighetsgrad' : 'Difficulty');
-  el('day').textContent = now.toLocaleDateString(lang === 'nb' ? 'nb-NO' : 'en-GB', T.date);
+  tabsEl.setAttribute('aria-label', T.tabs);
+  el('day').textContent = now.toLocaleDateString(T.locale, T.date);
   el('made').textContent = T.made;
   el('app').href = APP_URL;
   el('app').innerHTML = '<svg width="13" height="15" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>' + T.app;
@@ -382,7 +428,7 @@ footer a{color:var(--accent)}
     } else if (!history.length && selected === null) {
       statusEl.textContent = T.start;
     } else if (selected !== null && !targets(cells, n, selected).length) {
-      statusEl.textContent = T.noMove;
+      statusEl.textContent = T.noMove(cells[selected]);
     } else if (selected !== null) {
       statusEl.textContent = T.pick;
     } else {
@@ -401,7 +447,7 @@ footer a{color:var(--accent)}
     };
     if (isClear(cells)) {
       const share = add(T.share, async () => {
-        const text = `Hiku · ${T.tiers[tier]} · ${now.toLocaleDateString(lang === 'nb' ? 'nb-NO' : 'en-GB', {day: 'numeric', month: 'short'})}\n${'★'.repeat(stars(undos))}${'☆'.repeat(3 - stars(undos))}\n${location.origin}${location.pathname}`;
+        const text = `Hiku · ${T.tiers[tier]} · ${now.toLocaleDateString(T.locale, {day: 'numeric', month: 'short'})}\n${'★'.repeat(stars(undos))}${'☆'.repeat(3 - stars(undos))}\n${location.origin}${location.pathname}`;
         try {
           if (navigator.share) await navigator.share({text});
           else { await navigator.clipboard.writeText(text); share.textContent = T.copied; }
