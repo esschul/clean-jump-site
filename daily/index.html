@@ -78,7 +78,7 @@ footer a{color:var(--accent)}
          lost: 'Brettet kan ikke lenger ryddes. Angre et trekk.', stuck: 'Ingen trekk igjen. Angre eller start på nytt.',
          undo: 'Angre', restart: 'Start på nytt', share: 'Del resultat', copied: 'Kopiert!',
          solved: {3: 'Feilfritt!', 2: 'Godt løst!', 1: 'Løst!'}, undos: n => n === 0 ? 'Uten å angre.' : n === 1 ? 'Med én angring.' : `Med ${n} angringer.`,
-         made: 'Nye brett hver dag, de samme for alle.', app: 'Last ned Hiku for iPhone', more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store', gone: (a, b) => `${a} − ${b} = 0 · borte`,
+         made: 'Nye brett hver dag, kom tilbake i morgen!', app: 'Last ned Hiku for iPhone', more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store', gone: (a, b) => `${a} − ${b} = 0 · borte`,
          tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`, date: {weekday: 'long', day: 'numeric', month: 'long'}},
     en: {rule: 'The number says how far it jumps. Land on another and they subtract. Make all the numbers disappear.',
          tiers: {easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert'},
@@ -87,7 +87,7 @@ footer a{color:var(--accent)}
          lost: 'The board can no longer be cleared. Undo a move.', stuck: 'No moves left. Undo or start over.',
          undo: 'Undo', restart: 'Start over', share: 'Share result', copied: 'Copied!',
          solved: {3: 'Flawless!', 2: 'Well solved!', 1: 'Solved!'}, undos: n => n === 0 ? 'Without undoing.' : n === 1 ? 'With one undo.' : `With ${n} undos.`,
-         made: 'New boards every day, the same for everyone.', app: 'Get Hiku for iPhone', more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store', gone: (a, b) => `${a} − ${b} = 0 · gone`,
+         made: 'New boards every day, come back tomorrow!', app: 'Get Hiku for iPhone', more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store', gone: (a, b) => `${a} − ${b} = 0 · gone`,
          tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`, date: {weekday: 'long', day: 'numeric', month: 'long'}},
   }[lang];
   const TIERS = ['easy', 'medium', 'hard', 'expert'];
