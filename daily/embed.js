@@ -20,6 +20,8 @@
     query.push('lang=' + encodeURIComponent(lang));
     ['theme', 'level'].forEach(function (k) { if (host.dataset[k]) query.push(k + '=' + encodeURIComponent(host.dataset[k])); });
     if (host.dataset.compact === 'true' || host.dataset.compact === '') query.push('compact=1');
+    // A page opened with ?debug=1 passes it on, so the game's touch log shows inside the frame too.
+    if (/[?&]debug=1(&|$)/.test(location.search)) query.push('debug=1');
     var frame = document.createElement('iframe');
     frame.src = base + (query.length ? '?' + query.join('&') : '');
     var titles = {en: 'Daily Hiku', fi: 'Päivän Hiku', de: 'Hiku des Tages'};

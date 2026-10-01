@@ -677,16 +677,25 @@ footer a{color:var(--accent)}
       eq.remove();
     }
   });
-  // The board is redrawn only once the touch has ended. Redrawn at once, the number under the finger is gone before
-  // iOS delivers the end of the touch, and iOS then swallows the next tap whole: a button or a number needed two.
+  // The board is redrawn only once the touch has ended. Redrawn while the finger is still lifting, the number under
+  // it is gone before iOS delivers the end of the touch, and iOS then swallows the next tap whole: a button or a
+  // number needed two. A touch waits for its touchend, which some browsers send well after pointerup; a mouse or pen
+  // goes on at once.
+  let afterTouch = null;
+  document.addEventListener('touchend', () => { const run = afterTouch; afterTouch = null; if (run) setTimeout(run); }, true);
+  function whenLifted(e, run) {
+    if (e.pointerType !== 'touch') { run(); return; }
+    afterTouch = run;
+    setTimeout(() => { if (afterTouch === run) { afterTouch = null; run(); } }, 250);
+  }
   boardEl.addEventListener('pointerup', e => {
     if (!drag) return;
     const d = drag; drag = null;
-    if (!d.moved) { setTimeout(() => tap(d.i)); return; }
+    if (!d.moved) { whenLifted(e, () => tap(d.i)); return; }
     const r = boardEl.getBoundingClientRect(), L = layout();
     const x = e.clientX - r.left, y = e.clientY - r.top;
     const over = cells.findIndex((_, i) => { const p = L.at(i); return x >= p.x && x <= p.x + L.side && y >= p.y && y <= p.y + L.side; });
-    setTimeout(() => { if (over < 0 || !play(d.i, over, true)) { selected = null; render(); } });
+    whenLifted(e, () => { if (over < 0 || !play(d.i, over, true)) { selected = null; render(); } });
   });
   boardEl.addEventListener('pointercancel', () => { drag = null; selected = null; render(); });
 
