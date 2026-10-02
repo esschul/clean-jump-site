@@ -45,35 +45,37 @@ nav.top .links{margin-left:auto}
 .hero h1{font:400 clamp(64px,11vw,112px)/.95 Georgia,serif;letter-spacing:-3px;margin:0;position:relative;display:inline-block}
 .hero h1 span{color:var(--gold)}
 .arc{display:inline-block;width:1.1em;height:.62em;margin-left:.02em;vertical-align:baseline;overflow:visible}
-.tagline{font-size:22px;line-height:1.45;margin:22px 0 10px}
-.rule{color:var(--muted);font-size:18px;margin:0 0 26px;max-width:34em}
+.tagline{font-size:22px;line-height:1.45;margin:22px 0 26px;max-width:22em}
 .ctas{display:flex;gap:12px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px}
 .btn.primary{background:var(--accent);color:var(--on-accent)}
 .btn.ghost{border:1px solid var(--edge);color:var(--ink)}
 @media (min-width:821px){.play-down{display:none}}
 .game{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 3px 0 var(--edge)}
-.game h2{font:400 22px Georgia,serif;margin:4px 6px 2px}
-.game p{margin:0 6px 10px;color:var(--muted);font-size:14px}
+.game h2{font:400 22px Georgia,serif;margin:4px 6px 10px}
 section{padding:56px 0;border-top:1px solid var(--edge)}
 section h2{font:400 34px/1.15 Georgia,serif;margin:0 0 14px;letter-spacing:-.5px}
 section p,section li{color:var(--muted);max-width:40em}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-.bullets{padding-left:20px}
-.bullets li{margin:6px 0}
 .shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x mandatory}
 .shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 3px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media (max-width:1000px){.cards{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.cards{grid-template-columns:1fr}}
 .card{background:var(--card);border-radius:18px;padding:22px 24px;box-shadow:0 3px 0 var(--edge)}
-.card h2{font-size:26px}
+.card h2{font-size:24px}
 .card p{margin:0 0 12px}
 .card a{font-weight:600}
-.en h3{font:400 22px Georgia,serif;margin:28px 0 6px;color:var(--ink)}
+.small{font-size:14px;line-height:1.6}
+.small h2{font:600 14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;margin:24px 0 4px;letter-spacing:0}
+.small h2:first-child{margin-top:0}
+.small p{margin:0 0 8px}
+.en h3{font:600 14px system-ui,-apple-system,"Segoe UI",sans-serif;margin:24px 0 4px;color:var(--ink)}
 footer{padding:32px 0 48px;border-top:1px solid var(--edge);font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 @media (max-width:820px){.hero,.two{grid-template-columns:1fr}.hero{gap:28px;padding-top:20px}
   nav.top{flex-wrap:wrap}nav.top .theme{margin-left:auto;order:2}nav.top .links{order:3;flex-basis:100%;margin-left:0;gap:6px 18px}
-  .game{padding:10px 4px 4px;margin:0 -8px}.game h2,.game p{margin-left:12px;margin-right:12px}}
+  .game{padding:10px 4px 4px;margin:0 -8px}.game h2{margin-left:12px;margin-right:12px}}
 </style>
 </head>
 <body>
@@ -92,7 +94,6 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
   <div>
     <h1>Hiku<svg class="arc" viewBox="0 0 110 62" aria-hidden="true"><path d="M7.2 41.8 Q55 -34 102.8 41.8" fill="none" stroke="var(--guide)" stroke-width="4" stroke-linecap="round" stroke-dasharray="6.5 8"/><circle cx="7.2" cy="54.8" r="7.2" fill="var(--ink)"/><circle cx="102.8" cy="54.8" r="7.2" fill="var(--ink)"/></svg></h1>
     <p class="tagline">Liker du sudoku? Prøv Hiku. Enkle regler, utfordrende brett og fire nye oppgaver hver dag.</p>
-    <p class="rule">Flytt tallene med hopp. Tallet bestemmer hvor langt du kan hoppe. Når to tall møtes, trekkes det minste fra det største. Like tall forsvinner. Klarer du å tømme brettet?</p>
     <div class="ctas">
       <a class="btn primary play-down" href="#spill">Spill dagens brett <span aria-hidden="true">↓</span></a>
       <a class="btn ghost" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-nb&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Last ned for iPhone</a>
@@ -100,7 +101,6 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
   </div>
   <div class="game" id="spill">
     <h2>Dagens Hiku</h2>
-    <p>Fire nye brett hver dag, fra lett til ekspert. Nye brett kommer ved midnatt.</p>
     <div data-hiku data-lang="nb" data-compact></div>
   </div>
 </div>
@@ -109,47 +109,37 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 <section id="appen"><div class="wrap two">
   <div>
     <h2>Appen for iPhone</h2>
-    
-    <ul class="bullets"><li>Dagens Hiku: fire nye brett hver dag, fra lett til ekspert</li><li>50 brett å øve på, og de første lærer deg reglene underveis</li><li>Alle brett kan løses. Det gjelder bare å finne rekkefølgen.</li><li>Tre stjerner hvis du klarer det uten å angre</li><li>Hint, påminnelse, fargede tall og mørk modus når du vil</li><li>Kan spilles med VoiceOver</li><li>Ingen reklame, ingen klokke, ingen konto. Virker uten nett.</li></ul>
-    <p>I appen får du også 50 brett å øve på. De første lærer deg reglene, ett knep om gangen.</p>
+    <p>Dagens Hiku, 50 brett som lærer deg reglene, og en widget på hjemskjermen. Ingen reklame, ingen konto.</p>
     <p><a class="btn primary" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-nb&amp;mt=8">Last ned for iPhone</a></p>
   </div>
   <div class="shots" tabindex="0" role="region" aria-label="Skjermbilder fra appen"><img src="img/nb/0-hjem.jpg" alt="Startsiden med Dagens Hiku" width="480" height="1043" loading="lazy"><img src="img/nb/1-regel.jpg" alt="Et brett med buene som viser hvor tallet kan hoppe" width="480" height="1043" loading="lazy"><img src="img/nb/5-morkt.jpg" alt="Mørk modus" width="480" height="1043" loading="lazy"></div>
 </div></section>
 
-<section id="slik"><div class="wrap">
-  <h2>Slik spiller du</h2>
-  <p>Et tall hopper nøyaktig så mange ruter som det viser: til siden, opp eller ned, aldri på skrå. Det hopper over det som ligger imellom, men må lande på et annet tall.</p><p>Der det lander, trekkes det minste tallet fra det største, og svaret blir liggende. Er tallene like, forsvinner begge. Et mindre tall hopper kortere, så hvert trekk endrer hva som er mulig etterpå.</p><p>Rekkefølgen er alt. Ett feil trekk kan etterlate tall som aldri når hverandre. Da angrer du og prøver en annen vei.</p><p>Klarer du brettet uten å angre, får du tre stjerner. Med én eller to angringer får du to, ellers én. Å begynne på nytt teller som én angring.</p>
-</div></section>
-
-<section id="tilgjengelig"><div class="wrap">
-  <h2>Tilgjengelig for alle</h2>
-  <p>Du trenger ikke se brettet for å spille Hiku. Hver rute har et navn, som B2, og skjermleseren forteller hvor hvert tall kan hoppe. Etter hvert trekk får du høre hva som skjedde og hvor mange tall som er igjen.</p>
-  <ul class="bullets"><li><strong>Appen</strong> støtter VoiceOver, Stemmestyring («trykk på B2»), mørk modus, tydelig kontrast og redusert bevegelse. Du trenger aldri skille farger: tallene og prikkene viser alltid hvor langt et tall hopper.</li><li><strong>Nettversjonen</strong> kan spilles med skjermleser eller bare tastatur. Den følger lys og mørk modus og slår av animasjoner hvis du har bedt om det. Den er laget etter WCAG 2.2 nivå AA og testet med verktøyet axe.</li></ul>
-</div></section>
-
 <section><div class="wrap cards">
   <div class="card" id="aviser"><span id="daglig"></span>
     <h2>For aviser og nettsteder</h2>
-    <p>Nettaviser og andre nettsteder kan legge inn Dagens Hiku gratis med to linjer kode. Ingen informasjonskapsler, ingen sporing, og spillet finnes på seks språk.</p>
-    <p><a href="daily/embed.html">Slik bygger du det inn →</a><br><a href="daily/embed.html#prov">Prøv innstillingene →</a></p>
+    <p>Legg inn Dagens Hiku gratis med to linjer kode.</p>
+    <p><a href="daily/embed.html">Slik bygger du det inn →</a></p>
   </div>
   <div class="card" id="matematikk">
     <h2>Matematikken bak Hiku</h2>
-    <p>Hvorfor går ikke alle brett opp, og hvor langt fram må du tenke på et ekspertbrett? Artikkelen viser at summen av tallene er partall eller oddetall hele spillet gjennom, at brettet deler seg i grupper som aldri møtes igjen, og at tallene i hver gruppe må kunne deles i to hauger med like stor sum. Om spillet er NP-komplett, vet ingen ennå.</p>
+    <p>Hvorfor noen trekk gjør brettet umulig, forklart med partall, oddetall og like summer.</p>
     <p><a href="hiku-matematikk.pdf">Les artikkelen (engelsk, PDF) →</a></p>
+  </div>
+  <div class="card" id="tilgjengelig">
+    <h2>Tilgjengelig for alle</h2>
+    <p>Kan spilles med VoiceOver, skjermleser eller bare tastatur.</p>
+  </div>
+  <div class="card" id="navnet">
+    <h2>Om navnet</h2>
+    <p>Hiku (引く) er japansk og betyr «å trekke». Det er også ordet for minus: 5 引く 2 は 3 betyr «fem minus to er tre».</p>
   </div>
 </div></section>
 
-<section id="navnet"><div class="wrap">
-  <h2>Om navnet</h2>
-  <p>Hiku (引く) er japansk og betyr «å trekke». Det er også ordet for minus: 5 引く 2 は 3 betyr «fem minus to er tre».</p><p>Tegnet 引 består av 弓, en bue, og 丨, en strek: en buestreng som trekkes. Det er den samme buen du ser når et tall hopper.</p>
-</div></section>
-
-<section id="personvern"><div class="wrap">
+<section id="personvern" class="small"><div class="wrap">
   <h2>Personvern</h2>
   <p><strong>Hiku samler ingen personopplysninger.</strong> Appen har ingen konto og ingen reklame, og den sporer deg ikke på tvers av apper eller nettsteder.</p><p>Hvilke brett du har løst, stjernene dine og Dagens Hiku lagres bare på din egen telefon. Widgeten leser de samme tallene der. Alt slettes hvis du sletter appen.</p><p>Fra versjon 1.2 sender appen noen få anonyme milepæler, slik at vi kan se hvor langt spillerne kommer: når du har løst 1, 9, 10, 20, 30, 40 eller 50 brett (og 100, 150 og 200), når du løser et brett i Dagens Hiku og på hvilket nivå, og når rekken din med Dagens Hiku når 3, 7, 14, 30 dager eller mer. Milepælene sendes til <a href="https://telemetrydeck.com/privacy">TelemetryDeck</a>, en europeisk analysetjeneste laget for personvern. De inneholder ingen navn, e-post, posisjon eller annet som kan knyttes til deg; installasjonen får et tilfeldig nummer som gjøres om til en enveis-kode før det sendes. Vi bruker tallene bare til å gjøre spillet bedre.</p><p>Dagens Hiku i nettleseren setter ingen informasjonskapsler og sender ingen spilldata. Resultatene dine lagres bare i nettleseren din. Nettsiden teller besøk med Cloudflare Web Analytics, som ikke bruker informasjonskapsler og ikke følger deg mellom nettsider: vi ser hvor mange som kom og fra hvilket nettsted, ikke hvem.</p>
-  <h2 id="support" style="margin-top:36px">Support</h2>
+  <h2 id="support">Support</h2>
   <p>Har du spørsmål, har du funnet en feil, eller sitter du fast på et brett? Send en e-post til <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
   <section class="en" lang="en" id="privacy"><h3>Privacy (English)</h3><p><strong>Hiku collects no personal data.</strong> There is no account and no advertising, and it does not track you across apps or websites.</p><p>Your solved levels, your stars and your Daily Hiku results stay on your phone; the widget reads them there. Everything is deleted if you delete the app.</p><p>From version 1.2 the app sends a few anonymous milestones so we can see how far players get: reaching 1, 9, 10, 20, 30, 40 or 50 cleared levels (and 100, 150, 200), solving a Daily Hiku board and its difficulty, and a Daily Hiku streak of 3, 7, 14, 30 days or more. They go to <a href="https://telemetrydeck.com/privacy">TelemetryDeck</a>, a privacy-focused European analytics service, and contain nothing that identifies you: the install gets a random number that is hashed one way before it is sent. We use the numbers only to improve the game.</p><p>Daily Hiku in the browser sets no cookies and sends no game data. Your results stay in your browser. The site counts visits with Cloudflare Web Analytics, which uses no cookies and does not follow you between sites: we see how many came and from which site, not who.</p><h3>Support</h3><p>Questions, found a bug, or stuck on a board? Email <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p></section>
 </div></section>

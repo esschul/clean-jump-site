@@ -45,35 +45,37 @@ nav.top .links{margin-left:auto}
 .hero h1{font:400 clamp(64px,11vw,112px)/.95 Georgia,serif;letter-spacing:-3px;margin:0;position:relative;display:inline-block}
 .hero h1 span{color:var(--gold)}
 .arc{display:inline-block;width:1.1em;height:.62em;margin-left:.02em;vertical-align:baseline;overflow:visible}
-.tagline{font-size:22px;line-height:1.45;margin:22px 0 10px}
-.rule{color:var(--muted);font-size:18px;margin:0 0 26px;max-width:34em}
+.tagline{font-size:22px;line-height:1.45;margin:22px 0 26px;max-width:22em}
 .ctas{display:flex;gap:12px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px}
 .btn.primary{background:var(--accent);color:var(--on-accent)}
 .btn.ghost{border:1px solid var(--edge);color:var(--ink)}
 @media (min-width:821px){.play-down{display:none}}
 .game{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 3px 0 var(--edge)}
-.game h2{font:400 22px Georgia,serif;margin:4px 6px 2px}
-.game p{margin:0 6px 10px;color:var(--muted);font-size:14px}
+.game h2{font:400 22px Georgia,serif;margin:4px 6px 10px}
 section{padding:56px 0;border-top:1px solid var(--edge)}
 section h2{font:400 34px/1.15 Georgia,serif;margin:0 0 14px;letter-spacing:-.5px}
 section p,section li{color:var(--muted);max-width:40em}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-.bullets{padding-left:20px}
-.bullets li{margin:6px 0}
 .shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x mandatory}
 .shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 3px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media (max-width:1000px){.cards{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.cards{grid-template-columns:1fr}}
 .card{background:var(--card);border-radius:18px;padding:22px 24px;box-shadow:0 3px 0 var(--edge)}
-.card h2{font-size:26px}
+.card h2{font-size:24px}
 .card p{margin:0 0 12px}
 .card a{font-weight:600}
-.en h3{font:400 22px Georgia,serif;margin:28px 0 6px;color:var(--ink)}
+.small{font-size:14px;line-height:1.6}
+.small h2{font:600 14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;margin:24px 0 4px;letter-spacing:0}
+.small h2:first-child{margin-top:0}
+.small p{margin:0 0 8px}
+.en h3{font:600 14px system-ui,-apple-system,"Segoe UI",sans-serif;margin:24px 0 4px;color:var(--ink)}
 footer{padding:32px 0 48px;border-top:1px solid var(--edge);font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 @media (max-width:820px){.hero,.two{grid-template-columns:1fr}.hero{gap:28px;padding-top:20px}
   nav.top{flex-wrap:wrap}nav.top .theme{margin-left:auto;order:2}nav.top .links{order:3;flex-basis:100%;margin-left:0;gap:6px 18px}
-  .game{padding:10px 4px 4px;margin:0 -8px}.game h2,.game p{margin-left:12px;margin-right:12px}}
+  .game{padding:10px 4px 4px;margin:0 -8px}.game h2{margin-left:12px;margin-right:12px}}
 </style>
 </head>
 <body>
@@ -92,7 +94,6 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
   <div>
     <h1>Hiku<svg class="arc" viewBox="0 0 110 62" aria-hidden="true"><path d="M7.2 41.8 Q55 -34 102.8 41.8" fill="none" stroke="var(--guide)" stroke-width="4" stroke-linecap="round" stroke-dasharray="6.5 8"/><circle cx="7.2" cy="54.8" r="7.2" fill="var(--ink)"/><circle cx="102.8" cy="54.8" r="7.2" fill="var(--ink)"/></svg></h1>
     <p class="tagline">Hiku on rauhallinen numeropeli sudokun ystäville: puhdasta logiikkaa, ei arvailua.</p>
-    <p class="rule">Luku kertoo, kuinka pitkälle se hyppää. Kun se laskeutuu toiseen, ne vähennetään toisistaan. Saa kaikki luvut katoamaan.</p>
     <div class="ctas">
       <a class="btn primary play-down" href="#spill">Pelaa päivän lautoja <span aria-hidden="true">↓</span></a>
       <a class="btn ghost" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-fi&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Lataa iPhonelle</a>
@@ -100,7 +101,6 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
   </div>
   <div class="game" id="spill">
     <h2>Päivän Hiku</h2>
-    <p>Neljä uutta lautaa joka päivä, helposta asiantuntijaan. Uudet keskiyöllä.</p>
     <div data-hiku data-lang="fi" data-compact></div>
   </div>
 </div>
@@ -109,47 +109,37 @@ footer a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 <section id="appen"><div class="wrap two">
   <div>
     <h2>Sovellus iPhonelle</h2>
-    <p>Pidätkö sudokusta? Hiku on puhdasta logiikkaa yhdellä säännöllä: luku kertoo, kuinka pitkälle se hyppää. Neljä uutta lautaa joka päivä.</p>
-    <ul class="bullets"><li>Päivän Hiku: neljä uutta lautaa joka päivä, helposta asiantuntijaan</li><li>50 tasoa, kaikki ilmaisia, ja kolme harjoitustasoa, jotka opettavat niksit</li><li>Helppo, Keskitaso, Vaikea ja Asiantuntija</li><li>Jokainen taso on ratkaistavissa – sinun täytyy vain löytää järjestys</li><li>Kolme tähteä, jos onnistut perumatta</li><li>Asetukset vihjeelle, muistutukselle, väreille sekä vaalealle tai tummalle</li><li>Ei mainoksia, ei kiirettä, ei tiliä. Toimii ilman verkkoa.</li></ul>
-    <p>Sovelluksessa on Päivän Hikun lisäksi 50 tasoa, ja ensimmäiset opettavat niksit yksi kerrallaan.</p>
+    <p>Päivän Hiku, 50 tasoa, jotka opettavat niksit, ja widget kotinäytölle. Ei mainoksia, ei tiliä.</p>
     <p><a class="btn primary" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-fi&amp;mt=8">Lataa iPhonelle</a></p>
   </div>
   <div class="shots" tabindex="0" role="region" aria-label="Kuvakaappauksia sovelluksesta"><img src="../img/fi/0-hjem.jpg" alt="Etusivu ja Päivän Hiku" width="480" height="1043" loading="lazy"><img src="../img/fi/1-regel.jpg" alt="Lauta, jonka kaaret näyttävät, minne luku voi hypätä" width="480" height="1043" loading="lazy"><img src="../img/fi/5-morkt.jpg" alt="Tumma tila" width="480" height="1043" loading="lazy"></div>
 </div></section>
 
-<section id="slik"><div class="wrap">
-  <h2>Näin hypätään</h2>
-  <p>Luku hyppää niin monta ruutua kuin se sanoo, vaaka- tai pystysuunnassa. Ykkönen ylettyy naapuriin, kolmonen kolmen ruudun päähän. Se hyppää kaiken välissä olevan yli, mutta sen on laskeuduttava toiseen lukuun.</p><p>Pienempi vähennetään suuremmasta, ja erotus jää siihen, mihin laskeuduit. Samat luvut katoavat molemmat. Kun luku pienenee, hyppy lyhenee.</p><p>Jokainen taso on ratkaistavissa. Väärä järjestys voi jättää lukuja, jotka eivät ylety toisiinsa. Peru vapaasti ja kokeile toista tietä.</p><p>Kun ratkaiset tason perumatta, saat kolme tähteä. Yhdellä tai kahdella perumisella saat kaksi, muuten yhden. Alusta aloittaminen lasketaan yhdeksi perumiseksi.</p>
-</div></section>
-
-<section id="tilgjengelig"><div class="wrap">
-  <h2>Saavutettava kaikille</h2>
-  <p>Hikua voi pelata näkemättä lautaa. Jokaisella ruudulla on nimi, kuten B2, ja jokaisen luvun voi kuulla ääneen sekä sen, minne se voi hypätä. Jokainen siirto luetaan ääneen: mitä tapahtui ja montako lukua on jäljellä.</p>
-  <ul class="bullets"><li><strong>Sovellus</strong> tukee VoiceOveria, Äänellä ohjausta (”napauta B2”), tummaa tilaa, selkeää kontrastia ja vähennettyä liikettä. Väri ei ole koskaan ainoa vihje: numerot ja pisteet kertovat aina, kuinka pitkälle luku hyppää.</li><li><strong>Verkkoversiota</strong> voi pelata ruudunlukijalla ja pelkällä näppäimistöllä, se seuraa vaaleaa ja tummaa tilaa ja poistaa animaatiot, jos niin on pyydetty. Se on tehty WCAG 2.2 AA -tason mukaan ja testattu axe-työkalulla.</li></ul>
-</div></section>
-
 <section><div class="wrap cards">
   <div class="card" id="aviser"><span id="daglig"></span>
     <h2>Uutissivustoille ja julkaisijoille</h2>
-    <p>Päivän Hikun voi upottaa maksutta uutissivustolle tai verkkosivulle kahdella rivillä koodia. Ei evästeitä, ei seurantaa, ja peli toimii kuudella kielellä.</p>
-    <p><a href="../daily/embed-fi.html">Näin upotat sen →</a><br><a href="../daily/embed-fi.html#prov">Kokeile asetuksia →</a></p>
+    <p>Upota Päivän Hiku sivustollesi maksutta kahdella rivillä koodia.</p>
+    <p><a href="../daily/embed-fi.html">Näin upotat sen →</a></p>
   </div>
   <div class="card" id="matematikk">
     <h2>Hikun matematiikka</h2>
-    <p>Miksi osaa laudoista ei voi ratkaista, ja kuinka pitkälle eteenpäin asiantuntijalaudalla pitää nähdä? Artikkeli näyttää, että summan pariteetti ei koskaan muutu, että lauta jakautuu ryhmiin, jotka eivät enää kohtaa, ja että jokaisen ryhmän luvut on voitava jakaa kahteen kasaan, joiden summat ovat samat. Onko peli NP-täydellinen, on yhä avoin kysymys.</p>
+    <p>Miksi jotkin siirrot tekevät laudasta mahdottoman? Vastaus löytyy pariteetista ja yhtä suurista summista.</p>
     <p><a href="../hiku-matematikk.pdf">Lue artikkeli (englanniksi, PDF) →</a></p>
+  </div>
+  <div class="card" id="tilgjengelig">
+    <h2>Saavutettava kaikille</h2>
+    <p>Pelattavissa VoiceOverilla, ruudunlukijalla tai pelkällä näppäimistöllä.</p>
+  </div>
+  <div class="card" id="navnet">
+    <h2>Nimestä</h2>
+    <p>Hiku (引く) on japania ja tarkoittaa ”vetää”. Se on myös miinuksen sana: 5 引く 2 は 3 tarkoittaa ”viisi miinus kaksi on kolme”.</p>
   </div>
 </div></section>
 
-<section id="navnet"><div class="wrap">
-  <h2>Nimestä</h2>
-  <p>Hiku (引く) on japania ja tarkoittaa ”vetää”. Se on myös miinuksen sana: 5 引く 2 は 3 tarkoittaa ”viisi miinus kaksi on kolme”.</p><p>Merkki 引 muodostuu merkeistä 弓, jousi, ja 丨, viiva: jänne, jota vedetään. Se on sama kaari, jonka näet, kun luku hyppää.</p>
-</div></section>
-
-<section id="personvern"><div class="wrap">
+<section id="personvern" class="small"><div class="wrap">
   <h2>Tietosuoja</h2>
   <p><strong>Hiku ei kerää henkilötietoja.</strong> Sovelluksessa ei ole tiliä eikä mainoksia, eikä se seuraa sinua sovellusten tai verkkosivustojen välillä.</p><p>Ratkaisemasi tasot, tähtesi ja Päivän Hikun tulokset tallentuvat vain omaan puhelimeesi. Widget lukee samat tiedot sieltä. Kaikki poistuu, jos poistat sovelluksen.</p><p>Versiosta 1.2 alkaen sovellus lähettää muutaman nimettömän virstanpylvään, jotta näemme, kuinka pitkälle pelaajat etenevät: kun olet ratkaissut 1, 9, 10, 20, 30, 40 tai 50 tasoa (sekä 100, 150 ja 200), kun ratkaiset Päivän Hikun laudan ja millä tasolla, ja kun Päivän Hiku -putkesi saavuttaa 3, 7, 14, 30 päivää tai enemmän. Ne lähetetään <a href="https://telemetrydeck.com/privacy">TelemetryDeckille</a>, tietosuojaa varten tehdylle eurooppalaiselle analytiikkapalvelulle. Niissä ei ole nimeä, sähköpostia, sijaintia tai muuta, joka voitaisiin yhdistää sinuun; asennus saa satunnaisen numeron, josta tehdään yksisuuntainen tiiviste ennen lähettämistä. Käytämme lukuja vain pelin parantamiseen.</p><p>Selaimen Päivän Hiku ei aseta evästeitä eikä lähetä pelitietoja. Tuloksesi tallentuvat vain selaimeesi. Sivusto laskee käynnit Cloudflare Web Analyticsilla, joka ei käytä evästeitä eikä seuraa sinua sivustolta toiselle: näemme, kuinka moni tuli ja miltä sivustolta, emme sitä, kuka.</p>
-  <h2 id="support" style="margin-top:36px">Tuki</h2>
+  <h2 id="support">Tuki</h2>
   <p>Kysyttävää, löysitkö virheen, vai oletko jumissa laudalla? Lähetä sähköpostia osoitteeseen <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
   
 </div></section>
