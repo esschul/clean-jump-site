@@ -16,7 +16,7 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui
 main{max-width:480px;margin:0 auto;padding:16px}
 header{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 h1{font:400 30px/1.1 Georgia,serif;margin:0;letter-spacing:-.5px}
-h1 span{color:var(--gold-bright)}
+h1 .arc{display:inline-block;width:1.1em;height:.62em;margin-left:.02em;vertical-align:baseline;overflow:visible}
 .day{color:var(--muted);font-size:14px}
 .rule{color:var(--muted);font-size:14px;margin:6px 0 14px}
 .compact header,.compact .rule{display:none}
@@ -76,7 +76,7 @@ footer a{color:var(--accent)}
 </head>
 <body>
 <main>
-  <header><h1>Hiku<span>.</span></h1><span class="day" id="day"></span></header>
+  <header><h1>Hiku<svg class="arc" viewBox="0 0 110 62" aria-hidden="true"><path d="M7.2 41.8 Q55 -34 102.8 41.8" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linecap="round" stroke-dasharray="6.5 8"/><circle cx="7.2" cy="54.8" r="7.2" fill="var(--ink)"/><circle cx="102.8" cy="54.8" r="7.2" fill="var(--ink)"/></svg></h1><span class="day" id="day"></span></header>
   <p class="rule" id="rule"></p>
   <div class="lesson" id="lesson" hidden></div>
   <div class="tabs" id="tabs" role="group" aria-label=""></div>
