@@ -58,7 +58,11 @@ svg.guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
 .lesson .tip{margin-top:4px}
 .linky{background:none;border:0;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
 .info{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:0 2px 8px}
-.done{padding:4px 0}
+.done{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;border-radius:18px;
+  background:color-mix(in srgb,var(--well) 86%,transparent);animation:settle .45s ease .25s both}
+.done .stars,.done .streak{justify-content:center}
+.done .more{max-width:24em}
+@keyframes settle{from{opacity:0}to{opacity:1}}
 .stars{display:flex;gap:8px;font-size:32px;line-height:1;color:var(--gold-bright)}
 .stars span{display:inline-block;animation:pop .45s cubic-bezier(.3,1.6,.5,1) both}
 .stars span.off{color:var(--muted);opacity:.6}
@@ -595,10 +599,10 @@ footer a{color:var(--accent)}
     statusEl.className = 'status';
     if (isClear(cells)) {
       const k = stars(undos), days = lesson === null ? streak() : 0;
+      // The result lies on the cleared board, so the box keeps its height from the first move to the last.
       statusEl.innerHTML = '';
       const box = document.createElement('div');
       box.className = 'done';
-      box.style.width = '100%';
       box.setAttribute('role', 'group');
       box.setAttribute('aria-label', T.resultSaid(k, resultTitle(), resultDetail()));
       const flame = '<svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path fill="currentColor" d="M7 0c.6 2.6 3.9 4.2 3.9 8.3A3.9 3.9 0 0 1 7 12.2c-1.2 0-2.3-.6-2.9-1.5-.5 1.2-.3 2.5.4 3.5C2.3 13.6 1 11.6 1 9.4 1 5.5 5.6 4.3 7 0z"/></svg>';
@@ -607,7 +611,7 @@ footer a{color:var(--accent)}
         `<div class="rtitle" aria-hidden="true">${resultTitle()}</div><div class="rdetail" aria-hidden="true">${resultDetail()}</div>` +
         (days > 0 ? `<div class="streak">${flame}${T.streak(days)}</div>` : '') +
         (lesson === null ? `<div class="more">${T.more} <a href="${APP_URL}" target="_blank" rel="noopener">${T.moreLink}</a></div>` : '');
-      statusEl.appendChild(box);
+      boardEl.appendChild(box);
     } else if (lost) {
       statusEl.className = 'status warn';
       statusEl.textContent = hasMove(cells, n) ? T.lost : T.stuck;
