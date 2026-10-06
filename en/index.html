@@ -84,15 +84,17 @@ section p{color:var(--muted);max-width:38em;margin:0 0 14px}
 .shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory}
 .shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 4px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
 .shots:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
-/* Four things, each marked by a numbered tile with its dots, as on the board. */
-.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:36px 28px;margin:0;padding:0;list-style:none}
-@media (max-width:1000px){.facts{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.facts{grid-template-columns:1fr}}
-.facts h3{font-size:20px;margin:16px 0 6px}
-.facts p{font-size:16px;margin:0 0 8px}
-.facts a{font-weight:600}
-.num{width:52px;height:52px;border-radius:12px;background:var(--tile);box-shadow:0 4px 0 var(--edge);display:grid;place-items:center;align-content:center;gap:5px;font:500 23px/1 system-ui,-apple-system,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
-.num i{display:flex;gap:3px}
+/* Four things in two columns, each marked by a numbered tile with its dots, as on the board. */
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:48px 64px;margin:0;padding:0;list-style:none}
+@media (max-width:760px){.facts{grid-template-columns:1fr;gap:36px}}
+.facts li{display:grid;grid-template-columns:60px 1fr;gap:22px;align-items:start}
+.facts h3{font-size:21px;line-height:1.25;margin:2px 0 8px}
+.facts p{font-size:16px;margin:0 0 10px;max-width:34em}
+.facts a,.tips a{font-weight:600;text-underline-offset:3px}
+/* The digit sits in the middle of the tile and its dots near the foot, as the app draws them. */
+.num{position:relative;width:56px;height:56px;border-radius:13px;background:var(--tile);box-shadow:0 4px 0 var(--edge);display:grid;place-items:center;
+  font:500 25px/1 system-ui,-apple-system,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums;padding-bottom:6px}
+.num i{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:4px}
 .num i b{width:4px;height:4px;border-radius:50%;background:var(--muted)}
 
 /* The rules page. */
@@ -104,7 +106,7 @@ section p{color:var(--muted);max-width:38em;margin:0 0 14px}
 .example svg{width:100%;height:auto;display:block}
 .example figcaption{color:var(--muted);font-size:15px;margin-top:12px}
 .tips{display:grid;gap:30px;margin:8px 0 0;padding:0;list-style:none;max-width:44em}
-.tips li{display:grid;grid-template-columns:52px 1fr;gap:20px;align-items:start}
+.tips li{display:grid;grid-template-columns:60px 1fr;gap:22px;align-items:start}
 .tips h3{font-size:20px;margin:4px 0 4px}
 .tips p{margin:0;color:var(--muted)}
 
@@ -150,7 +152,7 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 <section id="appen"><div class="wrap two">
   <div>
     <h2>The iPhone app</h2>
-    <p>Daily Hiku, 50 levels that teach you the tricks, and a home-screen widget. No ads, no account.</p>
+    <p>Daily Hiku, 50 levels that teach you the tricks, and a home-screen widget. No ads, no account. Playable with VoiceOver, a screen reader or the keyboard alone.</p>
     <p><a class="btn navy" href="https://apps.apple.com/app/apple-store/id6816387508?pt=121709952&amp;ct=web-home-en&amp;mt=8"><svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>Get it for iPhone</a></p>
   </div>
   <div class="shots" tabindex="0" role="region" aria-label="Screenshots of the app"><img src="../img/en/0-hjem.jpg" alt="The home screen with Daily Hiku" width="480" height="1043" loading="lazy"><img src="../img/en/1-regel.jpg" alt="A board with the arcs showing where a number can jump" width="480" height="1043" loading="lazy"><img src="../img/en/5-morkt.jpg" alt="Dark mode" width="480" height="1043" loading="lazy"></div>
@@ -158,10 +160,10 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 
 <section><div class="wrap">
 <ul class="facts">
-  <li id="aviser"><span id="daglig"></span><span class="num" aria-hidden="true">1<i><b></b></i></span><h3>For news sites and publishers</h3><p>Embed Daily Hiku on your site for free with two lines of code.</p><p><a href="../daily/embed-en.html">How to embed it →</a></p></li>
-  <li id="regler"><span class="num" aria-hidden="true">2<i><b></b><b></b></i></span><h3>How to play Hiku</h3><p>Numbers jump and subtract. The rules take a minute to learn; the boards may take longer.</p><p><a href="../en/rules/">How to spot the traps →</a></p></li>
-  <li id="matematikk"><span class="num" aria-hidden="true">3<i><b></b><b></b><b></b></i></span><h3>The mathematics of Hiku</h3><p>Why some moves make a board impossible, explained with parity and equal sums.</p><p><a href="../hiku-matematikk.pdf">Read the paper (PDF) →</a></p></li>
-  <li id="navnet"><span class="num" aria-hidden="true">4<i><b></b><b></b><b></b><b></b></i></span><h3>About the name</h3><p>Hiku (引く) is Japanese for “to pull”. It is also the word for minus: 5 引く 2 は 3 means “five minus two is three”.</p><p>Playable with VoiceOver, a screen reader or the keyboard alone.</p></li>
+  <li id="aviser"><span class="num" aria-hidden="true">1<i><b></b></i></span><div><span id="daglig"></span><h3>For news sites and publishers</h3><p>Embed Daily Hiku on your site for free with two lines of code.</p><p><a href="../daily/embed-en.html">How to embed it&nbsp;→</a></p></div></li>
+  <li id="regler"><span class="num" aria-hidden="true">2<i><b></b><b></b></i></span><div><h3>How to play Hiku</h3><p>Numbers jump and subtract. The rules take a minute to learn; the boards may take longer.</p><p><a href="../en/rules/">How to spot the traps&nbsp;→</a></p></div></li>
+  <li id="matematikk"><span class="num" aria-hidden="true">3<i><b></b><b></b><b></b></i></span><div><h3>The mathematics of Hiku</h3><p>Why some moves make a board impossible, explained with parity and equal sums.</p><p><a href="../hiku-matematikk.pdf">Read the paper (PDF)&nbsp;→</a></p></div></li>
+  <li id="navnet"><span class="num" aria-hidden="true">4<i><b></b><b></b><b></b><b></b></i></span><div><h3>About the name</h3><p>Hiku (引く) is Japanese for “to pull”. It is also the word for minus: 5 引く 2 は 3 means “five minus two is three”.</p></div></li>
 </ul>
 </div></section>
 

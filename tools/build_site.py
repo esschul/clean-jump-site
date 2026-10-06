@@ -293,7 +293,7 @@ def home_page(lang, root, t, r, st):
     main = f'''<section id="appen"><div class="wrap two">
   <div>
     <h2>{t["app_title"]}</h2>
-    <p>{t["app_short"]}</p>
+    <p>{t["app_short"]} {t["a11y_short"]}</p>
     <p><a class="btn navy" href="{app}">{APPLE}{t["app_cta"]}</a></p>
   </div>
   <div class="shots" tabindex="0" role="region" aria-label="{t["shots_label"]}">{shots}</div>
@@ -301,10 +301,10 @@ def home_page(lang, root, t, r, st):
 
 <section><div class="wrap">
 <ul class="facts">
-  <li id="aviser"><span id="daglig"></span>{tile(1)}<h3>{t["news_title"]}</h3><p>{t["news_short"]}</p><p><a href="{root}daily/{GUIDE[lang]}">{t["news_link"]} →</a></p></li>
-  <li id="regler">{tile(2)}<h3>{r["h1"]}</h3><p>{r["lead"]}</p><p><a href="{root}{rules_url(lang)}">{r["tips_title"]} →</a></p></li>
-  <li id="matematikk">{tile(3)}<h3>{t["math_title"]}</h3><p>{t["math_short"]}</p><p><a href="{root}hiku-matematikk.pdf">{t["math_link"]} →</a></p></li>
-  <li id="navnet">{tile(4)}<h3>{st["name_title"]}</h3><p>{st["name"]}</p><p>{t["a11y_short"]}</p></li>
+  <li id="aviser">{tile(1)}<div><span id="daglig"></span><h3>{t["news_title"]}</h3><p>{t["news_short"]}</p><p><a href="{root}daily/{GUIDE[lang]}">{t["news_link"]}&nbsp;→</a></p></div></li>
+  <li id="regler">{tile(2)}<div><h3>{r["h1"]}</h3><p>{r["lead"]}</p><p><a href="{root}{rules_url(lang)}">{r["tips_title"]}&nbsp;→</a></p></div></li>
+  <li id="matematikk">{tile(3)}<div><h3>{t["math_title"]}</h3><p>{t["math_short"]}</p><p><a href="{root}hiku-matematikk.pdf">{t["math_link"]}&nbsp;→</a></p></div></li>
+  <li id="navnet">{tile(4)}<div><h3>{st["name_title"]}</h3><p>{st["name"]}</p></div></li>
 </ul>
 </div></section>
 
