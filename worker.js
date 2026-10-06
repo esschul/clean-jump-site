@@ -34,13 +34,17 @@ async function daily(url, env) {
   library ??= await env.LIBRARY.get("boards", "json");
   if (!library) return json({error: "library"}, 503);
   const days = Math.round((asked - FIRST_DAY) / DAY);
-  const boards = {};
+  const boards = {}, hints = {};
   for (const tier of TIERS) {
     const list = library[tier];
-    boards[tier] = list[((days % list.length) + list.length) % list.length];
+    const index = ((days % list.length) + list.length) % list.length;
+    boards[tier] = list[index];
+    // The square of "a good place to start", the same the app marks; a library without hints gives none.
+    const hint = library.hints?.[tier]?.[index];
+    if (Number.isInteger(hint)) hints[tier] = hint;
   }
   // The answer for a day never changes; let browsers and Cloudflare keep it for a while.
-  return json({day, boards}, 200, {"cache-control": "public, max-age=600"});
+  return json({day, boards, hints}, 200, {"cache-control": "public, max-age=600"});
 }
 
 // The homepage is Norwegian at / and in the other languages below it. Someone arriving at / from elsewhere is sent to

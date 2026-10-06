@@ -37,6 +37,10 @@ h1 .arc{display:inline-block;width:1.1em;height:.62em;margin-left:.02em;vertical
 .tile .dots{position:absolute;bottom:10%;left:0;right:0;display:flex;justify-content:center;gap:2px;opacity:.35}
 .tile .dots i{border-radius:50%;background:currentColor;display:block}
 .tile.sel{background:var(--accent);color:var(--on-accent)}
+/* A good place to start: a gold ring that breathes, still for anyone who asked for less motion. */
+.tile.hint::after{content:'';position:absolute;inset:-6px;border:3px solid var(--gold-bright);border-radius:20%;pointer-events:none;animation:breathe 1.4s ease-in-out infinite alternate}
+@keyframes breathe{from{opacity:.55;box-shadow:0 0 3px var(--gold-bright)}to{opacity:1;box-shadow:0 0 12px var(--gold-bright)}}
+@media (prefers-reduced-motion:reduce){.tile.hint::after{animation:none;opacity:1}}
 .tile.target{background:var(--soft);outline:3px solid var(--guide);outline-offset:3px}
 .tile.lifted{z-index:5;box-shadow:0 10px 20px rgba(0,0,0,.2);transition:none;cursor:grabbing}
 .tile:focus-visible{outline:3px solid var(--gold-bright);outline-offset:3px}
@@ -121,7 +125,7 @@ footer a{color:var(--accent)}
          solved: {3: 'Feilfritt!', 2: 'Godt løst!', 1: 'Løst!'}, undos: n => n === 0 ? 'Uten å angre.' : n === 1 ? 'Med én angring.' : `Med ${n} angringer.`,
          made: 'Nye brett hver dag, kom tilbake i morgen!', app: 'Last ned Hiku for iPhone',
          more: 'Vil du ha mer? Appen har 50 brett til, og de første lærer deg knepene:', moreLink: 'Hiku i App Store',
-         gone: (a, b) => `${a} − ${b} = borte`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
+         gone: (a, b) => `${a} − ${b} = borte`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`, startHere: 'et godt sted å starte'},
     en: {learn: 'Learn to play', lessonOf: k => '{k} of 3'.replace('{k}', k), skip: 'Skip', next: 'Next →', toDaily: "To today's boards →", replay: 'Learn to play again', lessons: [{"name": "First jump", "tip": "Drag a number to where it jumps, or tap the number and then its target."}, {"name": "One way out", "tip": "A number that can reach only one other must take it. Don't let anything else take it first."}, {"name": "Even numbers", "tip": "Numbers that can only reach each other vanish only if they add up to an even number. If the sum is odd, one is left over."}],
          left: k => (k === 1 ? '%d number left' : '%d numbers left').replace('%d', k), movesText: (n, s) => `Moves: ${n} · ${s}`, movesA11y: (n, s) => `Moves: ${n}, ${s} of 3 stars possible`, cleared: 'Board cleared', flawless: 'Flawless!', noUndo: 'Solved without undoing.', undoText: k => (k === 1 ? 'With %d undo.' : 'With %d undos.').replace('%d', k), streak: k => (k === 1 ? '%d day in a row' : '%d days in a row').replace('%d', k), retry: 'Try again', moveSaid: (a, b, sq, left) => `${a} onto ${b} at ${sq}, leaves ${left}.`, goneSaid: (a, b, sq) => `${a} onto ${b} at ${sq}, both gone.`, resultSaid: (s, title, detail) => `${s} of 3 stars. ${sentence(title)} ${detail}`,
          offline: "Couldn't fetch today's boards. Check your connection and try again.",
@@ -135,7 +139,7 @@ footer a{color:var(--accent)}
          solved: {3: 'Flawless!', 2: 'Well solved!', 1: 'Solved!'}, undos: n => n === 0 ? 'Without undoing.' : n === 1 ? 'With one undo.' : `With ${n} undos.`,
          made: 'New boards every day, come back tomorrow!', app: 'Get Hiku for iPhone',
          more: 'Want more? The app has 50 more levels, and the first ones teach you the tricks:', moreLink: 'Hiku on the App Store',
-         gone: (a, b) => `${a} − ${b} = gone`, tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`},
+         gone: (a, b) => `${a} − ${b} = gone`, tile: (v, sq) => `${v} on ${sq}`, empty: sq => `${sq}, empty`, startHere: 'a good place to start'},
     sv: {learn: 'Lär dig spela', lessonOf: k => '{k} av 3'.replace('{k}', k), skip: 'Hoppa över', next: 'Nästa →', toDaily: 'Till dagens bräden →', replay: 'Lär dig spela igen', lessons: [{"name": "Första hoppet", "tip": "Dra ett tal dit det ska hoppa, eller tryck på talet och sedan på målet."}, {"name": "En väg ut", "tip": "Ett tal som bara når ett annat tal måste ta det. Låt inget annat ta det först."}, {"name": "Jämna tal", "tip": "Tal som bara når varandra försvinner bara om summan är jämn. Är den udda blir ett tal kvar."}],
          left: k => (k === 1 ? '%d tal kvar' : '%d tal kvar').replace('%d', k), movesText: (n, s) => `Drag: ${n} · ${s}`, movesA11y: (n, s) => `Drag: ${n}, ${s} av 3 stjärnor möjliga`, cleared: 'Brädet är tömt', flawless: 'Felfritt!', noUndo: 'Löst utan att ångra.', undoText: k => (k === 1 ? 'Med %d ångring.' : 'Med %d ångringar.').replace('%d', k), streak: k => (k === 1 ? '%d dag i rad' : '%d dagar i rad').replace('%d', k), retry: 'Försök igen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, blir ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, båda försvann.`, resultSaid: (s, title, detail) => `${s} av 3 stjärnor. ${sentence(title)} ${detail}`,
          offline: 'Kunde inte hämta dagens bräden. Kontrollera nätet och försök igen.',
@@ -149,7 +153,7 @@ footer a{color:var(--accent)}
          solved: {3: 'Felfritt!', 2: 'Bra löst!', 1: 'Löst!'}, undos: n => n === 0 ? 'Utan att ångra.' : n === 1 ? 'Med en ångring.' : `Med ${n} ångringar.`,
          made: 'Nya bräden varje dag, kom tillbaka i morgon!', app: 'Ladda ner Hiku för iPhone',
          more: 'Vill du ha mer? Appen har 50 banor till, och de första lär dig knepen:', moreLink: 'Hiku i App Store',
-         gone: (a, b) => `${a} − ${b} = borta`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
+         gone: (a, b) => `${a} − ${b} = borta`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`, startHere: 'ett bra ställe att börja'},
     da: {learn: 'Lær at spille', lessonOf: k => '{k} af 3'.replace('{k}', k), skip: 'Spring over', next: 'Næste →', toDaily: 'Til dagens brætter →', replay: 'Lær at spille igen', lessons: [{"name": "Første spring", "tip": "Træk et tal derhen, hvor det skal springe, eller tryk på tallet og så på målet."}, {"name": "Én vej ud", "tip": "Et tal, der kun kan nå ét andet tal, må tage det. Lad ikke noget andet tage det først."}, {"name": "Lige tal", "tip": "Tal, der kun kan nå hinanden, forsvinder kun, hvis summen er lige. Er den ulige, bliver ét tal tilbage."}],
          left: k => (k === 1 ? '%d tal tilbage' : '%d tal tilbage').replace('%d', k), movesText: (n, s) => `Træk: ${n} · ${s}`, movesA11y: (n, s) => `Træk: ${n}, ${s} af 3 stjerner mulige`, cleared: 'Brættet er ryddet', flawless: 'Fejlfrit!', noUndo: 'Løst uden at fortryde.', undoText: k => (k === 1 ? 'Med %d fortrydelse.' : 'Med %d fortrydelser.').replace('%d', k), streak: k => (k === 1 ? '%d dag i træk' : '%d dage i træk').replace('%d', k), retry: 'Prøv igen', moveSaid: (a, b, sq, left) => `${a} på ${b} i ${sq}, bliver ${left}.`, goneSaid: (a, b, sq) => `${a} på ${b} i ${sq}, begge forsvandt.`, resultSaid: (s, title, detail) => `${s} af 3 stjerner. ${sentence(title)} ${detail}`,
          offline: 'Kunne ikke hente dagens brætter. Tjek forbindelsen og prøv igen.',
@@ -163,7 +167,7 @@ footer a{color:var(--accent)}
          solved: {3: 'Fejlfrit!', 2: 'Godt løst!', 1: 'Løst!'}, undos: n => n === 0 ? 'Uden at fortryde.' : n === 1 ? 'Med én fortrydelse.' : `Med ${n} fortrydelser.`,
          made: 'Nye brætter hver dag, kom tilbage i morgen!', app: 'Hent Hiku til iPhone',
          more: 'Vil du have mere? Appen har 50 baner mere, og de første lærer dig tricksene:', moreLink: 'Hiku i App Store',
-         gone: (a, b) => `${a} − ${b} = væk`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`},
+         gone: (a, b) => `${a} − ${b} = væk`, tile: (v, sq) => `${v} på ${sq}`, empty: sq => `${sq}, tom`, startHere: 'et godt sted at starte'},
     fi: {learn: 'Opettele pelaamaan', lessonOf: k => '{k}/3'.replace('{k}', k), skip: 'Ohita', next: 'Seuraava →', toDaily: 'Päivän lautoihin →', replay: 'Opettele uudelleen', lessons: [{"name": "Ensimmäinen hyppy", "tip": "Vedä luku sinne, minne se hyppää, tai napauta lukua ja sitten kohdetta."}, {"name": "Yksi tie ulos", "tip": "Luvun, joka ylettyy vain yhteen toiseen lukuun, on otettava se. Älä anna minkään muun viedä sitä ensin."}, {"name": "Parilliset", "tip": "Vain toisiinsa ylettyvät luvut katoavat vain, jos niiden summa on parillinen. Jos se on pariton, yksi luku jää jäljelle."}],
          left: k => (k === 1 ? '%d luku jäljellä' : '%d lukua jäljellä').replace('%d', k), movesText: (n, s) => `Siirrot: ${n} · ${s}`, movesA11y: (n, s) => `Siirrot: ${n}, ${s}/3 tähteä mahdollista`, cleared: 'Lauta on tyhjä', flawless: 'Virheetön!', noUndo: 'Ratkaistu perumatta.', undoText: k => (k === 1 ? '%d perumisella.' : '%d perumisella.').replace('%d', k), streak: k => (k === 1 ? '%d päivä putkeen' : '%d päivää putkeen').replace('%d', k), retry: 'Yritä uudelleen', moveSaid: (a, b, sq, left) => `${a} lukuun ${b} ruudussa ${sq}, jää ${left}.`, goneSaid: (a, b, sq) => `${a} lukuun ${b} ruudussa ${sq}, molemmat katosivat.`, resultSaid: (s, title, detail) => `${s}/3 tähteä. ${sentence(title)} ${detail}`,
          offline: 'Päivän lautoja ei saatu haettua. Tarkista yhteys ja yritä uudelleen.',
@@ -177,7 +181,7 @@ footer a{color:var(--accent)}
          solved: {3: 'Virheetön!', 2: 'Hyvin ratkaistu!', 1: 'Ratkaistu!'}, undos: n => n === 0 ? 'Perumatta.' : n === 1 ? 'Yhdellä perumisella.' : `${n} perumisella.`,
          made: 'Uudet laudat joka päivä, tule takaisin huomenna!', app: 'Lataa Hiku iPhonelle',
          more: 'Haluatko lisää? Sovelluksessa on 50 tasoa lisää, ja ensimmäiset opettavat niksit:', moreLink: 'Hiku App Storessa',
-         gone: (a, b) => `${a} − ${b} = poissa`, tile: (v, sq) => `${v}, ruutu ${sq}`, empty: sq => `${sq}, tyhjä`},
+         gone: (a, b) => `${a} − ${b} = poissa`, tile: (v, sq) => `${v}, ruutu ${sq}`, empty: sq => `${sq}, tyhjä`, startHere: 'hyvä paikka aloittaa'},
     de: {learn: 'Spielen lernen', lessonOf: k => '{k} von 3'.replace('{k}', k), skip: 'Überspringen', next: 'Weiter →', toDaily: 'Zu den Brettern von heute →', replay: 'Noch einmal lernen', lessons: [{"name": "Erster Sprung", "tip": "Zieh eine Zahl dorthin, wohin sie springt, oder tippe erst die Zahl und dann das Ziel an."}, {"name": "Nur ein Ausweg", "tip": "Eine Zahl, die nur eine andere erreicht, muss sie nehmen. Lass keine andere Zahl zuerst dorthin."}, {"name": "Gerade Zahlen", "tip": "Zahlen, die nur einander erreichen, verschwinden nur, wenn ihre Summe gerade ist. Ist sie ungerade, bleibt eine übrig."}],
          left: k => (k === 1 ? 'Noch %d Zahl' : 'Noch %d Zahlen').replace('%d', k), movesText: (n, s) => `Züge: ${n} · ${s}`, movesA11y: (n, s) => `Züge: ${n}, ${s} von 3 Sternen möglich`, cleared: 'Brett geleert', flawless: 'Fehlerfrei!', noUndo: 'Gelöst, ohne einen Zug zurückzunehmen.', undoText: k => (k === 1 ? 'Mit %d zurückgenommenen Zug.' : 'Mit %d zurückgenommenen Zügen.').replace('%d', k), streak: k => (k === 1 ? '%d Tag in Folge' : '%d Tage in Folge').replace('%d', k), retry: 'Noch mal', moveSaid: (a, b, sq, left) => `${a} auf ${b} in ${sq}, ergibt ${left}.`, goneSaid: (a, b, sq) => `${a} auf ${b} in ${sq}, beide weg.`, resultSaid: (s, title, detail) => `${s} von 3 Sternen. ${sentence(title)} ${detail}`,
          offline: 'Die Bretter von heute ließen sich nicht laden. Prüf die Verbindung und versuch es noch einmal.',
@@ -191,7 +195,7 @@ footer a{color:var(--accent)}
          solved: {3: 'Fehlerfrei!', 2: 'Gut gelöst!', 1: 'Gelöst!'}, undos: n => n === 0 ? 'Ohne einen Zug zurückzunehmen.' : n === 1 ? 'Mit einem zurückgenommenen Zug.' : `Mit ${n} zurückgenommenen Zügen.`,
          made: 'Jeden Tag neue Bretter – komm morgen wieder!', app: 'Hiku für iPhone laden',
          more: 'Lust auf mehr? Die App hat 50 weitere Level, und die ersten zeigen dir die Kniffe:', moreLink: 'Hiku im App Store',
-         gone: (a, b) => `${a} − ${b} = weg`, tile: (v, sq) => `${v} auf ${sq}`, empty: sq => `${sq}, leer`},
+         gone: (a, b) => `${a} − ${b} = weg`, tile: (v, sq) => `${v} auf ${sq}`, empty: sq => `${sq}, leer`, startHere: 'ein guter Anfang'},
   };
   const asked = (params.get('lang') || 'nb').toLowerCase().slice(0, 2);
   const lang = LANGS[asked] ? asked : asked === 'no' || asked === 'nn' ? 'nb' : 'nb';
@@ -221,6 +225,8 @@ footer a{color:var(--accent)}
   // Today's boards come from hikupuzzle.com, which only gives out the day that has come somewhere in the world;
   // the library itself is never sent.
   let todays = null;
+  // The square a good first move starts from, per difficulty, as the app's "a good place to start".
+  let todaysHints = {};
   function boardFor(tier) {
     const entry = todays[tier];
     return {size: +entry[0], cells: [...entry.slice(1)].map(Number)};
@@ -497,6 +503,8 @@ footer a{color:var(--accent)}
     // One element per square in reading order, A1, B1, C1 … row by row, so a screen reader follows the board:
     // an empty square is a labelled cell, a number is a button above it.
     const tgts = selected !== null ? targets(cells, n, selected) : [];
+    // A daily board shows its good place to start until the first move, as the app does with the setting on.
+    const hint = lesson === null && !history.length && !lost ? todaysHints[tier] : undefined;
     cells.forEach((v, i) => {
       const p = L.at(i);
       const sq = document.createElement('div');
@@ -507,9 +515,10 @@ footer a{color:var(--accent)}
       boardEl.appendChild(sq);
       if (!v) return;
       const b = document.createElement('button');
-      b.className = 'tile' + (i === selected ? ' sel' : '') + (tgts.includes(i) ? ' target' : '');
+      const hinted = i === hint && i !== selected && !tgts.includes(i);
+      b.className = 'tile' + (i === selected ? ' sel' : '') + (tgts.includes(i) ? ' target' : '') + (hinted ? ' hint' : '');
       b.dataset.i = i;
-      b.setAttribute('aria-label', T.tile(v, squareName(i)));
+      b.setAttribute('aria-label', T.tile(v, squareName(i)) + (i === hint ? ', ' + T.startHere : ''));
       Object.assign(b.style, {left: p.x + 'px', top: p.y + 'px', width: L.side + 'px', height: L.side + 'px', fontSize: L.side * 0.4 + 'px'});
       b.textContent = v;
       const dots = document.createElement('span');
@@ -735,7 +744,7 @@ footer a{color:var(--accent)}
 
   fetch(`https://hikupuzzle.com/api/daily?day=${dayKey}`)
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
-    .then(data => { todays = data.boards; if (lesson === null) start(tier); })
+    .then(data => { todays = data.boards; todaysHints = data.hints || {}; if (lesson === null) start(tier); })
     .catch(() => { if (lesson === null) statusEl.textContent = T.offline; });
   if (!store.get('learned') && !params.get('level')) startLesson(0);
 })();
