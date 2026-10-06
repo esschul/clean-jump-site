@@ -1,4 +1,4 @@
-// Cloudflare serves this repository on hikupuzzle.com. The files are sent as they are; only /api/* runs worker.js,
+// Cloudflare serves this repository on hikupuzzle.com. The files are sent as they are; only /api/* and / run worker.js,
 // which gives out the daily boards of whatever day it is somewhere in the world from the LIBRARY store. The library is never in this repository.
 // Files in .assetsignore (the tools that build the pages, the worker and this file) are not published.
 {
@@ -9,7 +9,7 @@
     "directory": ".",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": ["/api/*", "/"]
   },
   "kv_namespaces": [
     {"binding": "LIBRARY", "id": "b569f0b75189460e88545c35b88e1efd"}

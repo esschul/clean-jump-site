@@ -47,10 +47,16 @@ nav.top{display:flex;align-items:center;gap:12px 24px;padding-block:18px}
 .brand img{width:34px;height:34px;border-radius:8px;box-shadow:0 0 0 1px rgba(255,255,255,.18)}
 .brand b{font-weight:400}
 .brand b span{color:var(--gold)}
+/* On a narrow phone the big name is just below, so the bar keeps only the icon and room for the menus. */
+@media (max-width:420px){.brand b{display:none}}
 .links{display:flex;gap:6px 20px;flex-wrap:wrap;font-size:15px;margin-left:auto}
 .band .links a{color:var(--on-navy-muted);text-decoration:none}
 .band .links a:hover,.band .links a[aria-current]{color:var(--on-navy)}
-.theme{font:inherit;font-size:14px;color:var(--on-navy-muted);background:none;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:4px 12px;cursor:pointer}
+.tools{display:flex;gap:8px;align-items:center}
+.theme,.lang{font:inherit;font-size:14px;color:var(--on-navy-muted);background:none;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:4px 12px;cursor:pointer}
+/* The language list: a native menu, so it works with a keyboard and a screen reader as every select does. */
+.lang{appearance:none;-webkit-appearance:none;padding-right:28px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23c9cee6' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 10px center}
+.lang option{color:#2b2f45;background:#fffaf2}
 .hero{display:grid;grid-template-columns:1fr minmax(300px,480px);gap:48px;align-items:center;padding-block:28px 64px}
 .hero h1{font:400 clamp(64px,11vw,116px)/.95 Georgia,serif;letter-spacing:-3px;margin:0}
 .arc{display:inline-block;width:1.1em;height:.62em;margin-left:.02em;vertical-align:baseline;overflow:visible}
@@ -113,7 +119,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 footer.band a{color:var(--on-navy-muted)}
 footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration:none}
 @media (max-width:820px){.hero,.two{grid-template-columns:1fr}.hero{gap:28px;padding-top:12px}
-  nav.top{flex-wrap:wrap}nav.top .theme{margin-left:auto;order:2}nav.top .links{order:3;flex-basis:100%;margin-left:0;gap:6px 18px}
+  nav.top{flex-wrap:wrap}nav.top .tools{margin-left:auto;order:2}nav.top .links{order:3;flex-basis:100%;margin-left:0;gap:6px 18px}
   .game{padding:10px 4px 4px;margin:0 -8px}.game h2{margin-left:12px;margin-right:12px}}
 </style>
 </head>
@@ -124,7 +130,7 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 <nav class="top" aria-label="{{nav_label}}">
   <a class="brand" href="{{home}}"><img src="{{root}}icon.png" alt=""><b>Hiku<span>.</span></b></a>
   <div class="links">{{nav}}</div>
-  <button class="theme" id="theme" type="button"></button>
+  <div class="tools">{{langselect}}<button class="theme" id="theme" type="button"></button></div>
 </nav>
 </header>
 {{top}}
@@ -139,6 +145,8 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 </div>
 </footer>
 <script>
+// Picking a language goes to the same page in that language.
+document.getElementById('lang').addEventListener('change', function (e) { location.href = e.target.value; });
 // Light or dark: automatic by default, or the reader's own choice, remembered in this browser. A game on the page follows.
 (function () {
   var names = {auto: '{{theme_auto}}', light: '{{theme_light}}', dark: '{{theme_dark}}'}, order = ['auto', 'light', 'dark'];

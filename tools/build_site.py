@@ -355,6 +355,9 @@ def build(lang, template, page):
     v.update(home_page(lang, root, t, r, st) if page == "home" else rules_page(lang, root, home, t, r, st))
     v.update(lang=lang, root=root, home=home, nav=nav, canonical=DOMAIN + path,
              jsonld=jsonld(lang, page, DOMAIN + path, v["description"]),
+             langselect=f'<select class="lang" id="lang" aria-label="{t["language"]}">'
+                        + "".join(f'<option value="{root}{here(l)}" lang="{l}"' + (" selected" if l == lang else "") + f">{NATIVE[l]}</option>" for l in LANGS)
+                        + "</select>",
              switcher=" · ".join(f'<a href="{root}{here(l)}" hreflang="{l}" lang="{l}"' + (current if l == lang else "")
                                  + f">{NATIVE[l]}</a>" for l in LANGS),
              alternates="\n".join(f'<link rel="alternate" hreflang="{l}" href="{DOMAIN}{here(l)}">' for l in LANGS)
