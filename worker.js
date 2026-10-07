@@ -1,4 +1,5 @@
-// hikupuzzle.com: the site's files are served as they are; only /api/daily and the homepage's choice of language run here.
+// hikupuzzle.com: the site's files are served as they are; only /api/daily, the homepage's choice of language and
+// Apple's app-site association run here.
 //
 // GET /api/daily?day=YYYY-MM-DD gives that day's four boards, the same as the app picks. The library itself is kept
 // in the LIBRARY store (Cloudflare KV, key "boards") and never published, and a day is only given out while it is
@@ -78,10 +79,18 @@ async function home(request, url, env) {
   return response;
 }
 
+// Tells Apple that links to the daily boards belong to Hiku: they open the app when it is installed (applinks), and
+// the App Clip when it is not (appclips). Only /daily/ is claimed; every other page stays a web page.
+const APP_SITE_ASSOCIATION = {
+  applinks: {details: [{appIDs: ["M43Z9C48YX.no.rubberduck.cleanjump"], components: [{"/": "/daily"}, {"/": "/daily/*"}]}]},
+  appclips: {apps: ["M43Z9C48YX.no.rubberduck.cleanjump.Clip"]},
+};
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/api/daily") return daily(url, env);
+    if (url.pathname === "/.well-known/apple-app-site-association") return json(APP_SITE_ASSOCIATION, 200, {"cache-control": "public, max-age=3600"});
     if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) return home(request, url, env);
     return env.ASSETS.fetch(request);
   },
