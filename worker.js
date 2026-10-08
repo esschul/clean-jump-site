@@ -262,8 +262,14 @@ async function mcp(request, env) {
   const cors = {"access-control-allow-origin": "*", "access-control-allow-headers": "content-type, mcp-protocol-version, mcp-session-id", "access-control-allow-methods": "POST, OPTIONS"};
   if (request.method === "OPTIONS") return new Response(null, {status: 204, headers: cors});
   if (request.method !== "POST") return new Response("Hiku's MCP server: POST JSON-RPC here.", {status: 405, headers: {allow: "POST", ...cors}});
+  const text = await request.text();
+  // An empty POST is how a client probes the endpoint: answer as the reference MCP servers do, 406 unless it accepts both JSON and a stream.
+  const accept = request.headers.get("accept") || "";
+  if (!text.trim() && !(accept.includes("application/json") && accept.includes("text/event-stream"))) {
+    return json({jsonrpc: "2.0", id: null, error: {code: -32000, message: "Not Acceptable: Client must accept both application/json and text/event-stream"}}, 406, cors);
+  }
   let body;
-  try { body = await request.json(); } catch { return json({jsonrpc: "2.0", id: null, error: {code: -32700, message: "Parse error"}}, 400, cors); }
+  try { body = JSON.parse(text); } catch { return json({jsonrpc: "2.0", id: null, error: {code: -32700, message: "Parse error"}}, 400, cors); }
   const answers = (await Promise.all((Array.isArray(body) ? body : [body]).map(m => mcpHandle(m, env)))).filter(Boolean);
   if (!answers.length) return new Response(null, {status: 202, headers: cors});
   return json(Array.isArray(body) ? answers : answers[0], 200, {...cors, "cache-control": "no-store"});
