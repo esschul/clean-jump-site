@@ -81,6 +81,9 @@ async function home(request, url, env) {
 
 // Tells Apple that links to the daily boards belong to Hiku: they open the app when it is installed (applinks), and
 // the App Clip when it is not (appclips). Only /daily/ is claimed; every other page stays a web page.
+// OpenAI's check that the ChatGPT app's MCP server belongs to this domain: the token from the plugin portal, as plain text.
+const OPENAI_APPS_CHALLENGE = "UUbXbBqDFt0tmOaCwQ0IBnhIayL-K0EscBog0O7VYeU";
+
 const APP_SITE_ASSOCIATION = {
   applinks: {details: [{appIDs: ["M43Z9C48YX.no.rubberduck.cleanjump"], components: [{"/": "/daily"}, {"/": "/daily/*"}]}]},
   appclips: {apps: ["M43Z9C48YX.no.rubberduck.cleanjump.Clip"]},
@@ -272,6 +275,7 @@ export default {
     if (url.pathname === "/api/daily") return daily(url, env);
     if (url.pathname === "/mcp") return mcp(request, env);
     if (url.pathname === "/.well-known/apple-app-site-association") return json(APP_SITE_ASSOCIATION, 200, {"cache-control": "public, max-age=3600"});
+    if (url.pathname === "/.well-known/openai-apps-challenge") return new Response(OPENAI_APPS_CHALLENGE, {headers: {"content-type": "text/plain; charset=utf-8"}});
     if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) return home(request, url, env);
     return env.ASSETS.fetch(request);
   },

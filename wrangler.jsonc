@@ -9,7 +9,7 @@
     "directory": ".",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*", "/", "/.well-known/apple-app-site-association", "/mcp"]
+    "run_worker_first": ["/api/*", "/", "/.well-known/apple-app-site-association", "/.well-known/openai-apps-challenge", "/mcp"]
   },
   "kv_namespaces": [
     {"binding": "LIBRARY", "id": "b569f0b75189460e88545c35b88e1efd"}
