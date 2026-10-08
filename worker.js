@@ -1,5 +1,5 @@
-// hikupuzzle.com: the site's files are served as they are; only /api/daily, the homepage's choice of language and
-// Apple's app-site association run here.
+// hikupuzzle.com: the site's files are served as they are; only /api/daily, the homepage's choice of language,
+// Apple's app-site association and the MCP server for ChatGPT and Claude (/mcp) run here.
 //
 // GET /api/daily?day=YYYY-MM-DD gives that day's four boards, the same as the app picks. The library itself is kept
 // in the LIBRARY store (Cloudflare KV, key "boards") and never published, and a day is only given out while it is
@@ -86,10 +86,191 @@ const APP_SITE_ASSOCIATION = {
   appclips: {apps: ["M43Z9C48YX.no.rubberduck.cleanjump.Clip"]},
 };
 
+// ---- Hiku as an app inside ChatGPT and Claude (MCP, with the MCP Apps UI standard).
+//
+// POST /mcp takes JSON-RPC over Streamable HTTP, statelessly: nothing is kept between calls and nothing is asked of
+// the player. play_daily_hiku shows today's boards as the web game in a frame in the conversation; hiku_rules gives
+// the rules and the ways to see a trap, so the assistant can explain them. The game in the frame fetches the day's
+// boards from /api/daily like every embed, and keeps results in the frame's own storage.
+
+const MCP_WIDGET = "ui://hiku/daily-v1.html";
+const SITE = "https://hikupuzzle.com";
+const MCP_UI_MIME = "text/html;profile=mcp-app";
+const MCP_UI_META = {
+  ui: {resourceUri: MCP_WIDGET},
+  "openai/outputTemplate": MCP_WIDGET,
+  "openai/toolInvocation/invoking": "Setting out today's boards",
+  "openai/toolInvocation/invoked": "Today's boards are ready",
+  "openai/widgetAccessible": false,
+};
+
+const MCP_TOOLS = [
+  {
+    name: "play_daily_hiku",
+    title: "Play Daily Hiku",
+    description: "Show today's Daily Hiku as a playable game: four new number puzzles every day, from easy to expert. " +
+      "Use it when someone wants to play Hiku, a daily puzzle, a sudoku-like logic game or a short brain teaser. " +
+      "The player plays in the game itself; there is nothing to send back.",
+    inputSchema: {
+      type: "object",
+      properties: {difficulty: {type: "string", enum: ["easy", "medium", "hard", "expert"], description: "Which of today's four boards to open. Leave out to let the player choose."}},
+      additionalProperties: false,
+    },
+    annotations: {readOnlyHint: true, openWorldHint: false, destructiveHint: false},
+    _meta: MCP_UI_META,
+  },
+  {
+    name: "hiku_rules",
+    title: "Hiku rules and tips",
+    description: "The rules of Hiku and three ways to see a trap coming. Use it to explain how to play, or to help " +
+      "someone who is stuck, without solving the board for them.",
+    inputSchema: {type: "object", properties: {}, additionalProperties: false},
+    annotations: {readOnlyHint: true, openWorldHint: false, destructiveHint: false},
+  },
+];
+
+// The web game, with the settings a frame without a URL of its own needs, and a small bridge to the host: it says
+// hello (ui/initialize), follows the host's light or dark, opens the board the assistant asked for, reports its
+// height, and opens links through the host.
+async function mcpWidget(env) {
+  let html = await (await env.ASSETS.fetch(new Request(SITE + "/daily/"))).text();
+  html = html.replace('href="../icon.png"', `href="${SITE}/icon.png"`);
+  const setup = `<script>
+  (function () {
+    var asked = (navigator.language || 'en').toLowerCase().slice(0, 2);
+    var lang = ['nb', 'no', 'nn', 'en', 'sv', 'da', 'fi', 'de'].indexOf(asked) >= 0 ? asked : 'en';
+    window.HIKU_PARAMS = 'lang=' + lang;
+    window.HIKU_SITE = window.openai ? 'chatgpt' : 'ai-app';
+    window.HIKU_HOME = '${SITE}/daily/';
+    var theme = window.openai && window.openai.theme;
+    if (theme === 'dark' || theme === 'light') document.documentElement.dataset.theme = theme;
+  })();
+</script>`;
+  const bridge = `<script>
+  (function () {
+    var next = 0, waiting = {};
+    function send(method, params, request) {
+      var message = {jsonrpc: '2.0', method: method, params: params || {}};
+      if (request) message.id = ++next;
+      parent.postMessage(message, '*');
+      return message.id;
+    }
+    function request(method, params) {
+      return new Promise(function (resolve) { waiting[send(method, params, true)] = resolve; });
+    }
+    function theme(context) {
+      if (context && (context.theme === 'dark' || context.theme === 'light')) document.documentElement.dataset.theme = context.theme;
+    }
+    // A board asked for by name is opened at once, past the first-visit lessons.
+    function open(args) {
+      var i = ['easy', 'medium', 'hard', 'expert'].indexOf(args && args.difficulty);
+      if (i < 0) return;
+      var lesson = document.getElementById('lesson'), skip = document.getElementById('skip');
+      if (lesson && !lesson.hidden && skip) skip.click();
+      setTimeout(function () {
+        var tabs = document.getElementById('tabs');
+        if (tabs && !tabs.hidden && tabs.children[i]) tabs.children[i].click();
+      }, 50);
+    }
+    var main = document.querySelector('main');
+    function size() { send('ui/notifications/size-changed', {height: Math.ceil(main.offsetTop + main.offsetHeight + 16)}); }
+    addEventListener('message', function (event) {
+      var m = event.data;
+      if (!m || m.jsonrpc !== '2.0') return;
+      if (m.id && waiting[m.id]) { waiting[m.id](m.result); delete waiting[m.id]; return; }
+      if (m.method === 'ui/notifications/tool-input') open(m.params && m.params.arguments);
+      if (m.method === 'ui/notifications/tool-result') open(m.params && m.params.structuredContent);
+      if (m.method === 'ui/notifications/host-context-changed') theme(m.params);
+    });
+    request('ui/initialize', {protocolVersion: '2025-06-18', appInfo: {name: 'Hiku', version: '1.0.0'}, appCapabilities: {}})
+      .then(function (result) { theme(result && result.hostContext); send('ui/notifications/initialized'); size(); });
+    new ResizeObserver(size).observe(main);
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest && event.target.closest('a[href^="http"]');
+      if (!link) return;
+      event.preventDefault();
+      if (window.openai && window.openai.openExternal) window.openai.openExternal({href: link.href});
+      else request('ui/open-link', {url: link.href});
+    });
+  })();
+</script>`;
+  return html.replace("<head>", "<head>" + setup).replace("</body>", bridge + "</body>");
+}
+
+async function mcpHandle(message, env) {
+  const result = await (async () => {
+    switch (message.method) {
+      case "initialize":
+        return {
+          protocolVersion: message.params?.protocolVersion || "2025-06-18",
+          capabilities: {tools: {listChanged: false}, resources: {listChanged: false}},
+          serverInfo: {name: "hiku", title: "Hiku", version: "1.0.0"},
+          instructions: "Hiku is a calm daily number puzzle. Call play_daily_hiku to show today's boards, and hiku_rules " +
+            "to explain the rules or help a stuck player think, without giving the solution away.",
+        };
+      case "ping":
+        return {};
+      case "tools/list":
+        return {tools: MCP_TOOLS};
+      case "resources/list":
+        return {resources: [{uri: MCP_WIDGET, name: "Daily Hiku", mimeType: MCP_UI_MIME}]};
+      case "resources/templates/list":
+        return {resourceTemplates: []};
+      case "resources/read": {
+        if (message.params?.uri !== MCP_WIDGET) throw {code: -32602, message: "Unknown resource"};
+        return {contents: [{
+          uri: MCP_WIDGET, mimeType: MCP_UI_MIME, text: await mcpWidget(env),
+          _meta: {
+            ui: {csp: {connectDomains: [SITE], resourceDomains: [SITE]}, prefersBorder: true},
+            "openai/widgetCSP": {connect_domains: [SITE], resource_domains: [SITE]},
+            "openai/widgetDescription": "Today's four Hiku boards, playable right here: drag a number onto another, or tap one and then its target.",
+            "openai/widgetPrefersBorder": true,
+          },
+        }]};
+      }
+      case "tools/call": {
+        const name = message.params?.name, args = message.params?.arguments || {};
+        if (name === "play_daily_hiku") {
+          const difficulty = ["easy", "medium", "hard", "expert"].includes(args.difficulty) ? args.difficulty : null;
+          return {
+            content: [{type: "text", text: "Today's Daily Hiku is shown above" + (difficulty ? `, open at the ${difficulty} board` : "") +
+              ". The player plays it there; offer help with the rules if they ask, but do not solve the board for them."}],
+            structuredContent: {difficulty},
+            _meta: MCP_UI_META,
+          };
+        }
+        if (name === "hiku_rules") {
+          const text = await (await env.ASSETS.fetch(new Request(SITE + "/llms.txt"))).text();
+          return {content: [{type: "text", text}]};
+        }
+        throw {code: -32602, message: "Unknown tool"};
+      }
+      default:
+        throw {code: -32601, message: "Method not found"};
+    }
+  })().then(value => ({value}), error => ({error}));
+  if (message.id === undefined) return null;
+  return result.error
+    ? {jsonrpc: "2.0", id: message.id, error: {code: result.error.code || -32603, message: result.error.message || "Error"}}
+    : {jsonrpc: "2.0", id: message.id, result: result.value};
+}
+
+async function mcp(request, env) {
+  const cors = {"access-control-allow-origin": "*", "access-control-allow-headers": "content-type, mcp-protocol-version, mcp-session-id", "access-control-allow-methods": "POST, OPTIONS"};
+  if (request.method === "OPTIONS") return new Response(null, {status: 204, headers: cors});
+  if (request.method !== "POST") return new Response("Hiku's MCP server: POST JSON-RPC here.", {status: 405, headers: {allow: "POST", ...cors}});
+  let body;
+  try { body = await request.json(); } catch { return json({jsonrpc: "2.0", id: null, error: {code: -32700, message: "Parse error"}}, 400, cors); }
+  const answers = (await Promise.all((Array.isArray(body) ? body : [body]).map(m => mcpHandle(m, env)))).filter(Boolean);
+  if (!answers.length) return new Response(null, {status: 202, headers: cors});
+  return json(Array.isArray(body) ? answers : answers[0], 200, {...cors, "cache-control": "no-store"});
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/api/daily") return daily(url, env);
+    if (url.pathname === "/mcp") return mcp(request, env);
     if (url.pathname === "/.well-known/apple-app-site-association") return json(APP_SITE_ASSOCIATION, 200, {"cache-control": "public, max-age=3600"});
     if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) return home(request, url, env);
     return env.ASSETS.fetch(request);

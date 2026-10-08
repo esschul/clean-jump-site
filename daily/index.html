@@ -105,7 +105,9 @@ footer a{color:var(--accent)}
 <script>
 (() => {
   // ---- Settings from the address: ?lang=nb|en|sv|da|fi|de, ?theme=dark|light, ?level=easy|medium|hard|expert
-  const params = new URLSearchParams(location.search);
+  // A host that frames the game without a URL of its own (an app inside ChatGPT or Claude) passes the same settings
+  // as window.HIKU_PARAMS, and its own link and campaign as HIKU_HOME and HIKU_SITE.
+  const params = new URLSearchParams(window.HIKU_PARAMS || location.search);
   if (params.get('theme') === 'dark' || params.get('theme') === 'light') document.documentElement.dataset.theme = params.get('theme');
   // ?compact=1: no title or rule, for a page that already shows them.
   if (params.get('compact') === '1') document.documentElement.classList.add('compact');
@@ -217,6 +219,7 @@ footer a{color:var(--accent)}
   // App Store links carry a campaign naming the site the game is played on, so App Store Connect can count
   // visits and downloads per site. Only Apple sees it, and only when a reader follows the link.
   const site = (() => {
+    if (window.HIKU_SITE) return window.HIKU_SITE;
     if (parent === window) return 'direct';
     try { return new URL(document.referrer).hostname.replace(/^www\./, '') || 'embed'; } catch { return 'embed'; }
   })();
@@ -650,7 +653,7 @@ footer a{color:var(--accent)}
       if (stars(undos) < 3) add(T.retry, () => startLesson(lesson));
     } else if (isClear(cells)) {
       const share = add(T.share, async () => {
-        const text = `Hiku · ${T.tiers[tier]} · ${now.toLocaleDateString(T.locale, {day: 'numeric', month: 'short'})}\n${'★'.repeat(stars(undos))}${'☆'.repeat(3 - stars(undos))}\n${location.origin}${location.pathname}`;
+        const text = `Hiku · ${T.tiers[tier]} · ${now.toLocaleDateString(T.locale, {day: 'numeric', month: 'short'})}\n${'★'.repeat(stars(undos))}${'☆'.repeat(3 - stars(undos))}\n${window.HIKU_HOME || location.origin + location.pathname}`;
         try {
           if (navigator.share) await navigator.share({text});
           else { await navigator.clipboard.writeText(text); share.textContent = T.copied; }
@@ -740,7 +743,7 @@ footer a{color:var(--accent)}
   // The content's own height, not the page's: the page is never shorter than the frame, so it could only grow.
   const mainEl = document.querySelector('main');
   function reportHeight() {
-    if (parent !== window) parent.postMessage({type: 'hiku:height', height: mainEl.offsetTop + mainEl.offsetHeight}, '*');
+    if (parent !== window && !window.HIKU_PARAMS) parent.postMessage({type: 'hiku:height', height: mainEl.offsetTop + mainEl.offsetHeight}, '*');
   }
   new ResizeObserver(() => { reportHeight(); }).observe(mainEl);
   let lastWidth = 0;
