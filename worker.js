@@ -263,7 +263,10 @@ async function mcp(request, env) {
   const cors = {"access-control-allow-origin": "*", "access-control-allow-headers": "content-type, mcp-protocol-version, mcp-session-id", "access-control-allow-methods": "POST, OPTIONS"};
   if (request.method === "OPTIONS") return new Response(null, {status: 204, headers: cors});
   if (request.method !== "POST") return new Response("Hiku's MCP server: POST JSON-RPC here.", {status: 405, headers: {allow: "POST", ...cors}});
+  // A message is a few hundred bytes; a batch of more than 20, or a body over 64 kB, is not from a real client.
+  if (+(request.headers.get("content-length") || 0) > 65536) return json({jsonrpc: "2.0", id: null, error: {code: -32600, message: "Request too large"}}, 413, cors);
   const text = await request.text();
+  if (text.length > 65536) return json({jsonrpc: "2.0", id: null, error: {code: -32600, message: "Request too large"}}, 413, cors);
   // An empty POST is how a client probes the endpoint: answer as the reference MCP servers do, 406 unless it accepts both JSON and a stream.
   const accept = request.headers.get("accept") || "";
   if (!text.trim() && !(accept.includes("application/json") && accept.includes("text/event-stream"))) {
@@ -271,19 +274,37 @@ async function mcp(request, env) {
   }
   let body;
   try { body = JSON.parse(text); } catch { return json({jsonrpc: "2.0", id: null, error: {code: -32700, message: "Parse error"}}, 400, cors); }
+  if (Array.isArray(body) && (body.length === 0 || body.length > 20)) return json({jsonrpc: "2.0", id: null, error: {code: -32600, message: "Invalid batch"}}, 400, cors);
   const answers = (await Promise.all((Array.isArray(body) ? body : [body]).map(m => mcpHandle(m, env)))).filter(Boolean);
   if (!answers.length) return new Response(null, {status: 202, headers: cors});
   return json(Array.isArray(body) ? answers : answers[0], 200, {...cors, "cache-control": "no-store"});
 }
 
+// What the worker answers itself gets the same safety headers as the files (see _headers); the files keep their own.
+const SAFETY = {
+  "strict-transport-security": "max-age=31536000",
+  "x-content-type-options": "nosniff",
+  "referrer-policy": "strict-origin-when-cross-origin",
+};
+
+function safe(response) {
+  const headers = new Headers(response.headers);
+  for (const [k, v] of Object.entries(SAFETY)) if (!headers.has(k)) headers.set(k, v);
+  return new Response(response.body, {status: response.status, statusText: response.statusText, headers});
+}
+
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
-    if (url.pathname === "/api/daily") return daily(url, env);
-    if (url.pathname === "/mcp") return mcp(request, env);
-    if (url.pathname === "/.well-known/apple-app-site-association") return json(APP_SITE_ASSOCIATION, 200, {"cache-control": "public, max-age=3600"});
-    if (url.pathname === "/.well-known/openai-apps-challenge") return new Response(OPENAI_APPS_CHALLENGE, {headers: {"content-type": "text/plain; charset=utf-8"}});
-    if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) return home(request, url, env);
-    return env.ASSETS.fetch(request);
+    return safe(await route(request, env));
   },
 };
+
+async function route(request, env) {
+  const url = new URL(request.url);
+  if (url.pathname === "/api/daily") return daily(url, env);
+  if (url.pathname === "/mcp") return mcp(request, env);
+  if (url.pathname === "/.well-known/apple-app-site-association") return json(APP_SITE_ASSOCIATION, 200, {"cache-control": "public, max-age=3600"});
+  if (url.pathname === "/.well-known/openai-apps-challenge") return new Response(OPENAI_APPS_CHALLENGE, {headers: {"content-type": "text/plain; charset=utf-8"}});
+  if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) return home(request, url, env);
+  return env.ASSETS.fetch(request);
+}

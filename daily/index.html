@@ -323,7 +323,10 @@ footer a{color:var(--accent)}
   }
 
 `;
-  new Function(ENGINE + '; Object.assign(self.__hiku = {}, {targets, moved, hasMove, isClear});')();
+  // The engine runs here as a script of its own (the page's policy allows inline scripts, not eval) and in the worker below.
+  const engine = document.createElement('script');
+  engine.textContent = '(function () {' + ENGINE + '; Object.assign(self.__hiku = {}, {targets, moved, hasMove, isClear}); })();';
+  document.head.appendChild(engine);
   const {targets, moved, hasMove, isClear} = self.__hiku;
   const worker = new Worker(URL.createObjectURL(new Blob([ENGINE + `
     let memo = new Map(), board = null;
