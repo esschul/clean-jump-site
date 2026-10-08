@@ -120,6 +120,7 @@ section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .tips p{margin:0;color:var(--muted)}
 .terms h2{font-size:22px;margin:28px 0 6px}
 .terms h2:first-child{margin-top:0}
+.terms .changed{color:var(--muted);font-size:15px;margin-top:28px}
 
 .small{font-size:14px;line-height:1.6}
 .small h2,.small h3{font-size:14px;font-weight:650;letter-spacing:0;margin:24px 0 4px;color:var(--ink)}
@@ -177,18 +178,10 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
   <li id="navnet"><span class="num" aria-hidden="true">4<i><b></b><b></b><b></b><b></b></i></span><div><h3>Nimestä</h3><p>Hiku (引く) on japania ja tarkoittaa ”vetää”. Se on myös miinuksen sana: 5 引く 2 は 3 tarkoittaa ”viisi miinus kaksi on kolme”.</p></div></li>
 </ul>
 </div></section>
-
-<section id="personvern" class="small"><div class="wrap">
-  <h2>Tietosuoja</h2>
-  <p><strong>Hiku ei kerää henkilötietoja.</strong> Sovelluksessa ei ole tiliä eikä mainoksia, eikä se seuraa sinua sovellusten tai verkkosivustojen välillä.</p><p>Ratkaisemasi tasot, tähtesi ja Päivän Hikun tulokset tallentuvat vain omaan puhelimeesi. Widget lukee samat tiedot sieltä. Kaikki poistuu, jos poistat sovelluksen.</p><p>Versiosta 1.2 alkaen sovellus lähettää muutaman nimettömän virstanpylvään, jotta näemme, kuinka pitkälle pelaajat etenevät: kun olet ratkaissut 1, 9, 10, 20, 30, 40 tai 50 tasoa (sekä 100, 150 ja 200), kun ratkaiset Päivän Hikun laudan ja millä tasolla, ja kun Päivän Hiku -putkesi saavuttaa 3, 7, 14, 30 päivää tai enemmän. Ne lähetetään <a href="https://telemetrydeck.com/privacy">TelemetryDeckille</a>, tietosuojaa varten tehdylle eurooppalaiselle analytiikkapalvelulle. Niissä ei ole nimeä, sähköpostia, sijaintia tai muuta, joka voitaisiin yhdistää sinuun; asennus saa satunnaisen numeron, josta tehdään yksisuuntainen tiiviste ennen lähettämistä. Käytämme lukuja vain pelin parantamiseen.</p><p>Selaimen Päivän Hiku ei aseta evästeitä eikä lähetä pelitietoja. Tuloksesi tallentuvat vain selaimeesi. Sivusto laskee käynnit Cloudflare Web Analyticsilla, joka ei käytä evästeitä eikä seuraa sinua sivustolta toiselle: näemme, kuinka moni tuli ja miltä sivustolta, emme sitä, kuka.</p><p>Hiku ChatGPT:ssä ja Claudessa on sama peli kuin verkkosivuilla. Lautoja näyttävä palvelin ei tallenna mitään sinusta tai keskustelusta: se saa tietää vain, mitä lautaa pyydettiin, eikä peli lähetä pelitietoja. Keskusteluun kirjoittamasi käsittelee ChatGPT tai Claude omien tietosuojakäytäntöjensä mukaisesti. Hiku ei näe sitä.</p>
-  <h2 id="support">Tuki</h2>
-  <p>Kysyttävää, löysitkö virheen, vai oletko jumissa laudalla? Lähetä sähköpostia osoitteeseen <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
-  
-</div></section>
 </main>
 <footer class="band">
 <div class="wrap">
-  <span>Tekijä: <a href="https://rubberduck.no">Rubberduck</a> · <a href="../fi/kayttoehdot/">Käyttöehdot</a> · <a href="../fi/#personvern">Tietosuoja</a></span>
+  <span>Tekijä: <a href="https://rubberduck.no">Rubberduck</a> · <a href="../fi/kayttoehdot/">Käyttöehdot</a> · <a href="../fi/tietosuoja/">Tietosuoja</a></span>
   <nav aria-label="Kieli"><a href="../" hreflang="nb" lang="nb">Norsk</a> · <a href="../en/" hreflang="en" lang="en">English</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a> · <a href="../da/" hreflang="da" lang="da">Dansk</a> · <a href="../fi/" hreflang="fi" lang="fi" aria-current="page">Suomi</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a></nav>
 </div>
 </footer>
@@ -217,6 +210,6 @@ document.getElementById('lang').addEventListener('change', function (e) { locati
   apply(false);
 })();
 </script>
-<script src="../daily/embed.js" async></script>
+<script src="../daily/embed.js" async></script><script>(function () { var h = location.hash; if (h === '#personvern' || h === '#privacy') location.replace('../fi/tietosuoja/'); else if (h === '#support') location.replace('../fi/tietosuoja/#support'); })();</script>
 </body>
 </html>

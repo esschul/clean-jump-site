@@ -120,6 +120,7 @@ section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .tips p{margin:0;color:var(--muted)}
 .terms h2{font-size:22px;margin:28px 0 6px}
 .terms h2:first-child{margin-top:0}
+.terms .changed{color:var(--muted);font-size:15px;margin-top:28px}
 
 .small{font-size:14px;line-height:1.6}
 .small h2,.small h3{font-size:14px;font-weight:650;letter-spacing:0;margin:24px 0 4px;color:var(--ink)}
@@ -177,18 +178,10 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
   <li id="navnet"><span class="num" aria-hidden="true">4<i><b></b><b></b><b></b><b></b></i></span><div><h3>Über den Namen</h3><p>Hiku (引く) ist Japanisch und bedeutet „ziehen“. Es ist auch das Wort für minus: 5 引く 2 は 3 heißt „fünf minus zwei ist drei“.</p></div></li>
 </ul>
 </div></section>
-
-<section id="personvern" class="small"><div class="wrap">
-  <h2>Datenschutz</h2>
-  <p><strong>Hiku erhebt keine personenbezogenen Daten.</strong> Die App hat kein Konto und keine Werbung und verfolgt dich nicht über Apps oder Websites hinweg.</p><p>Welche Level du gelöst hast, deine Sterne und Hiku des Tages werden nur auf deinem Telefon gespeichert. Das Widget liest dieselben Daten dort. Alles wird gelöscht, wenn du die App löschst.</p><p>Ab Version 1.2 sendet die App einige anonyme Meilensteine, damit wir sehen, wie weit Spieler kommen: wenn du 1, 9, 10, 20, 30, 40 oder 50 Level gelöst hast (und 100, 150 und 200), wenn du ein Brett von Hiku des Tages löst und auf welchem Level, und wenn deine Serie bei Hiku des Tages 3, 7, 14, 30 Tage oder mehr erreicht. Sie gehen an <a href="https://telemetrydeck.com/privacy">TelemetryDeck</a>, einen europäischen, auf Datenschutz ausgelegten Analysedienst. Sie enthalten keinen Namen, keine E-Mail, keinen Standort und nichts, was sich dir zuordnen lässt; die Installation erhält eine Zufallsnummer, die vor dem Senden einweg-gehasht wird. Wir nutzen die Zahlen nur, um das Spiel zu verbessern.</p><p>Hiku des Tages im Browser setzt keine Cookies und sendet keine Spieldaten. Deine Ergebnisse bleiben in deinem Browser. Die Website zählt Besuche mit Cloudflare Web Analytics, das keine Cookies nutzt und dich nicht über Websites hinweg verfolgt: Wir sehen, wie viele kamen und von welcher Website, nicht wer.</p><p>Hiku in ChatGPT und Claude ist dasselbe Spiel wie auf der Website. Der Server, der die Bretter zeigt, speichert nichts über dich oder das Gespräch: Er erfährt nur, welches Brett angefragt wurde, und das Spiel sendet keine Spieldaten. Was du im Gespräch schreibst, verarbeiten ChatGPT oder Claude nach ihren eigenen Datenschutzregeln. Hiku sieht es nicht.</p>
-  <h2 id="support">Support</h2>
-  <p>Fragen, einen Fehler gefunden oder bei einem Brett festgesteckt? Schreib an <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
-  
-</div></section>
 </main>
 <footer class="band">
 <div class="wrap">
-  <span>Gemacht von <a href="https://rubberduck.no">Rubberduck</a> · <a href="../de/nutzungsbedingungen/">Nutzungsbedingungen</a> · <a href="../de/#personvern">Datenschutz</a></span>
+  <span>Gemacht von <a href="https://rubberduck.no">Rubberduck</a> · <a href="../de/nutzungsbedingungen/">Nutzungsbedingungen</a> · <a href="../de/datenschutz/">Datenschutz</a></span>
   <nav aria-label="Sprache"><a href="../" hreflang="nb" lang="nb">Norsk</a> · <a href="../en/" hreflang="en" lang="en">English</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a> · <a href="../da/" hreflang="da" lang="da">Dansk</a> · <a href="../fi/" hreflang="fi" lang="fi">Suomi</a> · <a href="../de/" hreflang="de" lang="de" aria-current="page">Deutsch</a></nav>
 </div>
 </footer>
@@ -217,6 +210,6 @@ document.getElementById('lang').addEventListener('change', function (e) { locati
   apply(false);
 })();
 </script>
-<script src="../daily/embed.js" async></script>
+<script src="../daily/embed.js" async></script><script>(function () { var h = location.hash; if (h === '#personvern' || h === '#privacy') location.replace('../de/datenschutz/'); else if (h === '#support') location.replace('../de/datenschutz/#support'); })();</script>
 </body>
 </html>
