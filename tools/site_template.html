@@ -63,7 +63,7 @@ nav.top{display:flex;align-items:center;gap:12px 24px;padding-block:18px}
 .hero{display:grid;grid-template-columns:1fr minmax(300px,480px);gap:48px;align-items:center;padding-block:28px 64px}
 .hero h1{font:400 clamp(64px,11vw,116px)/.95 Georgia,serif;letter-spacing:-3px;margin:0}
 .arc{display:inline-block;width:1.1em;height:.62em;margin-left:.02em;vertical-align:baseline;overflow:visible}
-.tagline{font-size:22px;line-height:1.45;margin:24px 0 28px;max-width:22em;color:var(--on-navy)}
+.tagline{font-size:22px;line-height:1.45;margin:24px 0 28px;max-width:22em;color:var(--on-navy);text-wrap:pretty}
 .ctas{display:flex;gap:14px;flex-wrap:wrap}
 /* Buttons stand like tiles: a flat face on a darker edge, pressed down when tapped. */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:14px;font-weight:650;text-decoration:none;font-size:16px;transition:transform .08s,box-shadow .08s}
@@ -82,7 +82,7 @@ nav.top{display:flex;align-items:center;gap:12px 24px;padding-block:18px}
 section{padding-block:64px}
 section + section{border-top:1px solid var(--rule)}
 section h2{font-size:32px;line-height:1.15;margin:0 0 12px}
-section p{color:var(--muted);max-width:38em;margin:0 0 14px}
+section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
 .shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory}
 .shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 4px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
@@ -103,7 +103,7 @@ section p{color:var(--muted);max-width:38em;margin:0 0 14px}
 /* The rules page. */
 .page{padding-block:16px 56px}
 .page h1{font:750 clamp(40px,7vw,64px)/1.05 system-ui,-apple-system,sans-serif;letter-spacing:-.03em;margin:0 0 16px;text-wrap:balance}
-.page .lead{font-size:20px;color:var(--on-navy-muted);max-width:32em;margin:0 0 26px}
+.page .lead{font-size:20px;color:var(--on-navy-muted);max-width:46em;margin:0 0 26px;text-wrap:pretty}
 .prose p{color:var(--ink);max-width:36em}
 .example{margin:28px 0 8px;max-width:560px}
 .example svg{width:100%;height:auto;display:block}
