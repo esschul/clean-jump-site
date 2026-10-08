@@ -275,6 +275,51 @@ AI_PRIVACY = {
 "fi": "Hiku ChatGPT:ssä ja Claudessa on sama peli kuin verkkosivuilla. Lautoja näyttävä palvelin ei tallenna mitään sinusta tai keskustelusta: se saa tietää vain, mitä lautaa pyydettiin, eikä peli lähetä pelitietoja. Keskusteluun kirjoittamasi käsittelee ChatGPT tai Claude omien tietosuojakäytäntöjensä mukaisesti. Hiku ei näe sitä.",
 "de": "Hiku in ChatGPT und Claude ist dasselbe Spiel wie auf der Website. Der Server, der die Bretter zeigt, speichert nichts über dich oder das Gespräch: Er erfährt nur, welches Brett angefragt wurde, und das Spiel sendet keine Spieldaten. Was du im Gespräch schreibst, verarbeiten ChatGPT oder Claude nach ihren eigenen Datenschutzregeln. Hiku sieht es nicht.",
 }
+# What the privacy policy says, point by point: the five things an app review checks a policy for.
+PRIVACY_GLANCE = {
+"nb": ("Kort fortalt", [
+  ("Hva som samles inn", "Ingen personopplysninger. Appen sender anonyme milepæler, nettsiden telles som anonyme besøk, og Hiku i ChatGPT og Claude får bare vite hvilket brett som ble bedt om."),
+  ("Hvorfor", "For å vise brettene, og for å se hvor langt spillerne kommer, slik at spillet kan bli bedre."),
+  ("Hvem som får det", "TelemetryDeck (milepælene fra appen) og Cloudflare, som drifter nettsiden og teller besøkene. Ingenting selges eller deles med andre."),
+  ("Hvor lenge", "Fremgangen din ligger på enheten din til du sletter appen eller tømmer nettleseren. Serveren som viser brettene, lagrer ingenting. Milepælene og besøkstallene finnes bare som anonym statistikk hos TelemetryDeck og Cloudflare, etter deres regler for lagring."),
+  ("Dine valg", "Slett appen eller tøm nettleserdataene, så er alt borte. Hiku trenger ingen konto, og ingenting kan knyttes til deg. Har du spørsmål, kan du skrive til oss."),
+]),
+"en": ("At a glance", [
+  ("What is collected", "No personal data. The app sends anonymous milestones, the website is counted as anonymous visits, and Hiku in ChatGPT and Claude only learns which board was asked for."),
+  ("Why", "To show the boards, and to see how far players get so the game can get better."),
+  ("Who receives it", "TelemetryDeck (the app's milestones) and Cloudflare, which runs the website and counts the visits. Nothing is sold or shared with anyone else."),
+  ("How long it is kept", "Your progress stays on your device until you delete the app or clear your browser. The server that shows the boards keeps nothing. Milestones and visit counts exist only as anonymous statistics at TelemetryDeck and Cloudflare, under their retention policies."),
+  ("Your choices", "Delete the app or clear your browser data, and everything is gone. Hiku needs no account, and nothing can be tied to you. If you have questions, write to us."),
+]),
+"sv": ("I korthet", [
+  ("Vad som samlas in", "Inga personuppgifter. Appen skickar anonyma milstolpar, webbplatsen räknas som anonyma besök, och Hiku i ChatGPT och Claude får bara veta vilket bräde som efterfrågades."),
+  ("Varför", "För att visa brädena, och för att se hur långt spelarna kommer så att spelet kan bli bättre."),
+  ("Vem som får det", "TelemetryDeck (appens milstolpar) och Cloudflare, som driver webbplatsen och räknar besöken. Inget säljs eller delas med andra."),
+  ("Hur länge", "Dina framsteg ligger på din enhet tills du raderar appen eller rensar webbläsaren. Servern som visar brädena sparar ingenting. Milstolparna och besökssiffrorna finns bara som anonym statistik hos TelemetryDeck och Cloudflare, enligt deras regler för lagring."),
+  ("Dina val", "Radera appen eller rensa webbläsardata, så är allt borta. Hiku behöver inget konto, och inget kan kopplas till dig. Har du frågor kan du skriva till oss."),
+]),
+"da": ("Kort fortalt", [
+  ("Hvad der indsamles", "Ingen personoplysninger. Appen sender anonyme milepæle, websitet tælles som anonyme besøg, og Hiku i ChatGPT og Claude får kun at vide, hvilket bræt der blev bedt om."),
+  ("Hvorfor", "For at vise brætterne, og for at se, hvor langt spillerne når, så spillet kan blive bedre."),
+  ("Hvem der får det", "TelemetryDeck (appens milepæle) og Cloudflare, som driver websitet og tæller besøgene. Intet sælges eller deles med andre."),
+  ("Hvor længe", "Dine fremskridt ligger på din enhed, til du sletter appen eller rydder browseren. Serveren, der viser brætterne, gemmer intet. Milepælene og besøgstallene findes kun som anonym statistik hos TelemetryDeck og Cloudflare efter deres regler for opbevaring."),
+  ("Dine valg", "Slet appen eller ryd browserdata, så er alt væk. Hiku kræver ingen konto, og intet kan kobles til dig. Har du spørgsmål, kan du skrive til os."),
+]),
+"fi": ("Lyhyesti", [
+  ("Mitä kerätään", "Ei henkilötietoja. Sovellus lähettää nimettömiä virstanpylväitä, verkkosivun käynnit lasketaan nimettöminä, ja Hiku ChatGPT:ssä ja Claudessa saa tietää vain, mitä lautaa pyydettiin."),
+  ("Miksi", "Lautojen näyttämiseen ja sen näkemiseen, kuinka pitkälle pelaajat etenevät, jotta peliä voi parantaa."),
+  ("Kuka sen saa", "TelemetryDeck (sovelluksen virstanpylväät) ja Cloudflare, joka ylläpitää verkkosivua ja laskee käynnit. Mitään ei myydä eikä jaeta muille."),
+  ("Kuinka kauan", "Edistymisesi pysyy laitteellasi, kunnes poistat sovelluksen tai tyhjennät selaimen. Lautoja näyttävä palvelin ei tallenna mitään. Virstanpylväät ja käyntimäärät ovat olemassa vain nimettömänä tilastona TelemetryDeckillä ja Cloudflarella niiden säilytyskäytäntöjen mukaan."),
+  ("Valintasi", "Poista sovellus tai tyhjennä selaimen tiedot, niin kaikki katoaa. Hiku ei tarvitse tiliä, eikä mitään voi yhdistää sinuun. Jos sinulla on kysyttävää, kirjoita meille."),
+]),
+"de": ("Kurz gesagt", [
+  ("Was erhoben wird", "Keine personenbezogenen Daten. Die App sendet anonyme Meilensteine, die Website zählt anonyme Besuche, und Hiku in ChatGPT und Claude erfährt nur, welches Brett angefragt wurde."),
+  ("Wozu", "Um die Bretter zu zeigen und zu sehen, wie weit Spieler kommen, damit das Spiel besser werden kann."),
+  ("Wer es erhält", "TelemetryDeck (die Meilensteine der App) und Cloudflare, das die Website betreibt und die Besuche zählt. Nichts wird verkauft oder an andere weitergegeben."),
+  ("Wie lange", "Dein Fortschritt bleibt auf deinem Gerät, bis du die App löschst oder den Browser leerst. Der Server, der die Bretter zeigt, speichert nichts. Meilensteine und Besuchszahlen gibt es nur als anonyme Statistik bei TelemetryDeck und Cloudflare, nach deren Aufbewahrungsregeln."),
+  ("Deine Wahl", "Lösche die App oder die Browserdaten, und alles ist weg. Hiku braucht kein Konto, und nichts lässt sich dir zuordnen. Bei Fragen schreib uns."),
+]),
+}
 PRIVACY = {
 "nb": dict(slug="personvern", parts=("Appen", "Dagens Hiku på nettet", "Hiku i ChatGPT og Claude"), changed="Sist endret 8. oktober 2026."),
 "en": dict(slug="privacy", parts=("The app", "Daily Hiku on the web", "Hiku in ChatGPT and Claude"), changed="Last changed 8 October 2026."),
@@ -429,10 +474,13 @@ def privacy_page(lang, t, pv):
   <p class="lead">{lead}</p>
 </div>'''
     app, web, ai = pv["parts"]
+    glance, rows = PRIVACY_GLANCE[lang]
+    points = "".join(f"<p><strong>{a}.</strong> {b}</p>" for a, b in rows)
     main = f'''<section><div class="wrap prose terms">
   <h2>{app}</h2><p>{t["privacy"][1]}</p><p>{t["privacy"][2]}</p>
   <h2>{web}</h2><p>{t["privacy"][3]}</p>
   <h2>{ai}</h2><p>{AI_PRIVACY[lang]}</p>
+  <h2>{glance}</h2>{points}
   <h2 id="support">{t["support_title"]}</h2><p>{t["support_text"]}</p>
   <p class="changed">{pv["changed"]}</p>
 </div></section>'''
