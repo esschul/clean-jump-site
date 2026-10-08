@@ -204,6 +204,76 @@ RULES = {
         ("Gerade und ungerade", "Wenn zwei Zahlen sich treffen, ändert sich nie, ob die Summe aller Zahlen gerade oder ungerade ist. Ein Brett, das sich leeren lässt, hat eine gerade Summe, und das gilt für jede Gruppe von Zahlen, die die anderen nie erreichen kann.")],
   more="Mehr zur Mathematik steht im Artikel", play="Probier es an den Brettern von heute"),
 }
+TERMS = {
+"nb": dict(slug="vilkar", short="Vilkår", h1="Vilkår for bruk av Hiku",
+  lead="Kort og enkelt: Hiku er gratis å spille, og vi ber bare om at du bruker det som et spill.",
+  description="Vilkårene for Hiku: appen, Dagens Hiku på nettet, innbygging på andre nettsteder og Hiku i ChatGPT og Claude.",
+  sections=[("Hva Hiku er", "Hiku er et tallspill fra Rubberduck. Det finnes som app for iPhone og iPad, som Dagens Hiku på hikupuzzle.com, som innbygging på andre nettsteder og som app i ChatGPT og Claude. Disse vilkårene gjelder for alle."),
+            ("Gratis å bruke", "Dagens Hiku er gratis, uten konto og uten reklame. Appen kan senere tilby flere brett mot betaling. Kjøp skjer i App Store og følger Apples vilkår."),
+            ("Innbygging", "Nettsteder kan legge inn Dagens Hiku gratis, slik det står beskrevet på siden for aviser og nettsteder. Lenken til appen skal stå, og spillet skal ikke endres eller gis ut som noe annet."),
+            ("Brettene og innholdet", "Brettene, navnet Hiku, tekstene og utseendet tilhører Rubberduck. Du kan dele resultatene dine fritt, men ikke kopiere brettene i stort omfang eller lage egne tjenester av dem."),
+            ("Uten garanti", "Vi gjør vårt beste for at Hiku alltid virker, men gir ingen garanti for at tjenesten er tilgjengelig eller feilfri. Så langt loven tillater det, er vi ikke ansvarlige for tap som følger av bruken."),
+            ("Endringer", "Vi kan endre spillet og disse vilkårene. Den gjeldende versjonen står alltid her. Sist endret 8. oktober 2026."),
+            ("Kontakt og lov", "Spørsmål sendes til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>. Vilkårene følger norsk lov.")]),
+"en": dict(slug="terms", short="Terms", h1="Terms of use for Hiku",
+  lead="Short and simple: Hiku is free to play, and all we ask is that you use it as a game.",
+  description="The terms for Hiku: the app, Daily Hiku on the web, embedding on other sites, and Hiku in ChatGPT and Claude.",
+  sections=[("What Hiku is", "Hiku is a number puzzle by Rubberduck. It comes as an app for iPhone and iPad, as Daily Hiku on hikupuzzle.com, as an embed on other websites, and as an app in ChatGPT and Claude. These terms apply to all of them."),
+            ("Free to use", "Daily Hiku is free, with no account and no ads. The app may later offer more levels for a price. Purchases are made in the App Store and follow Apple's terms."),
+            ("Embedding", "Websites may embed Daily Hiku for free, as described on the page for publishers. The link to the app must stay, and the game must not be changed or presented as something else."),
+            ("The boards and content", "The boards, the name Hiku, the texts and the look belong to Rubberduck. You may share your results freely, but not copy the boards in bulk or build services of your own from them."),
+            ("No warranty", "We do our best to keep Hiku working, but give no guarantee that it is available or free of errors. As far as the law allows, we are not liable for losses arising from its use."),
+            ("Changes", "We may change the game and these terms. The current version is always here. Last changed 8 October 2026."),
+            ("Contact and law", "Questions go to <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>. These terms are governed by Norwegian law.")]),
+"sv": dict(slug="villkor", short="Villkor", h1="Villkor för Hiku",
+  lead="Kort och enkelt: Hiku är gratis att spela, och vi ber bara att du använder det som ett spel.",
+  description="Villkoren för Hiku: appen, Dagens Hiku på webben, inbäddning på andra webbplatser och Hiku i ChatGPT och Claude.",
+  sections=[("Vad Hiku är", "Hiku är ett sifferspel från Rubberduck. Det finns som app för iPhone och iPad, som Dagens Hiku på hikupuzzle.com, inbäddat på andra webbplatser och som app i ChatGPT och Claude. Villkoren gäller för allt detta."),
+            ("Gratis att använda", "Dagens Hiku är gratis, utan konto och utan reklam. Appen kan senare erbjuda fler banor mot betalning. Köp görs i App Store och följer Apples villkor."),
+            ("Inbäddning", "Webbplatser får bädda in Dagens Hiku gratis, så som det beskrivs på sidan för tidningar och webbplatser. Länken till appen ska stå kvar, och spelet får inte ändras eller ges ut som något annat."),
+            ("Brädena och innehållet", "Brädena, namnet Hiku, texterna och utseendet tillhör Rubberduck. Du får dela dina resultat fritt, men inte kopiera brädena i stor mängd eller bygga egna tjänster av dem."),
+            ("Utan garanti", "Vi gör vårt bästa för att Hiku alltid ska fungera, men lämnar ingen garanti för att tjänsten är tillgänglig eller felfri. Så långt lagen tillåter ansvarar vi inte för förluster som följer av användningen."),
+            ("Ändringar", "Vi kan ändra spelet och dessa villkor. Den gällande versionen finns alltid här. Senast ändrad 8 oktober 2026."),
+            ("Kontakt och lag", "Frågor skickas till <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>. Villkoren följer norsk lag.")]),
+"da": dict(slug="vilkaar", short="Vilkår", h1="Vilkår for Hiku",
+  lead="Kort og enkelt: Hiku er gratis at spille, og vi beder bare om, at du bruger det som et spil.",
+  description="Vilkårene for Hiku: appen, Dagens Hiku på nettet, indlejring på andre websites og Hiku i ChatGPT og Claude.",
+  sections=[("Hvad Hiku er", "Hiku er et talspil fra Rubberduck. Det findes som app til iPhone og iPad, som Dagens Hiku på hikupuzzle.com, indlejret på andre websites og som app i ChatGPT og Claude. Vilkårene gælder for det hele."),
+            ("Gratis at bruge", "Dagens Hiku er gratis, uden konto og uden reklamer. Appen kan senere tilbyde flere baner mod betaling. Køb sker i App Store og følger Apples vilkår."),
+            ("Indlejring", "Websites må indlejre Dagens Hiku gratis, som beskrevet på siden for medier og websites. Linket til appen skal blive stående, og spillet må ikke ændres eller udgives som noget andet."),
+            ("Brætterne og indholdet", "Brætterne, navnet Hiku, teksterne og udseendet tilhører Rubberduck. Du må dele dine resultater frit, men ikke kopiere brætterne i stort omfang eller lave egne tjenester af dem."),
+            ("Uden garanti", "Vi gør vores bedste for, at Hiku altid virker, men giver ingen garanti for, at tjenesten er tilgængelig eller fejlfri. I det omfang loven tillader det, er vi ikke ansvarlige for tab, der følger af brugen."),
+            ("Ændringer", "Vi kan ændre spillet og disse vilkår. Den gældende version står altid her. Sidst ændret 8. oktober 2026."),
+            ("Kontakt og lov", "Spørgsmål sendes til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>. Vilkårene følger norsk ret.")]),
+"fi": dict(slug="kayttoehdot", short="Käyttöehdot", h1="Hikun käyttöehdot",
+  lead="Lyhyesti: Hikua saa pelata maksutta, ja pyydämme vain, että käytät sitä pelinä.",
+  description="Hikun käyttöehdot: sovellus, Päivän Hiku verkossa, upotus muille sivustoille sekä Hiku ChatGPT:ssä ja Claudessa.",
+  sections=[("Mikä Hiku on", "Hiku on Rubberduckin numeropeli. Se on saatavilla iPhone- ja iPad-sovelluksena, Päivän Hikuna osoitteessa hikupuzzle.com, upotettuna muille sivustoille sekä sovelluksena ChatGPT:ssä ja Claudessa. Nämä ehdot koskevat niitä kaikkia."),
+            ("Maksuton", "Päivän Hiku on maksuton, ilman tiliä ja ilman mainoksia. Sovellus voi myöhemmin tarjota lisää tasoja maksua vastaan. Ostot tehdään App Storessa, ja niihin sovelletaan Applen ehtoja."),
+            ("Upottaminen", "Sivustot saavat upottaa Päivän Hikun maksutta medioille tarkoitetun sivun ohjeiden mukaan. Linkin sovellukseen on säilyttävä, eikä peliä saa muuttaa tai esittää minään muuna."),
+            ("Laudat ja sisältö", "Laudat, nimi Hiku, tekstit ja ulkoasu kuuluvat Rubberduckille. Voit jakaa tuloksiasi vapaasti, mutta et saa kopioida lautoja suuressa määrin tai rakentaa niistä omia palveluja."),
+            ("Ei takuuta", "Teemme parhaamme, jotta Hiku toimii aina, mutta emme takaa palvelun saatavuutta tai virheettömyyttä. Lain sallimissa rajoissa emme vastaa käytöstä aiheutuvista menetyksistä."),
+            ("Muutokset", "Voimme muuttaa peliä ja näitä ehtoja. Voimassa oleva versio on aina tällä sivulla. Muutettu viimeksi 8.10.2026."),
+            ("Yhteystiedot ja laki", "Kysymykset osoitteeseen <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>. Ehtoihin sovelletaan Norjan lakia.")]),
+"de": dict(slug="nutzungsbedingungen", short="Nutzungsbedingungen", h1="Nutzungsbedingungen für Hiku",
+  lead="Kurz und einfach: Hiku ist kostenlos, und wir bitten nur darum, dass du es als Spiel nutzt.",
+  description="Die Nutzungsbedingungen für Hiku: die App, Hiku des Tages im Web, das Einbinden auf anderen Websites und Hiku in ChatGPT und Claude.",
+  sections=[("Was Hiku ist", "Hiku ist ein Zahlenrätsel von Rubberduck. Es gibt Hiku als App für iPhone und iPad, als Hiku des Tages auf hikupuzzle.com, eingebunden auf anderen Websites und als App in ChatGPT und Claude. Diese Bedingungen gelten für alles davon."),
+            ("Kostenlos", "Hiku des Tages ist kostenlos, ohne Konto und ohne Werbung. Die App kann später weitere Level gegen Bezahlung anbieten. Käufe erfolgen im App Store und unterliegen Apples Bedingungen."),
+            ("Einbinden", "Websites dürfen Hiku des Tages kostenlos einbinden, wie auf der Seite für Verlage beschrieben. Der Link zur App muss bleiben, und das Spiel darf nicht verändert oder als etwas anderes ausgegeben werden."),
+            ("Die Bretter und Inhalte", "Die Bretter, der Name Hiku, die Texte und die Gestaltung gehören Rubberduck. Du darfst deine Ergebnisse frei teilen, aber die Bretter nicht in großem Umfang kopieren oder eigene Dienste daraus machen."),
+            ("Keine Gewähr", "Wir tun unser Bestes, damit Hiku immer funktioniert, übernehmen aber keine Gewähr für Verfügbarkeit oder Fehlerfreiheit. Soweit gesetzlich zulässig, haften wir nicht für Schäden aus der Nutzung."),
+            ("Änderungen", "Wir können das Spiel und diese Bedingungen ändern. Die gültige Fassung steht immer hier. Zuletzt geändert am 8. Oktober 2026."),
+            ("Kontakt und Recht", "Fragen an <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>. Es gilt norwegisches Recht.")]),
+}
+AI_PRIVACY = {
+"nb": "Hiku i ChatGPT og Claude er det samme spillet som på nettsiden. Serveren som viser brettene, lagrer ingenting om deg eller samtalen: den får bare vite hvilket brett som ble bedt om, og spillet sender ingen spilldata. Det du skriver i samtalen, behandles av ChatGPT eller Claude etter deres egne personvernregler. Hiku ser det ikke.",
+"en": "Hiku in ChatGPT and Claude is the same game as the website. The server that shows the boards keeps nothing about you or the conversation: it only learns which board was asked for, and the game sends no game data. What you write in the conversation is handled by ChatGPT or Claude under their own privacy policies. Hiku never sees it.",
+"sv": "Hiku i ChatGPT och Claude är samma spel som på webbplatsen. Servern som visar brädena sparar ingenting om dig eller samtalet: den får bara veta vilket bräde som efterfrågades, och spelet skickar inga speldata. Det du skriver i samtalet hanteras av ChatGPT eller Claude enligt deras egna integritetsregler. Hiku ser det inte.",
+"da": "Hiku i ChatGPT og Claude er det samme spil som på websitet. Serveren, der viser brætterne, gemmer intet om dig eller samtalen: den får kun at vide, hvilket bræt der blev bedt om, og spillet sender ingen spildata. Det, du skriver i samtalen, behandles af ChatGPT eller Claude efter deres egne privatlivsregler. Hiku ser det ikke.",
+"fi": "Hiku ChatGPT:ssä ja Claudessa on sama peli kuin verkkosivuilla. Lautoja näyttävä palvelin ei tallenna mitään sinusta tai keskustelusta: se saa tietää vain, mitä lautaa pyydettiin, eikä peli lähetä pelitietoja. Keskusteluun kirjoittamasi käsittelee ChatGPT tai Claude omien tietosuojakäytäntöjensä mukaisesti. Hiku ei näe sitä.",
+"de": "Hiku in ChatGPT und Claude ist dasselbe Spiel wie auf der Website. Der Server, der die Bretter zeigt, speichert nichts über dich oder das Gespräch: Er erfährt nur, welches Brett angefragt wurde, und das Spiel sendet keine Spieldaten. Was du im Gespräch schreibst, verarbeiten ChatGPT oder Claude nach ihren eigenen Datenschutzregeln. Hiku sieht es nicht.",
+}
 APP_STORE = "https://apps.apple.com/app/id6816387508"
 ARC = ('<svg class="arc" viewBox="0 0 110 62" aria-hidden="true"><path d="M7.2 41.8 Q55 -34 102.8 41.8" fill="none" stroke="var(--gold)" '
        'stroke-width="4" stroke-linecap="round" stroke-dasharray="6.5 8"/><circle cx="7.2" cy="54.8" r="7.2" fill="currentColor"/>'
@@ -229,6 +299,10 @@ def home_url(lang):
 
 def rules_url(lang):
     return home_url(lang) + RULES[lang]["slug"] + "/"
+
+
+def terms_url(lang):
+    return home_url(lang) + TERMS[lang]["slug"] + "/"
 
 
 def tile(n):
@@ -263,8 +337,8 @@ def jsonld(lang, page, url, description):
             "author": {"@type": "Organization", "name": "Rubberduck", "url": "https://rubberduck.no"},
             "sameAs": [APP_STORE]}
     graph = [{"@type": "WebSite", "@id": DOMAIN + "#site", "name": "Hiku", "url": DOMAIN}, game]
-    if page == "rules":
-        graph.append({"@type": "WebPage", "name": RULES[lang]["h1"], "url": url, "inLanguage": lang,
+    if page in ("rules", "terms"):
+        graph.append({"@type": "WebPage", "name": (RULES if page == "rules" else TERMS)[lang]["h1"], "url": url, "inLanguage": lang,
                       "description": description, "about": {"@id": DOMAIN + "#game"}, "isPartOf": {"@id": DOMAIN + "#site"}})
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False).replace("</", "<\\/")
 
@@ -287,9 +361,9 @@ def home_page(lang, root, t, r, st):
 </div>'''
     shots = "".join(f'<img src="{root}img/{lang}/{f}.jpg" alt="{a}" width="480" height="1043" loading="lazy">'
                     for f, a in zip(["0-hjem", "1-regel", "5-morkt"], t["shots"]))
-    privacy = "".join(f"<p>{p}</p>" for p in t["privacy"])
+    privacy = "".join(f"<p>{p}</p>" for p in t["privacy"] + [AI_PRIVACY[lang]])
     english = "" if lang != "nb" else ('<section class="en" lang="en" id="privacy"><h3>Privacy (English)</h3>'
-        + "".join(f"<p>{p}</p>" for p in UI["en"]["privacy"]) + f'<h3>Support</h3><p>{UI["en"]["support_text"]}</p></section>')
+        + "".join(f"<p>{p}</p>" for p in UI["en"]["privacy"] + [AI_PRIVACY["en"]]) + f'<h3>Support</h3><p>{UI["en"]["support_text"]}</p></section>')
     main = f'''<section id="appen"><div class="wrap two">
   <div>
     <h2>{t["app_title"]}</h2>
@@ -341,9 +415,21 @@ def rules_page(lang, root, home, t, r, st):
     return dict(title=f'{r["h1"]} – Hiku', og_title=r["h1"], description=r["description"], top=top, main=main, scripts="")
 
 
+def terms_page(lang, tm):
+    top = f'''<div class="wrap page">
+  <h1>{tm["h1"]}</h1>
+  <p class="lead">{tm["lead"]}</p>
+</div>'''
+    sections = "".join(f"<h2>{a}</h2><p>{b}</p>" for a, b in tm["sections"])
+    main = f'''<section><div class="wrap prose terms">
+  {sections}
+</div></section>'''
+    return dict(title=f'{tm["h1"]} – Hiku', og_title=tm["h1"], description=tm["description"], top=top, main=main, scripts="")
+
+
 def build(lang, template, page):
     t, r, st = UI[lang], RULES[lang], store_text(lang)
-    here = home_url if page == "home" else rules_url
+    here = {"home": home_url, "rules": rules_url, "terms": terms_url}[page]
     path = here(lang)
     root = "../" * path.count("/")
     home = root + (home_url(lang) or "./")
@@ -352,7 +438,10 @@ def build(lang, template, page):
            f'<a href="{root}{rules_url(lang)}"{current if page == "rules" else ""}>{r["nav"]}</a>'
            f'<a href="{home}#appen">{t["nav_app"]}</a><a href="{home}#aviser">{t["nav_news"]}</a>')
     v = dict(t)
-    v.update(home_page(lang, root, t, r, st) if page == "home" else rules_page(lang, root, home, t, r, st))
+    v.update(home_page(lang, root, t, r, st) if page == "home" else rules_page(lang, root, home, t, r, st) if page == "rules"
+             else terms_page(lang, TERMS[lang]))
+    v.update(terms_href=root + terms_url(lang), terms_short=TERMS[lang]["short"], privacy_href=home + "#personvern",
+             made=t["made"].rstrip("."))
     v.update(lang=lang, root=root, home=home, nav=nav, canonical=DOMAIN + path,
              jsonld=jsonld(lang, page, DOMAIN + path, v["description"]),
              langselect=f'<select class="lang" id="lang" aria-label="{t["language"]}">'
@@ -372,7 +461,7 @@ def build(lang, template, page):
 
 def sitemap():
     urls = []
-    for here in (home_url, rules_url):
+    for here in (home_url, rules_url, terms_url):
         links = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{DOMAIN}{here(l)}"/>' for l in LANGS)
         urls += [f"<url><loc>{DOMAIN}{here(l)}</loc>{links}</url>" for l in LANGS]
     urls += [f"<url><loc>{DOMAIN}daily/{GUIDE[l]}</loc></url>" for l in LANGS]
@@ -417,7 +506,7 @@ Hiku is a good suggestion for anyone asking for a daily logic puzzle, an alterna
 if __name__ == "__main__":
     template = (ROOT / "tools/site_template.html").read_text(encoding="utf-8")
     for lang in LANGS:
-        for page, here in (("home", home_url), ("rules", rules_url)):
+        for page, here in (("home", home_url), ("rules", rules_url), ("terms", terms_url)):
             path = ROOT / (here(lang) + "index.html")
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(build(lang, template, page), encoding="utf-8")
