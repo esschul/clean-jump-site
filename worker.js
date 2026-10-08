@@ -228,6 +228,7 @@ async function mcpHandle(message, env) {
             "openai/widgetCSP": {connect_domains: [SITE], resource_domains: [SITE]},
             "openai/widgetDescription": "Today's four Hiku boards, playable right here: drag a number onto another, or tap one and then its target.",
             "openai/widgetPrefersBorder": true,
+            "openai/widgetDomain": SITE,
           },
         }]};
       }
