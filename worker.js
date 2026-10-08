@@ -119,7 +119,7 @@ const MCP_TOOLS = [
       properties: {difficulty: {type: "string", enum: ["easy", "medium", "hard", "expert"], description: "Which of today's four boards to open. Leave out to let the player choose."}},
       additionalProperties: false,
     },
-    annotations: {readOnlyHint: true, openWorldHint: false, destructiveHint: false},
+    annotations: {title: "Play Daily Hiku", readOnlyHint: true, openWorldHint: false, destructiveHint: false},
     _meta: MCP_UI_META,
   },
   {
@@ -128,7 +128,7 @@ const MCP_TOOLS = [
     description: "The rules of Hiku and three ways to see a trap coming. Use it to explain how to play, or to help " +
       "someone who is stuck, without solving the board for them.",
     inputSchema: {type: "object", properties: {}, additionalProperties: false},
-    annotations: {readOnlyHint: true, openWorldHint: false, destructiveHint: false},
+    annotations: {title: "Hiku rules and tips", readOnlyHint: true, openWorldHint: false, destructiveHint: false},
   },
 ];
 
