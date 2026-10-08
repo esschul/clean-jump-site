@@ -39,6 +39,9 @@
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+/* At least a screen tall, so the footer sits at the foot of a short page. */
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+main{flex:1 0 auto}
 a{color:var(--link)}
 .wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
 .skip{position:absolute;left:12px;top:-60px;background:var(--tile);color:var(--ink);padding:10px 16px;border-radius:10px;z-index:10;font-weight:600}
