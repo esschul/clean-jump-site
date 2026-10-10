@@ -39,7 +39,11 @@
     if (!e.data || e.data.type !== 'hiku:height') return;
     var frames = document.querySelectorAll('[data-hiku] iframe');
     for (var i = 0; i < frames.length; i++) {
-      if (frames[i].contentWindow === e.source) frames[i].style.height = Math.ceil(e.data.height) + 'px';
+      if (frames[i].contentWindow === e.source) {
+        frames[i].style.height = Math.ceil(e.data.height) + 'px';
+        // Any room the page held for the game is no longer needed once the frame has its own height.
+        frames[i].parentNode.style.minHeight = '0';
+      }
     }
   });
   function mountAll(root) {

@@ -77,6 +77,10 @@ nav.top{display:flex;align-items:center;gap:12px 24px;padding-block:18px}
 @media (min-width:821px){.play-down{display:none}}
 .game{background:var(--bg);color:var(--ink);border-radius:22px;padding:14px;box-shadow:0 6px 0 var(--navy-edge)}
 .game h2{font-size:20px;margin:4px 6px 10px}
+/* Room for the game before its frame arrives, so nothing below it moves: the frame is as wide as the box (at most
+   480 px) and about 320 px taller than wide. embed.js lifts this once the game has said how tall it is. */
+.game{container-type:inline-size}
+.game [data-hiku]{min-height:calc(min(100cqw, 480px) + 320px)}
 
 /* The cream page below. */
 section{padding-block:64px}
