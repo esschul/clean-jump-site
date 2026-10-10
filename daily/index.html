@@ -749,12 +749,14 @@ footer a{color:var(--accent)}
     if (parent !== window && !window.HIKU_PARAMS) parent.postMessage({type: 'hiku:height', height: mainEl.offsetTop + mainEl.offsetHeight}, '*');
   }
   new ResizeObserver(() => { reportHeight(); }).observe(mainEl);
+  // Also once everything has loaded: a frame that is not yet painted gets no resize callbacks.
+  addEventListener('load', reportHeight);
   let lastWidth = 0;
   new ResizeObserver(() => { if (boardEl.clientWidth !== lastWidth) { lastWidth = boardEl.clientWidth; if (cells) render(); } }).observe(boardEl);
 
   fetch(`https://hikupuzzle.com/api/daily?day=${dayKey}`)
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
-    .then(data => { todays = data.boards; todaysHints = data.hints || {}; if (lesson === null) start(tier); })
+    .then(data => { todays = data.boards; todaysHints = data.hints || {}; if (lesson === null) start(tier); reportHeight(); })
     .catch(() => { if (lesson === null) statusEl.textContent = T.offline; });
   if (!store.get('learned') && !params.get('level')) startLesson(0);
 })();

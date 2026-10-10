@@ -30,6 +30,10 @@
     // At most 480 pixels wide, in the middle of the space it is given unless asked to sit at the left.
     frame.style.cssText = 'display:block;width:100%;max-width:480px;height:720px;border:0;margin:' + (host.dataset.align === 'left' ? '0' : '0 auto') + ';';
     host.appendChild(frame);
+    // Start at about the height the game will have, so the page does not jump when it reports its own: the board is
+    // as wide as the frame, and the words and buttons around it take about 320 pixels (415 with the title and rule).
+    var compact = query.indexOf('compact=1') >= 0;
+    if (frame.clientWidth) frame.style.height = (frame.clientWidth + (compact ? 320 : 415)) + 'px';
   }
   window.addEventListener('message', function (e) {
     if (!e.data || e.data.type !== 'hiku:height') return;
