@@ -487,7 +487,7 @@ def home_page(lang, root, t, r, st):
     <div data-hiku data-lang="{lang}" data-compact></div>
   </div>
 </div>'''
-    shots = "".join(f'<img src="{root}img/{lang}/{f}.jpg" alt="{a}" width="480" height="1043" loading="lazy">'
+    shots = "".join(f'<img src="{root}img/{lang}/{f}.webp" alt="{a}" width="480" height="1043" loading="lazy" decoding="async">'
                     for f, a in zip(["0-hjem", "1-regel", "5-morkt"], t["shots"]))
     main = f'''<section id="appen"><div class="wrap two">
   <div>
