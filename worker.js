@@ -335,7 +335,18 @@ async function mcpWidget(env) {
   (function () {
     var asked = (navigator.language || 'en').toLowerCase().slice(0, 2);
     var lang = ['nb', 'no', 'nn', 'en', 'sv', 'da', 'fi', 'de'].indexOf(asked) >= 0 ? asked : 'en';
-    window.HIKU_PARAMS = 'lang=' + lang + '&lessons=0';
+    window.HIKU_PARAMS = 'lang=' + lang + '&lessons=0&compact=1';
+    // Inside a conversation the game is told what it is already: no title or rule, a tighter page, and the
+    // "learn to play" link beside the app's at the bottom instead of a line of its own.
+    document.documentElement.classList.add('in-ai');
+    var style = document.createElement('style');
+    style.textContent = '.in-ai main{padding:12px 14px 10px}.in-ai #made{display:none}.in-ai .replay{display:none}' +
+      '.in-ai footer{margin-top:12px;justify-content:space-between}.in-ai footer .linky{font-size:13px}';
+    document.head.appendChild(style);
+    addEventListener('DOMContentLoaded', function () {
+      var replay = document.getElementById('replay'), footer = document.querySelector('footer');
+      if (replay && footer) footer.insertBefore(replay, footer.firstChild);
+    });
     window.HIKU_SITE = window.openai ? 'chatgpt' : 'ai-app';
     window.HIKU_HOME = '${SITE}/daily/';
     var theme = window.openai && window.openai.theme;

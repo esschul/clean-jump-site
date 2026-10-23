@@ -504,7 +504,8 @@ footer a{color:var(--accent)}
     }
     const replay = el('replay');
     replay.hidden = lesson !== null;
-    replay.textContent = T.replay;
+    // Inside ChatGPT or Claude the lessons were never shown, so it is "learn to play", not "again".
+    replay.textContent = document.documentElement.classList.contains('in-ai') ? T.learn : T.replay;
     replay.onclick = () => startLesson(0);
     el('left').textContent = T.left(remaining());
     const info = el('movesInfo');
