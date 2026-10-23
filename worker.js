@@ -122,6 +122,11 @@ const dayArg = {type: "string", pattern: "^\\d{4}-\\d{2}-\\d{2}$", description: 
 const movesArg = {type: "array", items: {type: "string", pattern: "^[A-Ha-h][1-8]-[A-Ha-h][1-8]$"},
   description: "Moves already made on this board from its start, in order, each as \"from-to\" squares like \"B2-E2\" (columns A, B, C … from the left, rows 1, 2, 3 … from the top)."};
 
+// The rules in one breath, given with every board so the assistant never has to recall them.
+const HIKU_RULES_SHORT = "Rules: a number jumps exactly as many squares as it shows, across or up and down, over anything " +
+  "in between, and must land on another number. The smaller is taken from the larger and the rest stays where it " +
+  "landed; equal numbers both vanish. The goal is to clear the board: every number must vanish, none left over.";
+
 const MCP_TOOLS = [
   {
     name: "play_daily_hiku",
@@ -559,7 +564,7 @@ async function mcpHandle(message, env) {
           protocolVersion: message.params?.protocolVersion || "2025-06-18",
           capabilities: {tools: {listChanged: false}, resources: {listChanged: false}},
           serverInfo: {name: "hiku", title: "Hiku", version: "1.0.0"},
-          instructions: "Hiku is a calm daily number puzzle for the player to play. Call play_daily_hiku to show today's " +
+          instructions: "Hiku is a calm daily number puzzle for the player to play. " + HIKU_RULES_SHORT + " Call play_daily_hiku to show today's " +
             "boards and let the player play; with a difficulty it also gives you the board as a grid. Make moves only when " +
             "the player asks you to play or solve a board for them: then work out every move first and call " +
             "play_daily_hiku once with all of them, so the game shows them. " +
@@ -597,8 +602,8 @@ async function mcpHandle(message, env) {
           const difficulty = TIERS.includes(args.difficulty) ? args.difficulty : null;
           if (!difficulty) {
             return {
-              content: [{type: "text", text: "Today's Daily Hiku is shown above: four boards, easy to expert. Call play_daily_hiku " +
-                "with a difficulty to see one of them as a grid, and with moves to play on it."}],
+              content: [{type: "text", text: "Today's Daily Hiku is shown above: four boards, easy to expert, for the player to play. " +
+                HIKU_RULES_SHORT + " Call play_daily_hiku with a difficulty to see one of them as a grid."}],
               structuredContent: {difficulty: null, moves: [], day},
               _meta: MCP_UI_META,
             };
@@ -606,7 +611,7 @@ async function mcpHandle(message, env) {
           const b = await boardAfter(env, difficulty, moves, day);
           if (!b.n) return {content: [{type: "text", text: b.error}], isError: true};
           return {
-            content: [{type: "text", text: (b.error ? b.error + " The moves before it were played.\n\n" : "") + boardText(difficulty, b) +
+            content: [{type: "text", text: (b.error ? b.error + " The moves before it were played.\n\n" : "") + HIKU_RULES_SHORT + "\n\n" + boardText(difficulty, b) +
               "\n\nThe game above shows this board for the player to play. Do not make moves unless they asked you to; " +
               "their own moves reach you as the game's state."}],
             structuredContent: {difficulty, moves: b.played, day: b.day},
