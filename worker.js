@@ -126,12 +126,13 @@ const MCP_TOOLS = [
   {
     name: "play_daily_hiku",
     title: "Play Daily Hiku",
-    description: "Show today's Daily Hiku as a playable game: four new number puzzles every day, from easy to expert. " +
-      "Use it when someone wants to play Hiku, a daily puzzle, a sudoku-like logic game or a short brain teaser. " +
-      "With a difficulty it also returns that board as a grid with its legal moves, so you can see it. To make moves " +
-      "on it, for the player or to play yourself, call it again with all the moves so far: the game plays them, so " +
-      "always do this to show moves you suggest or make. The moves the player makes in the game come back to you as " +
-      "the game's state.",
+    description: "Show today's Daily Hiku as a playable game for the player: four new number puzzles every day, from " +
+      "easy to expert. Use it when someone wants to play Hiku, a daily puzzle, a sudoku-like logic game or a short " +
+      "brain teaser; \"play Hiku\" means the player plays, so open the board and make no moves. With a difficulty it " +
+      "also returns that board as a grid with its legal moves, so you can see it. Only when the player clearly asks you " +
+      "to play, solve or show moves for them, pass moves: work out all of them first (hiku_hint), then call this once " +
+      "with the whole list, and the game plays them on the board. The moves the player makes come back to you as the " +
+      "game's state.",
     inputSchema: {
       type: "object",
       properties: {
@@ -149,8 +150,8 @@ const MCP_TOOLS = [
     title: "Hiku hint",
     description: "A good next move on one of today's boards, worked out by Hiku's own solver, so it never leads into a " +
       "trap: which number to move, where it lands and what is left. Give the moves made so far to get a move from the " +
-      "board as it stands. If the board can no longer be cleared, it says how many moves to undo. When playing for the " +
-      "player, call play_daily_hiku with all the moves afterwards, so the game shows them.",
+      "board as it stands. If the board can no longer be cleared, it says how many moves to undo. Give the player the " +
+      "move as a tip; only when they asked you to play or solve it, show it with play_daily_hiku.",
     inputSchema: {
       type: "object",
       properties: {
@@ -452,9 +453,10 @@ async function mcpHandle(message, env) {
           protocolVersion: message.params?.protocolVersion || "2025-06-18",
           capabilities: {tools: {listChanged: false}, resources: {listChanged: false}},
           serverInfo: {name: "hiku", title: "Hiku", version: "1.0.0"},
-          instructions: "Hiku is a calm daily number puzzle. Call play_daily_hiku to show today's boards; with a difficulty " +
-            "it also gives you the board as a grid, and with moves it plays them in the game, so you can play along or " +
-            "play yourself: after finding moves, always call play_daily_hiku with them so the player sees them on the board. " +
+          instructions: "Hiku is a calm daily number puzzle for the player to play. Call play_daily_hiku to show today's " +
+            "boards and let the player play; with a difficulty it also gives you the board as a grid. Make moves only when " +
+            "the player asks you to play or solve a board for them: then work out every move first and call " +
+            "play_daily_hiku once with all of them, so the game shows them. " +
             "Use hiku_hint for a move from Hiku's own solver rather than working one out, and hiku_rules " +
             "to explain the rules. Moves are written \"B2-E2\": columns A, B, C … from the left, rows 1, 2, 3 … from the top.",
         };
@@ -497,7 +499,8 @@ async function mcpHandle(message, env) {
           if (!b.n) return {content: [{type: "text", text: b.error}], isError: true};
           return {
             content: [{type: "text", text: (b.error ? b.error + " The moves before it were played.\n\n" : "") + boardText(difficulty, b) +
-              "\n\nThe game above shows this board. The player can play on there; their moves reach you as the game's state."}],
+              "\n\nThe game above shows this board for the player to play. Do not make moves unless they asked you to; " +
+              "their own moves reach you as the game's state."}],
             structuredContent: {difficulty, moves: b.played, day: b.day},
             _meta: MCP_UI_META,
           };
