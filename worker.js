@@ -129,8 +129,9 @@ const MCP_TOOLS = [
     description: "Show today's Daily Hiku as a playable game: four new number puzzles every day, from easy to expert. " +
       "Use it when someone wants to play Hiku, a daily puzzle, a sudoku-like logic game or a short brain teaser. " +
       "With a difficulty it also returns that board as a grid with its legal moves, so you can see it. To make moves " +
-      "on it, for the player or to play yourself, call it again with all the moves so far: the game shows the board " +
-      "after them. The moves the player makes in the game come back to you as the game's state.",
+      "on it, for the player or to play yourself, call it again with all the moves so far: the game plays them, so " +
+      "always do this to show moves you suggest or make. The moves the player makes in the game come back to you as " +
+      "the game's state.",
     inputSchema: {
       type: "object",
       properties: {
@@ -148,7 +149,8 @@ const MCP_TOOLS = [
     title: "Hiku hint",
     description: "A good next move on one of today's boards, worked out by Hiku's own solver, so it never leads into a " +
       "trap: which number to move, where it lands and what is left. Give the moves made so far to get a move from the " +
-      "board as it stands. If the board can no longer be cleared, it says how many moves to undo.",
+      "board as it stands. If the board can no longer be cleared, it says how many moves to undo. When playing for the " +
+      "player, call play_daily_hiku with all the moves afterwards, so the game shows them.",
     inputSchema: {
       type: "object",
       properties: {
@@ -399,6 +401,20 @@ async function mcpWidget(env) {
       if (m.method === 'ui/notifications/tool-result') open(m.params && m.params.structuredContent);
       if (m.method === 'ui/notifications/host-context-changed') theme(m.params);
     });
+    // ChatGPT also hands the tool's input and result to the frame as window.openai.toolInput and toolOutput, and says
+    // when they change with an openai:set_globals event; it may not send the MCP Apps notifications at all.
+    var seen = '';
+    function fromOpenAI() {
+      var o = window.openai;
+      if (!o) return;
+      var args = o.toolOutput && o.toolOutput.difficulty ? o.toolOutput : o.toolInput && o.toolInput.difficulty ? {difficulty: o.toolInput.difficulty, moves: []} : null;
+      var key = JSON.stringify(args);
+      if (!args || key === seen) return;
+      seen = key;
+      open(args);
+    }
+    addEventListener('openai:set_globals', fromOpenAI);
+    fromOpenAI();
     request('ui/initialize', {protocolVersion: '2025-06-18', appInfo: {name: 'Hiku', version: '1.0.0'}, appCapabilities: {}})
       .then(function (result) { theme(result && result.hostContext); send('ui/notifications/initialized'); size(); });
     new ResizeObserver(size).observe(main);
@@ -424,7 +440,8 @@ async function mcpHandle(message, env) {
           serverInfo: {name: "hiku", title: "Hiku", version: "1.0.0"},
           instructions: "Hiku is a calm daily number puzzle. Call play_daily_hiku to show today's boards; with a difficulty " +
             "it also gives you the board as a grid, and with moves it plays them in the game, so you can play along or " +
-            "play yourself. Use hiku_hint for a move from Hiku's own solver rather than working one out, and hiku_rules " +
+            "play yourself: after finding moves, always call play_daily_hiku with them so the player sees them on the board. " +
+            "Use hiku_hint for a move from Hiku's own solver rather than working one out, and hiku_rules " +
             "to explain the rules. Moves are written \"B2-E2\": columns A, B, C … from the left, rows 1, 2, 3 … from the top.",
         };
       case "ping":
