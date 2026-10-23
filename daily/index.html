@@ -33,6 +33,9 @@ h1 .arc{display:inline-block;width:1.1em;height:.62em;margin-left:.02em;vertical
 .tabs .mark{font-size:12px;line-height:1;opacity:.8;min-height:12px}
 .board{position:relative;width:100%;aspect-ratio:1;background:var(--well);border-radius:18px;touch-action:none;user-select:none;-webkit-user-select:none}
 .sq{position:absolute;border-radius:16%;background:var(--cell)}
+/* Inside ChatGPT or Claude the squares are named as the assistant names them: A, B, C … above, 1, 2, 3 … beside. */
+.in-ai .board{width:calc(100% - 18px);margin:18px 0 0 18px}
+.coord{position:absolute;font-size:11px;font-weight:600;color:var(--muted);text-align:center;line-height:14px;pointer-events:none}
 .tile{position:absolute;z-index:1;border-radius:16%;background:var(--tile);box-shadow:0 3px 0 var(--edge);display:flex;align-items:center;justify-content:center;font-weight:500;font-variant-numeric:tabular-nums;cursor:grab;transition:transform .2s,opacity .4s,background .2s;border:0;color:var(--ink);padding:0;font-family:inherit}
 .tile .dots{position:absolute;bottom:10%;left:0;right:0;display:flex;justify-content:center;gap:2px;opacity:.35}
 .tile .dots i{border-radius:50%;background:currentColor;display:block}
@@ -544,6 +547,19 @@ footer a{color:var(--accent)}
       if (lost) b.disabled = true;
       boardEl.appendChild(b);
     });
+    if (document.documentElement.classList.contains('in-ai')) {
+      for (let k = 0; k < n; k++) {
+        const p = L.at(k), q = L.at(k * n);
+        const col = document.createElement('span'), row = document.createElement('span');
+        col.className = row.className = 'coord';
+        col.setAttribute('aria-hidden', 'true'); row.setAttribute('aria-hidden', 'true');
+        col.textContent = String.fromCharCode(65 + k);
+        row.textContent = k + 1;
+        Object.assign(col.style, {left: p.x + 'px', width: L.side + 'px', top: '-16px'});
+        Object.assign(row.style, {top: q.y + L.side / 2 - 7 + 'px', left: '-16px', width: '12px'});
+        boardEl.append(col, row);
+      }
+    }
     if (selected !== null) drawGuides(selected, L);
     if (lastMove) showSum(lastMove, L);
     renderStatus();
