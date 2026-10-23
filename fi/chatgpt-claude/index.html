@@ -94,6 +94,14 @@ section + section{border-top:1px solid var(--rule)}
 section h2{font-size:32px;line-height:1.15;margin:0 0 12px}
 section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.also{margin:18px 0 0;font-size:15px}
+.also a{color:var(--on-navy-muted)}
+/* A short conversation about a real board, as on the ChatGPT and Claude page. */
+.chat{display:flex;flex-direction:column;gap:12px;max-width:440px}
+.chat p{margin:0;padding:12px 16px;border-radius:18px;font-size:16px;line-height:1.45;max-width:85%;color:var(--ink)}
+.chat span{display:block;font-size:12px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.chat .you{align-self:flex-end;background:var(--tile);box-shadow:0 3px 0 var(--edge);border-bottom-right-radius:6px}
+.chat .them{align-self:flex-start;background:var(--cell);border-bottom-left-radius:6px}
 .shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory}
 .shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 4px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
 .shots:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
@@ -162,7 +170,7 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 </div>
 <main id="innhold" tabindex="-1">
 <section><div class="wrap prose terms">
-  <h2>Osoite</h2><p><code class="address">https://hikupuzzle.com/mcp</code></p><p>Hiku on MCP-sovellus. Se ei tarvitse kirjautumista eikä avainta.</p><h2>Lisää se Claudeen</h2><ol><li>Avaa asetukset ja etsi <strong>Connectors</strong>.</li><li>Valitse oman connectorin lisääminen, anna nimeksi <strong>Hiku</strong> ja liitä yllä oleva osoite.</li><li>Ota Hiku käyttöön keskustelussa ja kirjoita: ”Anna minun pelata päivän Hikua”.</li></ol><h2>Lisää se ChatGPT:hen</h2><p>Hiku löytyy ChatGPT:n sovellusluettelosta. Hae <strong>Hiku</strong> ChatGPT:n kohdasta <strong>Apps</strong>, yhdistä se ja pyydä saada pelata. Et tarvitse tiliä meillä.</p><h2>Mitä voit pyytää</h2><ul><li>”Anna minun pelata päivän Hikua”</li><li>”Avaa päivän vaikea lauta”</li><li>”Miten Hikua pelataan?”</li><li>”Olen jumissa asiantuntijalaudalla, onko vinkkiä paljastamatta ratkaisua?”</li></ul><h2>Mitä se tekee</h2><p><code>play_daily_hiku</code> näyttää päivän neljä lautaa pelinä keskustelussa, helposta asiantuntijaan. Voit pyytää tiettyä tasoa (<code>easy</code>, <code>medium</code>, <code>hard</code> tai <code>expert</code>). Vedä luku sinne, minne se hyppää, tai napauta lukua ja sitten kohdetta. <code>hiku_rules</code> kertoo säännöt ja vinkit ansoista ratkaisematta lautaa puolestasi.</p><h2>Tietosuoja</h2><p>Palvelin ei tallenna mitään sinusta tai keskustelusta. Se saa tietää vain, mitä lautaa pyydettiin, eikä peli lähetä pelitietoja. Lisää <a href="../../fi/tietosuoja/">tietosuojaselosteessa</a>.</p><h2>Apua</h2><p>Eikö jokin toimi? Kirjoita osoitteeseen <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
+  <h2>Osoite</h2><p><code class="address">https://hikupuzzle.com/mcp</code></p><p>Hiku on MCP-sovellus. Se ei tarvitse kirjautumista eikä avainta.</p><h2>Lisää se Claudeen</h2><ol><li>Avaa asetukset ja etsi <strong>Connectors</strong>.</li><li>Valitse oman connectorin lisääminen, anna nimeksi <strong>Hiku</strong> ja liitä yllä oleva osoite.</li><li>Ota Hiku käyttöön keskustelussa ja kirjoita: ”Anna minun pelata päivän Hikua”.</li></ol><h2>Lisää se ChatGPT:hen</h2><p>Hiku löytyy ChatGPT:n sovellusluettelosta. Hae <strong>Hiku</strong> ChatGPT:n kohdasta <strong>Apps</strong>, yhdistä se ja pyydä saada pelata. Et tarvitse tiliä meillä.</p><h2>Mitä voit pyytää</h2><ul><li>”Anna minun pelata päivän Hikua”</li><li>”Avaa päivän vaikea lauta”</li><li>”Miten Hikua pelataan?”</li><li>”Olen jumissa asiantuntijalaudalla, onko vinkkiä paljastamatta ratkaisua?”</li></ul><h2>Mitä se tekee</h2><p>ChatGPT ja Claude näkevät laudan pelatessasi ja voivat miettiä sitä kanssasi. <code>play_daily_hiku</code> avaa päivän neljä lautaa keskusteluun. <code>hiku_hint</code> antaa hyvän seuraavan siirron pelin omalta ratkaisijalta, ja <code>hiku_analyze</code> kertoo, miksi siirto on turvallinen tai ansa. Pyydettäessä se voi myös pelata laudan puolestasi siirto siirrolta. Ruudut ovat A1, B1 … vasemmasta yläkulmasta.</p><h2>Tietosuoja</h2><p>Palvelin ei tallenna mitään sinusta tai keskustelusta. Se saa tietää vain, mitä lautaa pyydettiin, eikä peli lähetä pelitietoja. Lisää <a href="../../fi/tietosuoja/">tietosuojaselosteessa</a>.</p><h2>Apua</h2><p>Eikö jokin toimi? Kirjoita osoitteeseen <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
 </div></section>
 </main>
 <footer class="band">

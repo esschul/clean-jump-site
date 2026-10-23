@@ -94,6 +94,14 @@ section + section{border-top:1px solid var(--rule)}
 section h2{font-size:32px;line-height:1.15;margin:0 0 12px}
 section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.also{margin:18px 0 0;font-size:15px}
+.also a{color:var(--on-navy-muted)}
+/* A short conversation about a real board, as on the ChatGPT and Claude page. */
+.chat{display:flex;flex-direction:column;gap:12px;max-width:440px}
+.chat p{margin:0;padding:12px 16px;border-radius:18px;font-size:16px;line-height:1.45;max-width:85%;color:var(--ink)}
+.chat span{display:block;font-size:12px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.chat .you{align-self:flex-end;background:var(--tile);box-shadow:0 3px 0 var(--edge);border-bottom-right-radius:6px}
+.chat .them{align-self:flex-start;background:var(--cell);border-bottom-left-radius:6px}
 .shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory}
 .shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 4px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
 .shots:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
@@ -162,7 +170,7 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 </div>
 <main id="innhold" tabindex="-1">
 <section><div class="wrap prose terms">
-  <h2>Adressen</h2><p><code class="address">https://hikupuzzle.com/mcp</code></p><p>Hiku er en MCP-app. Den trenger ingen innlogging og ingen nøkkel.</p><h2>Legg den til i Claude</h2><ol><li>Åpne innstillingene og finn <strong>Connectors</strong>.</li><li>Velg å legge til en egen connector, kall den <strong>Hiku</strong> og lim inn adressen over.</li><li>Slå på Hiku i en samtale og skriv: «La meg spille dagens Hiku».</li></ol><h2>Legg den til i ChatGPT</h2><p>Hiku finnes i ChatGPTs appkatalog. Søk etter <strong>Hiku</strong> under <strong>Apps</strong> i ChatGPT, koble den til og be om å få spille. Du trenger ingen konto hos oss.</p><h2>Hva du kan be om</h2><ul><li>«La meg spille dagens Hiku»</li><li>«Åpne dagens vanskelige brett»</li><li>«Hvordan spiller man Hiku?»</li><li>«Jeg står fast på ekspertbrettet, har du et tips uten å røpe løsningen?»</li></ul><h2>Hva den gjør</h2><p><code>play_daily_hiku</code> viser dagens fire brett som et spill i samtalen, fra lett til ekspert. Du kan be om et bestemt nivå (<code>easy</code>, <code>medium</code>, <code>hard</code> eller <code>expert</code>). Dra et tall dit det skal hoppe, eller trykk på tallet og så på målet. <code>hiku_rules</code> gir reglene og tips om feller, uten å løse brettet for deg.</p><h2>Personvern</h2><p>Serveren lagrer ingenting om deg eller samtalen. Den får bare vite hvilket brett som ble bedt om, og spillet sender ingen spilldata. Les mer i <a href="../personvern/">personvernerklæringen</a>.</p><h2>Hjelp</h2><p>Fungerer noe ikke? Skriv til <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
+  <h2>Adressen</h2><p><code class="address">https://hikupuzzle.com/mcp</code></p><p>Hiku er en MCP-app. Den trenger ingen innlogging og ingen nøkkel.</p><h2>Legg den til i Claude</h2><ol><li>Åpne innstillingene og finn <strong>Connectors</strong>.</li><li>Velg å legge til en egen connector, kall den <strong>Hiku</strong> og lim inn adressen over.</li><li>Slå på Hiku i en samtale og skriv: «La meg spille dagens Hiku».</li></ol><h2>Legg den til i ChatGPT</h2><p>Hiku finnes i ChatGPTs appkatalog. Søk etter <strong>Hiku</strong> under <strong>Apps</strong> i ChatGPT, koble den til og be om å få spille. Du trenger ingen konto hos oss.</p><h2>Hva du kan be om</h2><ul><li>«La meg spille dagens Hiku»</li><li>«Åpne dagens vanskelige brett»</li><li>«Hvordan spiller man Hiku?»</li><li>«Jeg står fast på ekspertbrettet, har du et tips uten å røpe løsningen?»</li></ul><h2>Hva den gjør</h2><p>ChatGPT og Claude ser brettet mens du spiller, og kan tenke sammen med deg. <code>play_daily_hiku</code> åpner dagens fire brett i samtalen. <code>hiku_hint</code> gir et godt neste trekk fra spillets egen løser, og <code>hiku_analyze</code> forklarer hvorfor et trekk er trygt eller en felle. Ber du om det, kan den også spille brettet for deg, trekk for trekk. Rutene heter A1, B1 … fra øverst til venstre.</p><h2>Personvern</h2><p>Serveren lagrer ingenting om deg eller samtalen. Den får bare vite hvilket brett som ble bedt om, og spillet sender ingen spilldata. Les mer i <a href="../personvern/">personvernerklæringen</a>.</p><h2>Hjelp</h2><p>Fungerer noe ikke? Skriv til <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
 </div></section>
 </main>
 <footer class="band">

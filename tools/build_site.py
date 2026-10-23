@@ -339,7 +339,7 @@ AI = {
     ("Legg den til i Claude", "<ol><li>Åpne innstillingene og finn <strong>Connectors</strong>.</li><li>Velg å legge til en egen connector, kall den <strong>Hiku</strong> og lim inn adressen over.</li><li>Slå på Hiku i en samtale og skriv: «La meg spille dagens Hiku».</li></ol>"),
     ("Legg den til i ChatGPT", "<p>Hiku finnes i ChatGPTs appkatalog. Søk etter <strong>Hiku</strong> under <strong>Apps</strong> i ChatGPT, koble den til og be om å få spille. Du trenger ingen konto hos oss.</p>"),
     ("Hva du kan be om", "<ul><li>«La meg spille dagens Hiku»</li><li>«Åpne dagens vanskelige brett»</li><li>«Hvordan spiller man Hiku?»</li><li>«Jeg står fast på ekspertbrettet, har du et tips uten å røpe løsningen?»</li></ul>"),
-    ("Hva den gjør", "<p><code>play_daily_hiku</code> viser dagens fire brett som et spill i samtalen, fra lett til ekspert. Du kan be om et bestemt nivå (<code>easy</code>, <code>medium</code>, <code>hard</code> eller <code>expert</code>). Dra et tall dit det skal hoppe, eller trykk på tallet og så på målet. <code>hiku_rules</code> gir reglene og tips om feller, uten å løse brettet for deg.</p>"),
+    ("Hva den gjør", "<p>ChatGPT og Claude ser brettet mens du spiller, og kan tenke sammen med deg. <code>play_daily_hiku</code> åpner dagens fire brett i samtalen. <code>hiku_hint</code> gir et godt neste trekk fra spillets egen løser, og <code>hiku_analyze</code> forklarer hvorfor et trekk er trygt eller en felle. Ber du om det, kan den også spille brettet for deg, trekk for trekk. Rutene heter A1, B1 … fra øverst til venstre.</p>"),
     ("Personvern", "<p>Serveren lagrer ingenting om deg eller samtalen. Den får bare vite hvilket brett som ble bedt om, og spillet sender ingen spilldata. Les mer i <a href=\"{privacy}\">personvernerklæringen</a>.</p>"),
     ("Hjelp", "<p>Fungerer noe ikke? Skriv til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.</p>")]),
 "en": dict(slug="chatgpt-claude", short="ChatGPT and Claude", h1="Hiku in ChatGPT and Claude",
@@ -349,7 +349,7 @@ AI = {
     ("Add it to Claude", "<ol><li>Open the settings and find <strong>Connectors</strong>.</li><li>Choose to add a custom connector, name it <strong>Hiku</strong> and paste the address above.</li><li>Turn Hiku on in a conversation and write: “Let me play today's Daily Hiku”.</li></ol>"),
     ("Add it to ChatGPT", "<p>Hiku is in ChatGPT's app directory. Search for <strong>Hiku</strong> under <strong>Apps</strong> in ChatGPT, connect it and ask to play. No account with us is needed.</p>"),
     ("What to ask", "<ul><li>“Let me play today's Daily Hiku”</li><li>“Open today's hard board”</li><li>“How do I play Hiku?”</li><li>“I'm stuck on the expert board, any tips without spoiling it?”</li></ul>"),
-    ("What it does", "<p><code>play_daily_hiku</code> shows today's four boards as a game in the conversation, from easy to expert. You can ask for one level (<code>easy</code>, <code>medium</code>, <code>hard</code> or <code>expert</code>). Drag a number to where it jumps, or tap the number and then its target. <code>hiku_rules</code> gives the rules and tips on spotting traps, without solving the board for you.</p>"),
+    ("What it does", "<p>ChatGPT and Claude see the board as you play and can think it through with you. <code>play_daily_hiku</code> opens today's four boards in the conversation. <code>hiku_hint</code> gives a good next move from the game's own solver, and <code>hiku_analyze</code> explains why a move is safe or a trap. Ask, and it can also play the board for you, move by move. Squares are named A1, B1 … from the top left.</p>"),
     ("Privacy", "<p>The server keeps nothing about you or the conversation. It only learns which board was asked for, and the game sends no game data. More in the <a href=\"{privacy}\">privacy policy</a>.</p>"),
     ("Help", "<p>Something not working? Write to <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.</p>")]),
 "sv": dict(slug="chatgpt-claude", short="ChatGPT och Claude", h1="Hiku i ChatGPT och Claude",
@@ -359,7 +359,7 @@ AI = {
     ("Lägg till den i Claude", "<ol><li>Öppna inställningarna och leta upp <strong>Connectors</strong>.</li><li>Välj att lägga till en egen connector, kalla den <strong>Hiku</strong> och klistra in adressen ovan.</li><li>Slå på Hiku i ett samtal och skriv: ”Låt mig spela dagens Hiku”.</li></ol>"),
     ("Lägg till den i ChatGPT", "<p>Hiku finns i ChatGPT:s appkatalog. Sök efter <strong>Hiku</strong> under <strong>Apps</strong> i ChatGPT, anslut den och be att få spela. Du behöver inget konto hos oss.</p>"),
     ("Vad du kan be om", "<ul><li>”Låt mig spela dagens Hiku”</li><li>”Öppna dagens svåra bräde”</li><li>”Hur spelar man Hiku?”</li><li>”Jag har fastnat på expertbrädet, har du ett tips utan att avslöja lösningen?”</li></ul>"),
-    ("Vad den gör", "<p><code>play_daily_hiku</code> visar dagens fyra brädor som ett spel i samtalet, från lätt till expert. Du kan be om en viss nivå (<code>easy</code>, <code>medium</code>, <code>hard</code> eller <code>expert</code>). Dra ett tal dit det ska hoppa, eller tryck på talet och sedan på målet. <code>hiku_rules</code> ger reglerna och tips om fällor, utan att lösa brädet åt dig.</p>"),
+    ("Vad den gör", "<p>ChatGPT och Claude ser brädet medan du spelar och kan tänka tillsammans med dig. <code>play_daily_hiku</code> öppnar dagens fyra brädor i samtalet. <code>hiku_hint</code> ger ett bra nästa drag från spelets egen lösare, och <code>hiku_analyze</code> förklarar varför ett drag är säkert eller en fälla. Ber du om det kan den också spela brädet åt dig, drag för drag. Rutorna heter A1, B1 … från övre vänstra hörnet.</p>"),
     ("Integritet", "<p>Servern sparar ingenting om dig eller samtalet. Den får bara veta vilket bräde som efterfrågades, och spelet skickar inga speldata. Läs mer i <a href=\"{privacy}\">integritetspolicyn</a>.</p>"),
     ("Hjälp", "<p>Fungerar något inte? Skriv till <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.</p>")]),
 "da": dict(slug="chatgpt-claude", short="ChatGPT og Claude", h1="Hiku i ChatGPT og Claude",
@@ -369,7 +369,7 @@ AI = {
     ("Tilføj den i Claude", "<ol><li>Åbn indstillingerne og find <strong>Connectors</strong>.</li><li>Vælg at tilføje en egen connector, kald den <strong>Hiku</strong> og indsæt adressen ovenfor.</li><li>Slå Hiku til i en samtale og skriv: »Lad mig spille dagens Hiku«.</li></ol>"),
     ("Tilføj den i ChatGPT", "<p>Hiku findes i ChatGPT's appkatalog. Søg efter <strong>Hiku</strong> under <strong>Apps</strong> i ChatGPT, forbind den og bed om at spille. Du behøver ingen konto hos os.</p>"),
     ("Hvad du kan bede om", "<ul><li>»Lad mig spille dagens Hiku«</li><li>»Åbn dagens svære bræt«</li><li>»Hvordan spiller man Hiku?«</li><li>»Jeg sidder fast på ekspertbrættet, har du et tip uden at afsløre løsningen?«</li></ul>"),
-    ("Hvad den gør", "<p><code>play_daily_hiku</code> viser dagens fire brætter som et spil i samtalen, fra let til ekspert. Du kan bede om et bestemt niveau (<code>easy</code>, <code>medium</code>, <code>hard</code> eller <code>expert</code>). Træk et tal derhen, hvor det skal hoppe, eller tryk på tallet og så på målet. <code>hiku_rules</code> giver reglerne og tips om fælder uden at løse brættet for dig.</p>"),
+    ("Hvad den gør", "<p>ChatGPT og Claude ser brættet, mens du spiller, og kan tænke det igennem med dig. <code>play_daily_hiku</code> åbner dagens fire brætter i samtalen. <code>hiku_hint</code> giver et godt næste træk fra spillets egen løser, og <code>hiku_analyze</code> forklarer, hvorfor et træk er sikkert eller en fælde. Beder du om det, kan den også spille brættet for dig, træk for træk. Felterne hedder A1, B1 … fra øverst til venstre.</p>"),
     ("Privatliv", "<p>Serveren gemmer intet om dig eller samtalen. Den får kun at vide, hvilket bræt der blev bedt om, og spillet sender ingen spildata. Læs mere i <a href=\"{privacy}\">privatlivspolitikken</a>.</p>"),
     ("Hjælp", "<p>Virker noget ikke? Skriv til <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.</p>")]),
 "fi": dict(slug="chatgpt-claude", short="ChatGPT ja Claude", h1="Hiku ChatGPT:ssä ja Claudessa",
@@ -379,7 +379,7 @@ AI = {
     ("Lisää se Claudeen", "<ol><li>Avaa asetukset ja etsi <strong>Connectors</strong>.</li><li>Valitse oman connectorin lisääminen, anna nimeksi <strong>Hiku</strong> ja liitä yllä oleva osoite.</li><li>Ota Hiku käyttöön keskustelussa ja kirjoita: ”Anna minun pelata päivän Hikua”.</li></ol>"),
     ("Lisää se ChatGPT:hen", "<p>Hiku löytyy ChatGPT:n sovellusluettelosta. Hae <strong>Hiku</strong> ChatGPT:n kohdasta <strong>Apps</strong>, yhdistä se ja pyydä saada pelata. Et tarvitse tiliä meillä.</p>"),
     ("Mitä voit pyytää", "<ul><li>”Anna minun pelata päivän Hikua”</li><li>”Avaa päivän vaikea lauta”</li><li>”Miten Hikua pelataan?”</li><li>”Olen jumissa asiantuntijalaudalla, onko vinkkiä paljastamatta ratkaisua?”</li></ul>"),
-    ("Mitä se tekee", "<p><code>play_daily_hiku</code> näyttää päivän neljä lautaa pelinä keskustelussa, helposta asiantuntijaan. Voit pyytää tiettyä tasoa (<code>easy</code>, <code>medium</code>, <code>hard</code> tai <code>expert</code>). Vedä luku sinne, minne se hyppää, tai napauta lukua ja sitten kohdetta. <code>hiku_rules</code> kertoo säännöt ja vinkit ansoista ratkaisematta lautaa puolestasi.</p>"),
+    ("Mitä se tekee", "<p>ChatGPT ja Claude näkevät laudan pelatessasi ja voivat miettiä sitä kanssasi. <code>play_daily_hiku</code> avaa päivän neljä lautaa keskusteluun. <code>hiku_hint</code> antaa hyvän seuraavan siirron pelin omalta ratkaisijalta, ja <code>hiku_analyze</code> kertoo, miksi siirto on turvallinen tai ansa. Pyydettäessä se voi myös pelata laudan puolestasi siirto siirrolta. Ruudut ovat A1, B1 … vasemmasta yläkulmasta.</p>"),
     ("Tietosuoja", "<p>Palvelin ei tallenna mitään sinusta tai keskustelusta. Se saa tietää vain, mitä lautaa pyydettiin, eikä peli lähetä pelitietoja. Lisää <a href=\"{privacy}\">tietosuojaselosteessa</a>.</p>"),
     ("Apua", "<p>Eikö jokin toimi? Kirjoita osoitteeseen <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.</p>")]),
 "de": dict(slug="chatgpt-claude", short="ChatGPT und Claude", h1="Hiku in ChatGPT und Claude",
@@ -389,9 +389,43 @@ AI = {
     ("In Claude hinzufügen", "<ol><li>Öffne die Einstellungen und such <strong>Connectors</strong>.</li><li>Wähle, einen eigenen Connector hinzuzufügen, nenne ihn <strong>Hiku</strong> und füge die Adresse oben ein.</li><li>Schalte Hiku in einem Gespräch ein und schreib: „Lass mich das heutige Hiku spielen“.</li></ol>"),
     ("In ChatGPT hinzufügen", "<p>Hiku steht im App-Verzeichnis von ChatGPT. Such in ChatGPT unter <strong>Apps</strong> nach <strong>Hiku</strong>, verbinde es und bitte darum, zu spielen. Ein Konto bei uns brauchst du nicht.</p>"),
     ("Was du fragen kannst", "<ul><li>„Lass mich das heutige Hiku spielen“</li><li>„Öffne das schwere Brett von heute“</li><li>„Wie spielt man Hiku?“</li><li>„Ich hänge am Expertenbrett fest, hast du einen Tipp, ohne die Lösung zu verraten?“</li></ul>"),
-    ("Was es macht", "<p><code>play_daily_hiku</code> zeigt die vier Bretter des Tages als Spiel im Gespräch, von leicht bis Experte. Du kannst ein bestimmtes Level verlangen (<code>easy</code>, <code>medium</code>, <code>hard</code> oder <code>expert</code>). Zieh eine Zahl dorthin, wo sie hinspringt, oder tippe auf die Zahl und dann auf das Ziel. <code>hiku_rules</code> erklärt die Regeln und gibt Tipps zu Fallen, ohne das Brett für dich zu lösen.</p>"),
+    ("Was es macht", "<p>ChatGPT und Claude sehen das Brett, während du spielst, und können mit dir nachdenken. <code>play_daily_hiku</code> öffnet die vier Bretter des Tages im Gespräch. <code>hiku_hint</code> gibt einen guten nächsten Zug vom spieleigenen Löser, und <code>hiku_analyze</code> erklärt, warum ein Zug sicher oder eine Falle ist. Auf Wunsch spielt es das Brett auch für dich, Zug für Zug. Die Felder heißen A1, B1 … von oben links.</p>"),
     ("Datenschutz", "<p>Der Server speichert nichts über dich oder das Gespräch. Er erfährt nur, welches Brett angefragt wurde, und das Spiel sendet keine Spieldaten. Mehr in der <a href=\"{privacy}\">Datenschutzerklärung</a>.</p>"),
     ("Hilfe", "<p>Funktioniert etwas nicht? Schreib an <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>.</p>")]),
+}
+# The home page's part about Hiku in ChatGPT and Claude: a line under the hero's buttons, and a section with a short
+# conversation taken from what hiku_analyze says about a real board (today's easy board on 23 October 2026).
+CHAT = {
+"nb": dict(hero="Også i ChatGPT og Claude", title="Lær Hiku med ChatGPT",
+  text="Åpne dagens brett rett i samtalen og spill med en partner som ser brettet. Spør hvorfor et trekk er en felle, få et hint når du står fast, eller be den vise løsningen trekk for trekk.",
+  you="Du", q="Hvorfor kan jeg ikke flytte 1-tallet på E1 ned på E2?",
+  a="Da forsvinner begge 1-tallene, og 3-tallet på E5 står helt alene: ingen andre tall i rad 5 eller kolonne E kan nå det.",
+  link="Slik kommer du i gang"),
+"en": dict(hero="Also in ChatGPT and Claude", title="Learn Hiku with ChatGPT",
+  text="Open today's boards right in the conversation and play with a partner who sees the board. Ask why a move is a trap, get a hint when you're stuck, or have it show you the solution move by move.",
+  you="You", q="Why can't I move the 1 on E1 down onto E2?",
+  a="Both 1s would vanish, and the 3 on E5 would be left on its own: no other number in row 5 or column E can reach it.",
+  link="How to get started"),
+"sv": dict(hero="Även i ChatGPT och Claude", title="Lär dig Hiku med ChatGPT",
+  text="Öppna dagens brädor direkt i samtalet och spela med en partner som ser brädet. Fråga varför ett drag är en fälla, få en ledtråd när du har fastnat, eller be den visa lösningen drag för drag.",
+  you="Du", q="Varför kan jag inte flytta ettan på E1 ner till E2?",
+  a="Då försvinner båda ettorna, och trean på E5 blir helt ensam: inget annat tal i rad 5 eller kolumn E kan nå den.",
+  link="Så kommer du igång"),
+"da": dict(hero="Også i ChatGPT og Claude", title="Lær Hiku med ChatGPT",
+  text="Åbn dagens brætter direkte i samtalen og spil med en partner, der ser brættet. Spørg hvorfor et træk er en fælde, få et hint når du sidder fast, eller bed den vise løsningen træk for træk.",
+  you="Dig", q="Hvorfor kan jeg ikke flytte 1-tallet på E1 ned på E2?",
+  a="Så forsvinder begge 1-taller, og 3-tallet på E5 står helt alene: intet andet tal i række 5 eller kolonne E kan nå det.",
+  link="Sådan kommer du i gang"),
+"fi": dict(hero="Myös ChatGPT:ssä ja Claudessa", title="Opi Hikua ChatGPT:n kanssa",
+  text="Avaa päivän laudat suoraan keskusteluun ja pelaa kumppanin kanssa, joka näkee laudan. Kysy, miksi siirto on ansa, pyydä vihjettä kun olet jumissa, tai anna sen näyttää ratkaisu siirto siirrolta.",
+  you="Sinä", q="Miksi en voi siirtää ruudun E1 ykköstä alas ruutuun E2?",
+  a="Silloin molemmat ykköset katoavat, ja ruudun E5 kolmonen jää yksin: mikään muu rivin 5 tai sarakkeen E luku ei ylety siihen.",
+  link="Näin pääset alkuun"),
+"de": dict(hero="Auch in ChatGPT und Claude", title="Hiku lernen mit ChatGPT",
+  text="Öffne die Bretter des Tages direkt im Gespräch und spiel mit einem Partner, der das Brett sieht. Frag, warum ein Zug eine Falle ist, hol dir einen Tipp, wenn du feststeckst, oder lass dir die Lösung Zug für Zug zeigen.",
+  you="Du", q="Warum kann ich die 1 auf E1 nicht nach unten auf E2 ziehen?",
+  a="Dann verschwinden beide Einsen, und die 3 auf E5 steht ganz allein: Keine andere Zahl in Reihe 5 oder Spalte E erreicht sie.",
+  link="So legst du los"),
 }
 APP_STORE = "https://apps.apple.com/app/id6816387508"
 ARC = ('<svg class="arc" viewBox="0 0 110 62" aria-hidden="true"><path d="M7.2 41.8 Q55 -34 102.8 41.8" fill="none" stroke="var(--gold)" '
@@ -473,6 +507,7 @@ def jsonld(lang, page, url, description):
 
 def home_page(lang, root, t, r, st):
     app = APP.format(lang=lang)
+    ch = CHAT[lang]
     top = f'''<div class="wrap hero">
   <div>
     <h1>Hiku{ARC}</h1>
@@ -481,6 +516,7 @@ def home_page(lang, root, t, r, st):
       <a class="btn tile play-down" href="#spill">{t["play_cta"]} <span aria-hidden="true">↓</span></a>
       <a class="btn line" href="{app}">{APPLE}{t["app_cta"]}</a>
     </div>
+    <p class="also"><a href="{root}{ai_url(lang)}">{CHAT[lang]["hero"]}&nbsp;→</a></p>
   </div>
   <div class="game" id="spill">
     <h2>{t["today"]}</h2>
@@ -496,6 +532,18 @@ def home_page(lang, root, t, r, st):
     <p><a class="btn navy" href="{app}">{APPLE}{t["app_cta"]}</a></p>
   </div>
   <div class="shots" tabindex="0" role="region" aria-label="{t["shots_label"]}">{shots}</div>
+</div></section>
+
+<section id="chatgpt"><div class="wrap two">
+  <div>
+    <h2>{ch["title"]}</h2>
+    <p>{ch["text"]}</p>
+    <p><a href="{root}{ai_url(lang)}">{ch["link"]}&nbsp;→</a></p>
+  </div>
+  <div class="chat" role="img" aria-label="{ch["you"]}: {ch["q"]} ChatGPT: {ch["a"]}">
+    <p class="you"><span>{ch["you"]}</span>{ch["q"]}</p>
+    <p class="them"><span>ChatGPT</span>{ch["a"]}</p>
+  </div>
 </div></section>
 
 <section><div class="wrap">

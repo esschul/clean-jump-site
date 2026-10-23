@@ -88,6 +88,14 @@ section + section{border-top:1px solid var(--rule)}
 section h2{font-size:32px;line-height:1.15;margin:0 0 12px}
 section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.also{margin:18px 0 0;font-size:15px}
+.also a{color:var(--on-navy-muted)}
+/* A short conversation about a real board, as on the ChatGPT and Claude page. */
+.chat{display:flex;flex-direction:column;gap:12px;max-width:440px}
+.chat p{margin:0;padding:12px 16px;border-radius:18px;font-size:16px;line-height:1.45;max-width:85%;color:var(--ink)}
+.chat span{display:block;font-size:12px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.chat .you{align-self:flex-end;background:var(--tile);box-shadow:0 3px 0 var(--edge);border-bottom-right-radius:6px}
+.chat .them{align-self:flex-start;background:var(--cell);border-bottom-left-radius:6px}
 .shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory}
 .shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 4px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
 .shots:focus-visible{outline:3px solid var(--gold);outline-offset:4px}

@@ -94,6 +94,14 @@ section + section{border-top:1px solid var(--rule)}
 section h2{font-size:32px;line-height:1.15;margin:0 0 12px}
 section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.also{margin:18px 0 0;font-size:15px}
+.also a{color:var(--on-navy-muted)}
+/* A short conversation about a real board, as on the ChatGPT and Claude page. */
+.chat{display:flex;flex-direction:column;gap:12px;max-width:440px}
+.chat p{margin:0;padding:12px 16px;border-radius:18px;font-size:16px;line-height:1.45;max-width:85%;color:var(--ink)}
+.chat span{display:block;font-size:12px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.chat .you{align-self:flex-end;background:var(--tile);box-shadow:0 3px 0 var(--edge);border-bottom-right-radius:6px}
+.chat .them{align-self:flex-start;background:var(--cell);border-bottom-left-radius:6px}
 .shots{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory}
 .shots img{width:200px;height:auto;border-radius:18px;box-shadow:0 4px 0 var(--edge);scroll-snap-align:start;flex-shrink:0}
 .shots:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
@@ -162,7 +170,7 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 </div>
 <main id="innhold" tabindex="-1">
 <section><div class="wrap prose terms">
-  <h2>The address</h2><p><code class="address">https://hikupuzzle.com/mcp</code></p><p>Hiku is an MCP app. It needs no sign-in and no key.</p><h2>Add it to Claude</h2><ol><li>Open the settings and find <strong>Connectors</strong>.</li><li>Choose to add a custom connector, name it <strong>Hiku</strong> and paste the address above.</li><li>Turn Hiku on in a conversation and write: “Let me play today's Daily Hiku”.</li></ol><h2>Add it to ChatGPT</h2><p>Hiku is in ChatGPT's app directory. Search for <strong>Hiku</strong> under <strong>Apps</strong> in ChatGPT, connect it and ask to play. No account with us is needed.</p><h2>What to ask</h2><ul><li>“Let me play today's Daily Hiku”</li><li>“Open today's hard board”</li><li>“How do I play Hiku?”</li><li>“I'm stuck on the expert board, any tips without spoiling it?”</li></ul><h2>What it does</h2><p><code>play_daily_hiku</code> shows today's four boards as a game in the conversation, from easy to expert. You can ask for one level (<code>easy</code>, <code>medium</code>, <code>hard</code> or <code>expert</code>). Drag a number to where it jumps, or tap the number and then its target. <code>hiku_rules</code> gives the rules and tips on spotting traps, without solving the board for you.</p><h2>Privacy</h2><p>The server keeps nothing about you or the conversation. It only learns which board was asked for, and the game sends no game data. More in the <a href="../../en/privacy/">privacy policy</a>.</p><h2>Help</h2><p>Something not working? Write to <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
+  <h2>The address</h2><p><code class="address">https://hikupuzzle.com/mcp</code></p><p>Hiku is an MCP app. It needs no sign-in and no key.</p><h2>Add it to Claude</h2><ol><li>Open the settings and find <strong>Connectors</strong>.</li><li>Choose to add a custom connector, name it <strong>Hiku</strong> and paste the address above.</li><li>Turn Hiku on in a conversation and write: “Let me play today's Daily Hiku”.</li></ol><h2>Add it to ChatGPT</h2><p>Hiku is in ChatGPT's app directory. Search for <strong>Hiku</strong> under <strong>Apps</strong> in ChatGPT, connect it and ask to play. No account with us is needed.</p><h2>What to ask</h2><ul><li>“Let me play today's Daily Hiku”</li><li>“Open today's hard board”</li><li>“How do I play Hiku?”</li><li>“I'm stuck on the expert board, any tips without spoiling it?”</li></ul><h2>What it does</h2><p>ChatGPT and Claude see the board as you play and can think it through with you. <code>play_daily_hiku</code> opens today's four boards in the conversation. <code>hiku_hint</code> gives a good next move from the game's own solver, and <code>hiku_analyze</code> explains why a move is safe or a trap. Ask, and it can also play the board for you, move by move. Squares are named A1, B1 … from the top left.</p><h2>Privacy</h2><p>The server keeps nothing about you or the conversation. It only learns which board was asked for, and the game sends no game data. More in the <a href="../../en/privacy/">privacy policy</a>.</p><h2>Help</h2><p>Something not working? Write to <a href="mailto:es@rubberduck.no">es@rubberduck.no</a>.</p>
 </div></section>
 </main>
 <footer class="band">
