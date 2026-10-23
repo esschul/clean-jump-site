@@ -340,6 +340,8 @@ footer a{color:var(--accent)}
   // ---- State
   let tier = TIERS.includes(params.get('level')) ? params.get('level') : (store.get('tier') || 'easy');
   let n, cells, history, undos, selected = null, lost = false, lastMove = null, checkToken = 0;
+  // The moves on today's board so far, as "B2-E2", for an assistant the game runs inside (see HikuGame below).
+  let moveLog = [];
 
   const el = id => document.getElementById(id);
   const boardEl = el('board'), statusEl = el('status'), controlsEl = el('controls'), tabsEl = el('tabs');
@@ -395,7 +397,7 @@ footer a{color:var(--accent)}
     tier = t;
     store.set('tier', t);
     const b = boardFor(t);
-    n = b.size; cells = b.cells; history = []; undos = 0; selected = null; lost = false; lastMove = null;
+    n = b.size; cells = b.cells; history = []; undos = 0; selected = null; lost = false; lastMove = null; moveLog = [];
     checkToken++;
     render();
   }
@@ -404,6 +406,7 @@ footer a{color:var(--accent)}
     if (busy || lost || !targets(cells, n, from).includes(to)) return false;
     const finish = () => {
       history.push(cells);
+      moveLog.push(squareName(from) + '-' + squareName(to));
       lastMove = {from, to, a: cells[from], b: cells[to]};
       cells = moved(cells, from, to);
       selected = null;
@@ -469,7 +472,7 @@ footer a{color:var(--accent)}
 
   function undo() {
     if (!history.length) return;
-    cells = history.pop(); undos++; selected = null; lost = false; lastMove = null; checkToken++;
+    cells = history.pop(); moveLog.pop(); undos++; selected = null; lost = false; lastMove = null; checkToken++;
     say(T.undone + ' ' + sentence(T.left(remaining())));
     render();
   }
@@ -490,6 +493,7 @@ footer a{color:var(--accent)}
 
   function render() {
     renderTabs();
+    if (lesson === null && cells) dispatchEvent(new CustomEvent('hiku:state', {detail: gameState()}));
     const head = el('lesson');
     tabsEl.hidden = lesson !== null;
     head.hidden = lesson === null;
@@ -744,6 +748,28 @@ footer a{color:var(--accent)}
 
   // ---- Embedding: tell the page around us how tall we are, so the frame can fit.
   // The content's own height, not the page's: the page is never shorter than the frame, so it could only grow.
+  // ---- For an assistant the game runs inside (ChatGPT, Claude): the state of today's board, and a way to open a board
+  // and make moves on it, so the assistant can see what the player sees and play along.
+  function gameState() {
+    return {day: dayKey, difficulty: tier, size: n, rows: Array.from({length: n}, (_, r) => cells.slice(r * n, r * n + n).join('')),
+            moves: moveLog.slice(), left: remaining(), cleared: isClear(cells), lost};
+  }
+  const squareIndex = name => {
+    const m = /^([A-Z])(\d+)$/.exec(String(name).trim().toUpperCase());
+    return m ? (+m[2] - 1) * n + (m[1].charCodeAt(0) - 65) : -1;
+  };
+  window.HikuGame = {
+    state: () => lesson === null && cells ? gameState() : null,
+    open(t) { if (!TIERS.includes(t) || !todays) return false; if (lesson !== null) { tier = t; endLessons(); } else if (t !== tier) start(t); return true; },
+    // One move as "B2-E2"; false when it is not a legal jump on the board as it stands.
+    move(text) {
+      if (lesson !== null || busy) return false;
+      const [a, b] = String(text).split('-').map(squareIndex);
+      return a >= 0 && b >= 0 && play(a, b, false);
+    },
+    restart() { if (lesson === null) start(tier); },
+  };
+
   const mainEl = document.querySelector('main');
   function reportHeight() {
     if (parent !== window && !window.HIKU_PARAMS) parent.postMessage({type: 'hiku:height', height: mainEl.offsetTop + mainEl.offsetHeight}, '*');

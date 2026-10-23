@@ -24,16 +24,26 @@ function json(body, status, extra = {}) {
 
 async function daily(url, env) {
   const day = url.searchParams.get("day") || "";
+  const found = await dayBoards(env, day);
+  if (found.error === "day") return json({error: "day"}, 400);
+  if (found.error === "not today") return json({error: "not today"}, 403, {"cache-control": "no-store"});
+  if (found.error) return json({error: found.error}, 503);
+  // The answer for a day never changes; let browsers and Cloudflare keep it for a while.
+  return json({day, boards: found.boards, hints: found.hints}, 200, {"cache-control": "public, max-age=600"});
+}
+
+/** The four boards of a day, as "size digit + squares", with their start hints; or {error}. */
+async function dayBoards(env, day) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(day);
-  if (!match) return json({error: "day"}, 400);
+  if (!match) return {error: "day"};
   const asked = Date.UTC(+match[1], +match[2] - 1, +match[3]);
   // A day is given out only while it is today somewhere: from when it starts at UTC+14 until it ends at UTC−12.
   const now = Date.now();
   const earliest = Math.floor((now - 12 * 3600000) / DAY) * DAY, latest = Math.floor((now + 14 * 3600000) / DAY) * DAY;
-  if (asked < earliest || asked > latest) return json({error: "not today"}, 403, {"cache-control": "no-store"});
+  if (asked < earliest || asked > latest) return {error: "not today"};
 
   library ??= await env.LIBRARY.get("boards", "json");
-  if (!library) return json({error: "library"}, 503);
+  if (!library) return {error: "library"};
   const days = Math.round((asked - FIRST_DAY) / DAY);
   const boards = {}, hints = {};
   for (const tier of TIERS) {
@@ -44,8 +54,7 @@ async function daily(url, env) {
     const hint = library.hints?.[tier]?.[index];
     if (Number.isInteger(hint)) hints[tier] = hint;
   }
-  // The answer for a day never changes; let browsers and Cloudflare keep it for a while.
-  return json({day, boards, hints}, 200, {"cache-control": "public, max-age=600"});
+  return {boards, hints};
 }
 
 // The homepage is Norwegian at / and in the other languages below it. Someone arriving at / from elsewhere is sent to
@@ -107,30 +116,212 @@ const MCP_UI_META = {
   "openai/widgetAccessible": false,
 };
 
+// Today in UTC, as the day to use when the assistant does not say which; the player's own today can differ near midnight.
+const utcToday = () => new Date().toISOString().slice(0, 10);
+const dayArg = {type: "string", pattern: "^\\d{4}-\\d{2}-\\d{2}$", description: "The player's date today, YYYY-MM-DD. Leave out for today in UTC."};
+const movesArg = {type: "array", items: {type: "string", pattern: "^[A-Ha-h][1-8]-[A-Ha-h][1-8]$"},
+  description: "Moves already made on this board from its start, in order, each as \"from-to\" squares like \"B2-E2\" (columns A, B, C … from the left, rows 1, 2, 3 … from the top)."};
+
 const MCP_TOOLS = [
   {
     name: "play_daily_hiku",
     title: "Play Daily Hiku",
     description: "Show today's Daily Hiku as a playable game: four new number puzzles every day, from easy to expert. " +
       "Use it when someone wants to play Hiku, a daily puzzle, a sudoku-like logic game or a short brain teaser. " +
-      "The player plays in the game itself; there is nothing to send back.",
+      "With a difficulty it also returns that board as a grid with its legal moves, so you can see it. To make moves " +
+      "on it, for the player or to play yourself, call it again with all the moves so far: the game shows the board " +
+      "after them. The moves the player makes in the game come back to you as the game's state.",
     inputSchema: {
       type: "object",
-      properties: {difficulty: {type: "string", enum: ["easy", "medium", "hard", "expert"], description: "Which of today's four boards to open. Leave out to let the player choose."}},
+      properties: {
+        difficulty: {type: "string", enum: ["easy", "medium", "hard", "expert"], description: "Which of today's four boards to open. Leave out to let the player choose."},
+        moves: movesArg,
+        day: dayArg,
+      },
       additionalProperties: false,
     },
     annotations: {title: "Play Daily Hiku", readOnlyHint: true, openWorldHint: false, destructiveHint: false},
     _meta: MCP_UI_META,
   },
   {
+    name: "hiku_hint",
+    title: "Hiku hint",
+    description: "A good next move on one of today's boards, worked out by Hiku's own solver, so it never leads into a " +
+      "trap: which number to move, where it lands and what is left. Give the moves made so far to get a move from the " +
+      "board as it stands. If the board can no longer be cleared, it says how many moves to undo.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        difficulty: {type: "string", enum: ["easy", "medium", "hard", "expert"], description: "Which of today's boards."},
+        moves: movesArg,
+        day: dayArg,
+      },
+      required: ["difficulty"],
+      additionalProperties: false,
+    },
+    annotations: {title: "Hiku hint", readOnlyHint: true, openWorldHint: false, destructiveHint: false},
+  },
+  {
     name: "hiku_rules",
     title: "Hiku rules and tips",
     description: "The rules of Hiku and three ways to see a trap coming. Use it to explain how to play, or to help " +
-      "someone who is stuck, without solving the board for them.",
+      "someone who is stuck think for themselves.",
     inputSchema: {type: "object", properties: {}, additionalProperties: false},
     annotations: {title: "Hiku rules and tips", readOnlyHint: true, openWorldHint: false, destructiveHint: false},
   },
 ];
+
+// ---- The rules and the solver, as in the web game (daily/index.html): a number jumps exactly its value across or up
+// and down onto another number, the smaller is taken from the larger, and equal numbers both vanish. Numbers that
+// share no row or column never meet, so each such group is solved on its own.
+const HIKU_DIRS = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+function hikuTargets(cells, n, i) {
+  const v = cells[i], r = Math.floor(i / n), c = i % n, out = [];
+  if (!v) return out;
+  for (const [dr, dc] of HIKU_DIRS) {
+    const rr = r + dr * v, cc = c + dc * v;
+    if (rr >= 0 && rr < n && cc >= 0 && cc < n && cells[rr * n + cc] > 0) out.push(rr * n + cc);
+  }
+  return out;
+}
+function hikuMoved(cells, from, to) {
+  const next = cells.slice();
+  next[to] = Math.abs(cells[from] - cells[to]);
+  next[from] = 0;
+  return next;
+}
+function hikuGroups(cells, n) {
+  const parent = [...Array(2 * n).keys()];
+  const find = x => { while (parent[x] !== x) x = parent[x] = parent[parent[x]]; return x; };
+  const occ = [];
+  cells.forEach((v, i) => { if (v) { occ.push(i); const a = find(Math.floor(i / n)), b = find(n + i % n); if (a !== b) parent[a] = b; } });
+  const by = new Map();
+  for (const i of occ) { const k = find(Math.floor(i / n)); if (!by.has(k)) by.set(k, []); by.get(k).push(i); }
+  return [...by.values()];
+}
+/** true when the board can be cleared, false when it cannot, null when the search gave up past its budget. */
+function hikuSolvable(cells, n, memo, budget) {
+  let left = budget;
+  function search(p) {
+    const key = p.join("");
+    if (memo.has(key)) return memo.get(key);
+    if (p.every(v => v === 0)) return true;
+    if (left <= 0) return null;
+    left--;
+    const parts = hikuGroups(p, n);
+    if (parts.length > 1 || parts[0].length === 1) {
+      for (const part of parts) {
+        if (part.length === 1 || part.reduce((sum, i) => sum + p[i], 0) % 2) { memo.set(key, false); return false; }
+      }
+      if (parts.length > 1) {
+        let gaveUp = false;
+        for (const part of parts.sort((a, b) => a.length - b.length)) {
+          const q = new Array(p.length).fill(0);
+          for (const i of part) q[i] = p[i];
+          const r = search(q);
+          if (r === false) { memo.set(key, false); return false; }
+          if (r === null) gaveUp = true;
+        }
+        if (gaveUp) return null;
+        memo.set(key, true);
+        return true;
+      }
+    }
+    let gaveUp = false;
+    for (let i = 0; i < p.length; i++) {
+      for (const t of hikuTargets(p, n, i)) {
+        const r = search(hikuMoved(p, i, t));
+        if (r === true) { memo.set(key, true); return true; }
+        if (r === null) gaveUp = true;
+      }
+    }
+    if (gaveUp) return null;
+    memo.set(key, false);
+    return false;
+  }
+  return search(cells);
+}
+
+const squareName = (n, i) => String.fromCharCode(65 + i % n) + (Math.floor(i / n) + 1);
+const squareIndex = (n, name) => {
+  const m = /^([A-Z])(\d+)$/.exec(String(name).trim().toUpperCase());
+  if (!m) return -1;
+  const c = m[1].charCodeAt(0) - 65, r = +m[2] - 1;
+  return c < n && r >= 0 && r < n ? r * n + c : -1;
+};
+function boardGrid(n, cells) {
+  const head = "    " + Array.from({length: n}, (_, c) => String.fromCharCode(65 + c)).join(" ");
+  const rows = Array.from({length: n}, (_, r) => String(r + 1).padStart(2) + "  " + cells.slice(r * n, r * n + n).map(v => v || ".").join(" "));
+  return [head, ...rows].join("\n");
+}
+function describeMove(n, cells, from, to) {
+  const a = cells[from], b = cells[to], fr = Math.floor(from / n), tr = Math.floor(to / n);
+  const way = fr === tr ? (to > from ? "right" : "left") : (tr > fr ? "down" : "up");
+  const squares = a === 1 ? "one square" : `${a} squares`;
+  const result = a === b ? `both ${a}s vanish` : `${Math.max(a, b)} − ${Math.min(a, b)} leaves ${Math.abs(a - b)} on ${squareName(n, to)}`;
+  return `${squareName(n, from)}-${squareName(n, to)}: the ${a} on ${squareName(n, from)} jumps ${squares} ${way} onto the ${b} on ${squareName(n, to)}, and ${result}`;
+}
+
+/** Today's board of a difficulty after the given moves: {day, n, cells, played, error}. Stops at the first illegal move. */
+async function boardAfter(env, difficulty, moves, day) {
+  const found = await dayBoards(env, day);
+  if (found.error) return {error: found.error === "not today" ? `${day} is not today anywhere in the world, so its boards are not out.` : "Today's boards could not be read."};
+  const text = found.boards[difficulty], n = +text[0];
+  const start = [...text.slice(1)].map(Number);
+  let cells = start;
+  const played = [];
+  for (const move of moves || []) {
+    const [a, b] = String(move).split("-").map(sq => squareIndex(n, sq));
+    if (a < 0 || b < 0 || !hikuTargets(cells, n, a).includes(b)) {
+      return {day, n, start, cells, played, error: `${move} is not a legal move on the board after ${played.length ? played.join(", ") : "no moves"}.`};
+    }
+    cells = hikuMoved(cells, a, b);
+    played.push(squareName(n, a) + "-" + squareName(n, b));
+  }
+  return {day, n, start, cells, played, hint: found.hints[difficulty]};
+}
+
+function boardText(difficulty, b) {
+  const left = b.cells.filter(v => v).length;
+  const moves = [];
+  b.cells.forEach((v, i) => hikuTargets(b.cells, b.n, i).forEach(t => moves.push(describeMove(b.n, b.cells, i, t))));
+  const lines = [`Today's ${difficulty} board (${b.day}), ${b.n}×${b.n}, after ${b.played.length ? b.played.join(", ") : "no moves"}:`, "", boardGrid(b.n, b.cells), ""];
+  if (!left) lines.push("The board is cleared.");
+  else if (!moves.length) lines.push(`${left} numbers are left and none can move: this board is lost. Undo some moves and try another way.`);
+  else lines.push(`${left} numbers left. Legal moves (not all of them keep the board clearable):`, ...moves.map(m => "• " + m));
+  return lines.join("\n");
+}
+
+function hintText(difficulty, b) {
+  const n = b.n, memo = new Map(), budget = 400_000;
+  if (b.cells.every(v => v === 0)) return "This board is already cleared.";
+  const now = hikuSolvable(b.cells, n, memo, budget);
+  if (now === false) {
+    // How far back the board could still be cleared: replay the moves from the start and find the last good position.
+    const positions = [b.start];
+    for (const move of b.played) {
+      const [a, t] = move.split("-").map(sq => squareIndex(n, sq));
+      positions.push(hikuMoved(positions[positions.length - 1], a, t));
+    }
+    for (let k = positions.length - 2; k >= 0; k--) {
+      if (hikuSolvable(positions[k], n, memo, budget) === true) {
+        const undo = b.played.length - k;
+        return `The board can no longer be cleared: the mistake was ${b.played[k]}. Undo ${undo === 1 ? "the last move" : `the last ${undo} moves`} ` +
+          `(back to after ${k ? b.played.slice(0, k).join(", ") : "no moves"}) and ask for a hint from there.`;
+      }
+    }
+    return "This board cannot be cleared from here; start it over.";
+  }
+  let best = null;
+  b.cells.forEach((v, i) => {
+    if (!v) return;
+    const safe = hikuTargets(b.cells, n, i).filter(t => hikuSolvable(hikuMoved(b.cells, i, t), n, memo, budget) === true);
+    if (safe.length && (!best || safe.length < best.safe.length)) best = {from: i, safe};
+  });
+  if (!best) return "The solver could not settle this position in time. Try the rules' tips, or ask again after another move.";
+  return `A good next move on today's ${difficulty} board: ${describeMove(n, b.cells, best.from, best.safe[0])}. ` +
+    `The board can still be cleared after it.` + (best.safe.length === 1 ? ` It is the only safe way to move the ${b.cells[best.from]} on ${squareName(n, best.from)}.` : "");
+}
 
 // The web game, with the settings a frame without a URL of its own needs, and a small bridge to the host: it says
 // hello (ui/initialize), follows the host's light or dark, opens the board the assistant asked for, reports its
@@ -164,24 +355,47 @@ async function mcpWidget(env) {
     function theme(context) {
       if (context && (context.theme === 'dark' || context.theme === 'light')) document.documentElement.dataset.theme = context.theme;
     }
-    // A board asked for by name is opened at once, past the first-visit lessons.
-    function open(args) {
-      var i = ['easy', 'medium', 'hard', 'expert'].indexOf(args && args.difficulty);
-      if (i < 0) return;
-      var lesson = document.getElementById('lesson'), skip = document.getElementById('skip');
-      if (lesson && !lesson.hidden && skip) skip.click();
-      setTimeout(function () {
-        var tabs = document.getElementById('tabs');
-        if (tabs && !tabs.hidden && tabs.children[i]) tabs.children[i].click();
-      }, 50);
+    // A board asked for by name is opened at once, past the first-visit lessons, and any moves the assistant sent are
+    // played on it one by one, so the player sees them happen. Waits for the day's boards if they have not come yet.
+    var replaying = null;
+    function open(args, tries) {
+      if (!args || !args.difficulty || !window.HikuGame) return;
+      if (!window.HikuGame.open(args.difficulty)) {
+        if ((tries || 0) < 40) setTimeout(function () { open(args, (tries || 0) + 1); }, 150);
+        return;
+      }
+      var moves = args.moves || [];
+      if (!moves.length) return;
+      var current = window.HikuGame.state();
+      // Already at that position (the same moves were made here): nothing to replay.
+      if (current && current.moves.join(' ') === moves.join(' ')) return;
+      window.HikuGame.restart();
+      var k = 0, tries = 0, run = replaying = {};
+      (function step() {
+        // A move that will not go (another day's board near midnight) stops the replay instead of trying forever.
+        if (replaying !== run || k >= moves.length || tries > 8) return;
+        if (window.HikuGame.move(moves[k])) { k++; tries = 0; } else tries++;
+        setTimeout(step, 420);
+      })();
     }
+    // The board as it stands, to the host, so the assistant sees the player's own moves too.
+    var lastSent = '';
+    addEventListener('hiku:state', function (event) {
+      var s = event.detail, key = JSON.stringify(s);
+      if (key === lastSent) return;
+      lastSent = key;
+      var text = "The player's " + s.difficulty + ' board (' + s.day + ') after ' + (s.moves.length ? s.moves.join(', ') : 'no moves') +
+        ': rows from the top ' + s.rows.join(' / ') + (s.cleared ? ', cleared.' : s.lost ? ', no longer clearable.' : ', ' + s.left + ' numbers left.');
+      if (window.openai && window.openai.setWidgetState) window.openai.setWidgetState(s);
+      send('ui/update-model-context', {content: [{type: 'text', text: text}], structuredContent: s}, true);
+    });
     var main = document.querySelector('main');
     function size() { send('ui/notifications/size-changed', {height: Math.ceil(main.offsetTop + main.offsetHeight + 16)}); }
     addEventListener('message', function (event) {
       var m = event.data;
       if (!m || m.jsonrpc !== '2.0') return;
       if (m.id && waiting[m.id]) { waiting[m.id](m.result); delete waiting[m.id]; return; }
-      if (m.method === 'ui/notifications/tool-input') open(m.params && m.params.arguments);
+      if (m.method === 'ui/notifications/tool-input') open({difficulty: m.params && m.params.arguments && m.params.arguments.difficulty});
       if (m.method === 'ui/notifications/tool-result') open(m.params && m.params.structuredContent);
       if (m.method === 'ui/notifications/host-context-changed') theme(m.params);
     });
@@ -208,8 +422,10 @@ async function mcpHandle(message, env) {
           protocolVersion: message.params?.protocolVersion || "2025-06-18",
           capabilities: {tools: {listChanged: false}, resources: {listChanged: false}},
           serverInfo: {name: "hiku", title: "Hiku", version: "1.0.0"},
-          instructions: "Hiku is a calm daily number puzzle. Call play_daily_hiku to show today's boards, and hiku_rules " +
-            "to explain the rules or help a stuck player think, without giving the solution away.",
+          instructions: "Hiku is a calm daily number puzzle. Call play_daily_hiku to show today's boards; with a difficulty " +
+            "it also gives you the board as a grid, and with moves it plays them in the game, so you can play along or " +
+            "play yourself. Use hiku_hint for a move from Hiku's own solver rather than working one out, and hiku_rules " +
+            "to explain the rules. Moves are written \"B2-E2\": columns A, B, C … from the left, rows 1, 2, 3 … from the top.",
         };
       case "ping":
         return {};
@@ -234,14 +450,33 @@ async function mcpHandle(message, env) {
       }
       case "tools/call": {
         const name = message.params?.name, args = message.params?.arguments || {};
+        const day = typeof args.day === "string" && /^\d{4}-\d{2}-\d{2}$/.test(args.day) ? args.day : utcToday();
+        const moves = Array.isArray(args.moves) ? args.moves.slice(0, 64).map(String) : [];
         if (name === "play_daily_hiku") {
-          const difficulty = ["easy", "medium", "hard", "expert"].includes(args.difficulty) ? args.difficulty : null;
+          const difficulty = TIERS.includes(args.difficulty) ? args.difficulty : null;
+          if (!difficulty) {
+            return {
+              content: [{type: "text", text: "Today's Daily Hiku is shown above: four boards, easy to expert. Call play_daily_hiku " +
+                "with a difficulty to see one of them as a grid, and with moves to play on it."}],
+              structuredContent: {difficulty: null, moves: [], day},
+              _meta: MCP_UI_META,
+            };
+          }
+          const b = await boardAfter(env, difficulty, moves, day);
+          if (!b.n) return {content: [{type: "text", text: b.error}], isError: true};
           return {
-            content: [{type: "text", text: "Today's Daily Hiku is shown above" + (difficulty ? `, open at the ${difficulty} board` : "") +
-              ". The player plays it there; offer help with the rules if they ask, but do not solve the board for them."}],
-            structuredContent: {difficulty},
+            content: [{type: "text", text: (b.error ? b.error + " The moves before it were played.\n\n" : "") + boardText(difficulty, b) +
+              "\n\nThe game above shows this board. The player can play on there; their moves reach you as the game's state."}],
+            structuredContent: {difficulty, moves: b.played, day: b.day},
             _meta: MCP_UI_META,
           };
+        }
+        if (name === "hiku_hint") {
+          if (!TIERS.includes(args.difficulty)) throw {code: -32602, message: "difficulty must be easy, medium, hard or expert"};
+          const b = await boardAfter(env, args.difficulty, moves, day);
+          if (!b.n) return {content: [{type: "text", text: b.error}], isError: true};
+          if (b.error) return {content: [{type: "text", text: b.error}], isError: true};
+          return {content: [{type: "text", text: hintText(args.difficulty, b)}]};
         }
         if (name === "hiku_rules") {
           const text = await (await env.ASSETS.fetch(new Request(SITE + "/llms.txt"))).text();
