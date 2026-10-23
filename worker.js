@@ -165,6 +165,27 @@ const MCP_TOOLS = [
     annotations: {title: "Hiku hint", readOnlyHint: true, openWorldHint: false, destructiveHint: false},
   },
   {
+    name: "hiku_analyze",
+    title: "Analyse a Hiku position",
+    description: "Hiku's solver explains a position, so you can think it through with the player: for one move, whether " +
+      "the board can still be cleared after it and, if not, why (a number left with no partner, numbers that can never " +
+      "meet adding up to an odd sum, or a line showing how every way on runs out); without a move, every legal move " +
+      "marked safe or a trap with a short reason, and what each number can reach and be reached by. Use it to discuss " +
+      "strategy and answer \"why not this one?\", revealing only as much as the player wants.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        difficulty: {type: "string", enum: ["easy", "medium", "hard", "expert"], description: "Which of today's boards."},
+        moves: movesArg,
+        move: {type: "string", pattern: "^[A-Ha-h][1-8]-[A-Ha-h][1-8]$", description: "A move to judge, as \"B2-E2\". Leave out for the whole position."},
+        day: dayArg,
+      },
+      required: ["difficulty"],
+      additionalProperties: false,
+    },
+    annotations: {title: "Analyse a Hiku position", readOnlyHint: true, openWorldHint: false, destructiveHint: false},
+  },
+  {
     name: "hiku_rules",
     title: "Hiku rules and tips",
     description: "The rules of Hiku and three ways to see a trap coming. Use it to explain how to play, or to help " +
@@ -263,6 +284,91 @@ function describeMove(n, cells, from, to) {
   const squares = a === 1 ? "one square" : `${a} squares`;
   const result = a === b ? `both ${a}s vanish` : `${Math.max(a, b)} − ${Math.min(a, b)} leaves ${Math.abs(a - b)} on ${squareName(n, to)}`;
   return `${squareName(n, from)}-${squareName(n, to)}: the ${a} on ${squareName(n, from)} jumps ${squares} ${way} onto the ${b} on ${squareName(n, to)}, and ${result}`;
+}
+
+/** Why a position plainly cannot be cleared, in words, or null when nothing shows it at a glance. */
+function plainlyLost(cells, n) {
+  const left = cells.filter(v => v).length;
+  if (!left) return null;
+  const parts = hikuGroups(cells, n);
+  for (const part of parts) {
+    const names = part.map(i => `${cells[i]} on ${squareName(n, i)}`);
+    if (part.length === 1) return `the ${names[0]} has no row or column with another number in it, so nothing can ever reach it`;
+  }
+  if (parts.length > 1) {
+    for (const part of parts) {
+      const sum = part.reduce((s, i) => s + cells[i], 0);
+      if (sum % 2) return `the numbers ${part.map(i => `${cells[i]} on ${squareName(n, i)}`).join(", ")} share no row or column with the rest, ` +
+        `so they can only meet each other, and their sum ${sum} is odd: one number will always be left`;
+    }
+  }
+  if (!cells.some((v, i) => v && hikuTargets(cells, n, i).length)) return `no number can move, and ${left} are left`;
+  return null;
+}
+
+/** For a position that cannot be cleared: the shortest line of moves to a position that plainly cannot, with why. */
+function lostLine(cells, n) {
+  const start = plainlyLost(cells, n);
+  if (start) return {line: [], why: start};
+  const seen = new Set([cells.join("")]);
+  let frontier = [{cells, line: []}], visited = 0;
+  for (let depth = 0; depth < 8 && frontier.length && visited < 30000; depth++) {
+    const next = [];
+    for (const {cells: p, line} of frontier) {
+      for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
+        const q = hikuMoved(p, i, t), key = q.join("");
+        if (seen.has(key)) continue;
+        seen.add(key); visited++;
+        const step = [...line, squareName(n, i) + "-" + squareName(n, t)], why = plainlyLost(q, n);
+        if (why) return {line: step, why};
+        next.push({cells: q, line: step});
+      }
+    }
+    frontier = next;
+  }
+  return null;
+}
+
+/** The solver's verdict on a move, with the reason in words. */
+function judgeMove(b, from, to, memo) {
+  const n = b.n, after = hikuMoved(b.cells, from, to), what = describeMove(n, b.cells, from, to);
+  const ok = hikuSolvable(after, n, memo, 400_000);
+  if (ok === true) return {safe: true, text: `${what}. Safe: the board can still be cleared after it.`};
+  if (ok === null) return {safe: null, text: `${what}. The solver could not settle it in time.`};
+  const shown = lostLine(after, n);
+  if (!shown) return {safe: false, text: `${what}. A trap: the board can no longer be cleared after it, though the reason lies many moves ahead.`};
+  if (!shown.line.length) return {safe: false, text: `${what}. A trap, at once: ${shown.why}.`};
+  return {safe: false, text: `${what}. A trap: every way on from here runs out. One example, the shortest: ${shown.line.join(", ")}, and then ${shown.why}.`};
+}
+
+function analyseText(difficulty, b, move) {
+  const n = b.n, memo = new Map();
+  if (b.cells.every(v => v === 0)) return "This board is already cleared.";
+  if (move) {
+    const [a, t] = String(move).split("-").map(sq => squareIndex(n, sq));
+    if (a < 0 || t < 0 || !hikuTargets(b.cells, n, a).includes(t)) return `${move} is not a legal move here. ` + boardText(difficulty, b);
+    return judgeMove(b, a, t, memo).text;
+  }
+  const now = hikuSolvable(b.cells, n, memo, 400_000);
+  const lines = [boardText(difficulty, b).split("\n").slice(0, n + 3).join("\n"), ""];
+  if (now === false) {
+    const shown = lostLine(b.cells, n);
+    lines.push("This position can no longer be cleared" + (shown ? (shown.line.length ? `: for example ${shown.line.join(", ")}, and then ${shown.why}.` : `: ${shown.why}.`) : "."));
+    return lines.join("\n");
+  }
+  lines.push("Each legal move:");
+  b.cells.forEach((v, i) => hikuTargets(b.cells, n, i).forEach(t => {
+    const j = judgeMove(b, i, t, memo);
+    lines.push("• " + (j.safe === true ? "SAFE " : j.safe === false ? "TRAP " : "? ") + j.text);
+  }));
+  lines.push("", "What each number can reach, and what can reach it:");
+  b.cells.forEach((v, i) => {
+    if (!v) return;
+    const reach = hikuTargets(b.cells, n, i).map(t => squareName(n, t));
+    const reachedBy = b.cells.map((w, k) => k).filter(k => b.cells[k] && hikuTargets(b.cells, n, k).includes(i)).map(k => squareName(n, k));
+    lines.push(`• ${v} on ${squareName(n, i)}: reaches ${reach.join(", ") || "nothing"}; reached by ${reachedBy.join(", ") || "nothing"}`);
+  });
+  return lines.join("\n");
 }
 
 /** Today's board of a difficulty after the given moves: {day, n, cells, played, error}. Stops at the first illegal move. */
@@ -457,6 +563,8 @@ async function mcpHandle(message, env) {
             "boards and let the player play; with a difficulty it also gives you the board as a grid. Make moves only when " +
             "the player asks you to play or solve a board for them: then work out every move first and call " +
             "play_daily_hiku once with all of them, so the game shows them. " +
+            "To think a board through with the player (why a number cannot be taken, whether a move is a trap), use " +
+            "hiku_analyze, which gives the solver's verdict and the reason; don't guess. " +
             "Use hiku_hint for a move from Hiku's own solver rather than working one out, and hiku_rules " +
             "to explain the rules. Moves are written \"B2-E2\": columns A, B, C … from the left, rows 1, 2, 3 … from the top.",
         };
@@ -511,6 +619,14 @@ async function mcpHandle(message, env) {
           if (!b.n) return {content: [{type: "text", text: b.error}], isError: true};
           if (b.error) return {content: [{type: "text", text: b.error}], isError: true};
           return {content: [{type: "text", text: hintText(args.difficulty, b)}]};
+        }
+        if (name === "hiku_analyze") {
+          if (!TIERS.includes(args.difficulty)) throw {code: -32602, message: "difficulty must be easy, medium, hard or expert"};
+          const b = await boardAfter(env, args.difficulty, moves, day);
+          if (!b.n) return {content: [{type: "text", text: b.error}], isError: true};
+          if (b.error) return {content: [{type: "text", text: b.error}], isError: true};
+          return {content: [{type: "text", text: analyseText(args.difficulty, b, typeof args.move === "string" ? args.move : null) +
+            "\n\nThink it through with the player; share only as much as they want to know."}]};
         }
         if (name === "hiku_rules") {
           const text = await (await env.ASSETS.fetch(new Request(SITE + "/llms.txt"))).text();
