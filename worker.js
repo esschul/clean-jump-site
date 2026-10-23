@@ -359,9 +359,12 @@ async function mcpWidget(env) {
     }
     // A board asked for by name is opened at once, past the first-visit lessons, and any moves the assistant sent are
     // played on it one by one, so the player sees them happen. Waits for the day's boards if they have not come yet.
-    var replaying = null;
+    var replaying = null, lastOpened = '';
     function open(args, tries) {
       if (!args || !args.difficulty || !window.HikuGame) return;
+      // The same call can arrive both as an MCP notification and through window.openai: play it once.
+      var key = args.difficulty + ' ' + (args.moves || []).join(' ');
+      if (!tries) { if (key === lastOpened) return; lastOpened = key; }
       if (!window.HikuGame.open(args.difficulty)) {
         if ((tries || 0) < 40) setTimeout(function () { open(args, (tries || 0) + 1); }, 150);
         return;
