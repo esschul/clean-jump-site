@@ -96,6 +96,7 @@ section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
 .also{margin:18px 0 0;font-size:15px}
 .also a{color:var(--on-navy-muted)}
+.also-dark{margin:16px 0 0}
 /* A short conversation about a real board, as on the ChatGPT and Claude page. */
 .chat{display:flex;flex-direction:column;gap:12px;max-width:440px}
 .chat p{margin:0;padding:12px 16px;border-radius:18px;font-size:16px;line-height:1.45;max-width:85%;color:var(--ink)}
@@ -193,7 +194,8 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
   <div>
     <h2>Learn Hiku with ChatGPT</h2>
     <p>Open today's boards right in the conversation and play with a partner who sees the board. Ask why a move is a trap, get a hint when you're stuck, or have it show you the solution move by move.</p>
-    <p><a href="../en/chatgpt-claude/">How to get started&nbsp;→</a></p>
+    <div class="ctas"><a class="btn navy" href="https://chatgpt.com/plugins/plugin_asdk_app_6ac784905700819182339334cdd30ae1">Open Hiku in ChatGPT</a></div>
+    <p class="also-dark"><a href="../en/chatgpt-claude/">How to get started&nbsp;→</a></p>
   </div>
   <div class="chat" role="img" aria-label="You: Why can't I move the 1 on E1 down onto E2? ChatGPT: Both 1s would vanish, and the 3 on E5 would be left on its own: no other number in row 5 or column E can reach it.">
     <p class="you"><span>You</span>Why can't I move the 1 on E1 down onto E2?</p>

@@ -96,6 +96,7 @@ section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
 .also{margin:18px 0 0;font-size:15px}
 .also a{color:var(--on-navy-muted)}
+.also-dark{margin:16px 0 0}
 /* A short conversation about a real board, as on the ChatGPT and Claude page. */
 .chat{display:flex;flex-direction:column;gap:12px;max-width:440px}
 .chat p{margin:0;padding:12px 16px;border-radius:18px;font-size:16px;line-height:1.45;max-width:85%;color:var(--ink)}
@@ -193,7 +194,8 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
   <div>
     <h2>Lær Hiku med ChatGPT</h2>
     <p>Åbn dagens brætter direkte i samtalen og spil med en partner, der ser brættet. Spørg hvorfor et træk er en fælde, få et hint når du sidder fast, eller bed den vise løsningen træk for træk.</p>
-    <p><a href="../da/chatgpt-claude/">Sådan kommer du i gang&nbsp;→</a></p>
+    <div class="ctas"><a class="btn navy" href="https://chatgpt.com/plugins/plugin_asdk_app_6ac784905700819182339334cdd30ae1">Åbn Hiku i ChatGPT</a></div>
+    <p class="also-dark"><a href="../da/chatgpt-claude/">Sådan kommer du i gang&nbsp;→</a></p>
   </div>
   <div class="chat" role="img" aria-label="Dig: Hvorfor kan jeg ikke flytte 1-tallet på E1 ned på E2? ChatGPT: Så forsvinder begge 1-taller, og 3-tallet på E5 står helt alene: intet andet tal i række 5 eller kolonne E kan nå det.">
     <p class="you"><span>Dig</span>Hvorfor kan jeg ikke flytte 1-tallet på E1 ned på E2?</p>
