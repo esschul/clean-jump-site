@@ -335,7 +335,7 @@ async function mcpWidget(env) {
   (function () {
     var asked = (navigator.language || 'en').toLowerCase().slice(0, 2);
     var lang = ['nb', 'no', 'nn', 'en', 'sv', 'da', 'fi', 'de'].indexOf(asked) >= 0 ? asked : 'en';
-    window.HIKU_PARAMS = 'lang=' + lang;
+    window.HIKU_PARAMS = 'lang=' + lang + '&lessons=0';
     window.HIKU_SITE = window.openai ? 'chatgpt' : 'ai-app';
     window.HIKU_HOME = '${SITE}/daily/';
     var theme = window.openai && window.openai.theme;

@@ -784,7 +784,9 @@ footer a{color:var(--accent)}
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     .then(data => { todays = data.boards; todaysHints = data.hints || {}; if (lesson === null) start(tier); reportHeight(); })
     .catch(() => { if (lesson === null) statusEl.textContent = T.offline; });
-  if (!store.get('learned') && !params.get('level')) startLesson(0);
+  // lessons=0 leaves the lessons to the "Learn to play" link: inside ChatGPT or Claude the game cannot remember a
+  // player who has done them, and the assistant explains the rules itself.
+  if (!store.get('learned') && !params.get('level') && params.get('lessons') !== '0') startLesson(0);
 })();
 </script>
 <script>
