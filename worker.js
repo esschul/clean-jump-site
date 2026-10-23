@@ -105,7 +105,8 @@ const APP_SITE_ASSOCIATION = {
 // the rules and the ways to see a trap, so the assistant can explain them. The game in the frame fetches the day's
 // boards from /api/daily like every embed, and keeps results in the frame's own storage.
 
-const MCP_WIDGET = "ui://hiku/daily-v1.html";
+// The version in the name changes whenever the game in the frame changes: hosts keep a copy of a template by its name.
+const MCP_WIDGET = "ui://hiku/daily-v2.html";
 const SITE = "https://hikupuzzle.com";
 const MCP_UI_MIME = "text/html;profile=mcp-app";
 const MCP_UI_META = {
