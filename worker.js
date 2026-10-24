@@ -576,7 +576,7 @@ async function mcpHandle(message, env, request) {
           protocolVersion: message.params?.protocolVersion || "2025-06-18",
           capabilities: {tools: {listChanged: false}, resources: {listChanged: false}},
           serverInfo: {name: "hiku", title: "Hiku", version: "1.0.0"},
-          instructions: "Hiku is a calm daily number puzzle for the player to play. " + HIKU_RULES_SHORT + " Call play_daily_hiku to show today's " +
+          instructions: "Hiku is a daily logic puzzle with numbers, with no guessing, for the player to play. " + HIKU_RULES_SHORT + " Call play_daily_hiku to show today's " +
             "boards and let the player play; with a difficulty it also gives you the board as a grid. Make moves only when " +
             "the player asks you to play or solve a board for them: then work out every move first and call " +
             "play_daily_hiku once with all of them, so the game shows them. " +
