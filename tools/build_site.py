@@ -268,12 +268,12 @@ TERMS = {
             ("Kontakt und Recht", "Fragen an <a href=\"mailto:es@rubberduck.no\">es@rubberduck.no</a>. Es gilt norwegisches Recht.")]),
 }
 AI_PRIVACY = {
-"nb": "Hiku i ChatGPT og Claude er det samme spillet som på nettsiden. Serveren som viser brettene, lagrer ingenting om deg eller samtalen: den får bare vite hvilket brett som ble bedt om, og spillet sender ingen spilldata. Det du skriver i samtalen, behandles av ChatGPT eller Claude etter deres egne personvernregler. Hiku ser det ikke.",
-"en": "Hiku in ChatGPT and Claude is the same game as the website. The server that shows the boards keeps nothing about you or the conversation: it only learns which board was asked for, and the game sends no game data. What you write in the conversation is handled by ChatGPT or Claude under their own privacy policies. Hiku never sees it.",
-"sv": "Hiku i ChatGPT och Claude är samma spel som på webbplatsen. Servern som visar brädena sparar ingenting om dig eller samtalet: den får bara veta vilket bräde som efterfrågades, och spelet skickar inga speldata. Det du skriver i samtalet hanteras av ChatGPT eller Claude enligt deras egna integritetsregler. Hiku ser det inte.",
-"da": "Hiku i ChatGPT og Claude er det samme spil som på websitet. Serveren, der viser brætterne, gemmer intet om dig eller samtalen: den får kun at vide, hvilket bræt der blev bedt om, og spillet sender ingen spildata. Det, du skriver i samtalen, behandles af ChatGPT eller Claude efter deres egne privatlivsregler. Hiku ser det ikke.",
-"fi": "Hiku ChatGPT:ssä ja Claudessa on sama peli kuin verkkosivuilla. Lautoja näyttävä palvelin ei tallenna mitään sinusta tai keskustelusta: se saa tietää vain, mitä lautaa pyydettiin, eikä peli lähetä pelitietoja. Keskusteluun kirjoittamasi käsittelee ChatGPT tai Claude omien tietosuojakäytäntöjensä mukaisesti. Hiku ei näe sitä.",
-"de": "Hiku in ChatGPT und Claude ist dasselbe Spiel wie auf der Website. Der Server, der die Bretter zeigt, speichert nichts über dich oder das Gespräch: Er erfährt nur, welches Brett angefragt wurde, und das Spiel sendet keine Spieldaten. Was du im Gespräch schreibst, verarbeiten ChatGPT oder Claude nach ihren eigenen Datenschutzregeln. Hiku sieht es nicht.",
+"nb": "Hiku i ChatGPT og Claude er det samme spillet som på nettsiden. Serveren som viser brettene, lagrer ingenting om deg eller samtalen: den får bare vite hvilket brett som ble bedt om, og spillet sender ingen spilldata. Det du skriver i samtalen, behandles av ChatGPT eller Claude etter deres egne personvernregler. Hiku ser det ikke. Serveren teller anonymt hvilke av verktøyene som brukes og på hvilket nivå, så vi ser hvordan Hiku brukes; tellingen inneholder ingenting om deg.",
+"en": "Hiku in ChatGPT and Claude is the same game as the website. The server that shows the boards keeps nothing about you or the conversation: it only learns which board was asked for, and the game sends no game data. What you write in the conversation is handled by ChatGPT or Claude under their own privacy policies. Hiku never sees it. The server counts, anonymously, which of its tools are used and at which difficulty, so we can see how Hiku is used; the counts hold nothing about you.",
+"sv": "Hiku i ChatGPT och Claude är samma spel som på webbplatsen. Servern som visar brädena sparar ingenting om dig eller samtalet: den får bara veta vilket bräde som efterfrågades, och spelet skickar inga speldata. Det du skriver i samtalet hanteras av ChatGPT eller Claude enligt deras egna integritetsregler. Hiku ser det inte. Servern räknar anonymt vilka av verktygen som används och på vilken nivå, så att vi ser hur Hiku används; räkningen innehåller inget om dig.",
+"da": "Hiku i ChatGPT og Claude er det samme spil som på websitet. Serveren, der viser brætterne, gemmer intet om dig eller samtalen: den får kun at vide, hvilket bræt der blev bedt om, og spillet sender ingen spildata. Det, du skriver i samtalen, behandles af ChatGPT eller Claude efter deres egne privatlivsregler. Hiku ser det ikke. Serveren tæller anonymt, hvilke af værktøjerne der bruges og på hvilket niveau, så vi kan se, hvordan Hiku bruges; tællingen indeholder intet om dig.",
+"fi": "Hiku ChatGPT:ssä ja Claudessa on sama peli kuin verkkosivuilla. Lautoja näyttävä palvelin ei tallenna mitään sinusta tai keskustelusta: se saa tietää vain, mitä lautaa pyydettiin, eikä peli lähetä pelitietoja. Keskusteluun kirjoittamasi käsittelee ChatGPT tai Claude omien tietosuojakäytäntöjensä mukaisesti. Hiku ei näe sitä. Palvelin laskee nimettömästi, mitä sen työkaluja käytetään ja millä tasolla, jotta näemme, miten Hikua käytetään; laskennassa ei ole mitään sinusta.",
+"de": "Hiku in ChatGPT und Claude ist dasselbe Spiel wie auf der Website. Der Server, der die Bretter zeigt, speichert nichts über dich oder das Gespräch: Er erfährt nur, welches Brett angefragt wurde, und das Spiel sendet keine Spieldaten. Was du im Gespräch schreibst, verarbeiten ChatGPT oder Claude nach ihren eigenen Datenschutzregeln. Hiku sieht es nicht. Der Server zählt anonym, welche seiner Werkzeuge auf welchem Level genutzt werden, damit wir sehen, wie Hiku genutzt wird; die Zählung enthält nichts über dich.",
 }
 # What the privacy policy says, point by point: the five things an app review checks a policy for.
 PRIVACY_GLANCE = {
@@ -321,12 +321,12 @@ PRIVACY_GLANCE = {
 ]),
 }
 PRIVACY = {
-"nb": dict(slug="personvern", parts=("Appen", "Dagens Hiku på nettet", "Hiku i ChatGPT og Claude"), changed="Sist endret 8. oktober 2026."),
-"en": dict(slug="privacy", parts=("The app", "Daily Hiku on the web", "Hiku in ChatGPT and Claude"), changed="Last changed 8 October 2026."),
-"sv": dict(slug="integritet", parts=("Appen", "Dagens Hiku på webben", "Hiku i ChatGPT och Claude"), changed="Senast ändrad 8 oktober 2026."),
-"da": dict(slug="privatliv", parts=("Appen", "Dagens Hiku på nettet", "Hiku i ChatGPT og Claude"), changed="Sidst ændret 8. oktober 2026."),
-"fi": dict(slug="tietosuoja", parts=("Sovellus", "Päivän Hiku verkossa", "Hiku ChatGPT:ssä ja Claudessa"), changed="Muutettu viimeksi 8.10.2026."),
-"de": dict(slug="datenschutz", parts=("Die App", "Hiku des Tages im Web", "Hiku in ChatGPT und Claude"), changed="Zuletzt geändert am 8. Oktober 2026."),
+"nb": dict(slug="personvern", parts=("Appen", "Dagens Hiku på nettet", "Hiku i ChatGPT og Claude"), changed="Sist endret 24. oktober 2026."),
+"en": dict(slug="privacy", parts=("The app", "Daily Hiku on the web", "Hiku in ChatGPT and Claude"), changed="Last changed 24 October 2026."),
+"sv": dict(slug="integritet", parts=("Appen", "Dagens Hiku på webben", "Hiku i ChatGPT och Claude"), changed="Senast ändrad 24 oktober 2026."),
+"da": dict(slug="privatliv", parts=("Appen", "Dagens Hiku på nettet", "Hiku i ChatGPT og Claude"), changed="Sidst ændret 24. oktober 2026."),
+"fi": dict(slug="tietosuoja", parts=("Sovellus", "Päivän Hiku verkossa", "Hiku ChatGPT:ssä ja Claudessa"), changed="Muutettu viimeksi 24.10.2026."),
+"de": dict(slug="datenschutz", parts=("Die App", "Hiku des Tages im Web", "Hiku in ChatGPT und Claude"), changed="Zuletzt geändert am 24. Oktober 2026."),
 }
 MCP_URL = "https://hikupuzzle.com/mcp"
 ADDR = f'<p><code class="address">{MCP_URL}</code></p>'

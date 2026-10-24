@@ -13,5 +13,9 @@
   },
   "kv_namespaces": [
     {"binding": "LIBRARY", "id": "b569f0b75189460e88545c35b88e1efd"}
+  ],
+  // Anonymous counts of the MCP tools used (tool, difficulty, which assistant): no IP, no id, nothing from the chat.
+  "analytics_engine_datasets": [
+    {"binding": "USAGE", "dataset": "hiku_mcp"}
   ]
 }

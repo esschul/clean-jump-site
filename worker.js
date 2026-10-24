@@ -557,7 +557,18 @@ async function mcpWidget(env) {
   return html.replace("<head>", "<head>" + setup).replace("</body>", bridge + "</body>");
 }
 
-async function mcpHandle(message, env) {
+/** One anonymous count per tool call: the tool, the board's difficulty and which assistant asked, told by its
+ *  user agent. Nothing about the person or the conversation, and no IP address. */
+function countToolUse(env, request, name, difficulty) {
+  if (!env.USAGE) return;
+  const agent = (request?.headers.get("user-agent") || "").toLowerCase();
+  const client = agent.includes("openai") ? "chatgpt" : agent.includes("claude") || agent.includes("anthropic") ? "claude" : "other";
+  try {
+    env.USAGE.writeDataPoint({blobs: [String(name).slice(0, 40), TIERS.includes(difficulty) ? difficulty : "", client], doubles: [1], indexes: [client]});
+  } catch {}
+}
+
+async function mcpHandle(message, env, request) {
   const result = await (async () => {
     switch (message.method) {
       case "initialize":
@@ -597,6 +608,7 @@ async function mcpHandle(message, env) {
       }
       case "tools/call": {
         const name = message.params?.name, args = message.params?.arguments || {};
+        countToolUse(env, request, name, args.difficulty);
         const day = typeof args.day === "string" && /^\d{4}-\d{2}-\d{2}$/.test(args.day) ? args.day : utcToday();
         const moves = Array.isArray(args.moves) ? args.moves.slice(0, 64).map(String) : [];
         if (name === "play_daily_hiku") {
@@ -666,7 +678,7 @@ async function mcp(request, env) {
   let body;
   try { body = JSON.parse(text); } catch { return json({jsonrpc: "2.0", id: null, error: {code: -32700, message: "Parse error"}}, 400, cors); }
   if (Array.isArray(body) && (body.length === 0 || body.length > 20)) return json({jsonrpc: "2.0", id: null, error: {code: -32600, message: "Invalid batch"}}, 400, cors);
-  const answers = (await Promise.all((Array.isArray(body) ? body : [body]).map(m => mcpHandle(m, env)))).filter(Boolean);
+  const answers = (await Promise.all((Array.isArray(body) ? body : [body]).map(m => mcpHandle(m, env, request)))).filter(Boolean);
   if (!answers.length) return new Response(null, {status: 202, headers: cors});
   return json(Array.isArray(body) ? answers : answers[0], 200, {...cors, "cache-control": "no-store"});
 }
