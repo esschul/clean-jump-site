@@ -91,6 +91,19 @@ footer a{color:var(--accent)}
 .more{margin-top:8px;font-size:14px;color:var(--muted)}
 .more a{color:var(--accent);font-weight:600}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* Why the board can no longer be cleared: the short reason, more on asking, and the board it is about, with the
+   number it is about filled in and the ones it depends on ringed, as in the apps. */
+.why{margin:0 0 12px;display:grid;gap:10px;font-size:15px}
+.why p{margin:0}
+.why .head{font-weight:600}
+.why .reason{color:var(--muted)}
+.why .linky{justify-self:start}
+.whyboard{display:grid;gap:5px;width:100%;max-width:320px;margin-top:4px}
+.whyboard .name{font-size:11px;font-weight:600;color:var(--muted);text-align:center;align-self:center}
+.whyboard .sq{position:static;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:clamp(13px,4.5vw,20px);font-variant-numeric:tabular-nums}
+.whyboard .num{background:var(--tile);box-shadow:0 2px 0 var(--edge);opacity:.35}
+.whyboard .num.main{background:var(--accent);color:var(--on-accent);opacity:1}
+.whyboard .num.dep{background:var(--soft);outline:3px solid var(--guide);outline-offset:2px;opacity:1}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -103,6 +116,7 @@ footer a{color:var(--accent)}
   <div class="info"><span id="left"></span><span id="movesInfo"></span></div>
   <div class="board" id="board" role="group"></div>
   <div class="status" id="status" aria-live="polite"></div>
+  <div class="why" id="why" aria-live="polite" hidden></div>
   <p class="sr" id="said" aria-live="assertive"></p>
   <div class="controls" id="controls"></div>
   <p class="replay"><button class="linky" id="replay" type="button"></button></p>
@@ -350,7 +364,66 @@ footer a{color:var(--accent)}
   let moveLog = [];
 
   const el = id => document.getElementById(id);
-  const boardEl = el('board'), statusEl = el('status'), controlsEl = el('controls'), tabsEl = el('tabs');
+  const boardEl = el('board'), statusEl = el('status'), controlsEl = el('controls'), tabsEl = el('tabs'), whyEl = el('why');
+
+  // ---- Why a lost board can no longer be cleared: the same proofs and words as the apps, from explain.js. It loads on
+  // the side; until it has, or where it cannot (inside an assistant, which explains the board itself), there is no link.
+  let Explain = null;
+  import(window.HIKU_PARAMS ? 'https://hikupuzzle.com/daily/explain.js' : './explain.js')
+    .then(module => { Explain = module; if (cells && lost) renderStatus(); })
+    .catch(() => {});
+  const words = key => Explain.say({key, args: []}, lang);
+  const lostText = document.createTextNode(''), lostLine = document.createElement('span'), whyLink = document.createElement('button');
+  whyLink.type = 'button';
+  whyLink.className = 'linky';
+  whyLink.onclick = () => showWhy();
+  lostLine.append(lostText, whyLink);
+
+  function showWhy() {
+    whyEl.hidden = false;
+    whyEl.textContent = words('explain.loading');
+    const positions = [...history, cells], size = n, asked = checkToken;
+    // A moment for "looking for the reason" to show: the search can take a tenth of a second on a big board.
+    setTimeout(() => {
+      const found = Explain.why(positions, size);
+      if (asked !== checkToken || !lost) return;
+      whyEl.replaceChildren();
+      if (!found) { whyEl.textContent = words('explain.none'); return; }
+      const head = document.createElement('p');
+      head.className = 'head';
+      head.textContent = Explain.say(found.headline, lang);
+      const reason = document.createElement('p');
+      reason.className = 'reason';
+      reason.textContent = Explain.say(found.reason, lang);
+      reason.hidden = true;
+      const more = document.createElement('button');
+      more.type = 'button';
+      more.className = 'linky';
+      more.textContent = words('explain.more');
+      more.onclick = () => { reason.hidden = false; more.remove(); };
+      whyEl.append(head, more, reason, whyBoard(found, size));
+    }, 30);
+  }
+
+  // The board the reason is told on, with A, B, C … above and 1, 2, 3 … beside it. Screen readers get the words,
+  // which name every square that matters.
+  function whyBoard(found, size) {
+    const grid = document.createElement('div');
+    grid.className = 'whyboard';
+    grid.setAttribute('aria-hidden', 'true');
+    grid.style.gridTemplateColumns = `14px repeat(${size}, 1fr)`;
+    const cell = (cls, text) => { const d = document.createElement('div'); d.className = cls; d.textContent = text; grid.appendChild(d); };
+    cell('name', '');
+    for (let c = 0; c < size; c++) cell('name', String.fromCharCode(65 + c));
+    for (let r = 0; r < size; r++) {
+      cell('name', String(r + 1));
+      for (let c = 0; c < size; c++) {
+        const i = r * size + c, v = found.cells[i];
+        cell('sq' + (v ? ' num' : '') + (i === found.focus[0] ? ' main' : found.focus.includes(i) ? ' dep' : ''), v || '');
+      }
+    }
+    return grid;
+  }
   el('rule').textContent = T.rule;
   tabsEl.setAttribute('aria-label', T.tabs);
   el('day').textContent = now.toLocaleDateString(T.locale, T.date);
@@ -627,6 +700,7 @@ footer a{color:var(--accent)}
 
   function renderStatus() {
     statusEl.className = 'status';
+    if (!lost) whyEl.hidden = true;
     if (isClear(cells)) {
       const k = stars(undos), days = lesson === null ? streak() : 0;
       // The result lies on the cleared board, so the box keeps its height from the first move to the last.
@@ -644,7 +718,11 @@ footer a{color:var(--accent)}
       boardEl.appendChild(box);
     } else if (lost) {
       statusEl.className = 'status warn';
-      statusEl.textContent = hasMove(cells, n) ? T.lost : T.stuck;
+      // The line and its link are kept between redraws, so a redraw while the link is pressed does not swallow it.
+      lostText.data = (hasMove(cells, n) ? T.lost : T.stuck) + ' ';
+      whyLink.hidden = !(Explain && history.length && lesson === null);
+      if (Explain && whyLink.textContent !== words('explain.why')) whyLink.textContent = words('explain.why');
+      if (statusEl.firstChild !== lostLine || statusEl.childNodes.length !== 1) statusEl.replaceChildren(lostLine);
     } else if (!history.length && selected === null && lesson === null) {
       statusEl.textContent = T.start;
     } else if (selected !== null && !targets(cells, n, selected).length) {
