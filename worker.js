@@ -431,6 +431,39 @@ function certificate(cells, n) {
   return null;
 }
 
+/** "Right move, wrong moment": the move is in every way to clear the board, but another number has to land on the
+ *  same square before it, while that square is still what it is now. Found from every solution of the position before
+ *  the move (up to a limit), so it is always true. */
+function wrongMoment(cells, n, from, to, memo) {
+  const sols = [];
+  let nodes = 0;
+  (function dfs(p, line) {
+    if (sols.length > 200 || nodes > 20_000) return;
+    nodes++;
+    if (p.every(v => !v)) { sols.push(line); return; }
+    for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
+      const q = hikuMoved(p, i, t);
+      if (hikuSolvable(q, n, memo, 400_000) === true) dfs(q, [...line, [i, t, p[i], p[t]]]);
+    }
+  })(cells, []);
+  if (!sols.length || sols.length > 200 || nodes > 20_000) return null;
+  // The played move in every solution, and the number that lands on the same square before it in every one.
+  const at = sols.map(sol => sol.findIndex(([i, t]) => i === from && t === to));
+  if (at.some(k => k < 0)) return null;
+  const firsts = sols.map((sol, k) => sol.slice(0, at[k]).filter(([, t]) => t === to).map(([i]) => i));
+  const common = firsts[0].filter(i => firsts.every(f => f.includes(i)));
+  if (!common.length) return null;
+  const x = common[0];
+  const name = i => `the ${cells[i]} on ${squareName(n, i)}`, cap = w => w[0].toUpperCase() + w.slice(1);
+  const now = Math.abs(cells[from] - cells[to]);
+  return {code: "WRONG_MOMENT", focus: [x, to], related: [from],
+    question: `${cap(name(x))} and ${name(from)} can both land on ${squareName(n, to)}. Which of them needs it first?`,
+    reason: `Right move, wrong moment. In every way to clear this board, ${name(from)} does jump onto ${squareName(n, to)}, ` +
+      `but only after ${name(x)} has landed there first, while ${squareName(n, to)} is still a ${cells[to]}. ` +
+      `Played now, it makes ${squareName(n, to)} ${now ? `a ${now}` : "empty"}, and that no longer works for ${name(x)}.`,
+    pattern: "order matters: when two numbers need the same square, ask which one needs it as it is now"};
+}
+
 /** A number no order of play can ever clear, found by trying every way on (up to a limit), or null. Said with what it
  *  would take to reach it: the number each square in line with it would have to be. Every word is checkable on the
  *  board, and the search behind it is complete, so it is never wrong. */
@@ -484,7 +517,9 @@ function judgeMove(b, from, to, memo) {
   const ok = hikuSolvable(after, n, memo, 400_000);
   if (ok === true) return {safe: true, text: `${what}. Safe: the board can still be cleared after it.`};
   if (ok === null) return {safe: null, text: `${what}. The solver could not settle it in time.`};
-  const proof = certificate(after, n) || alwaysLeft(after, n);
+  // A number left alone by the move is the plainest; then what the move spoilt; then the other proofs.
+  const plain = certificate(after, n);
+  const proof = (plain && plain.code === "STRANDED" ? plain : null) || wrongMoment(b.cells, n, from, to, memo) || plain || alwaysLeft(after, n);
   if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.reason}`, text: `${what}. A trap. ${stepsText(proof, n)}`};
   const shown = lostLine(after, n);
   if (!shown) return {safe: false, text: `${what}. A trap: the board can no longer be cleared after it, though the reason lies many moves ahead.`};
