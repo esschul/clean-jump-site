@@ -375,18 +375,36 @@ function certificate(cells, n) {
   const lone = occ.find(i => !pairs.some(([a, b]) => a === i || b === i));
   if (lone !== undefined) return {code: "STRANDED", focus: [lone], related: [],
     question: `Is there any number left in the same row or column as ${name(lone)}?`,
-    reason: `${name(lone)[0].toUpperCase() + name(lone).slice(1)} has no other number in its row or column, so nothing can ever reach it and it can never move.`,
+    reason: `${name(lone)[0].toUpperCase() + name(lone).slice(1)} is alone: there is no other number in its row or its column, so it can never jump onto anything and nothing can ever land on it. It will be left.`,
     pattern: partner};
-  // A number that lines up with others but can never be the right distance from any of them.
+  // A number that lines up with others but can never be the right distance from any of them. Told the way a player
+  // can check it on the board: a number only changes when another lands on it, so say which ones could, and what
+  // that could ever make of it.
   const isolated = occ.find(i => !links.some(([a, b]) => a === i || b === i));
   if (isolated !== undefined) {
     const mates = pairs.filter(([a, b]) => a === isolated || b === isolated).map(([a, b, d]) => [a === isolated ? b : a, d]);
-    const only = i => [...vals.get(i)].sort((x, y) => x - y).join(" or ");
+    const cap = x => x[0].toUpperCase() + x.slice(1);
+    const list = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
+    // What can land on a number, and what each landing would make of it, said as it would happen on the board.
+    const changes = i => {
+      const landers = pairs.filter(([a, b]) => a === i || b === i).map(([a, b, e]) => [a === i ? b : a, e]).filter(([x, e]) => vals.get(x).has(e));
+      if (!landers.length) return `nothing can ever land on ${name(i)}, so it stays a ${cells[i]}`;
+      const told = landers.map(([x, e]) => {
+        const who = cells[x] === e ? name(x) : `${name(x)}, once it is a ${e},`;
+        const made = [...new Set([...vals.get(i)].map(v => Math.abs(v - e)))].sort((p, q) => p - q);
+        const left = made.filter(w => w > 0);
+        const outcome = !left.length ? "both would vanish" : `it would be a ${list(left.map(String))}`;
+        return `${who} could land on ${name(i)}, but then ${outcome}`;
+      });
+      return told.join(". ").replace(/\. t/g, ". T");
+    };
+    const told = mates.slice(0, 2).map(([t, d]) =>
+      `${cap(name(isolated))} and ${name(t)} are ${d} squares apart, so to meet, one of them would have to become a ${d}. ` +
+      `A number only changes when another lands on it. ${cap(changes(isolated))}. ${cap(changes(t))}. Neither can ever become a ${d}.`);
     return {code: "UNREACHABLE", focus: [isolated], related: mates.map(([t]) => t),
-      question: `${name(isolated)[0].toUpperCase() + name(isolated).slice(1)} lines up with ${mates.map(([t]) => name(t)).join(" and ")}. Can either side ever be exactly the right number to jump across?`,
-      reason: `${name(isolated)[0].toUpperCase() + name(isolated).slice(1)} can never meet another number: ` + mates.map(([t, d]) =>
-        `it is ${d} squares from ${name(t)}, and neither can ever become a ${d} (` +
-        (only(isolated) === only(t) ? `both can only ever be ${only(t)}` : `one can only ever be ${only(isolated)}, the other ${only(t)}`) + ")").join("; ") + ".",
+      question: `${cap(name(isolated))} lines up with ${list(mates.map(([t]) => name(t)))}. How far apart are they, and can either of them ever become that number?`,
+      reason: told.join(" ") + (mates.length > 2 ? ` The same goes for the other ${mates.length - 2} it lines up with.` : "") +
+        ` So ${name(isolated)} can never meet another number, and it will be left.`,
       pattern: partner};
   }
   // A group that can only ever meet itself, with an odd sum.
@@ -395,13 +413,19 @@ function certificate(cells, n) {
   for (const [a, b] of links) parent.set(find(a), find(b));
   const groups = new Map();
   for (const i of occ) { const k = find(i); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(i); }
-  const odd = [...groups.values()].filter(g => g.reduce((sum, i) => sum + cells[i], 0) % 2).sort((x, y) => x.length - y.length)[0];
+  // Only a small group is told this way: a reader can follow three numbers, not five. A bigger one gets the example line.
+  const odd = [...groups.values()].filter(g => g.reduce((sum, i) => sum + cells[i], 0) % 2 && g.length <= 3).sort((x, y) => x.length - y.length)[0];
   if (odd && groups.size > 1) {
     const sum = odd.reduce((total, i) => total + cells[i], 0);
+    // Why they are cut off from the rest: no shared row or column at all, or never the right distance to meet.
+    const inGroup = new Set(odd);
+    const lined = pairs.some(([a, b]) => inGroup.has(a) !== inGroup.has(b));
     return {code: "ODD_GROUP", focus: odd, related: [],
       question: `Which numbers can ${odd.map(name).join(", ")} ever meet? Add them up: can they cancel out?`,
-      reason: `${odd.map(name).join(", ").replace(/^t/, "T")} can only ever meet each other, and together they make ${sum}, an odd number. ` +
-        `A meeting never changes whether the total is odd or even, so one number will always be left.`,
+      reason: `${odd.map(name).join(", ").replace(/^t/, "T")} can only ever meet each other: ` +
+        (lined ? `they line up with other numbers, but are never the right distance from any of them to jump. ` : `no other number is in their rows or columns. `) +
+        `Together they add up to ${sum}, an odd number. ` +
+        `When two numbers meet, their total goes down by an even amount (3 and 1 make 2, 2 and 2 make 0), so the total stays odd and can never reach 0: one number will always be left.`,
       pattern: "even and odd: a group of numbers that can only meet each other must add up to an even number"};
   }
   return null;
@@ -410,7 +434,7 @@ function certificate(cells, n) {
 /** The reasons a lost position is lost, in the order to reveal them, for the assistant to tell one step at a time. */
 function stepsText(c, n) {
   const sq = list => list.map(i => squareName(n, i)).join(", ");
-  return `Reason code ${c.code}. Tell it in steps, as far as the player wants: ` +
+  return `Reason code ${c.code}. Tell it in plain everyday words, one idea at a time, in the player's language, as far as the player wants: ` +
     `(1) where to look: ${sq(c.focus)}${c.related.length ? ` (with ${sq(c.related)})` : ""}; ` +
     `(2) a question to ask: "${c.question}" ` +
     `(3) the reason: ${c.reason} ` +
