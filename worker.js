@@ -374,6 +374,7 @@ function certificate(cells, n) {
   // A number with nothing in its row or column.
   const lone = occ.find(i => !pairs.some(([a, b]) => a === i || b === i));
   if (lone !== undefined) return {code: "STRANDED", focus: [lone], related: [],
+    headline: `${name(lone)[0].toUpperCase() + name(lone).slice(1)} is alone now: no other number can ever reach it.`,
     question: `Is there any number left in the same row or column as ${name(lone)}?`,
     reason: `${name(lone)[0].toUpperCase() + name(lone).slice(1)} is alone: there is no other number in its row or its column, so it can never jump onto anything and nothing can ever land on it. It will be left.`,
     pattern: partner};
@@ -402,6 +403,7 @@ function certificate(cells, n) {
       `${cap(name(isolated))} and ${name(t)} are ${d} squares apart, so to meet, one of them would have to become a ${d}. ` +
       `A number only changes when another lands on it. ${cap(changes(isolated))}. ${cap(changes(t))}. Neither can ever become a ${d}.`);
     return {code: "UNREACHABLE", focus: [isolated], related: mates.map(([t]) => t),
+      headline: `${cap(name(isolated))} can no longer be cleared: no other number can ever reach it.`,
       question: `${cap(name(isolated))} lines up with ${list(mates.map(([t]) => name(t)))}. How far apart are they, and can either of them ever become that number?`,
       reason: told.join(" ") + (mates.length > 2 ? ` The same goes for the other ${mates.length - 2} it lines up with.` : "") +
         ` So ${name(isolated)} can never meet another number, and it will be left.`,
@@ -421,6 +423,7 @@ function certificate(cells, n) {
     const inGroup = new Set(odd);
     const lined = pairs.some(([a, b]) => inGroup.has(a) !== inGroup.has(b));
     return {code: "ODD_GROUP", focus: odd, related: [],
+      headline: `${odd.map(name).join(", ").replace(/^t/, "T")} can only meet each other, and they add up to an odd number, so one of them will always be left.`,
       question: `Which numbers can ${odd.map(name).join(", ")} ever meet? Add them up: can they cancel out?`,
       reason: `${odd.map(name).join(", ").replace(/^t/, "T")} can only ever meet each other: ` +
         (lined ? `they line up with other numbers, but are never the right distance from any of them to jump. ` : `no other number is in their rows or columns. `) +
@@ -457,6 +460,7 @@ function wrongMoment(cells, n, from, to, memo) {
   const name = i => `the ${cells[i]} on ${squareName(n, i)}`, cap = w => w[0].toUpperCase() + w.slice(1);
   const now = Math.abs(cells[from] - cells[to]);
   return {code: "WRONG_MOMENT", focus: [x, to], related: [from],
+    headline: `Right move, wrong moment: ${name(x)} needs ${squareName(n, to)} first, while it is still a ${cells[to]}.`,
     question: `${cap(name(x))} and ${name(from)} can both land on ${squareName(n, to)}. Which of them needs it first?`,
     reason: `Right move, wrong moment. In every way to clear this board, ${name(from)} does jump onto ${squareName(n, to)}, ` +
       `but only after ${name(x)} has landed there first, while ${squareName(n, to)} is still a ${cells[to]}. ` +
@@ -492,6 +496,7 @@ function alwaysLeft(cells, n, limit = 60_000) {
   const list = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
   const ownJumps = hikuTargets(cells, n, s).length;
   return {code: "ALWAYS_LEFT", focus: [s], related: lineMates(s),
+    headline: `${cap(name(s))} can no longer be cleared: whatever you play next, no other number will ever reach it.`,
     question: `What would it take for a number to reach ${name(s)}? Look at what is in its row and column, and how far away each one is.`,
     reason: `${cap(name(s))} will always be left, whatever order you play the rest in. ` +
       (needs.length ? `To reach it, there would have to be ${list(needs)}, ` : `Nothing is in its row or column, `) +
@@ -507,8 +512,9 @@ function stepsText(c, n) {
     `and don't name a better move unless the player asks for one: ` +
     `(1) where to look: ${sq(c.focus)}${c.related.length ? ` (with ${sq(c.related)})` : ""}; ` +
     `(2) a question to ask: "${c.question}" ` +
-    `(3) the reason: ${c.reason} ` +
-    `(4) the pattern to remember: ${c.pattern}.`;
+    `(3) the reason in one sentence, said first and often enough on its own: ${c.headline} ` +
+    `(4) only if the player asks why: ${c.reason} ` +
+    `(5) the pattern to remember: ${c.pattern}.`;
 }
 
 /** The solver's verdict on a move, with the reason in words. */
@@ -520,7 +526,7 @@ function judgeMove(b, from, to, memo) {
   // A number left alone by the move is the plainest; then what the move spoilt; then the other proofs.
   const plain = certificate(after, n);
   const proof = (plain && plain.code === "STRANDED" ? plain : null) || wrongMoment(b.cells, n, from, to, memo) || plain || alwaysLeft(after, n);
-  if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.reason}`, text: `${what}. A trap. ${stepsText(proof, n)}`};
+  if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.headline}`, text: `${what}. A trap. ${stepsText(proof, n)}`};
   const shown = lostLine(after, n);
   if (!shown) return {safe: false, text: `${what}. A trap: the board can no longer be cleared after it, though the reason lies many moves ahead.`};
   if (!shown.line.length) return {safe: false, text: `${what}. A trap, at once: ${shown.why}.`};
