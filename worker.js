@@ -539,18 +539,32 @@ function followGraph(cells, n, start, limit = 60_000) {
  *  sentence is what that search saw and nothing more: "can only" lists every step that happened anywhere, "cannot
  *  jump" is said only if it never jumped, "stuck" only if nothing ever happened to it there. Null when no number
  *  qualifies or the search is too large. */
-function follow(cells, n) {
+function follow(cells, n, {summary = false} = {}) {
   let best = null;
   cells.forEach((v, start) => {
     if (!v) return;
     const g = followGraph(cells, n, start);
     if (!g) return;
     const steps = [...g.values()].reduce((a, m) => a + m.size, 0);
-    if (g.size > 4 || steps > 5 || [...g.values()].some(m => [...m.values()].some(e => e.who.size > 3))) return;
+    if (!summary && (g.size > 6 || steps > 8 || [...g.values()].some(m => [...m.values()].some(e => e.who.size > 3)))) return;
     if (!best || steps < best.steps || (steps === best.steps && g.size < best.g.size)) best = {start, g, steps};
   });
   if (!best) return null;
   const {start, g} = best;
+  if (summary) {
+    // Too much happens to it to tell step by step: what it can become and where it can go, and that it never goes.
+    const sq = i => squareName(n, i), first = `the ${cells[start]} on ${sq(start)}`;
+    const nodes = [...g.keys()].map(k => k.split(",").map(Number));
+    const values = [...new Set(nodes.map(([, v]) => v))].sort((p, q) => p - q);
+    const squares = [...new Set(nodes.map(([pos]) => pos))].filter(pos => pos !== start).sort((p, q) => p - q).map(sq);
+    const or = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
+    return {code: "FOLLOW", focus: [start, ...new Set(nodes.map(([pos]) => pos))].filter((x, k, a) => a.indexOf(x) === k), related: [],
+      headline: `${first[0].toUpperCase() + first.slice(1)} will be left: nothing can get rid of it.`,
+      question: `What can ever happen to ${first}: where can it jump, and what can land on it?`,
+      reason: `Whatever you play, ${first} can become a ${or(values.map(String))}` +
+        (squares.length ? ` and end up on ${or(squares)}` : "") + `, but it never disappears.`,
+      pattern: "follow one number: where it can jump, what can land on it, and what it becomes"};
+  }
   const sq = i => squareName(n, i), at = key => key.split(",").map(Number), cap = x => x[0].toUpperCase() + x.slice(1);
   const called = key => { const [pos, val] = at(key); return `the ${val} on ${sq(pos)}`; };
   const or = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
@@ -586,6 +600,65 @@ function follow(cells, n) {
     pattern: "follow one number: where it can jump, what can land on it, and what it becomes"};
 }
 
+/** Two numbers that can never both disappear, found by following every number through every position that can be
+ *  reached: where each one is (it goes on as what it leaves when it jumps, and two that land together go on as one)
+ *  and which numbers it is with when it vanishes. Said as "both need the same number to disappear" when every way
+ *  each of them can vanish takes that one number with it, which can only happen once; else as "never both". Null
+ *  when no pair is found or the search is too large. */
+function rivals(cells, n, {plain = false} = {}, limit = 200_000) {
+  const occ = cells.map((v, i) => v ? i : -1).filter(i => i >= 0), k = occ.length;
+  if (k > 30) return null;
+  const seen = new Set([cells.join(",") + "|" + occ.join(",")]), queue = [[cells, occ.slice()]];
+  const both = new Set(), partners = occ.map(() => []);
+  while (queue.length) {
+    const [p, at] = queue.pop();
+    const gone = []; at.forEach((s, j) => { if (s < 0) gone.push(j); });
+    for (let x = 0; x < gone.length; x++) for (let y = x + 1; y < gone.length; y++) both.add(gone[x] * 64 + gone[y]);
+    for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
+      const q = hikuMoved(p, i, t), next = at.slice();
+      if (!q[t]) {
+        const movers = [], hit = [];
+        at.forEach((s, j) => { if (s === i) movers.push(j); if (s === t) hit.push(j); });
+        for (const j of movers) partners[j].push(hit);
+        for (const j of hit) partners[j].push(movers);
+      }
+      for (let j = 0; j < k; j++) if (next[j] === i) next[j] = q[t] ? t : -1; else if (next[j] === t && !q[t]) next[j] = -1;
+      const key = q.join(",") + "|" + next.join(",");
+      if (seen.has(key)) continue;
+      if (seen.size >= limit) return null;
+      seen.add(key); queue.push([q, next]);
+    }
+  }
+  const sq = i => squareName(n, i), name = j => `the ${cells[occ[j]]} on ${sq(occ[j])}`, cap = x => x[0].toUpperCase() + x.slice(1);
+  let found = null;
+  for (let x = 0; x < k; x++) for (let y = x + 1; y < k; y++) {
+    if (both.has(x * 64 + y) || !partners[x].length || !partners[y].length) continue;
+    // A number both of them always vanish with.
+    const always = j => partners[j].reduce((acc, g) => acc.filter(c => g.includes(c)), [...partners[j][0]]);
+    const shared = always(x).filter(c => always(y).includes(c));
+    const ways = j => new Set(partners[j].map(g => g.join("+"))).size;
+    const score = (shared.length ? 0 : 100) + ways(x) + ways(y);
+    if (!found || score < found.score) found = {x, y, shared, score};
+  }
+  if (!found) return null;
+  const {x, y, shared} = found;
+  if (shared.length) {
+    const c = shared[0];
+    return {code: "SHARED", focus: [occ[c], occ[x], occ[y]], related: [],
+      headline: `${cap(name(x))} and ${name(y)} both need ${name(c)} to disappear, and it can only help one of them.`,
+      question: `What can ${name(x)} and ${name(y)} each disappear with?`,
+      reason: `Whatever you play, ${name(x)} can only disappear together with ${name(c)}, and so can ${name(y)}. ` +
+        `Once ${name(c)} has gone with one of them, it is not there for the other.`,
+      pattern: "two numbers that need the same partner: only one of them can have it"};
+  }
+  if (!plain) return null;
+  return {code: "RIVALS", focus: [occ[x], occ[y]], related: [],
+    headline: `${cap(name(x))} and ${name(y)} can never both disappear.`,
+    question: `What happens to ${name(y)} once ${name(x)} is gone, and the other way round?`,
+    reason: `Whatever you play, as soon as one of them has disappeared, the other one can no longer get away.`,
+    pattern: "two numbers that stand in each other's way: clearing one strands the other"};
+}
+
 /** The reasons a lost position is lost, in the order to reveal them, for the assistant to tell one step at a time. */
 function stepsText(c, n) {
   const sq = list => list.map(i => squareName(n, i)).join(", ");
@@ -606,7 +679,7 @@ function judgeMove(b, from, to, memo) {
   if (ok === null) return {safe: null, text: `${what}. The solver could not settle it in time.`};
   // A number left alone by the move is the plainest; then what the move spoilt; then the other proofs.
   const plain = certificate(after, n);
-  const proof = (plain && plain.code === "STRANDED" ? plain : null) || wrongMoment(b.cells, n, from, to, memo) || plain || follow(after, n) || alwaysLeft(after, n);
+  const proof = (plain && plain.code === "STRANDED" ? plain : null) || wrongMoment(b.cells, n, from, to, memo) || plain || follow(after, n) || rivals(after, n) || follow(after, n, {summary: true}) || rivals(after, n, {plain: true}) || alwaysLeft(after, n);
   if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.headline}`, text: `${what}. A trap. ${stepsText(proof, n)}`};
   const shown = lostLine(after, n);
   if (!shown) return {safe: false, text: `${what}. A trap: the board can no longer be cleared after it, though the reason lies many moves ahead.`};
