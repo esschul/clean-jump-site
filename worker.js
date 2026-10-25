@@ -176,7 +176,7 @@ const MCP_TOOLS = [
     description: "Hiku's solver explains a position, so you can think it through with the player: for one move, whether " +
       "the board can still be cleared after it and, if not, a proof of why, told in steps: where to look, a question " +
       "that leads the player to it, the reason (a number left with no partner, numbers that can never be the right " +
-      "distance apart, or a group that can only meet itself with an odd sum; else a line showing how every way on " +
+      "distance apart, or a group cut off from the rest with an odd sum; else a line showing how every way on " +
       "runs out) and the pattern to remember; without a move, every legal move " +
       "marked safe or a trap with a short reason, and what each number can reach and be reached by. Use it to discuss " +
       "strategy and answer \"why not this one?\", revealing only as much as the player wants.",
@@ -307,7 +307,7 @@ function plainlyLost(cells, n) {
     for (const part of parts) {
       const sum = part.reduce((s, i) => s + cells[i], 0);
       if (sum % 2) return `the numbers ${part.map(i => `${cells[i]} on ${squareName(n, i)}`).join(", ")} share no row or column with the rest, ` +
-        `so they can only meet each other, and their sum ${sum} is odd: one number will always be left`;
+        `so they are cut off from the rest and can only clear each other, and their sum ${sum} is odd: one number will always be left`;
     }
   }
   if (!cells.some((v, i) => v && hikuTargets(cells, n, i).length)) return `no number can move, and ${left} are left`;
@@ -400,16 +400,16 @@ function certificate(cells, n) {
       return told.join(". ").replace(/\. t/g, ". T");
     };
     const told = mates.slice(0, 2).map(([t, d]) =>
-      `${cap(name(isolated))} and ${name(t)} are ${d} squares apart, so to meet, one of them would have to become a ${d}. ` +
+      `${cap(name(isolated))} and ${name(t)} are ${d} squares apart, so for one to jump onto the other, one of them would have to become a ${d}. ` +
       `A number only changes when another lands on it. ${cap(changes(isolated))}. ${cap(changes(t))}. Neither can ever become a ${d}.`);
     return {code: "UNREACHABLE", focus: [isolated], related: mates.map(([t]) => t),
       headline: `${cap(name(isolated))} can no longer be cleared: no other number can ever reach it.`,
       question: `${cap(name(isolated))} lines up with ${list(mates.map(([t]) => name(t)))}. How far apart are they, and can either of them ever become that number?`,
       reason: told.join(" ") + (mates.length > 2 ? ` The same goes for the other ${mates.length - 2} it lines up with.` : "") +
-        ` So ${name(isolated)} can never meet another number, and it will be left.`,
+        ` So no number will ever be the right distance from ${name(isolated)}, and it will be left.`,
       pattern: partner};
   }
-  // A group that can only ever meet itself, with an odd sum.
+  // A group cut off from the rest of the board, with an odd sum.
   const parent = new Map(occ.map(i => [i, i]));
   const find = x => { while (parent.get(x) !== x) x = parent.get(x); return x; };
   for (const [a, b] of links) parent.set(find(a), find(b));
@@ -419,17 +419,17 @@ function certificate(cells, n) {
   const odd = [...groups.values()].filter(g => g.reduce((sum, i) => sum + cells[i], 0) % 2 && g.length <= 3).sort((x, y) => x.length - y.length)[0];
   if (odd && groups.size > 1) {
     const sum = odd.reduce((total, i) => total + cells[i], 0);
-    // Why they are cut off from the rest: no shared row or column at all, or never the right distance to meet.
+    // Why they are cut off from the rest: no shared row or column at all, or never the right distance to jump.
     const inGroup = new Set(odd);
     const lined = pairs.some(([a, b]) => inGroup.has(a) !== inGroup.has(b));
     return {code: "ODD_GROUP", focus: odd, related: [],
-      headline: `${odd.map(name).join(", ").replace(/^t/, "T")} can only meet each other, and they add up to an odd number, so one of them will always be left.`,
-      question: `Which numbers can ${odd.map(name).join(", ")} ever meet? Add them up: can they cancel out?`,
-      reason: `${odd.map(name).join(", ").replace(/^t/, "T")} can only ever meet each other: ` +
+      headline: `${odd.map(name).join(", ").replace(/^t/, "T")} are cut off from the rest of the board: no other number will ever be the right distance from them, and on their own they cannot clear each other.`,
+      question: `Which numbers could ever clear ${odd.map(name).join(", ")}? Add them up: can they cancel out?`,
+      reason: `${odd.map(name).join(", ").replace(/^t/, "T")} are cut off from the rest of the board: ` +
         (lined ? `they line up with other numbers, but are never the right distance from any of them to jump. ` : `no other number is in their rows or columns. `) +
         `Together they add up to ${sum}, an odd number. ` +
-        `When two numbers meet, their total goes down by an even amount (3 and 1 make 2, 2 and 2 make 0), so the total stays odd and can never reach 0: one number will always be left.`,
-      pattern: "even and odd: a group of numbers that can only meet each other must add up to an even number"};
+        `When one number jumps onto another, the difference is left, so their total goes down by an even amount (3 onto 1 makes 2, 2 onto 2 makes 0): the total stays odd and can never reach 0, so whatever the order, one number is always left.`,
+      pattern: "even and odd: a group of numbers cut off from the rest must add up to an even number"};
   }
   return null;
 }
