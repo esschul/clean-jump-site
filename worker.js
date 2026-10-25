@@ -453,18 +453,23 @@ function wrongMoment(cells, n, from, to, memo) {
   // The played move in every solution, and the number that lands on the same square before it in every one.
   const at = sols.map(sol => sol.findIndex(([i, t]) => i === from && t === to));
   if (at.some(k => k < 0)) return null;
-  const firsts = sols.map((sol, k) => sol.slice(0, at[k]).filter(([, t]) => t === to).map(([i]) => i));
-  const common = firsts[0].filter(i => firsts.every(f => f.includes(i)));
-  if (!common.length) return null;
-  const x = common[0];
-  const name = i => `the ${cells[i]} on ${squareName(n, i)}`, cap = w => w[0].toUpperCase() + w.slice(1);
-  const now = Math.abs(cells[from] - cells[to]);
+  const firsts = sols.map((sol, k) => sol.slice(0, at[k]).filter(([, t]) => t === to));
+  // The number from x may have changed before it jumps, and so may the square it lands on: say them as they are then,
+  // and only when every way to clear the board agrees on both.
+  const x = firsts[0].map(([i]) => i).find(i => firsts.every(f => f.some(([j]) => j === i)));
+  if (x === undefined) return null;
+  const then = firsts.map(f => f.find(([j]) => j === x));
+  if (then.some(([, , v, w]) => v !== then[0][2] || w !== then[0][3])) return null;
+  const [, , jumper, target] = then[0];
+  const sq = i => squareName(n, i), name = i => `the ${cells[i]} on ${sq(i)}`;
+  const now = Math.abs(cells[from] - cells[to]), cap = w => w[0].toUpperCase() + w.slice(1);
   return {code: "WRONG_MOMENT", focus: [x, to], related: [from],
-    headline: `Right move, wrong moment: ${name(x)} needs ${squareName(n, to)} first, while it is still a ${cells[to]}.`,
-    question: `${cap(name(x))} and ${name(from)} can both land on ${squareName(n, to)}. Which of them needs it first?`,
-    reason: `Right move, wrong moment. In every way to clear this board, ${name(from)} does jump onto ${squareName(n, to)}, ` +
-      `but only after ${name(x)} has landed there first, while ${squareName(n, to)} is still a ${cells[to]}. ` +
-      `Played now, it makes ${squareName(n, to)} ${now ? `a ${now}` : "empty"}, and that no longer works for ${name(x)}.`,
+    headline: `${cap(name(x))} depends on ${sq(to)} to be cleared, and ` +
+      (now ? `there is a ${now} there now, which no longer fits.` : `${sq(to)} is empty now.`),
+    question: `Which numbers could ever clear ${name(x)}? And what happened to ${sq(to)}?`,
+    reason: `In every way to clear the board, ${name(x)}` +
+      (jumper === cells[x] ? "" : ` first becomes a ${jumper}, then`) +
+      ` jumps to ${sq(to)} while there is a ${target} there. Only after that can ${name(from)} land on ${sq(to)}.`,
     pattern: "order matters: when two numbers need the same square, ask which one needs it as it is now"};
 }
 
