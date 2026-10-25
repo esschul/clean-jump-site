@@ -174,8 +174,10 @@ const MCP_TOOLS = [
     name: "hiku_analyze",
     title: "Analyse a Hiku position",
     description: "Hiku's solver explains a position, so you can think it through with the player: for one move, whether " +
-      "the board can still be cleared after it and, if not, why (a number left with no partner, numbers that can never " +
-      "meet adding up to an odd sum, or a line showing how every way on runs out); without a move, every legal move " +
+      "the board can still be cleared after it and, if not, a proof of why, told in steps: where to look, a question " +
+      "that leads the player to it, the reason (a number left with no partner, numbers that can never be the right " +
+      "distance apart, or a group that can only meet itself with an odd sum; else a line showing how every way on " +
+      "runs out) and the pattern to remember; without a move, every legal move " +
       "marked safe or a trap with a short reason, and what each number can reach and be reached by. Use it to discuss " +
       "strategy and answer \"why not this one?\", revealing only as much as the player wants.",
     inputSchema: {
@@ -335,12 +337,94 @@ function lostLine(cells, n) {
   return null;
 }
 
+/** Which numbers could ever meet: for each number, every value it could ever hold, and a link between two numbers in
+ *  line when either could ever hold their distance. Squares only ever empty, never fill, and a value changes only when
+ *  a number lands on it, so this lets in every meeting real play could make and maybe more: whatever it rules out
+ *  can never happen. */
+function couldMeet(cells, n) {
+  const occ = cells.map((v, i) => v ? i : -1).filter(i => i >= 0);
+  const vals = new Map(occ.map(i => [i, new Set([cells[i]])]));
+  const pairs = [];
+  for (const a of occ) for (const b of occ) {
+    if (b <= a) continue;
+    const ra = Math.floor(a / n), rb = Math.floor(b / n), ca = a % n, cb = b % n;
+    if (ra === rb || ca === cb) pairs.push([a, b, Math.abs(ra - rb) + Math.abs(ca - cb)]);
+  }
+  for (let changed = true; changed;) {
+    changed = false;
+    for (const [a, b, d] of pairs) for (const [x, y] of [[a, b], [b, a]]) {
+      if (!vals.get(x).has(d)) continue;
+      for (const v of [...vals.get(y)]) {
+        const w = Math.abs(v - d);
+        if (w > 0 && !vals.get(y).has(w)) { vals.get(y).add(w); changed = true; }
+      }
+    }
+  }
+  const links = pairs.filter(([a, b, d]) => vals.get(a).has(d) || vals.get(b).has(d));
+  return {occ, vals, pairs, links};
+}
+
+/** A short proof that a position can never be cleared, ready to be told in steps (where to look, a question, the
+ *  reason, the general pattern), or null when none of the simple proofs holds. Tried from the plainest. */
+function certificate(cells, n) {
+  const name = i => `the ${cells[i]} on ${squareName(n, i)}`;
+  const {occ, vals, pairs, links} = couldMeet(cells, n);
+  if (!occ.length) return null;
+  const partner = "a number with no partner: watch for numbers that are about to be left alone in their row and column";
+  // A number with nothing in its row or column.
+  const lone = occ.find(i => !pairs.some(([a, b]) => a === i || b === i));
+  if (lone !== undefined) return {code: "STRANDED", focus: [lone], related: [],
+    question: `Is there any number left in the same row or column as ${name(lone)}?`,
+    reason: `${name(lone)[0].toUpperCase() + name(lone).slice(1)} has no other number in its row or column, so nothing can ever reach it and it can never move.`,
+    pattern: partner};
+  // A number that lines up with others but can never be the right distance from any of them.
+  const isolated = occ.find(i => !links.some(([a, b]) => a === i || b === i));
+  if (isolated !== undefined) {
+    const mates = pairs.filter(([a, b]) => a === isolated || b === isolated).map(([a, b, d]) => [a === isolated ? b : a, d]);
+    const only = i => [...vals.get(i)].sort((x, y) => x - y).join(" or ");
+    return {code: "UNREACHABLE", focus: [isolated], related: mates.map(([t]) => t),
+      question: `${name(isolated)[0].toUpperCase() + name(isolated).slice(1)} lines up with ${mates.map(([t]) => name(t)).join(" and ")}. Can either side ever be exactly the right number to jump across?`,
+      reason: `${name(isolated)[0].toUpperCase() + name(isolated).slice(1)} can never meet another number: ` + mates.map(([t, d]) =>
+        `it is ${d} squares from ${name(t)}, and neither can ever become a ${d} (` +
+        (only(isolated) === only(t) ? `both can only ever be ${only(t)}` : `one can only ever be ${only(isolated)}, the other ${only(t)}`) + ")").join("; ") + ".",
+      pattern: partner};
+  }
+  // A group that can only ever meet itself, with an odd sum.
+  const parent = new Map(occ.map(i => [i, i]));
+  const find = x => { while (parent.get(x) !== x) x = parent.get(x); return x; };
+  for (const [a, b] of links) parent.set(find(a), find(b));
+  const groups = new Map();
+  for (const i of occ) { const k = find(i); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(i); }
+  const odd = [...groups.values()].filter(g => g.reduce((sum, i) => sum + cells[i], 0) % 2).sort((x, y) => x.length - y.length)[0];
+  if (odd && groups.size > 1) {
+    const sum = odd.reduce((total, i) => total + cells[i], 0);
+    return {code: "ODD_GROUP", focus: odd, related: [],
+      question: `Which numbers can ${odd.map(name).join(", ")} ever meet? Add them up: can they cancel out?`,
+      reason: `${odd.map(name).join(", ").replace(/^t/, "T")} can only ever meet each other, and together they make ${sum}, an odd number. ` +
+        `A meeting never changes whether the total is odd or even, so one number will always be left.`,
+      pattern: "even and odd: a group of numbers that can only meet each other must add up to an even number"};
+  }
+  return null;
+}
+
+/** The reasons a lost position is lost, in the order to reveal them, for the assistant to tell one step at a time. */
+function stepsText(c, n) {
+  const sq = list => list.map(i => squareName(n, i)).join(", ");
+  return `Reason code ${c.code}. Tell it in steps, as far as the player wants: ` +
+    `(1) where to look: ${sq(c.focus)}${c.related.length ? ` (with ${sq(c.related)})` : ""}; ` +
+    `(2) a question to ask: "${c.question}" ` +
+    `(3) the reason: ${c.reason} ` +
+    `(4) the pattern to remember: ${c.pattern}.`;
+}
+
 /** The solver's verdict on a move, with the reason in words. */
 function judgeMove(b, from, to, memo) {
   const n = b.n, after = hikuMoved(b.cells, from, to), what = describeMove(n, b.cells, from, to);
   const ok = hikuSolvable(after, n, memo, 400_000);
   if (ok === true) return {safe: true, text: `${what}. Safe: the board can still be cleared after it.`};
   if (ok === null) return {safe: null, text: `${what}. The solver could not settle it in time.`};
+  const proof = certificate(after, n);
+  if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.reason}`, text: `${what}. A trap. ${stepsText(proof, n)}`};
   const shown = lostLine(after, n);
   if (!shown) return {safe: false, text: `${what}. A trap: the board can no longer be cleared after it, though the reason lies many moves ahead.`};
   if (!shown.line.length) return {safe: false, text: `${what}. A trap, at once: ${shown.why}.`};
@@ -358,6 +442,8 @@ function analyseText(difficulty, b, move) {
   const now = hikuSolvable(b.cells, n, memo, 400_000);
   const lines = [boardText(difficulty, b).split("\n").slice(0, n + 3).join("\n"), ""];
   if (now === false) {
+    const proof = certificate(b.cells, n);
+    if (proof) { lines.push("This position can no longer be cleared. " + stepsText(proof, n)); return lines.join("\n"); }
     const shown = lostLine(b.cells, n);
     lines.push("This position can no longer be cleared" + (shown ? (shown.line.length ? `: for example ${shown.line.join(", ")}, and then ${shown.why}.` : `: ${shown.why}.`) : "."));
     return lines.join("\n");
@@ -365,7 +451,7 @@ function analyseText(difficulty, b, move) {
   lines.push("Each legal move:");
   b.cells.forEach((v, i) => hikuTargets(b.cells, n, i).forEach(t => {
     const j = judgeMove(b, i, t, memo);
-    lines.push("• " + (j.safe === true ? "SAFE " : j.safe === false ? "TRAP " : "? ") + j.text);
+    lines.push("• " + (j.safe === true ? "SAFE " : j.safe === false ? "TRAP " : "? ") + (j.short || j.text));
   }));
   lines.push("", "What each number can reach, and what can reach it:");
   b.cells.forEach((v, i) => {
