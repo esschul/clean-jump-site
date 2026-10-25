@@ -431,10 +431,47 @@ function certificate(cells, n) {
   return null;
 }
 
+/** A number no order of play can ever clear, found by trying every way on (up to a limit), or null. Said with what it
+ *  would take to reach it: the number each square in line with it would have to be. Every word is checkable on the
+ *  board, and the search behind it is complete, so it is never wrong. */
+function alwaysLeft(cells, n, limit = 60_000) {
+  const occ = cells.map((v, i) => v ? i : -1).filter(i => i >= 0);
+  const cleared = new Set(), seen = new Set([cells.join("")]), queue = [cells];
+  while (queue.length) {
+    const p = queue.pop();
+    for (const i of occ) if (!p[i]) cleared.add(i);
+    if (cleared.size === occ.length) return null;
+    for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
+      const q = hikuMoved(p, i, t), key = q.join("");
+      if (seen.has(key)) continue;
+      if (seen.size >= limit) return null;
+      seen.add(key); queue.push(q);
+    }
+  }
+  const left = occ.filter(i => !cleared.has(i));
+  if (!left.length) return null;
+  // The one with the fewest squares in line with it is the easiest to see.
+  const lineMates = i => occ.filter(j => j !== i && (Math.floor(j / n) === Math.floor(i / n) || j % n === i % n));
+  const s = left.sort((a, b) => lineMates(a).length - lineMates(b).length)[0];
+  const name = i => `the ${cells[i]} on ${squareName(n, i)}`, cap = x => x[0].toUpperCase() + x.slice(1);
+  const dist = j => Math.abs(Math.floor(j / n) - Math.floor(s / n)) + Math.abs(j % n - s % n);
+  const needs = lineMates(s).map(j => `a ${dist(j)} on ${squareName(n, j)}`);
+  const list = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
+  const ownJumps = hikuTargets(cells, n, s).length;
+  return {code: "ALWAYS_LEFT", focus: [s], related: lineMates(s),
+    question: `What would it take for a number to reach ${name(s)}? Look at what is in its row and column, and how far away each one is.`,
+    reason: `${cap(name(s))} will always be left, whatever order you play the rest in. ` +
+      (needs.length ? `To reach it, there would have to be ${list(needs)}, ` : `Nothing is in its row or column, `) +
+      (ownJumps ? `and every way it could jump itself leads to the same end. ` : `and it can't jump onto anything itself. `) +
+      `However the other numbers are played, none of them ever becomes the right number in the right place.`,
+    pattern: "look a few moves ahead for the number that will be left: ask what would have to happen for something to reach it"};
+}
+
 /** The reasons a lost position is lost, in the order to reveal them, for the assistant to tell one step at a time. */
 function stepsText(c, n) {
   const sq = list => list.map(i => squareName(n, i)).join(", ");
-  return `Reason code ${c.code}. Tell it in plain everyday words, one idea at a time, in the player's language, as far as the player wants: ` +
+  return `Reason code ${c.code}. Tell it in plain everyday words, one idea at a time, in the player's language, as far as the player wants, ` +
+    `and don't name a better move unless the player asks for one: ` +
     `(1) where to look: ${sq(c.focus)}${c.related.length ? ` (with ${sq(c.related)})` : ""}; ` +
     `(2) a question to ask: "${c.question}" ` +
     `(3) the reason: ${c.reason} ` +
@@ -447,7 +484,7 @@ function judgeMove(b, from, to, memo) {
   const ok = hikuSolvable(after, n, memo, 400_000);
   if (ok === true) return {safe: true, text: `${what}. Safe: the board can still be cleared after it.`};
   if (ok === null) return {safe: null, text: `${what}. The solver could not settle it in time.`};
-  const proof = certificate(after, n);
+  const proof = certificate(after, n) || alwaysLeft(after, n);
   if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.reason}`, text: `${what}. A trap. ${stepsText(proof, n)}`};
   const shown = lostLine(after, n);
   if (!shown) return {safe: false, text: `${what}. A trap: the board can no longer be cleared after it, though the reason lies many moves ahead.`};
@@ -466,7 +503,7 @@ function analyseText(difficulty, b, move) {
   const now = hikuSolvable(b.cells, n, memo, 400_000);
   const lines = [boardText(difficulty, b).split("\n").slice(0, n + 3).join("\n"), ""];
   if (now === false) {
-    const proof = certificate(b.cells, n);
+    const proof = certificate(b.cells, n) || alwaysLeft(b.cells, n);
     if (proof) { lines.push("This position can no longer be cleared. " + stepsText(proof, n)); return lines.join("\n"); }
     const shown = lostLine(b.cells, n);
     lines.push("This position can no longer be cleared" + (shown ? (shown.line.length ? `: for example ${shown.line.join(", ")}, and then ${shown.why}.` : `: ${shown.why}.`) : "."));
