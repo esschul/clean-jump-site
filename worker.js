@@ -176,7 +176,8 @@ const MCP_TOOLS = [
     description: "Hiku's solver explains a position, so you can think it through with the player: for one move, whether " +
       "the board can still be cleared after it and, if not, a proof of why, told in steps: where to look, a question " +
       "that leads the player to it, the reason (a number left with no partner, numbers that can never be the right " +
-      "distance apart, or a group cut off from the rest with an odd sum; else a line showing how every way on " +
+      "distance apart, a group cut off from the rest with an odd sum, or one number followed through everything that " +
+      "can ever happen to it; else a line showing how every way on " +
       "runs out) and the pattern to remember; without a move, every legal move " +
       "marked safe or a trap with a short reason, and what each number can reach and be reached by. Use it to discuss " +
       "strategy and answer \"why not this one?\", revealing only as much as the player wants.",
@@ -496,18 +497,93 @@ function alwaysLeft(cells, n, limit = 60_000) {
   const lineMates = i => occ.filter(j => j !== i && (Math.floor(j / n) === Math.floor(i / n) || j % n === i % n));
   const s = left.sort((a, b) => lineMates(a).length - lineMates(b).length)[0];
   const name = i => `the ${cells[i]} on ${squareName(n, i)}`, cap = x => x[0].toUpperCase() + x.slice(1);
-  const dist = j => Math.abs(Math.floor(j / n) - Math.floor(s / n)) + Math.abs(j % n - s % n);
-  const needs = lineMates(s).map(j => `a ${dist(j)} on ${squareName(n, j)}`);
-  const list = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
-  const ownJumps = hikuTargets(cells, n, s).length;
   return {code: "ALWAYS_LEFT", focus: [s], related: lineMates(s),
-    headline: `${cap(name(s))} can no longer be cleared: whatever you play next, no other number will ever reach it.`,
+    headline: `${cap(name(s))} can no longer be cleared, whatever you play next.`,
     question: `What would it take for a number to reach ${name(s)}? Look at what is in its row and column, and how far away each one is.`,
-    reason: `${cap(name(s))} will always be left, whatever order you play the rest in. ` +
-      (needs.length ? `To reach it, there would have to be ${list(needs)}, ` : `Nothing is in its row or column, `) +
-      (ownJumps ? `and every way it could jump itself leads to the same end. ` : `and it can't jump onto anything itself. `) +
-      `However the other numbers are played, none of them ever becomes the right number in the right place.`,
+    reason: `${cap(name(s))} will always be left, whatever order you play the rest in: in every way the game can go on, ` +
+      `it is still there at the end.`,
     pattern: "look a few moves ahead for the number that will be left: ask what would have to happen for something to reach it"};
+}
+
+/** Every way one number can go, over every position that can be reached: a map from "square,value" to the steps out of
+ *  it. Null when the number is cleared somewhere (so this number is no proof) or the search is too large. */
+function followGraph(cells, n, start, limit = 60_000) {
+  const edges = new Map(), seen = new Set([cells.join(",") + "|" + start]), queue = [[cells, start]];
+  const edge = (from, to, kind, who) => {
+    const out = edges.get(from);
+    if (!out.has(to)) out.set(to, {kind, who: new Set()});
+    if (who !== undefined) out.get(to).who.add(who);
+  };
+  while (queue.length) {
+    const [p, tok] = queue.pop(), here = `${tok},${p[tok]}`;
+    if (!edges.has(here)) edges.set(here, new Map());
+    for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
+      const q = hikuMoved(p, i, t);
+      let next = tok;
+      if (i === tok || t === tok) {
+        if (!q[t]) return null;
+        if (i === tok) { next = t; edge(here, `${t},${q[t]}`, "jump"); } else edge(here, `${t},${q[t]}`, "land", i);
+      }
+      const key = q.join(",") + "|" + next;
+      if (seen.has(key)) continue;
+      if (seen.size >= limit) return undefined;
+      seen.add(key); queue.push([q, next]);
+    }
+  }
+  return edges;
+}
+
+/** One number followed through every way the game can go on: what can land on it, where it can jump, and what it
+ *  becomes, until it is stuck. Said only when that number is never cleared in any position that can be reached (so the
+ *  board is lost) and what can happen to it is small enough to tell: at most four values on at most five steps. Every
+ *  sentence is what that search saw and nothing more: "can only" lists every step that happened anywhere, "cannot
+ *  jump" is said only if it never jumped, "stuck" only if nothing ever happened to it there. Null when no number
+ *  qualifies or the search is too large. */
+function follow(cells, n) {
+  let best = null;
+  cells.forEach((v, start) => {
+    if (!v) return;
+    const g = followGraph(cells, n, start);
+    if (!g) return;
+    const steps = [...g.values()].reduce((a, m) => a + m.size, 0);
+    if (g.size > 4 || steps > 5 || [...g.values()].some(m => [...m.values()].some(e => e.who.size > 3))) return;
+    if (!best || steps < best.steps || (steps === best.steps && g.size < best.g.size)) best = {start, g, steps};
+  });
+  if (!best) return null;
+  const {start, g} = best;
+  const sq = i => squareName(n, i), at = key => key.split(",").map(Number), cap = x => x[0].toUpperCase() + x.slice(1);
+  const called = key => { const [pos, val] = at(key); return `the ${val} on ${sq(pos)}`; };
+  const or = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
+  // Each value it can have, in the order it can come to have them, told in one sentence.
+  const order = [`${start},${cells[start]}`];
+  for (let k = 0; k < order.length; k++) for (const to of g.get(order[k]).keys()) if (!order.includes(to)) order.push(to);
+  const told = [];
+  const stuck = order.filter(key => !g.get(key).size);
+  for (const key of order) {
+    const out = [...g.get(key).entries()], [pos] = at(key);
+    if (!out.length) continue;
+    const dist = i => Math.abs(Math.floor(i / n) - Math.floor(pos / n)) + Math.abs(i % n - pos % n);
+    // Jumps to the same square that leave different numbers, by what was there, are told as one.
+    const jumps = new Map();
+    for (const [to, e] of out) if (e.kind === "jump") { const [t, w] = at(to); jumps.set(t, [...(jumps.get(t) || []), w]); }
+    const jumped = [...jumps.entries()].map(([t, ws]) => `${sq(t)}, leaving a ${or(ws.sort((p, q) => p - q).map(String))} there`);
+    const landed = out.filter(([, e]) => e.kind === "land").map(([to, e]) =>
+      `${or([...e.who].sort((p, q) => p - q).map(i => `a ${dist(i)} from ${sq(i)}`))}, which ${to === key ? "leaves it" : "makes it"} a ${at(to)[1]}`);
+    const name = cap(called(key));
+    if (!landed.length) told.push(`${name} can only jump to ${or(jumped)}.`);
+    else if (!jumped.length) told.push(`${name} cannot jump, and the only ${landed.length > 1 ? "numbers" : "number"} that can land on it ${landed.length > 1 ? "are" : "is"} ${or(landed)}.`);
+    else told.push(`${name} can jump to ${or(jumped)}. Otherwise the only ${landed.length > 1 ? "numbers" : "number"} that can land on it ${landed.length > 1 ? "are" : "is"} ${or(landed)}.`);
+  }
+  if (stuck.length) told.push(stuck.length === 1
+    ? `${cap(called(stuck[0]))} is stuck: it cannot jump, and nothing can land on it.`
+    : `${cap(or(stuck.map(called)).replace(/ or ([^,]*)$/, " and $1"))} are stuck: they cannot jump, and nothing can land on them.`);
+  const focus = [start, ...new Set([...g.values()].flatMap(m => [...m.entries()].flatMap(([to, e]) => e.kind === "jump" ? [at(to)[0]] : [...e.who])))];
+  const neverJumps = ![...g.get(order[0]).values()].some(e => e.kind === "jump");
+  return {code: "FOLLOW", focus: [...new Set(focus)], related: [],
+    headline: `${cap(called(order[0]))} will be left: ${neverJumps ? "it cannot jump, and " : ""}nothing can get rid of it.`,
+    question: `What can ever happen to ${called(order[0])}: where can it jump, and what can land on it?`,
+    reason: told.join(" "),
+    pattern: "follow one number: where it can jump, what can land on it, and what it becomes"};
 }
 
 /** The reasons a lost position is lost, in the order to reveal them, for the assistant to tell one step at a time. */
@@ -530,7 +606,7 @@ function judgeMove(b, from, to, memo) {
   if (ok === null) return {safe: null, text: `${what}. The solver could not settle it in time.`};
   // A number left alone by the move is the plainest; then what the move spoilt; then the other proofs.
   const plain = certificate(after, n);
-  const proof = (plain && plain.code === "STRANDED" ? plain : null) || wrongMoment(b.cells, n, from, to, memo) || plain || alwaysLeft(after, n);
+  const proof = (plain && plain.code === "STRANDED" ? plain : null) || wrongMoment(b.cells, n, from, to, memo) || plain || follow(after, n) || alwaysLeft(after, n);
   if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.headline}`, text: `${what}. A trap. ${stepsText(proof, n)}`};
   const shown = lostLine(after, n);
   if (!shown) return {safe: false, text: `${what}. A trap: the board can no longer be cleared after it, though the reason lies many moves ahead.`};
