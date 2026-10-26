@@ -1,6 +1,7 @@
 // Written by tools/build_explain_texts.py from the iOS app's Localizable.xcstrings; don't edit by hand.
 export const TEXTS = {
  "nb": {
+  "action.done": "Ferdig",
   "explain.alwaysLeft": "%@ kan ikke lenger fjernes, uansett hva du spiller videre.",
   "explain.alwaysLeft.why": "Uansett hvilken rekkefølge du spiller resten i, står det der til slutt.",
   "explain.cannotClear": "%@ kan ikke lenger fjernes: ingen andre tall kan noen gang nå det.",
@@ -45,6 +46,7 @@ export const TEXTS = {
   "list.or": "eller"
  },
  "en": {
+  "action.done": "Done",
   "explain.alwaysLeft": "%@ can no longer be cleared, whatever you play next.",
   "explain.alwaysLeft.why": "Whatever order you play the rest in, it is still there at the end.",
   "explain.cannotClear": "%@ can no longer be cleared: no other number can ever reach it.",
@@ -89,6 +91,7 @@ export const TEXTS = {
   "list.or": "or"
  },
  "sv": {
+  "action.done": "Klar",
   "explain.alwaysLeft": "%@ går inte längre att ta bort, vad du än spelar härnäst.",
   "explain.alwaysLeft.why": "Oavsett i vilken ordning du spelar resten står den kvar till slut.",
   "explain.cannotClear": "%@ går inte längre att ta bort: inget annat tal kan någonsin nå den.",
@@ -133,6 +136,7 @@ export const TEXTS = {
   "list.or": "eller"
  },
  "da": {
+  "action.done": "Færdig",
   "explain.alwaysLeft": "%@ kan ikke længere fjernes, uanset hvad du spiller nu.",
   "explain.alwaysLeft.why": "Uanset i hvilken rækkefølge du spiller resten, står det der til sidst.",
   "explain.cannotClear": "%@ kan ikke længere fjernes: intet andet tal kan nogensinde nå det.",
@@ -177,6 +181,7 @@ export const TEXTS = {
   "list.or": "eller"
  },
  "fi": {
+  "action.done": "Valmis",
   "explain.alwaysLeft": "%@ ei voi enää poistua, pelasitpa mitä tahansa.",
   "explain.alwaysLeft.why": "Missä järjestyksessä tahansa pelaat loput, se on lopussa yhä paikallaan.",
   "explain.cannotClear": "%@ ei voi enää poistua: mikään muu luku ei voi koskaan päästä siihen.",
@@ -221,6 +226,7 @@ export const TEXTS = {
   "list.or": "tai"
  },
  "de": {
+  "action.done": "Fertig",
   "explain.alwaysLeft": "%@ lässt sich nicht mehr entfernen, egal was du spielst.",
   "explain.alwaysLeft.why": "Egal in welcher Reihenfolge du den Rest spielst, am Ende steht sie noch da.",
   "explain.cannotClear": "%@ lässt sich nicht mehr entfernen: keine andere Zahl kann sie je erreichen.",

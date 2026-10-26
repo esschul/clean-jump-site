@@ -3,8 +3,8 @@
 
     python3 tools/build_explain_texts.py [path/to/Localizable.xcstrings]
 
-Reads the explain.* and list.* keys of ../clean-jump/CleanJump/Localizable.xcstrings (or the path given) and writes
-daily/explain-texts.js, which daily/explain.js fills in. A key like "explain.number %lld %@" is stored as
+Reads the explain.* and list.* keys and action.done of ../clean-jump/CleanJump/Localizable.xcstrings (or the path
+given) and writes daily/explain-texts.js, which daily/explain.js fills in. A key like "explain.number %lld %@" is stored as
 explain.number with its text as it is in the catalog (%1$lld, %@ …): explain.js fills those in itself. Run this after
 changing the texts in the catalog.
 """
@@ -20,7 +20,7 @@ languages = ["nb", "en", "sv", "da", "fi", "de"]
 texts = {lang: {} for lang in languages}
 for key, entry in sorted(catalog.items()):
     name = key.split(" ")[0]
-    if not (name.startswith("explain.") or name.startswith("list.")):
+    if not (name.startswith("explain.") or name.startswith("list.") or name == "action.done"):
         continue
     for lang in languages:
         texts[lang][name] = entry["localizations"][lang]["stringUnit"]["value"]
