@@ -99,7 +99,8 @@ footer a{color:var(--accent)}
 .whycard.opening{animation:settle .25s ease both}
 .whycard .bar{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .whycard .bar span{font-weight:600}
-.whycard .bar button{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:4px 0;cursor:pointer}
+.whycard .bar button{width:32px;height:32px;flex:none;border-radius:50%;border:0;background:var(--cell);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.whycard .bar button:hover{background:var(--edge)}
 .whycard p{margin:0}
 .whycard .head{font-weight:600}
 .whycard .reason{color:var(--muted)}
@@ -382,7 +383,9 @@ footer a{color:var(--accent)}
   const lostText = document.createTextNode(''), lostLine = document.createElement('span'), whyLink = document.createElement('button');
   whyLink.type = 'button';
   whyLink.className = 'linky';
-  whyLink.onclick = () => showWhy();
+  // The link opens the reason and, while it is open, closes it again.
+  whyLink.onclick = () => whyCard ? closeWhy() : showWhy();
+  whyLink.setAttribute('aria-expanded', 'false');
   lostLine.append(lostText, whyLink);
 
   // The reason lies over the board while it is open, put back after every redraw, and goes with Done, Escape or a move back.
@@ -391,6 +394,7 @@ footer a{color:var(--accent)}
     if (!whyCard) return;
     whyCard.remove();
     whyCard = null;
+    whyLink.setAttribute('aria-expanded', 'false');
     whyLink.focus();
   }
 
@@ -406,9 +410,11 @@ footer a{color:var(--accent)}
     bar.className = 'bar';
     const title = document.createElement('span');
     title.textContent = words('explain.why');
+    // A round ✕ in the corner, as players expect a card to close; read out as "Done".
     const done = document.createElement('button');
     done.type = 'button';
-    done.textContent = words('action.done');
+    done.setAttribute('aria-label', words('action.done'));
+    done.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
     done.onclick = closeWhy;
     bar.append(title, done);
     const body = document.createElement('p');
@@ -416,6 +422,7 @@ footer a{color:var(--accent)}
     body.textContent = words('explain.loading');
     card.append(bar, body);
     boardEl.appendChild(card);
+    whyLink.setAttribute('aria-expanded', 'true');
     done.focus();
     const positions = [...history, cells], size = n, asked = checkToken;
     // A moment for "looking for the reason" to show: the search can take a tenth of a second on a big board.
@@ -733,7 +740,7 @@ footer a{color:var(--accent)}
 
   function renderStatus() {
     statusEl.className = 'status';
-    if (!lost) whyCard = null;
+    if (!lost) { whyCard = null; whyLink.setAttribute('aria-expanded', 'false'); }
     if (isClear(cells)) {
       const k = stars(undos), days = lesson === null ? streak() : 0;
       // The result lies on the cleared board, so the box keeps its height from the first move to the last.
