@@ -342,7 +342,7 @@ function lostLine(cells, n) {
 
 // The reasons themselves come from daily/explain.js, the same proofs and words as the iOS and Android apps and the web
 // game. An assistant gets them in English, with a question that leads the player there and the pattern to remember.
-const KIND_CODES = {stranded: "STRANDED", unreachable: "UNREACHABLE", oddGroup: "ODD_GROUP", wrongMoment: "WRONG_MOMENT",
+const KIND_CODES = {stranded: "STRANDED", unreachable: "UNREACHABLE", oddGroup: "ODD_GROUP", wrongMoment: "WRONG_MOMENT", needsSquare: "NEEDS_SQUARE",
   follow: "FOLLOW", shared: "SHARED", rivals: "RIVALS", alwaysLeft: "ALWAYS_LEFT"};
 
 /** An explanation from explain.js told for an assistant: where to look, a question, the reason and the pattern. */
@@ -359,6 +359,8 @@ function forAssistant(found, n) {
       "even and odd: a group of numbers cut off from the rest must add up to an even number"],
     wrongMoment: [`Which numbers could ever clear ${name(first)}? And what happened to ${squareName(n, rest[0])}?`,
       "order matters: when two numbers need the same square, ask which one needs it as it is now"],
+    needsSquare: [`How could ${name(first)} ever disappear? What did it need on ${squareName(n, rest[0])}?`,
+      "before a move, look at what it takes away: a number that needs that square to get away is left for good"],
     follow: [`What can ever happen to ${name(first)}: where can it jump, and what can land on it?`,
       "follow one number: where it can jump, what can land on it, and what it becomes"],
     shared: [`What can ${name(rest[0])} and ${name(rest[1])} each disappear with?`,

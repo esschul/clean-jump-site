@@ -206,13 +206,12 @@ function changes(cells, n, meet, index) {
 
 // ---- Right move, wrong moment
 
-/** The move is in every way to clear the board, but another number has to land on the same square first, while it is
- *  still what it is now. Found from every solution of the position before the move, so it is always true. */
-function wrongMoment(before, n, move, memo) {
+/** Every way to clear `before`, as lists of moves, or null when there are too many to look at them all. */
+function solutionsOf(before, n, memo) {
   const solutions = [], line = [];
   let nodes = 0;
   (function walk(p) {
-    if (solutions.length > 200 || nodes > 20_000) return;
+    if (solutions.length > 2000 || nodes > 20_000) return;
     nodes++;
     if (p.every(v => v === 0)) { solutions.push(line.slice()); return; }
     for (let i = 0; i < p.length; i++) for (const t of targets(p, n, i)) {
@@ -221,7 +220,12 @@ function wrongMoment(before, n, move, memo) {
       line.push({from: i, to: t, jumper: p[i], target: p[t]}); walk(next); line.pop();
     }
   })(before);
-  if (!solutions.length || solutions.length > 200 || nodes > 20_000) return null;
+  return !solutions.length || solutions.length > 2000 || nodes > 20_000 ? null : solutions;
+}
+
+/** The move is in every way to clear the board, but another number has to land on the same square first, while it
+ *  is still what it is now. Found from every solution of the position before the move, so it is always true. */
+function wrongMoment(before, n, move, solutions) {
   const at = solutions.map(s => s.findIndex(m => m.from === move.from && m.to === move.to));
   if (at.some(k => k < 0)) return null;
   const firsts = solutions.map((s, k) => s.slice(0, at[k]).filter(m => m.to === move.to));
@@ -238,6 +242,25 @@ function wrongMoment(before, n, move, memo) {
     reason: then[0].jumper === before[first]
       ? phrase("explain.dependsOn.why", lander, square, count(then[0].target), mover)
       : phrase("explain.dependsOn.whyBecomes", lander, count(then[0].jumper), square, count(then[0].target), mover)};
+}
+
+/** The move emptied a square another number needs: in every way to clear the board, that number jumps onto the square
+ *  or the number there lands on it, and the square is empty now. Found from every solution, so it is always true. */
+function needsSquare(before, n, move, solutions) {
+  const after = moved(before, move.from, move.to);
+  for (const square of [move.to, move.from]) {
+    if (after[square]) continue;
+    const jumps = x => solutions.every(s => s.some(m => m.from === x && m.to === square));
+    const lands = x => solutions.every(s => s.some(m => m.from === square && m.to === x));
+    const either = x => solutions.every(s => s.some(m => (m.from === x && m.to === square) || (m.from === square && m.to === x)));
+    const x = before.findIndex((v, i) => v && i !== move.from && i !== move.to && either(i));
+    if (x < 0) continue;
+    const name = numberAt(before, n, x), where = plain(squareName(n, square));
+    return {kind: "needsSquare", cells: before, focus: [x, square],
+      headline: cap(phrase("explain.dependsOn.gone", name, where)),
+      reason: phrase(jumps(x) ? "explain.needs.jumps" : lands(x) ? "explain.needs.lands" : "explain.needs.either", name, where)};
+  }
+  return null;
 }
 
 // ---- Follow one number
@@ -419,7 +442,9 @@ export function trap(before, n, move) {
   if (solvable(after, n, memo, 2_000_000) !== false) return null;
   const plainOne = certificate(after, n);
   if (plainOne && plainOne.kind === "stranded") return plainOne;
-  return wrongMoment(before, n, move, memo) || plainOne || follow(after, n) || rivals(after, n)
+  const solutions = solutionsOf(before, n, memo);
+  return (solutions && (wrongMoment(before, n, move, solutions) || needsSquare(before, n, move, solutions)))
+    || plainOne || follow(after, n) || rivals(after, n)
     || follow(after, n, true) || rivals(after, n, true) || alwaysLeft(after, n);
 }
 
