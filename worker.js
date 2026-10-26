@@ -6,6 +6,8 @@
 // today somewhere in the world: every time zone gets its own today, and no board can be read further ahead or
 // collected.
 
+import * as Explain from "./daily/explain.js";
+
 const FIRST_DAY = Date.UTC(2026, 9, 1);
 const DAY = 86400000;
 const TIERS = ["easy", "medium", "hard", "expert"];
@@ -338,325 +340,36 @@ function lostLine(cells, n) {
   return null;
 }
 
-/** Which numbers could ever meet: for each number, every value it could ever hold, and a link between two numbers in
- *  line when either could ever hold their distance. Squares only ever empty, never fill, and a value changes only when
- *  a number lands on it, so this lets in every meeting real play could make and maybe more: whatever it rules out
- *  can never happen. */
-function couldMeet(cells, n) {
-  const occ = cells.map((v, i) => v ? i : -1).filter(i => i >= 0);
-  const vals = new Map(occ.map(i => [i, new Set([cells[i]])]));
-  const pairs = [];
-  for (const a of occ) for (const b of occ) {
-    if (b <= a) continue;
-    const ra = Math.floor(a / n), rb = Math.floor(b / n), ca = a % n, cb = b % n;
-    if (ra === rb || ca === cb) pairs.push([a, b, Math.abs(ra - rb) + Math.abs(ca - cb)]);
-  }
-  for (let changed = true; changed;) {
-    changed = false;
-    for (const [a, b, d] of pairs) for (const [x, y] of [[a, b], [b, a]]) {
-      if (!vals.get(x).has(d)) continue;
-      for (const v of [...vals.get(y)]) {
-        const w = Math.abs(v - d);
-        if (w > 0 && !vals.get(y).has(w)) { vals.get(y).add(w); changed = true; }
-      }
-    }
-  }
-  const links = pairs.filter(([a, b, d]) => vals.get(a).has(d) || vals.get(b).has(d));
-  return {occ, vals, pairs, links};
-}
+// The reasons themselves come from daily/explain.js, the same proofs and words as the iOS and Android apps and the web
+// game. An assistant gets them in English, with a question that leads the player there and the pattern to remember.
+const KIND_CODES = {stranded: "STRANDED", unreachable: "UNREACHABLE", oddGroup: "ODD_GROUP", wrongMoment: "WRONG_MOMENT",
+  follow: "FOLLOW", shared: "SHARED", rivals: "RIVALS", alwaysLeft: "ALWAYS_LEFT"};
 
-/** A short proof that a position can never be cleared, ready to be told in steps (where to look, a question, the
- *  reason, the general pattern), or null when none of the simple proofs holds. Tried from the plainest. */
-function certificate(cells, n) {
-  const name = i => `the ${cells[i]} on ${squareName(n, i)}`;
-  const {occ, vals, pairs, links} = couldMeet(cells, n);
-  if (!occ.length) return null;
-  const partner = "a number with no partner: watch for numbers that are about to be left alone in their row and column";
-  // A number with nothing in its row or column.
-  const lone = occ.find(i => !pairs.some(([a, b]) => a === i || b === i));
-  if (lone !== undefined) return {code: "STRANDED", focus: [lone], related: [],
-    headline: `${name(lone)[0].toUpperCase() + name(lone).slice(1)} is alone now: no other number can ever reach it.`,
-    question: `Is there any number left in the same row or column as ${name(lone)}?`,
-    reason: `${name(lone)[0].toUpperCase() + name(lone).slice(1)} is alone: there is no other number in its row or its column, so it can never jump onto anything and nothing can ever land on it. It will be left.`,
-    pattern: partner};
-  // A number that lines up with others but can never be the right distance from any of them. Told the way a player
-  // can check it on the board: a number only changes when another lands on it, so say which ones could, and what
-  // that could ever make of it.
-  const isolated = occ.find(i => !links.some(([a, b]) => a === i || b === i));
-  if (isolated !== undefined) {
-    const mates = pairs.filter(([a, b]) => a === isolated || b === isolated).map(([a, b, d]) => [a === isolated ? b : a, d]);
-    const cap = x => x[0].toUpperCase() + x.slice(1);
-    const list = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
-    // What can land on a number, and what each landing would make of it, said as it would happen on the board.
-    const changes = i => {
-      const landers = pairs.filter(([a, b]) => a === i || b === i).map(([a, b, e]) => [a === i ? b : a, e]).filter(([x, e]) => vals.get(x).has(e));
-      if (!landers.length) return `nothing can ever land on ${name(i)}, so it stays a ${cells[i]}`;
-      const told = landers.map(([x, e]) => {
-        const who = cells[x] === e ? name(x) : `${name(x)}, once it is a ${e},`;
-        const made = [...new Set([...vals.get(i)].map(v => Math.abs(v - e)))].sort((p, q) => p - q);
-        const left = made.filter(w => w > 0);
-        const outcome = !left.length ? "both would vanish" : `it would be a ${list(left.map(String))}`;
-        return `${who} could land on ${name(i)}, but then ${outcome}`;
-      });
-      return told.join(". ").replace(/\. t/g, ". T");
-    };
-    const told = mates.slice(0, 2).map(([t, d]) =>
-      `${cap(name(isolated))} and ${name(t)} are ${d} squares apart, so for one to jump onto the other, one of them would have to become a ${d}. ` +
-      `A number only changes when another lands on it. ${cap(changes(isolated))}. ${cap(changes(t))}. Neither can ever become a ${d}.`);
-    return {code: "UNREACHABLE", focus: [isolated], related: mates.map(([t]) => t),
-      headline: `${cap(name(isolated))} can no longer be cleared: no other number can ever reach it.`,
-      question: `${cap(name(isolated))} lines up with ${list(mates.map(([t]) => name(t)))}. How far apart are they, and can either of them ever become that number?`,
-      reason: told.join(" ") + (mates.length > 2 ? ` The same goes for the other ${mates.length - 2} it lines up with.` : "") +
-        ` So no number will ever be the right distance from ${name(isolated)}, and it will be left.`,
-      pattern: partner};
-  }
-  // A group cut off from the rest of the board, with an odd sum.
-  const parent = new Map(occ.map(i => [i, i]));
-  const find = x => { while (parent.get(x) !== x) x = parent.get(x); return x; };
-  for (const [a, b] of links) parent.set(find(a), find(b));
-  const groups = new Map();
-  for (const i of occ) { const k = find(i); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(i); }
-  // Only a small group is told this way: a reader can follow three numbers, not five. A bigger one gets the example line.
-  const odd = [...groups.values()].filter(g => g.reduce((sum, i) => sum + cells[i], 0) % 2 && g.length <= 3).sort((x, y) => x.length - y.length)[0];
-  if (odd && groups.size > 1) {
-    const sum = odd.reduce((total, i) => total + cells[i], 0);
-    // Why they are cut off from the rest: no shared row or column at all, or never the right distance to jump.
-    const inGroup = new Set(odd);
-    const lined = pairs.some(([a, b]) => inGroup.has(a) !== inGroup.has(b));
-    return {code: "ODD_GROUP", focus: odd, related: [],
-      headline: `${odd.map(name).join(", ").replace(/^t/, "T")} are cut off from the rest of the board: no other number will ever be the right distance from them, and on their own they cannot clear each other.`,
-      question: `Which numbers could ever clear ${odd.map(name).join(", ")}? Add them up: can they cancel out?`,
-      reason: `${odd.map(name).join(", ").replace(/^t/, "T")} are cut off from the rest of the board: ` +
-        (lined ? `they line up with other numbers, but are never the right distance from any of them to jump. ` : `no other number is in their rows or columns. `) +
-        `Together they add up to ${sum}, an odd number. ` +
-        `When one number jumps onto another, the difference is left, so their total goes down by an even amount (3 onto 1 makes 2, 2 onto 2 makes 0): the total stays odd and can never reach 0, so whatever the order, one number is always left.`,
-      pattern: "even and odd: a group of numbers cut off from the rest must add up to an even number"};
-  }
-  return null;
-}
-
-/** "Right move, wrong moment": the move is in every way to clear the board, but another number has to land on the
- *  same square before it, while that square is still what it is now. Found from every solution of the position before
- *  the move (up to a limit), so it is always true. */
-function wrongMoment(cells, n, from, to, memo) {
-  const sols = [];
-  let nodes = 0;
-  (function dfs(p, line) {
-    if (sols.length > 200 || nodes > 20_000) return;
-    nodes++;
-    if (p.every(v => !v)) { sols.push(line); return; }
-    for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
-      const q = hikuMoved(p, i, t);
-      if (hikuSolvable(q, n, memo, 400_000) === true) dfs(q, [...line, [i, t, p[i], p[t]]]);
-    }
-  })(cells, []);
-  if (!sols.length || sols.length > 200 || nodes > 20_000) return null;
-  // The played move in every solution, and the number that lands on the same square before it in every one.
-  const at = sols.map(sol => sol.findIndex(([i, t]) => i === from && t === to));
-  if (at.some(k => k < 0)) return null;
-  const firsts = sols.map((sol, k) => sol.slice(0, at[k]).filter(([, t]) => t === to));
-  // The number from x may have changed before it jumps, and so may the square it lands on: say them as they are then,
-  // and only when every way to clear the board agrees on both.
-  const x = firsts[0].map(([i]) => i).find(i => firsts.every(f => f.some(([j]) => j === i)));
-  if (x === undefined) return null;
-  const then = firsts.map(f => f.find(([j]) => j === x));
-  if (then.some(([, , v, w]) => v !== then[0][2] || w !== then[0][3])) return null;
-  const [, , jumper, target] = then[0];
-  const sq = i => squareName(n, i), name = i => `the ${cells[i]} on ${sq(i)}`;
-  const now = Math.abs(cells[from] - cells[to]), cap = w => w[0].toUpperCase() + w.slice(1);
-  return {code: "WRONG_MOMENT", focus: [x, to], related: [from],
-    headline: `${cap(name(x))} depends on ${sq(to)} to be cleared, and ` +
-      (now ? `there is a ${now} there now, which no longer fits.` : `${sq(to)} is empty now.`),
-    question: `Which numbers could ever clear ${name(x)}? And what happened to ${sq(to)}?`,
-    reason: `In every way to clear the board, ${name(x)}` +
-      (jumper === cells[x] ? "" : ` first becomes a ${jumper}, then`) +
-      ` jumps to ${sq(to)} while there is a ${target} there. Only after that can ${name(from)} land on ${sq(to)}.`,
-    pattern: "order matters: when two numbers need the same square, ask which one needs it as it is now"};
-}
-
-/** A number no order of play can ever clear, found by trying every way on (up to a limit), or null. Said with what it
- *  would take to reach it: the number each square in line with it would have to be. Every word is checkable on the
- *  board, and the search behind it is complete, so it is never wrong. */
-function alwaysLeft(cells, n, limit = 60_000) {
-  const occ = cells.map((v, i) => v ? i : -1).filter(i => i >= 0);
-  const cleared = new Set(), seen = new Set([cells.join("")]), queue = [cells];
-  while (queue.length) {
-    const p = queue.pop();
-    for (const i of occ) if (!p[i]) cleared.add(i);
-    if (cleared.size === occ.length) return null;
-    for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
-      const q = hikuMoved(p, i, t), key = q.join("");
-      if (seen.has(key)) continue;
-      if (seen.size >= limit) return null;
-      seen.add(key); queue.push(q);
-    }
-  }
-  const left = occ.filter(i => !cleared.has(i));
-  if (!left.length) return null;
-  // The one with the fewest squares in line with it is the easiest to see.
-  const lineMates = i => occ.filter(j => j !== i && (Math.floor(j / n) === Math.floor(i / n) || j % n === i % n));
-  const s = left.sort((a, b) => lineMates(a).length - lineMates(b).length)[0];
-  const name = i => `the ${cells[i]} on ${squareName(n, i)}`, cap = x => x[0].toUpperCase() + x.slice(1);
-  return {code: "ALWAYS_LEFT", focus: [s], related: lineMates(s),
-    headline: `${cap(name(s))} can no longer be cleared, whatever you play next.`,
-    question: `What would it take for a number to reach ${name(s)}? Look at what is in its row and column, and how far away each one is.`,
-    reason: `${cap(name(s))} will always be left, whatever order you play the rest in: in every way the game can go on, ` +
-      `it is still there at the end.`,
-    pattern: "look a few moves ahead for the number that will be left: ask what would have to happen for something to reach it"};
-}
-
-/** Every way one number can go, over every position that can be reached: a map from "square,value" to the steps out of
- *  it. Null when the number is cleared somewhere (so this number is no proof) or the search is too large. */
-function followGraph(cells, n, start, limit = 60_000) {
-  const edges = new Map(), seen = new Set([cells.join(",") + "|" + start]), queue = [[cells, start]];
-  const edge = (from, to, kind, who) => {
-    const out = edges.get(from);
-    if (!out.has(to)) out.set(to, {kind, who: new Set()});
-    if (who !== undefined) out.get(to).who.add(who);
-  };
-  while (queue.length) {
-    const [p, tok] = queue.pop(), here = `${tok},${p[tok]}`;
-    if (!edges.has(here)) edges.set(here, new Map());
-    for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
-      const q = hikuMoved(p, i, t);
-      let next = tok;
-      if (i === tok || t === tok) {
-        if (!q[t]) return null;
-        if (i === tok) { next = t; edge(here, `${t},${q[t]}`, "jump"); } else edge(here, `${t},${q[t]}`, "land", i);
-      }
-      const key = q.join(",") + "|" + next;
-      if (seen.has(key)) continue;
-      if (seen.size >= limit) return undefined;
-      seen.add(key); queue.push([q, next]);
-    }
-  }
-  return edges;
-}
-
-/** One number followed through every way the game can go on: what can land on it, where it can jump, and what it
- *  becomes, until it is stuck. Said only when that number is never cleared in any position that can be reached (so the
- *  board is lost) and what can happen to it is small enough to tell: at most four values on at most five steps. Every
- *  sentence is what that search saw and nothing more: "can only" lists every step that happened anywhere, "cannot
- *  jump" is said only if it never jumped, "stuck" only if nothing ever happened to it there. Null when no number
- *  qualifies or the search is too large. */
-function follow(cells, n, {summary = false} = {}) {
-  let best = null;
-  cells.forEach((v, start) => {
-    if (!v) return;
-    const g = followGraph(cells, n, start);
-    if (!g) return;
-    const steps = [...g.values()].reduce((a, m) => a + m.size, 0);
-    if (!summary && (g.size > 6 || steps > 8 || [...g.values()].some(m => [...m.values()].some(e => e.who.size > 3)))) return;
-    if (!best || steps < best.steps || (steps === best.steps && g.size < best.g.size)) best = {start, g, steps};
-  });
-  if (!best) return null;
-  const {start, g} = best;
-  if (summary) {
-    // Too much happens to it to tell step by step: what it can become and where it can go, and that it never goes.
-    const sq = i => squareName(n, i), first = `the ${cells[start]} on ${sq(start)}`;
-    const nodes = [...g.keys()].map(k => k.split(",").map(Number));
-    const values = [...new Set(nodes.map(([, v]) => v))].sort((p, q) => p - q);
-    const squares = [...new Set(nodes.map(([pos]) => pos))].filter(pos => pos !== start).sort((p, q) => p - q).map(sq);
-    const or = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
-    return {code: "FOLLOW", focus: [start, ...new Set(nodes.map(([pos]) => pos))].filter((x, k, a) => a.indexOf(x) === k), related: [],
-      headline: `${first[0].toUpperCase() + first.slice(1)} will be left: nothing can get rid of it.`,
-      question: `What can ever happen to ${first}: where can it jump, and what can land on it?`,
-      reason: `Whatever you play, ${first} can become a ${or(values.map(String))}` +
-        (squares.length ? ` and end up on ${or(squares)}` : "") + `, but it never disappears.`,
-      pattern: "follow one number: where it can jump, what can land on it, and what it becomes"};
-  }
-  const sq = i => squareName(n, i), at = key => key.split(",").map(Number), cap = x => x[0].toUpperCase() + x.slice(1);
-  const called = key => { const [pos, val] = at(key); return `the ${val} on ${sq(pos)}`; };
-  const or = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " or " + items[items.length - 1];
-  // Each value it can have, in the order it can come to have them, told in one sentence.
-  const order = [`${start},${cells[start]}`];
-  for (let k = 0; k < order.length; k++) for (const to of g.get(order[k]).keys()) if (!order.includes(to)) order.push(to);
-  const told = [];
-  const stuck = order.filter(key => !g.get(key).size);
-  for (const key of order) {
-    const out = [...g.get(key).entries()], [pos] = at(key);
-    if (!out.length) continue;
-    const dist = i => Math.abs(Math.floor(i / n) - Math.floor(pos / n)) + Math.abs(i % n - pos % n);
-    // Jumps to the same square that leave different numbers, by what was there, are told as one.
-    const jumps = new Map();
-    for (const [to, e] of out) if (e.kind === "jump") { const [t, w] = at(to); jumps.set(t, [...(jumps.get(t) || []), w]); }
-    const jumped = [...jumps.entries()].map(([t, ws]) => `${sq(t)}, leaving a ${or(ws.sort((p, q) => p - q).map(String))} there`);
-    const landed = out.filter(([, e]) => e.kind === "land").map(([to, e]) =>
-      `${or([...e.who].sort((p, q) => p - q).map(i => `a ${dist(i)} from ${sq(i)}`))}, which ${to === key ? "leaves it" : "makes it"} a ${at(to)[1]}`);
-    const name = cap(called(key));
-    if (!landed.length) told.push(`${name} can only jump to ${or(jumped)}.`);
-    else if (!jumped.length) told.push(`${name} cannot jump, and the only ${landed.length > 1 ? "numbers" : "number"} that can land on it ${landed.length > 1 ? "are" : "is"} ${or(landed)}.`);
-    else told.push(`${name} can jump to ${or(jumped)}. Otherwise the only ${landed.length > 1 ? "numbers" : "number"} that can land on it ${landed.length > 1 ? "are" : "is"} ${or(landed)}.`);
-  }
-  if (stuck.length) told.push(stuck.length === 1
-    ? `${cap(called(stuck[0]))} is stuck: it cannot jump, and nothing can land on it.`
-    : `${cap(or(stuck.map(called)).replace(/ or ([^,]*)$/, " and $1"))} are stuck: they cannot jump, and nothing can land on them.`);
-  const focus = [start, ...new Set([...g.values()].flatMap(m => [...m.entries()].flatMap(([to, e]) => e.kind === "jump" ? [at(to)[0]] : [...e.who])))];
-  const neverJumps = ![...g.get(order[0]).values()].some(e => e.kind === "jump");
-  return {code: "FOLLOW", focus: [...new Set(focus)], related: [],
-    headline: `${cap(called(order[0]))} will be left: ${neverJumps ? "it cannot jump, and " : ""}nothing can get rid of it.`,
-    question: `What can ever happen to ${called(order[0])}: where can it jump, and what can land on it?`,
-    reason: told.join(" "),
-    pattern: "follow one number: where it can jump, what can land on it, and what it becomes"};
-}
-
-/** Two numbers that can never both disappear, found by following every number through every position that can be
- *  reached: where each one is (it goes on as what it leaves when it jumps, and two that land together go on as one)
- *  and which numbers it is with when it vanishes. Said as "both need the same number to disappear" when every way
- *  each of them can vanish takes that one number with it, which can only happen once; else as "never both". Null
- *  when no pair is found or the search is too large. */
-function rivals(cells, n, {plain = false} = {}, limit = 200_000) {
-  const occ = cells.map((v, i) => v ? i : -1).filter(i => i >= 0), k = occ.length;
-  if (k > 30) return null;
-  const seen = new Set([cells.join(",") + "|" + occ.join(",")]), queue = [[cells, occ.slice()]];
-  const both = new Set(), partners = occ.map(() => []);
-  while (queue.length) {
-    const [p, at] = queue.pop();
-    const gone = []; at.forEach((s, j) => { if (s < 0) gone.push(j); });
-    for (let x = 0; x < gone.length; x++) for (let y = x + 1; y < gone.length; y++) both.add(gone[x] * 64 + gone[y]);
-    for (let i = 0; i < p.length; i++) for (const t of hikuTargets(p, n, i)) {
-      const q = hikuMoved(p, i, t), next = at.slice();
-      if (!q[t]) {
-        const movers = [], hit = [];
-        at.forEach((s, j) => { if (s === i) movers.push(j); if (s === t) hit.push(j); });
-        for (const j of movers) partners[j].push(hit);
-        for (const j of hit) partners[j].push(movers);
-      }
-      for (let j = 0; j < k; j++) if (next[j] === i) next[j] = q[t] ? t : -1; else if (next[j] === t && !q[t]) next[j] = -1;
-      const key = q.join(",") + "|" + next.join(",");
-      if (seen.has(key)) continue;
-      if (seen.size >= limit) return null;
-      seen.add(key); queue.push([q, next]);
-    }
-  }
-  const sq = i => squareName(n, i), name = j => `the ${cells[occ[j]]} on ${sq(occ[j])}`, cap = x => x[0].toUpperCase() + x.slice(1);
-  let found = null;
-  for (let x = 0; x < k; x++) for (let y = x + 1; y < k; y++) {
-    if (both.has(x * 64 + y) || !partners[x].length || !partners[y].length) continue;
-    // A number both of them always vanish with.
-    const always = j => partners[j].reduce((acc, g) => acc.filter(c => g.includes(c)), [...partners[j][0]]);
-    const shared = always(x).filter(c => always(y).includes(c));
-    const ways = j => new Set(partners[j].map(g => g.join("+"))).size;
-    const score = (shared.length ? 0 : 100) + ways(x) + ways(y);
-    if (!found || score < found.score) found = {x, y, shared, score};
-  }
-  if (!found) return null;
-  const {x, y, shared} = found;
-  if (shared.length) {
-    const c = shared[0];
-    return {code: "SHARED", focus: [occ[c], occ[x], occ[y]], related: [],
-      headline: `${cap(name(x))} and ${name(y)} both need ${name(c)} to disappear, and it can only help one of them.`,
-      question: `What can ${name(x)} and ${name(y)} each disappear with?`,
-      reason: `Whatever you play, ${name(x)} can only disappear together with ${name(c)}, and so can ${name(y)}. ` +
-        `Once ${name(c)} has gone with one of them, it is not there for the other.`,
-      pattern: "two numbers that need the same partner: only one of them can have it"};
-  }
-  if (!plain) return null;
-  return {code: "RIVALS", focus: [occ[x], occ[y]], related: [],
-    headline: `${cap(name(x))} and ${name(y)} can never both disappear.`,
-    question: `What happens to ${name(y)} once ${name(x)} is gone, and the other way round?`,
-    reason: `Whatever you play, as soon as one of them has disappeared, the other one can no longer get away.`,
-    pattern: "two numbers that stand in each other's way: clearing one strands the other"};
+/** An explanation from explain.js told for an assistant: where to look, a question, the reason and the pattern. */
+function forAssistant(found, n) {
+  const [first, ...rest] = found.focus;
+  const name = i => `the ${found.cells[i]} on ${squareName(n, i)}`;
+  const list = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " and " + items[items.length - 1];
+  const [question, pattern] = {
+    stranded: [`Is there any other number in the row or column of ${name(first)}?`,
+      "a number with nothing left in its row or column will always be left"],
+    unreachable: [`${name(first)} lines up with ${list(rest.map(name))}. How far apart are they, and can either of them ever become that number?`,
+      "two numbers in line only meet at the right distance: check whether either can ever become it"],
+    oddGroup: [`Which numbers can ${list(found.focus.map(name))} ever jump onto? Add them up: can they cancel out?`,
+      "even and odd: a group of numbers cut off from the rest must add up to an even number"],
+    wrongMoment: [`Which numbers could ever clear ${name(first)}? And what happened to ${squareName(n, rest[0])}?`,
+      "order matters: when two numbers need the same square, ask which one needs it as it is now"],
+    follow: [`What can ever happen to ${name(first)}: where can it jump, and what can land on it?`,
+      "follow one number: where it can jump, what can land on it, and what it becomes"],
+    shared: [`What can ${name(rest[0])} and ${name(rest[1])} each disappear with?`,
+      "two numbers that need the same partner: only one of them can have it"],
+    rivals: [`What happens to ${name(rest[0])} once ${name(first)} is gone, and the other way round?`,
+      "two numbers that stand in each other's way: clearing one strands the other"],
+    alwaysLeft: [`What would it take for a number to clear ${name(first)}? Look at what is in its row and column.`,
+      "look a few moves ahead for the number that will be left"],
+  }[found.kind];
+  return {code: KIND_CODES[found.kind], focus: [first], related: rest, question: question.charAt(0).toUpperCase() + question.slice(1),
+    headline: Explain.say(found.headline, "en"), reason: Explain.say(found.reason, "en"), pattern};
 }
 
 /** The reasons a lost position is lost, in the order to reveal them, for the assistant to tell one step at a time. */
@@ -678,8 +391,8 @@ function judgeMove(b, from, to, memo) {
   if (ok === true) return {safe: true, text: `${what}. Safe: the board can still be cleared after it.`};
   if (ok === null) return {safe: null, text: `${what}. The solver could not settle it in time.`};
   // A number left alone by the move is the plainest; then what the move spoilt; then the other proofs.
-  const plain = certificate(after, n);
-  const proof = (plain && plain.code === "STRANDED" ? plain : null) || wrongMoment(b.cells, n, from, to, memo) || plain || follow(after, n) || rivals(after, n) || follow(after, n, {summary: true}) || rivals(after, n, {plain: true}) || alwaysLeft(after, n);
+  const found = Explain.trap(b.cells, n, {from, to, jumper: b.cells[from], target: b.cells[to]});
+  const proof = found && forAssistant(found, n);
   if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.headline}`, text: `${what}. A trap. ${stepsText(proof, n)}`};
   const shown = lostLine(after, n);
   if (!shown) return {safe: false, text: `${what}. A trap: the board can no longer be cleared after it, though the reason lies many moves ahead.`};
@@ -698,7 +411,7 @@ function analyseText(difficulty, b, move) {
   const now = hikuSolvable(b.cells, n, memo, 400_000);
   const lines = [boardText(difficulty, b).split("\n").slice(0, n + 3).join("\n"), ""];
   if (now === false) {
-    const proof = certificate(b.cells, n) || alwaysLeft(b.cells, n);
+    const found = Explain.lost(b.cells, n), proof = found && forAssistant(found, n);
     if (proof) { lines.push("This position can no longer be cleared. " + stepsText(proof, n)); return lines.join("\n"); }
     const shown = lostLine(b.cells, n);
     lines.push("This position can no longer be cleared" + (shown ? (shown.line.length ? `: for example ${shown.line.join(", ")}, and then ${shown.why}.` : `: ${shown.why}.`) : "."));

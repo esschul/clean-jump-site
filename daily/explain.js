@@ -388,7 +388,7 @@ export function rivals(cells, n, plainToo = false, limit = 200_000) {
 // ---- Always left
 
 /** A number no order of play can ever clear, found by trying every way on, up to a limit. */
-function alwaysLeft(cells, n, limit = 60_000) {
+export function alwaysLeft(cells, n, limit = 60_000) {
   const occupied = cells.map((v, i) => v ? i : -1).filter(i => i >= 0);
   const cleared = new Set(), seen = new Set([key(cells)]), queue = [cells];
   while (queue.length) {
@@ -438,6 +438,11 @@ export function wrongMove(positions, n) {
     return null;
   }
   return null;
+}
+
+/** Why a position can no longer be cleared, with no move to blame: the proofs that look at the position alone. */
+export function lost(cells, n) {
+  return certificate(cells, n) || follow(cells, n) || rivals(cells, n) || follow(cells, n, true) || rivals(cells, n, true) || alwaysLeft(cells, n);
 }
 
 /** Why the board went wrong, from the boards played through: the explanation, or null when there is no short one. */
