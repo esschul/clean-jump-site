@@ -45,6 +45,13 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 .step h3{font-size:20px;margin:4px 0 6px;text-wrap:balance}
 .step p{margin:6px 0}
 .move{font-weight:650}
+/* What to look for in a find exercise, so the trap and the safe move are never mixed up. */
+.step .goal{display:flex;gap:10px;align-items:center;border-radius:12px;padding:10px 14px;margin:10px 0 4px;font-weight:650}
+.goal .icon{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--card)}
+.goal.trap{background:var(--bad-soft)}
+.goal.trap .icon{background:var(--bad)}
+.goal.safe{background:var(--good-soft)}
+.goal.safe .icon{background:var(--good)}
 
 /* The board: square names above and beside, cream tiles on grey squares, as in the game. */
 .boardwrap{position:relative;width:min(100%,340px);margin:18px auto 10px}
@@ -282,7 +289,7 @@ const LESSONS = /*LESSONS*/[
      0,
      3
     ],
-    "text": "Ett av trekkene her gjør at et tall blir stående alene. Finn det. Trykk først på tallet som skal hoppe, og så på ruta det skal lande på."
+    "text": "Bare ett av trekkene her gjør at et tall blir stående alene. Trykk på tallet som skal hoppe, og så på ruta det skal lande på."
    },
    {
     "type": "findSafe",
@@ -1617,9 +1624,13 @@ function teach(e, n, cells, after, from, to) {
   switch (e.kind) {
     case "stranded": {
       const x = f[0]; marks[x] = "alone";
-      const partner = from !== x && to !== x && inLine(n, from, x) && !after[from];
+      // The numbers in its row and column that this move took away: they were its last ones.
+      const gone = [from, to].filter(i => i !== x && cells[i] && !after[i] && inLine(n, i, x)).sort((p, q) => p - q);
+      const names = gone.map(i => num(n, cells, i));
       return {marks, more, text: `${Cap(num(n, after, x))} blir stående alene. ` +
-        (partner ? `${Cap(num(n, cells, from))} var det eneste tallet i samme rad eller kolonne.` : "Det er ingen andre tall igjen i raden eller kolonnen.")};
+        (gone.length === 1 ? `${Cap(names[0])} var det eneste tallet i samme rad eller kolonne.`
+          : gone.length === 2 ? `${Cap(names[0])} og ${names[1]} var de eneste tallene i samme rad eller kolonne.`
+          : "Det er ingen andre tall igjen i raden eller kolonnen.")};
     }
     case "unreachable": {
       const [a, m] = f, d = Math.abs(a % n - m % n) + Math.abs(Math.floor(a / n) - Math.floor(m / n));
@@ -1738,7 +1749,9 @@ function show(k, extra = null) {
   stepsEl.innerHTML = "";
   const el = document.createElement("article"); el.className = "step";
   const label = s.type === "example" || s.type === "demo" ? "Eksempel" : extra ? "En lignende oppgave" : `Oppgave ${k} av ${steps.length - 1}`;
-  el.innerHTML = `<p class="kind">${label}</p><h3></h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>` +
+  const banner = s.type === "findTrap" ? `<p class="goal trap"><span class="icon" aria-hidden="true">✕</span><span>Du leter etter fellen: trekket som gjør at brettet ikke kan løses.</span></p>`
+    : s.type === "findSafe" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>Du leter etter det trygge trekket: det eneste som ikke ødelegger brettet.</span></p>` : "";
+  el.innerHTML = `<p class="kind">${label}</p><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>` +
     `<div class="actions"><button type="button" class="btn main next" hidden>${k === steps.length - 1 ? "Ferdig" : "Neste"}</button></div>`;
   const from = s.move ? at(n, s.move[0]) : -1, to = s.move ? at(n, s.move[1]) : -1;
   const mv = s.move ? moveText(n, cells, from, to) : "";
@@ -1748,8 +1761,8 @@ function show(k, extra = null) {
     demo: "Trykk deg gjennom, ett steg om gangen.",
     example: `Se hva som skjer når ${mv}.`,
     predict: lesson.ask.replace("{move}", mv),
-    findTrap: "Ett av trekkene her er en felle. Finn det. Trykk først på tallet som skal hoppe, og så på ruta det skal lande på.",
-    findSafe: "Her er nesten alle trekk feller. Finn det ene trekket som ikke ødelegger brettet."}[s.type];
+    findTrap: "Bare ett av trekkene her er en felle. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
+    findSafe: "Her er nesten alle trekk feller. Trykk på tallet som skal hoppe, og så på ruta det skal lande på."}[s.type];
   stepsEl.append(el);
   const b = board(el.querySelector(".host"), n), label2 = el.querySelector(".boardlabel"), acts = el.querySelector(".actions"), fb = el.querySelector(".feedback");
   el.querySelector(".next").onclick = () => k < steps.length - 1 ? show(k + 1) : allDone();
@@ -1856,8 +1869,8 @@ function show(k, extra = null) {
       recall(fb);
       return finish(k, tries === 1);
     }
-    if (goal === "findTrap") verdict(fb, "info", `${Move}: trygt.`, "Brettet kan fortsatt løses etter det trekket.");
-    else verdict(fb, "bad", `${Move}: en felle.`, t ? t.text : "Brettet kan ikke løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
+    if (goal === "findTrap") verdict(fb, "info", "Det trekket er trygt. Du leter etter fellen.", `${Move}: brettet kan fortsatt løses etter det.`);
+    else verdict(fb, "bad", "Det var en felle. Du leter etter det trygge trekket.", t ? t.text : "Brettet kan ikke løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
     acts.innerHTML = `<button type="button" class="btn">Prøv et annet trekk</button>`;
     acts.firstChild.onclick = () => { acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; redraw(); };
   }
