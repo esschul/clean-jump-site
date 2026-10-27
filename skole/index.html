@@ -283,7 +283,7 @@ const LESSONS = /*LESSONS*/[
   "check": "Står det et tall i samme rad eller kolonne som tallet du vil flytte? Har det tallet ingen andre å møte, blir det alene når du flytter.",
   "recall": "Se etter tall i samme rad eller kolonne som tallet du vil flytte. Har et av dem ingen andre å møte, blir det alene.",
   "predict": "pick",
-  "ask": "Blir noe tall stående alene hvis {move}? Trykk på det, eller velg «Ingen».",
+  "ask": "Hvis {move}, blir da et tall stående alene?",
   "none": "Ingen blir alene. Alle tallene har fortsatt et annet tall i raden eller kolonnen sin, og brettet kan fortsatt løses.",
   "steps": [
    {
@@ -361,8 +361,7 @@ const LESSONS = /*LESSONS*/[
     "move": [
      "C3",
      "C4"
-    ],
-    "title": "Blir noen alene?"
+    ]
    },
    {
     "type": "predict",
@@ -516,7 +515,8 @@ const LESSONS = /*LESSONS*/[
      "D3"
     ]
    }
-  ]
+  ],
+  "pick": "Hvilket tall blir stående alene? Trykk på det på brettet."
  },
  {
   "id": "meet",
@@ -527,7 +527,7 @@ const LESSONS = /*LESSONS*/[
   "check": "Tell avstanden mellom tallene på samme linje. Er ett av dem like stort som avstanden, eller kan det bli det?",
   "recall": "Tell avstanden til tallene på samme linje. Kan noen av dem noen gang bli like stort som avstanden?",
   "predict": "pick",
-  "ask": "Blir et tall umulig å nå hvis {move}? Trykk på det, eller velg «Ingen».",
+  "ask": "Hvis {move}, blir da et tall umulig å nå?",
   "none": "Nei. Alle tallene kan fortsatt nås, og brettet kan fortsatt løses.",
   "steps": [
    {
@@ -767,7 +767,8 @@ const LESSONS = /*LESSONS*/[
      "D3"
     ]
    }
-  ]
+  ],
+  "pick": "Hvilket tall kan ingen nå? Trykk på det på brettet."
  },
  {
   "id": "partner",
@@ -778,7 +779,7 @@ const LESSONS = /*LESSONS*/[
   "check": "Har to tall bare én mulig partner igjen, og er det den samme?",
   "recall": "Se etter to tall som bare har én partner å forsvinne med. Er det den samme, går det ikke.",
   "predict": "pick",
-  "ask": "Trenger to tall den samme partneren hvis {move}? Trykk på partneren, eller velg «Ingen».",
+  "ask": "Hvis {move}, trenger da to tall den samme partneren?",
   "none": "Nei. Ingen to tall er avhengige av den samme partneren, og brettet kan fortsatt løses.",
   "steps": [
    {
@@ -1021,7 +1022,8 @@ const LESSONS = /*LESSONS*/[
      "C3"
     ]
    }
-  ]
+  ],
+  "pick": "Hvilket tall vil begge ha? Trykk på det på brettet."
  },
  {
   "id": "order",
@@ -1302,7 +1304,7 @@ const LESSONS = /*LESSONS*/[
   "check": "Blir noen tall skilt fra resten av brettet? Legg dem sammen. Er summen et oddetall, går det ikke.",
   "recall": "Se etter tall som blir skilt fra resten. Legg dem sammen. Er summen et oddetall, blir minst ett tall igjen.",
   "predict": "pick",
-  "ask": "Blir noen tall skilt fra resten med en oddetallssum hvis {move}? Trykk på et av dem, eller velg «Ingen».",
+  "ask": "Hvis {move}, blir noen tall skilt fra resten med en oddetallssum?",
   "none": "Nei. Ingen tall blir skilt fra resten med en oddetallssum, og brettet kan fortsatt løses.",
   "steps": [
    {
@@ -1588,7 +1590,8 @@ const LESSONS = /*LESSONS*/[
      "D3"
     ]
    }
-  ]
+  ],
+  "pick": "Trykk på ett av tallene i den gruppen på brettet."
  },
  {
   "id": "ahead",
@@ -3421,26 +3424,34 @@ function show(k, extra = null) {
       bad.onclick = () => answer("trap");
       return;
     }
-    const pick = i => { choice = i; b.draw(cells, {marks: {[from]: "from", [i]: "picked"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "false"); fb.className = "feedback"; fb.innerHTML = ""; };
-    b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick});
-    acts.innerHTML = `<button type="button" class="btn" aria-pressed="false">Ingen</button><button type="button" class="btn main">Spill trekket</button>`;
-    const [none, go] = acts.children;
-    none.onclick = () => { choice = -1; b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "true"); fb.className = "feedback"; fb.innerHTML = ""; };
-    // Asked first: the answer is the point, so the move waits for one.
-    go.onclick = () => {
-      if (choice == null) return verdict(fb, "info", "Svar først: trykk på et tall, eller velg «Ingen».");
+    // Two plain steps: yes or no first; only on yes, which number, answered by tapping it. The move is played after.
+    const answer = picked => {
       // A first wrong answer gets a hint and another try on the same board, the move still to come.
-      if (!judge(choice) && !missed) {
-        missed = true; miss(k); choice = null;
-        none.setAttribute("aria-pressed", "false");
+      if (!judge(picked) && !missed) {
+        missed = true; miss(k);
         const marks = {[from]: "from"};
         if (lesson.id === "alone") cells.forEach((v, i) => { if (v && i !== from && inLine(n, i, from)) marks[i] = "line"; });
-        b.draw(cells, {marks, arc: [from, to], tap: pick});
+        b.draw(cells, {marks, arc: [from, to]});
         verdict(fb, "bad", "Ikke helt. Prøv igjen.", lesson.hint);
+        ask();
         return;
       }
-      acts.innerHTML = ""; reveal(choice);
+      acts.innerHTML = ""; reveal(picked);
     };
+    const ask = () => {
+      acts.innerHTML = `<button type="button" class="btn">Ja</button><button type="button" class="btn">Nei</button>`;
+      const [yes, no] = acts.children;
+      no.onclick = () => answer(-1);
+      yes.onclick = () => {
+        // Now the board takes the answer: every number but the one about to jump can be tapped.
+        b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: i => i !== from && answer(i)});
+        verdict(fb, "info", lesson.pick);
+        acts.innerHTML = `<button type="button" class="btn">Tilbake</button>`;
+        acts.firstChild.onclick = () => { b.draw(cells, {marks: {[from]: "from"}, arc: [from, to]}); fb.className = "feedback"; fb.innerHTML = ""; ask(); };
+      };
+    };
+    b.draw(cells, {marks: {[from]: "from"}, arc: [from, to]});
+    ask();
     return;
   }
 
