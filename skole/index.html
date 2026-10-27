@@ -85,6 +85,12 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 details.recall{margin:12px 4px 0;font-size:15px}
 details.recall summary{cursor:pointer;font-weight:600;color:var(--link)}
 details.recall p{color:var(--muted);margin:6px 0 0}
+.lessons ol{list-style:none;padding:0;margin:24px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.lessons button{font:inherit;font-size:15px;font-weight:600;border:0;border-radius:12px;padding:8px 14px;min-height:44px;cursor:pointer;background:var(--cell);color:var(--ink)}
+.lessons button[aria-current="true"]{background:var(--navy);color:var(--on-navy)}
+.lessons button .tick{color:var(--good);margin-left:6px}
+.lessons button[aria-current="true"] .tick{color:var(--on-navy)}
+.steplist{margin:6px 0 0;padding-left:22px}
 .done-note{text-align:center;color:var(--muted)}
 footer{margin-top:56px;padding-block:24px;border-top:1px solid var(--rule);color:var(--muted);font-size:14px}
 </style>
@@ -95,10 +101,11 @@ footer{margin-top:56px;padding-block:24px;border-top:1px solid var(--rule);color
 <h1>Hiku-skolen</h1>
 <p class="lead">Her øver du på å se fellene før du går i dem. Hver leksjon er et spørsmål du kan stille deg selv før du flytter.</p>
 
-<section aria-labelledby="l1">
-<h2 id="l1">1. Hvilket tall blir stående alene?</h2>
-<p class="rule">Et tall kan bare forsvinne når det reduseres av et annet tall i samme rad eller kolonne. Er det ingen tall igjen der, blir det stående for alltid.</p>
-<p class="check"><b>Sjekk før du flytter</b>Står det et tall i samme rad eller kolonne som tallet du vil flytte? Har det tallet ingen andre å møte, blir det alene når du flytter.</p>
+<nav class="lessons" aria-label="Leksjoner"><ol id="lessons"></ol></nav>
+<section aria-labelledby="lesson-title">
+<h2 id="lesson-title"></h2>
+<p class="rule" id="lesson-rule"></p>
+<p class="check"><b>Sjekk før du flytter</b><span id="lesson-check"></span></p>
 <ol class="progress" id="progress" aria-label="Fremgang"></ol>
 <div id="steps"></div>
 </section>
@@ -115,36 +122,559 @@ const num = (n, cells, i) => `${cells[i]}-tallet på ${sq(n, i)}`;
 const inLine = (n, a, b) => Math.floor(a / n) === Math.floor(b / n) || a % n === b % n;
 const alone = (n, cells) => cells.map((v, i) => v && !cells.some((w, j) => w && j !== i && inLine(n, i, j)) ? i : -1).filter(i => i >= 0);
 const at = (n, name) => (Number(name.slice(1)) - 1) * n + COLS.indexOf(name[0]);
+const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
 
-// The lesson's steps. The boards were picked from what tools/school/alone.mjs finds from small random boards, every move judged by
-// the solver: none comes from the daily library.
-const STEPS = [
-  {type: "example", n: 4, cells: [0,3,0,2, 0,2,0,0, 1,2,0,0, 0,0,0,0], move: ["B3", "B1"],
-   title: "Se hva som skjer",
-   text: "1-tallet på A3 har bare ett annet tall i raden og kolonnen sin: 2-tallet på B3. Se hva som skjer når 2-tallet hopper bort."},
-  {type: "predict", n: 4, cells: [0,0,0,0, 0,1,3,0, 2,0,1,0, 0,0,3,0], move: ["C3", "C4"],
-   title: "Blir noen alene?",
-   text: "Blir noe tall stående alene hvis 1-tallet på C3 hopper til C4? Trykk på det, eller velg «Ingen»."},
-  {type: "predict", n: 4, cells: [0,1,0,0, 0,3,0,0, 1,3,0,0, 0,2,0,0], move: ["A3", "B3"],
-   title: "Og her?",
-   text: "Blir noe tall stående alene hvis 1-tallet på A3 hopper til B3? Trykk på det, eller velg «Ingen»."},
-  {type: "findTrap", n: 4, cells: [0,0,0,2, 0,0,0,0, 0,0,0,3, 0,2,0,3],
-   title: "Finn fellen",
-   text: "Ett av trekkene her gjør at et tall blir stående alene. Finn det. Trykk først på tallet som skal hoppe, og så på ruta det skal lande på."},
-  {type: "findSafe", n: 4, cells: [1,1,1,0, 0,0,0,0, 0,0,0,0, 0,3,0,0],
-   title: "Finn det trygge trekket",
-   text: "Her er nesten alle trekk feller. Finn det ene trekket som ikke ødelegger brettet."},
-];
+// The lessons, each a question to ask before a move. Their boards are picked from what tools/school/alone.mjs and
+// tools/school/mine.mjs find in small random boards, every move judged by the solver: none comes from the daily library.
+// A predict step asks the lesson's question about one move: "pick" answers by tapping the number it is about (or
+// «Ingen»), "trap" answers safe or trap. The answer is worked out by the solver and the engine, never written down.
+const LESSONS = /*LESSONS*/[
+ {
+  "id": "alone",
+  "key": "hiku:skole:alone",
+  "short": "Alene",
+  "title": "Hvilket tall blir stående alene?",
+  "rule": "Et tall kan bare forsvinne når det reduseres av et annet tall i samme rad eller kolonne. Er det ingen tall igjen der, blir det stående for alltid.",
+  "check": "Står det et tall i samme rad eller kolonne som tallet du vil flytte? Har det tallet ingen andre å møte, blir det alene når du flytter.",
+  "recall": "Se etter tall i samme rad eller kolonne som tallet du vil flytte. Har et av dem ingen andre å møte, blir det alene.",
+  "predict": "pick",
+  "ask": "Blir noe tall stående alene hvis {move}? Trykk på det, eller velg «Ingen».",
+  "none": "Ingen blir alene. Alle tallene har fortsatt et annet tall i raden eller kolonnen sin, og brettet kan fortsatt løses.",
+  "steps": [
+   {
+    "type": "example",
+    "n": 4,
+    "cells": [
+     0,
+     3,
+     0,
+     2,
+     0,
+     2,
+     0,
+     0,
+     1,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "B3",
+     "B1"
+    ],
+    "text": "1-tallet på A3 har bare ett annet tall i raden og kolonnen sin: 2-tallet på B3. Se hva som skjer når 2-tallet hopper bort."
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     3,
+     0,
+     2,
+     0,
+     1,
+     0,
+     0,
+     0,
+     3,
+     0
+    ],
+    "move": [
+     "C3",
+     "C4"
+    ],
+    "title": "Blir noen alene?"
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0,
+     1,
+     3,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0
+    ],
+    "move": [
+     "A3",
+     "B3"
+    ]
+   },
+   {
+    "type": "findTrap",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     0,
+     2,
+     0,
+     3
+    ],
+    "text": "Ett av trekkene her gjør at et tall blir stående alene. Finn det. Trykk først på tallet som skal hoppe, og så på ruta det skal lande på."
+   },
+   {
+    "type": "findSafe",
+    "n": 4,
+    "cells": [
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "id": "meet",
+  "key": "hiku:skole:meet",
+  "short": "Avstand",
+  "title": "Hvilket tall kan aldri nås?",
+  "rule": "To tall på samme linje møtes bare når det ene er like stort som avstanden mellom dem. Et tall endrer seg bare når noe lander på det, så noen ganger kan det aldri bli stort nok.",
+  "check": "Tell avstanden mellom tallene på samme linje. Er ett av dem like stort som avstanden, eller kan det bli det?",
+  "recall": "Tell avstanden til tallene på samme linje. Kan noen av dem noen gang bli like stort som avstanden?",
+  "predict": "pick",
+  "ask": "Blir et tall umulig å nå hvis {move}? Trykk på det, eller velg «Ingen».",
+  "none": "Nei. Alle tallene kan fortsatt nås, og brettet kan fortsatt løses.",
+  "steps": [
+   {
+    "type": "example",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     2,
+     1,
+     2,
+     3
+    ],
+    "move": [
+     "A4",
+     "C4"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     2,
+     1,
+     2,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A1",
+     "C1"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     1,
+     2,
+     0,
+     3,
+     1,
+     1,
+     0
+    ],
+    "move": [
+     "B3",
+     "C3"
+    ]
+   },
+   {
+    "type": "findTrap",
+    "n": 4,
+    "cells": [
+     3,
+     1,
+     3,
+     0,
+     3,
+     1,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "id": "partner",
+  "key": "hiku:skole:partner",
+  "short": "Samme partner",
+  "title": "Hvilket tall vil to andre ha?",
+  "rule": "Når to tall bare kan forsvinne sammen med det samme tallet, får bare ett av dem det. Det andre blir stående.",
+  "check": "Har to tall bare én mulig partner igjen, og er det den samme?",
+  "recall": "Se etter to tall som bare har én partner å forsvinne med. Er det den samme, går det ikke.",
+  "predict": "pick",
+  "ask": "Trenger to tall den samme partneren hvis {move}? Trykk på partneren, eller velg «Ingen».",
+  "none": "Nei. Ingen to tall er avhengige av den samme partneren, og brettet kan fortsatt løses.",
+  "steps": [
+   {
+    "type": "example",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     1
+    ],
+    "move": [
+     "D1",
+     "D4"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     3,
+     0,
+     2,
+     0
+    ],
+    "move": [
+     "A3",
+     "A4"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     2,
+     3,
+     1,
+     3,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A1",
+     "C1"
+    ]
+   },
+   {
+    "type": "findTrap",
+    "n": 4,
+    "cells": [
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     0,
+     2,
+     0,
+     1,
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "id": "order",
+  "key": "hiku:skole:order",
+  "short": "Rekkefølge",
+  "title": "Hva må skje først?",
+  "rule": "Noen ganger er trekket riktig, men kommer for tidlig: et annet tall må lande på ruta først. Og en tom rute får aldri et tall igjen.",
+  "check": "Skal flere tall hoppe til eller fra den samme ruta? Finn ut hvilket som må gå først, og ikke tøm en rute som fortsatt trengs.",
+  "recall": "Skal flere tall bruke den samme ruta, må du finne rekkefølgen. Og tøm aldri en rute noe fortsatt skal hoppe til eller fra.",
+  "predict": "trap",
+  "ask": "Se på trekket: {move}. Er det trygt nå, eller er det en felle?",
+  "none": "Trygt. Brettet kan fortsatt løses etter det trekket.",
+  "steps": [
+   {
+    "type": "example",
+    "n": 4,
+    "cells": [
+     0,
+     3,
+     3,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     2,
+     0,
+     0,
+     1,
+     3
+    ],
+    "move": [
+     "D4",
+     "D1"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     3,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A3",
+     "A2"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     2,
+     3,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0
+    ],
+    "move": [
+     "A2",
+     "A1"
+    ]
+   },
+   {
+    "type": "findTrap",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     2,
+     2,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "type": "findSafe",
+    "n": 4,
+    "cells": [
+     0,
+     3,
+     0,
+     0,
+     0,
+     3,
+     3,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     2,
+     1,
+     1
+    ]
+   }
+  ]
+ }
+]/*END*/;
 
-const KEY = "hiku:skole:alone";
-const saved = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } })();
-const store = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} };
-saved.done ||= []; saved.first ||= {};
-let current = Math.min(saved.done.length, STEPS.length - 1);
+/** Where the engine points, for a lesson's question: the numbers a player should have tapped. */
+const ANSWERS = {
+  alone: (e, n, after) => alone(n, after),
+  meet: e => [e.focus[0]],
+  partner: e => [e.focus[0]],
+  parity: e => e.focus,
+};
 
-const progress = document.getElementById("progress"), stepsEl = document.getElementById("steps");
+const lessonsEl = document.getElementById("lessons"), progress = document.getElementById("progress"), stepsEl = document.getElementById("steps");
+let lesson, saved, current;
+const load = key => { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } };
+const store = () => { try { localStorage.setItem(lesson.key, JSON.stringify(saved)); } catch (e) {} };
+const finished = l => (load(l.key).done || []).length >= l.steps.length;
+
+function drawLessons() {
+  lessonsEl.innerHTML = "";
+  LESSONS.forEach((l, k) => {
+    const li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button";
+    b.textContent = `${k + 1}. ${l.short}`;
+    if (finished(l)) b.insertAdjacentHTML("beforeend", `<span class="tick" aria-label="ferdig">✓</span>`);
+    b.setAttribute("aria-current", String(l === lesson));
+    b.onclick = () => open(k);
+    li.append(b); lessonsEl.append(li);
+  });
+}
+
+function open(k) {
+  lesson = LESSONS[k];
+  try { history.replaceState(null, "", `#leksjon-${k + 1}`); } catch (e) {}
+  saved = load(lesson.key); saved.done ||= []; saved.first ||= {};
+  document.getElementById("lesson-title").textContent = `${k + 1}. ${lesson.title}`;
+  document.getElementById("lesson-rule").textContent = lesson.rule;
+  document.getElementById("lesson-check").textContent = lesson.check;
+  drawLessons();
+  current = Math.min(saved.done.length, lesson.steps.length - 1);
+  if (finished(lesson)) allDone(); else show(current);
+}
+
 function drawProgress() {
-  progress.innerHTML = STEPS.map((_, k) => `<li class="${saved.done.includes(k) ? "done" : k === current ? "now" : ""}" aria-label="Steg ${k + 1}${saved.done.includes(k) ? ", ferdig" : ""}"></li>`).join("");
+  progress.innerHTML = lesson.steps.map((_, k) => `<li class="${saved.done.includes(k) ? "done" : k === current ? "now" : ""}" aria-label="Steg ${k + 1}${saved.done.includes(k) ? ", ferdig" : ""}"></li>`).join("");
 }
 
 /** A board on the page: square names, numbers as tiles, an arc for a move, and taps on the squares when wanted. */
@@ -200,80 +730,114 @@ function board(host, n) {
   return {draw};
 }
 
-function verdict(box, cls, head, why) {
+function verdict(box, cls, head, why, steps = []) {
   box.className = "feedback " + cls;
   box.innerHTML = `<p class="verdict"></p>` + (why ? `<p class="why"></p>` : "");
   box.querySelector(".verdict").textContent = head;
   if (why) box.querySelector(".why").textContent = why;
+  if (steps.length) {
+    const ol = document.createElement("ol"); ol.className = "steplist";
+    for (const t of steps) { const li = document.createElement("li"); li.textContent = t; ol.append(li); }
+    box.querySelector(".why").before(ol);
+    box.querySelector(".steplist").insertAdjacentHTML("beforebegin", `<p class="why">Før det må dette skje:</p>`);
+  }
 }
 
-/** The engine's own words for a move, or null when it has no short proof. */
+/** The engine's own words for a move, with the board they are about (before or after it), or null when it has none. */
 function explain(n, cells, from, to) {
   const e = trap(cells, n, {from, to, jumper: cells[from], target: cells[to]});
-  return e && {kind: e.kind, focus: e.focus, head: say(e.headline, LANG), why: say(e.reason, LANG)};
+  return e && {kind: e.kind, focus: e.focus, cells: e.cells, head: say(e.headline, LANG), why: say(e.reason, LANG),
+    steps: (e.steps || []).map(st => say(st.text, LANG))};
+}
+
+/** The board a move leaves, or the one before it when that is what the explanation is about, with what it points at. */
+function showResult(b, label, n, cells, after, e, extra = {}) {
+  const before = e && same(e.cells, cells), marks = {...extra};
+  if (e) for (const i of e.focus) marks[i] ||= "alone";
+  else if (lesson.id === "alone") for (const i of alone(n, after)) marks[i] = "alone";
+  b.draw(before ? cells : after, {marks});
+  label.textContent = before ? "Før trekket ditt" : "Etter trekket";
 }
 
 function recall(host) {
-  host.insertAdjacentHTML("afterend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p>Se etter tall i samme rad eller kolonne som tallet du vil flytte. Har et av dem ingen andre å møte, blir det alene.</p></details>`);
+  host.insertAdjacentHTML("afterend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p></p></details>`);
+  host.nextElementSibling.querySelector("p").textContent = lesson.recall;
 }
 
 function finish(k, firstTry) {
   if (!(k in saved.first)) saved.first[k] = firstTry;
   if (!saved.done.includes(k)) saved.done.push(k);
-  store(); drawProgress();
+  store(); drawProgress(); drawLessons();
   const next = stepsEl.querySelector(".next");
   if (next) next.hidden = false;
 }
 
+const moveText = (n, cells, from, to) => `${num(n, cells, from)} hopper til ${sq(n, to)}`;
+
 function show(k) {
   current = k; drawProgress();
-  const s = STEPS[k], n = s.n, cells = s.cells.slice();
+  const steps = lesson.steps, s = steps[k], n = s.n, cells = s.cells.slice();
   stepsEl.innerHTML = "";
   const el = document.createElement("article"); el.className = "step";
-  const label = s.type === "example" ? "Eksempel" : `Oppgave ${k} av ${STEPS.length - 1}`;
+  const label = s.type === "example" ? "Eksempel" : `Oppgave ${k} av ${steps.length - 1}`;
   el.innerHTML = `<p class="kind">${label}</p><h3></h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>` +
-    `<div class="actions"><button type="button" class="btn main next" hidden>${k === STEPS.length - 1 ? "Ferdig" : "Neste"}</button></div>`;
-  el.querySelector("h3").textContent = s.title;
-  el.querySelector(".text").textContent = s.text;
+    `<div class="actions"><button type="button" class="btn main next" hidden>${k === steps.length - 1 ? "Ferdig" : "Neste"}</button></div>`;
+  const from = s.move ? at(n, s.move[0]) : -1, to = s.move ? at(n, s.move[1]) : -1;
+  const mv = s.move ? moveText(n, cells, from, to) : "";
+  el.querySelector("h3").textContent = s.title || {example: "Se hva som skjer", predict: k === 1 ? "Hva tror du?" : "Og her?",
+    findTrap: "Finn fellen", findSafe: "Finn det trygge trekket"}[s.type];
+  el.querySelector(".text").textContent = s.text || {
+    example: `Se hva som skjer når ${mv}.`,
+    predict: lesson.ask.replace("{move}", mv),
+    findTrap: "Ett av trekkene her er en felle. Finn det. Trykk først på tallet som skal hoppe, og så på ruta det skal lande på.",
+    findSafe: "Her er nesten alle trekk feller. Finn det ene trekket som ikke ødelegger brettet."}[s.type];
   stepsEl.append(el);
   const b = board(el.querySelector(".host"), n), label2 = el.querySelector(".boardlabel"), acts = el.querySelector(".actions"), fb = el.querySelector(".feedback");
-  el.querySelector(".next").onclick = () => k < STEPS.length - 1 ? show(k + 1) : allDone();
+  el.querySelector(".next").onclick = () => k < steps.length - 1 ? show(k + 1) : allDone();
 
   if (s.type === "example" || s.type === "predict") {
-    const from = at(n, s.move[0]), to = at(n, s.move[1]), after = moved(cells, from, to), lone = alone(n, after);
-    label2.textContent = `Trekk: ${num(n, cells, from)} til ${s.move[1]}`;
+    const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000), e = ok ? null : explain(n, cells, from, to);
+    label2.textContent = `Trekk: ${mv}`;
     const reveal = picked => {
-      const marks = {}; for (const i of lone) marks[i] = "alone";
-      if (picked != null && picked >= 0 && !lone.includes(picked)) marks[picked] = "picked";
-      b.draw(after, {marks}); label2.textContent = "Etter trekket";
-      const e = lone.length ? explain(n, cells, from, to) : null;
-      if (s.type === "example") verdict(fb, "info", e ? e.head : "", e ? e.why : "");
-      else {
-        const right = lone.length ? lone.includes(picked) : picked === -1;
-        const head = right ? "Riktig!" : "Ikke helt.";
-        const why = lone.length ? e.head + " " + e.why
-          : "Ingen blir alene. Alle tallene har fortsatt et annet tall i raden eller kolonnen sin, og brettet kan fortsatt løses.";
-        verdict(fb, right ? "good" : "bad", head, why);
-        recall(fb);
-        finish(k, right);
-        return;
+      if (s.type === "example") {
+        showResult(b, label2, n, cells, after, e);
+        verdict(fb, "info", e ? e.head : "", e ? e.why : "", e ? e.steps : []);
+        return finish(k, true);
       }
-      finish(k, true);
+      let right;
+      if (lesson.predict === "trap") right = picked === (ok ? "safe" : "trap");
+      else {
+        const answers = e ? ANSWERS[lesson.id](e, n, after) : [];
+        right = answers.length ? answers.includes(picked) : picked === -1;
+      }
+      showResult(b, label2, n, cells, after, e, picked >= 0 ? {[picked]: "picked"} : {});
+      verdict(fb, right ? "good" : "bad", right ? "Riktig!" : "Ikke helt.", e ? e.head + " " + e.why : lesson.none, e ? e.steps : []);
+      recall(fb);
+      finish(k, right);
     };
     if (s.type === "example") {
       b.draw(cells, {marks: {[from]: "from"}, arc: [from, to]});
       acts.innerHTML = `<button type="button" class="btn main">Spill trekket</button>`;
       acts.firstChild.onclick = () => { acts.innerHTML = ""; reveal(null); };
-    } else {
-      let choice = null;
-      const pick = i => { choice = i; b.draw(cells, {marks: {[from]: "from", [i]: "picked"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "false"); fb.className = "feedback"; fb.innerHTML = ""; };
-      b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick});
-      acts.innerHTML = `<button type="button" class="btn" aria-pressed="false">Ingen</button><button type="button" class="btn main">Spill trekket</button>`;
-      const [none, go] = acts.children;
-      none.onclick = () => { choice = -1; b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "true"); fb.className = "feedback"; fb.innerHTML = ""; };
-      // Asked first: the answer is the point, so the move waits for one.
-      go.onclick = () => choice == null ? verdict(fb, "info", "Svar først: trykk på tallet du tror blir alene, eller velg «Ingen».") : (acts.innerHTML = "", reveal(choice));
+      return;
     }
+    let choice = null;
+    if (lesson.predict === "trap") {
+      // Safe or a trap: answered with the two buttons, and the move is played at once.
+      b.draw(cells, {marks: {[from]: "from"}, arc: [from, to]});
+      acts.innerHTML = `<button type="button" class="btn">Trygt</button><button type="button" class="btn">Felle</button>`;
+      const [safe, bad] = acts.children;
+      safe.onclick = () => { acts.innerHTML = ""; reveal("safe"); };
+      bad.onclick = () => { acts.innerHTML = ""; reveal("trap"); };
+      return;
+    }
+    const pick = i => { choice = i; b.draw(cells, {marks: {[from]: "from", [i]: "picked"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "false"); fb.className = "feedback"; fb.innerHTML = ""; };
+    b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick});
+    acts.innerHTML = `<button type="button" class="btn" aria-pressed="false">Ingen</button><button type="button" class="btn main">Spill trekket</button>`;
+    const [none, go] = acts.children;
+    none.onclick = () => { choice = -1; b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "true"); fb.className = "feedback"; fb.innerHTML = ""; };
+    // Asked first: the answer is the point, so the move waits for one.
+    go.onclick = () => choice == null ? verdict(fb, "info", "Svar først: trykk på et tall, eller velg «Ingen».") : (acts.innerHTML = "", reveal(choice));
     return;
   }
 
@@ -298,20 +862,16 @@ function show(k) {
     const move = `${num(n, cells, from)} til ${sq(n, to)}`, Move = move[0].toUpperCase() + move.slice(1);
     if (ok === null) { verdict(fb, "info", "Det trekket rakk vi ikke å sjekke. Prøv et annet."); return redraw(); }
     const e = ok ? null : explain(n, cells, from, to);
-    const lone = alone(n, after), marks = {}; for (const i of lone) marks[i] = "alone";
-    const won = goal === "findTrap" ? !ok : ok;
-    if (won) {
-      b.draw(after, {marks}); label2.textContent = "Etter trekket";
-      verdict(fb, "good", goal === "findTrap" ? `Riktig, det var fellen.` : `Riktig, det trekket er trygt.`,
-        goal === "findTrap" ? (e ? e.head + " " + e.why : "") : "Brettet kan fortsatt løses etter det.");
+    // The move is shown as the explanation sees it, since that is what the words are about.
+    showResult(b, label2, n, cells, after, e);
+    if (goal === "findTrap" ? !ok : ok) {
+      verdict(fb, "good", goal === "findTrap" ? "Riktig, det var fellen." : "Riktig, det trekket er trygt.",
+        goal === "findTrap" ? (e ? e.head + " " + e.why : "") : "Brettet kan fortsatt løses etter det.", e ? e.steps : []);
       recall(fb);
-      finish(k, tries === 1);
-      return;
+      return finish(k, tries === 1);
     }
-    // A wrong try is shown as it leaves the board, since that is what the words are about; then back to try again.
-    b.draw(after, {marks}); label2.textContent = "Etter trekket";
     if (goal === "findTrap") verdict(fb, "info", `${Move}: trygt.`, "Brettet kan fortsatt løses etter det trekket.");
-    else verdict(fb, "bad", `${Move}: en felle.`, e ? e.head + " " + e.why : "Brettet kan ikke løses etter det.");
+    else verdict(fb, "bad", `${Move}: en felle.`, e ? e.head + " " + e.why : "Brettet kan ikke løses etter det.", e ? e.steps : []);
     acts.innerHTML = `<button type="button" class="btn">Prøv et annet trekk</button>`;
     acts.firstChild.onclick = () => { acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; redraw(); };
   }
@@ -319,17 +879,21 @@ function show(k) {
 }
 
 function allDone() {
-  stepsEl.innerHTML = `<article class="step"><p class="kind">Leksjon 1</p><h3>Ferdig!</h3><p></p><div class="actions"><button type="button" class="btn">Ta leksjonen på nytt</button></div></article>`;
+  const k = LESSONS.indexOf(lesson), next = LESSONS[k + 1];
+  stepsEl.innerHTML = `<article class="step"><p class="kind">Leksjon ${k + 1}</p><h3>Ferdig!</h3><p></p><div class="actions"></div></article>`;
   // The example is no exercise, so it is not counted.
-  const asked = STEPS.map((s, k) => k).filter(k => STEPS[k].type !== "example");
-  const right = asked.filter(k => saved.first[k]).length;
-  stepsEl.querySelector("p:not(.kind)").textContent = `Du fikk ${right} av ${asked.length} oppgaver riktig på første forsøk. Neste leksjon kommer snart.`;
-  stepsEl.querySelector("button").onclick = () => { saved.done = []; saved.first = {}; store(); show(0); };
-  current = STEPS.length; drawProgress();
+  const asked = lesson.steps.map((s, i) => i).filter(i => lesson.steps[i].type !== "example");
+  const right = asked.filter(i => saved.first[i]).length;
+  stepsEl.querySelector("p:not(.kind)").textContent = `Du fikk ${right} av ${asked.length} oppgaver riktig på første forsøk.` + (next ? "" : " Det var den siste leksjonen så langt.");
+  const acts = stepsEl.querySelector(".actions");
+  if (next) { acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn main">Neste leksjon</button>`); acts.lastChild.onclick = () => { open(k + 1); scrollTo({top: 0}); }; }
+  acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn">Ta leksjonen på nytt</button>`);
+  acts.lastChild.onclick = () => { saved.done = []; saved.first = {}; store(); drawLessons(); show(0); };
+  current = lesson.steps.length; drawProgress();
 }
 
-drawProgress();
-show(current);
+const fromHash = Number((location.hash.match(/^#leksjon-(\d+)$/) || [])[1]) - 1;
+open(LESSONS[fromHash] ? fromHash : Math.max(0, LESSONS.findIndex(l => !finished(l))));
 </script>
 </body>
 </html>
