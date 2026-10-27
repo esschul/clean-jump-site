@@ -78,9 +78,13 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 .feedback.bad{background:var(--bad-soft)}
 .feedback.info{background:var(--cell)}
 .feedback .verdict{font-weight:750;margin:0 0 4px}
-.feedback .why{color:var(--muted)}
-details.recall{margin-top:12px}
-details.recall summary{cursor:pointer;font-weight:650;color:var(--link)}
+.feedback.good .verdict{color:var(--good)}
+.feedback.bad .verdict{color:var(--bad)}
+.feedback .why{margin:0}
+/* The habit to take away, below the answer, quieter than it. */
+details.recall{margin:12px 4px 0;font-size:15px}
+details.recall summary{cursor:pointer;font-weight:600;color:var(--link)}
+details.recall p{color:var(--muted);margin:6px 0 0}
 .done-note{text-align:center;color:var(--muted)}
 footer{margin-top:56px;padding-block:24px;border-top:1px solid var(--rule);color:var(--muted);font-size:14px}
 </style>
@@ -169,11 +173,18 @@ function board(host, n) {
     svg.innerHTML = "";
     // Drawn once the squares are laid out, and only if no other board has been drawn since.
     const drawn = ++drawing;
-    if (arc) requestAnimationFrame(() => { if (drawn === drawing) drawArc(arc); });
+    // One arc, or a list of them: every place a chosen number can jump.
+    const arcs = !arc ? [] : Array.isArray(arc[0]) ? arc : [arc];
+    if (arcs.length) requestAnimationFrame(() => {
+      if (drawn !== drawing) return;
+      const box = wrap.getBoundingClientRect();
+      svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+      svg.innerHTML = arcs.map(a => drawArc(box, a)).join("");
+    });
   }
   let drawing = 0;
-  function drawArc([from, to]) {
-    const box = wrap.getBoundingClientRect(), a = squares[from].getBoundingClientRect(), b = squares[to].getBoundingClientRect();
+  function drawArc(box, [from, to]) {
+    const a = squares[from].getBoundingClientRect(), b = squares[to].getBoundingClientRect();
     const x1 = a.left + a.width / 2 - box.left, y1 = a.top + a.height / 2 - box.top, x2 = b.left + b.width / 2 - box.left, y2 = b.top + b.height / 2 - box.top;
     // A bow over the jump, bent to one side, the way a number jumps in the game.
     const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = x2 - x1, bend = a.width * 1.4;
@@ -183,8 +194,7 @@ function board(host, n) {
     const edge = (x, y) => { const d = Math.hypot(qx - x, qy - y) || 1, r = a.width * .5; return [x + (qx - x) / d * r, y + (qy - y) / d * r]; };
     const [sx, sy] = edge(x1, y1), [ex, ey] = edge(x2, y2);
     const ang = Math.atan2(ey - qy, ex - qx), s = 8;
-    svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
-    svg.innerHTML = `<path d="M${sx} ${sy} Q${qx} ${qy} ${ex} ${ey}"/>` +
+    return `<path d="M${sx} ${sy} Q${qx} ${qy} ${ex} ${ey}"/>` +
       `<polygon points="${ex + Math.cos(ang) * s},${ey + Math.sin(ang) * s} ${ex + Math.cos(ang + 2.3) * s},${ey + Math.sin(ang + 2.3) * s} ${ex + Math.cos(ang - 2.3) * s},${ey + Math.sin(ang - 2.3) * s}"/>`;
   }
   return {draw};
@@ -204,7 +214,7 @@ function explain(n, cells, from, to) {
 }
 
 function recall(host) {
-  host.insertAdjacentHTML("beforeend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p>Se etter tall i samme rad eller kolonne som tallet du vil flytte. Har et av dem ingen andre å møte, blir det alene.</p></details>`);
+  host.insertAdjacentHTML("afterend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p>Se etter tall i samme rad eller kolonne som tallet du vil flytte. Har et av dem ingen andre å møte, blir det alene.</p></details>`);
 }
 
 function finish(k, firstTry) {
@@ -272,8 +282,9 @@ function show(k) {
   const goal = s.type;
   const redraw = () => {
     const marks = {};
-    if (selected != null) { marks[selected] = "selected"; for (const t of targets(cells, n, selected)) marks[t] = "target"; }
-    b.draw(cells, {marks, tap});
+    const arcs = selected == null ? null : targets(cells, n, selected).map(t => [selected, t]);
+    if (selected != null) marks[selected] = "selected";
+    b.draw(cells, {marks, arc: arcs, tap});
   };
   function tap(i) {
     if (selected != null && targets(cells, n, selected).includes(i)) return play(selected, i);
