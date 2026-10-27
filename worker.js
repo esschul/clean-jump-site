@@ -361,8 +361,8 @@ function forAssistant(found, n) {
       "even and odd: a group of numbers cut off from the rest must add up to an even number"],
     wrongMoment: () => [`Which number has to land on ${squareName(n, rest[0])} before ${name(first)} goes there?`,
       "when two numbers need the same square, check which one has to land there first"],
-    needsSquare: () => [`How could ${name(rest[1])} ever disappear? What did it need on ${squareName(n, rest[0])}?`,
-      "before you empty a square, check which numbers still need it"],
+    needsSquare: () => [`${name(rest[1])} and the number on ${squareName(n, rest[0])} had to meet. How far apart are they, and what does the one that jumps have to be then?`,
+      "an empty square never gets a number again: before you empty one, check whether anything still has to jump there or from there"],
     follow: () => [`What can ever happen to ${name(first)}: where can it jump, and what can land on it?`,
       "follow one number: where it can jump, what can land on it, and what it becomes"],
     shared: () => [`What can ${name(rest[0])} and ${name(rest[1])} each disappear with?`,
@@ -397,7 +397,8 @@ function judgeMove(b, from, to, memo) {
   const ok = hikuSolvable(after, n, memo, 400_000);
   if (ok === true) return {safe: true, text: `${what}. Safe: the board can still be cleared after it.`};
   if (ok === null) return {safe: null, text: `${what}. The solver could not settle it in time.`};
-  // A number left alone by the move is the plainest; then what the move spoilt; then the other proofs.
+  // A number left alone by the move is the plainest; then what it left where it landed; then what the move spoilt;
+  // then the other proofs.
   const found = Explain.trap(b.cells, n, {from, to, jumper: b.cells[from], target: b.cells[to]});
   const proof = found && forAssistant(found, n);
   if (proof) return {safe: false, code: proof.code, short: `${what}. A trap: ${proof.headline}`, text: `${what}. A trap. ${stepsText(proof, n)}`};

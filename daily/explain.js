@@ -241,13 +241,15 @@ function wrongMoment(before, n, move, solutions) {
   const square = plain(squareName(n, move.to));
   const lander = numberAt(before, n, first), mover = numberAt(before, n, move.from);
   const steps = chain(before, n, move, first, solutions, at);
+  // What that jump leaves, for the player's number to land on later: never nothing, or it could not land there.
+  const left = Math.abs(then[0].target - then[0].jumper);
   // With steps, the board first shows the move alone; the steps show the rest one by one.
   return {kind: "wrongMoment", cells: before, focus: steps.length ? [move.from, move.to] : [move.from, move.to, first],
-    headline: cap(phrase("explain.tooEarly", mover, square)),
+    headline: cap(phrase(move.jumper === move.target ? "explain.tooEarly.vanish" : "explain.tooEarly", mover, square)),
     reason: steps.length ? phrase("explain.tooEarly.then", mover, square)
       : then[0].jumper === before[first]
-        ? phrase("explain.dependsOn.why", lander, square, count(then[0].target), mover)
-        : phrase("explain.dependsOn.whyBecomes", lander, count(then[0].jumper), square, count(then[0].target), mover),
+        ? phrase("explain.dependsOn.why", lander, square, count(then[0].target), count(left), mover)
+        : phrase("explain.dependsOn.whyBecomes", lander, count(then[0].jumper), square, count(then[0].target), count(left), mover),
     steps};
 }
 
@@ -279,21 +281,36 @@ function chain(before, n, move, lander, solutions, at) {
   return steps;
 }
 
-/** The move emptied a square another number needs: in every way to clear the board, that number jumps onto the square
- *  or the number there lands on it, and the square is empty now. Found from every solution, so it is always true. */
+/** The move emptied a square that two numbers had to meet across: in every way to clear the board, the number on `x`
+ *  jumps onto it, or the number on it lands on `x`, or one of the two. Told as what had to happen there, what each has to
+ *  be when it jumps, and that an empty square never gets a number again. Found from every solution, so always true. */
 function needsSquare(before, n, move, solutions) {
   const after = moved(before, move.from, move.to);
+  // Every pair that has to meet across an emptied square, the ones that always go the same way first: "X jumps there"
+  // is plainer than "one of the two jumps onto the other".
+  const found = [];
   for (const square of [move.to, move.from]) {
     if (after[square]) continue;
     const jumps = x => solutions.every(s => s.some(m => m.from === x && m.to === square));
     const lands = x => solutions.every(s => s.some(m => m.from === square && m.to === x));
     const either = x => solutions.every(s => s.some(m => (m.from === x && m.to === square) || (m.from === square && m.to === x)));
-    const x = before.findIndex((v, i) => v && i !== move.from && i !== move.to && either(i));
-    if (x < 0) continue;
-    const name = numberAt(before, n, x), where = plain(squareName(n, square)), mover = numberAt(before, n, move.from);
+    before.forEach((v, x) => {
+      if (v && x !== move.from && x !== move.to && either(x)) found.push({square, x, how: jumps(x) ? "jumps" : lands(x) ? "lands" : "either"});
+    });
+  }
+  const pick = found.find(f => f.how !== "either") || found[0];
+  if (pick) {
+    const {square, x, how} = pick;
+    const name = numberAt(before, n, x), where = plain(squareName(n, square));
+    // Whichever of the two jumps, it jumps exactly the distance between them, so it has to be that number then: said
+    // outright when it is something else now, for that is the step a player does not see.
+    const d = Math.abs(x % n - square % n) + Math.abs(Math.floor(x / n) - Math.floor(square / n));
+    const becomes = how === "jumps" ? (before[x] === d ? null : phrase("explain.needs.becomes.jumps", name, count(d)))
+      : how === "lands" ? (before[square] === d ? null : phrase("explain.needs.becomes.lands", where, count(d)))
+      : phrase("explain.needs.becomes.either", count(d));
     return {kind: "needsSquare", cells: before, focus: [move.from, square, x],
-      headline: cap(square === move.from ? phrase("explain.jumpedAway", mover, name) : phrase("explain.emptied", mover, where, name)),
-      reason: phrase(jumps(x) ? "explain.needs.jumps" : lands(x) ? "explain.needs.lands" : "explain.needs.either", name, where)};
+      headline: cap(phrase("explain.needs.head." + how, name, where)),
+      reason: sentences([phrase("explain.needs.always"), ...(becomes ? [becomes] : []), phrase("explain.needs.gone", where)])};
   }
   return null;
 }
@@ -331,10 +348,10 @@ function followGraph(cells, n, start, limit = 60_000) {
  *  becomes, until it is stuck. Only when that number is never cleared in any position that can be reached; told step
  *  by step when that is at most six values on at most eight steps, else with `summary` as what it can become and where
  *  it can go. Every sentence is what that search saw and nothing more. */
-export function follow(cells, n, summary = false) {
+export function follow(cells, n, summary = false, only = -1) {
   let best = null;
   cells.forEach((v, start) => {
-    if (!v) return;
+    if (!v || (only >= 0 && start !== only)) return;
     const graph = followGraph(cells, n, start);
     if (!graph) return;
     const steps = [...graph.values()].reduce((s, m) => s + m.size, 0);
@@ -387,7 +404,8 @@ export function follow(cells, n, summary = false) {
   for (const node of order) for (const [to, step] of graph.get(node)) {
     for (const s of step.jump ? [at(to)[0]] : [...step.who].sort((a, b) => a - b)) if (!focus.includes(s)) focus.push(s);
   }
-  const neverJumps = ![...graph.get(first).values()].some(e => e.jump);
+  // Whatever it becomes: a number that can jump once something has landed on it is not one that cannot jump.
+  const neverJumps = ![...graph.values()].some(out => [...out.values()].some(e => e.jump));
   return {kind: "follow", cells, focus, headline: cap(phrase(neverJumps ? "explain.follow.cannotJump" : "explain.follow", called(first))),
     reason: sentences(told)};
 }
@@ -477,9 +495,15 @@ export function trap(before, n, move) {
   if (solvable(after, n, memo, 2_000_000) !== false) return null;
   const plainOne = certificate(after, n);
   if (plainOne && plainOne.kind === "stranded") return plainOne;
+  // The simplest reason is what the move left where it landed, there to see on the board: a number no other can reach,
+  // or one stuck as it is. Then what the move should have waited for or kept, which says what to do instead, and only
+  // then what happens to the number it left, step by step.
+  const landed = after[move.to] ? follow(after, n, false, move.to) : null;
+  if (landed && landed.focus.length === 1) return landed;
+  if (plainOne && plainOne.kind === "unreachable" && plainOne.focus[0] === move.to) return plainOne;
   const solutions = solutionsOf(before, n, memo);
   return (solutions && (wrongMoment(before, n, move, solutions) || needsSquare(before, n, move, solutions)))
-    || plainOne || follow(after, n) || rivals(after, n)
+    || landed || plainOne || follow(after, n) || rivals(after, n)
     || follow(after, n, true) || rivals(after, n, true) || alwaysLeft(after, n);
 }
 
