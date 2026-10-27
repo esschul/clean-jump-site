@@ -41,6 +41,10 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:22px;margin:22px 0 6px;text-w
 .progress li{width:18px;height:6px;border-radius:3px;background:var(--rule)}
 .progress li.done{background:var(--good)}
 .progress li.now{background:var(--gold)}
+.progress li.missed{background:var(--bad)}
+.scores{list-style:none;padding:0;margin:10px 0;display:grid;gap:4px}
+.scores li.missed{color:var(--bad);font-weight:600}
+.lead2{color:var(--muted)}
 .step{background:var(--card);border-radius:16px;box-shadow:0 0 0 1px var(--rule);padding:16px 18px;margin-bottom:24px}
 .step .kind{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
 .step h3{font-size:18px;margin:6px 0 2px;text-wrap:balance}
@@ -1855,6 +1859,972 @@ const LESSONS = /*LESSONS*/[
     ]
    }
   ]
+ },
+ {
+  "id": "test",
+  "key": "hiku:skole:test",
+  "test": true,
+  "short": "Prøve",
+  "title": "Prøve",
+  "rule": "Ti trekk fra alle leksjonene, om hverandre, uten navn på mønsteret og uten hint. Se på trekket og svar: trygt eller felle?",
+  "check": "Blir noen alene? Kan de møtes? Trenger to den samme partneren? Må noe skje først? Går summen opp? Hva skjer etterpå?",
+  "steps": [],
+  "pool": [
+   {
+    "n": 4,
+    "cells": [
+     3,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A1",
+     "D1"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     1,
+     0,
+     3,
+     0,
+     2,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "C2",
+     "A2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     1,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     1
+    ],
+    "move": [
+     "D1",
+     "D4"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     1,
+     0,
+     2,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A3",
+     "A2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     2,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A2",
+     "C2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     2,
+     0,
+     2,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3
+    ],
+    "move": [
+     "A1",
+     "C1"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     3,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A2",
+     "A1"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0
+    ],
+    "move": [
+     "C2",
+     "C1"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     2,
+     1,
+     3
+    ],
+    "move": [
+     "C4",
+     "D4"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     2,
+     2,
+     1,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "C2",
+     "D2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2
+    ],
+    "move": [
+     "D2",
+     "D3"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     3,
+     1,
+     2,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A2",
+     "D2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     2,
+     0,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2
+    ],
+    "move": [
+     "D1",
+     "D2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     3,
+     1,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "B2",
+     "A2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     1,
+     0,
+     2,
+     0,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0
+    ],
+    "move": [
+     "C1",
+     "C2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     1,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "B3",
+     "A3"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     2,
+     1,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "D3",
+     "D1"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     3,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     2,
+     0
+    ],
+    "move": [
+     "A2",
+     "A4"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     3,
+     0,
+     2,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A4",
+     "A3"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     3,
+     1,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A4",
+     "A3"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     1,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "B3",
+     "A3"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     1,
+     0,
+     2,
+     0,
+     1,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "B1",
+     "B2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0
+    ],
+    "move": [
+     "B4",
+     "B1"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     3,
+     0,
+     2
+    ],
+    "move": [
+     "B1",
+     "B3"
+    ]
+   },
+   {
+    "n": 5,
+    "cells": [
+     0,
+     3,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     3,
+     3,
+     0,
+     2,
+     0,
+     1,
+     0,
+     0,
+     0,
+     2,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "move": [
+     "D3",
+     "D4"
+    ]
+   },
+   {
+    "n": 5,
+    "cells": [
+     2,
+     0,
+     2,
+     0,
+     0,
+     2,
+     1,
+     4,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0
+    ],
+    "move": [
+     "C3",
+     "D3"
+    ]
+   },
+   {
+    "n": 5,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     4,
+     1,
+     0,
+     0,
+     3,
+     4,
+     2,
+     2,
+     0,
+     3,
+     0,
+     0,
+     2,
+     1,
+     0
+    ],
+    "move": [
+     "C4",
+     "E4"
+    ]
+   },
+   {
+    "n": 5,
+    "cells": [
+     3,
+     0,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     4,
+     2,
+     1,
+     0,
+     0,
+     0,
+     0,
+     3,
+     1,
+     3,
+     0,
+     4,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "B3",
+     "A3"
+    ]
+   },
+   {
+    "n": 5,
+    "cells": [
+     0,
+     3,
+     0,
+     2,
+     0,
+     2,
+     1,
+     3,
+     0,
+     2,
+     2,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0
+    ],
+    "move": [
+     "B2",
+     "B1"
+    ]
+   },
+   {
+    "n": 5,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     2,
+     1,
+     2,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     2,
+     2,
+     0,
+     0
+    ],
+    "move": [
+     "A2",
+     "B2"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     1,
+     2,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     3,
+     0,
+     0
+    ],
+    "move": [
+     "A1",
+     "B1"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     3,
+     2,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "move": [
+     "B1",
+     "D1"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     1,
+     0,
+     3,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     2,
+     0
+    ],
+    "move": [
+     "B4",
+     "C4"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     3,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     2,
+     0,
+     0
+    ],
+    "move": [
+     "B3",
+     "B4"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     3
+    ],
+    "move": [
+     "D4",
+     "A4"
+    ]
+   },
+   {
+    "n": 4,
+    "cells": [
+     2,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     1,
+     1,
+     0
+    ],
+    "move": [
+     "A4",
+     "A1"
+    ]
+   }
+  ]
  }
 ]/*END*/;
 
@@ -1888,7 +2858,7 @@ const lessonsEl = document.getElementById("lessons"), stepsEl = document.getElem
 let lesson, saved, current;
 const load = key => { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } };
 const store = () => { try { localStorage.setItem(lesson.key, JSON.stringify(saved)); } catch (e) {} };
-const finished = l => (load(l.key).done || []).length >= l.steps.length;
+const finished = l => l.test ? load(l.key).best != null : (load(l.key).done || []).length >= l.steps.length;
 
 function drawLessons() {
   lessonsEl.innerHTML = "";
@@ -1912,6 +2882,7 @@ function open(k) {
   document.getElementById("lesson-rule").textContent = lesson.rule;
   document.getElementById("lesson-check").textContent = lesson.check;
   drawLessons();
+  if (lesson.test) return runTest();
   current = Math.min(saved.done.length, lesson.steps.length - 1);
   if (finished(lesson)) allDone(); else show(current);
 }
@@ -2522,6 +3493,98 @@ function allDone() {
   acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn">Ta leksjonen på nytt</button>`);
   acts.lastChild.onclick = () => { saved.done = []; saved.first = {}; store(); drawLessons(); show(0); };
   current = lesson.steps.length; drawProgress();
+}
+
+// ---- The test
+
+/** Which lesson teaches the pattern behind an explanation. */
+const KIND_LESSON = {stranded: "alone", unreachable: "meet", shared: "partner", needsSquare: "order", wrongMoment: "order",
+  oddGroup: "parity", follow: "ahead"};
+
+/**
+ * The final test: ten moves from every lesson, mixed and unnamed, each answered safe or trap with no hint; after each
+ * the answer and why, at the end the score per pattern and a way back to the lessons missed. A trap counts for the
+ * lesson its explanation belongs to, worked out by the engine; a safe move counts for none.
+ */
+function runTest() {
+  // One trap per lesson and four safe moves, so answering "Felle" to everything does not pass.
+  const COUNT = 10, TRAPS = 6;
+  const pool = lesson.pool.map(q => ({...q})).sort(() => Math.random() - .5);
+  const qs = [], perLesson = {}, taken = new Set();
+  // First one trap from each lesson, then up to two, then safe moves to fill: every lesson is in the test.
+  for (const most of [1, 2]) for (const q of pool) {
+    if (qs.length >= COUNT || taken.has(q)) continue;
+    const n = q.n, from = at(n, q.move[0]), to = at(n, q.move[1]), after = moved(q.cells, from, to);
+    const ok = solvable(after, n, new Map(), 500_000);
+    if (ok === null) continue;
+    const e = ok ? null : explain(n, q.cells, from, to), home = e && KIND_LESSON[e.kind];
+    if (!ok && !home) continue;
+    const traps = qs.filter(x => !x.ok).length;
+    if (ok ? qs.length - traps >= COUNT - TRAPS : traps >= TRAPS) continue;
+    // At most two traps of one kind, so the test reaches every lesson it can.
+    if (home && (perLesson[home] || 0) >= most) continue;
+    if (home) perLesson[home] = (perLesson[home] || 0) + 1;
+    taken.add(q);
+    qs.push({...q, from, to, after, ok, e, home});
+  }
+  qs.sort(() => Math.random() - .5);
+  const answers = [];
+  const show = i => {
+    const q = qs[i], n = q.n, cells = q.cells;
+    stepsEl.innerHTML = "";
+    const el = document.createElement("article"); el.className = "step";
+    el.innerHTML = `<div class="stephead"><p class="kind">Spørsmål ${i + 1} av ${qs.length}</p><ol class="progress" aria-label="Fremgang">` +
+      qs.map((_, j) => `<li class="${j < i ? (answers[j] ? "done" : "missed") : j === i ? "now" : ""}"></li>`).join("") + `</ol></div>` +
+      `<h3>Trygt eller felle?</h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div>`;
+    el.querySelector(".text").textContent = `Se på trekket: ${moveText(n, cells, q.from, q.to)}.`;
+    stepsEl.append(el);
+    const b = board(el.querySelector(".host"), n), label = el.querySelector(".boardlabel"), fb = el.querySelector(".feedback"), acts = el.querySelector(".actions");
+    b.draw(cells, {marks: {[q.from]: "from"}, arc: [q.from, q.to]});
+    label.textContent = `Trekk: ${moveText(n, cells, q.from, q.to)}`;
+    acts.innerHTML = `<button type="button" class="btn">Trygt</button><button type="button" class="btn">Felle</button>`;
+    const answer = a => {
+      const right = a === (q.ok ? "safe" : "trap");
+      answers[i] = right;
+      const t = q.e && teach(q.e, n, cells, q.after, q.from, q.to);
+      showResult(b, label, n, cells, q.after, t, {}, [q.from, q.to]);
+      const home = q.home && LESSONS.find(l => l.id === q.home);
+      verdict(fb, right ? "good" : "bad", right ? "Riktig!" : q.ok ? "Feil. Trekket er trygt." : "Feil. Det er en felle.",
+        q.ok ? "Brettet kan fortsatt løses etter det trekket." : `Mønster: ${home.short}. ${t ? t.text : ""}`, t ? t.steps || [] : []);
+      acts.innerHTML = `<button type="button" class="btn main">${i < qs.length - 1 ? "Neste spørsmål" : "Se resultatet"}</button>`;
+      acts.firstChild.onclick = () => i < qs.length - 1 ? show(i + 1) : result();
+    };
+    acts.children[0].onclick = () => answer("safe");
+    acts.children[1].onclick = () => answer("trap");
+  };
+  const result = () => {
+    const right = answers.filter(Boolean).length, rows = {};
+    qs.forEach((q, i) => { const key = q.home || "safe"; rows[key] ||= [0, 0]; rows[key][1]++; if (answers[i]) rows[key][0]++; });
+    saved.best = Math.max(saved.best ?? 0, right); saved.last = right; store(); drawLessons();
+    stepsEl.innerHTML = `<article class="step"><p class="kind">Prøve</p><h3></h3><p class="lead2"></p><ul class="scores"></ul><div class="actions"></div></article>`;
+    stepsEl.querySelector("h3").textContent = `Du fikk ${right} av ${qs.length}.`;
+    stepsEl.querySelector(".lead2").textContent = right === qs.length ? "Alt riktig. Du ser fellene før du går i dem."
+      : right >= qs.length * .7 ? "Godt jobbet. Øv litt mer på mønstrene du bommet på." : "Ta en runde til med leksjonene der du bommet, og prøv igjen.";
+    const ul = stepsEl.querySelector(".scores"), acts = stepsEl.querySelector(".actions");
+    const order = key => key === "safe" ? 99 : LESSONS.findIndex(l => l.id === key);
+    for (const [key, [r, all]] of Object.entries(rows).sort((a, b) => order(a[0]) - order(b[0]))) {
+      const l = LESSONS.find(x => x.id === key), li = document.createElement("li");
+      li.textContent = `${l ? l.short : "Trygge trekk"}: ${r} av ${all}`;
+      if (r < all) li.className = "missed";
+      ul.append(li);
+      if (l && r < all) {
+        const k = LESSONS.indexOf(l), go = document.createElement("button");
+        go.type = "button"; go.className = "btn"; go.textContent = `Øv på ${l.short}`;
+        go.onclick = () => { const st = load(l.key); st.done = [0]; try { localStorage.setItem(l.key, JSON.stringify(st)); } catch (e) {} open(k); scrollTo({top: 0}); };
+        acts.append(go);
+      }
+    }
+    const again = document.createElement("button");
+    again.type = "button"; again.className = "btn main"; again.textContent = "Ta prøven på nytt";
+    again.onclick = () => runTest();
+    acts.append(again);
+  };
+  if (!qs.length) { stepsEl.innerHTML = `<article class="step"><h3>Prøven kunne ikke settes opp.</h3></article>`; return; }
+  show(0);
 }
 
 const fromHash = Number((location.hash.match(/^#leksjon-(\d+)$/) || [])[1]) - 1;
