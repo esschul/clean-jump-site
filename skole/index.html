@@ -308,9 +308,12 @@ function show(k) {
       finish(k, tries === 1);
       return;
     }
-    if (goal === "findTrap") verdict(fb, "info", `${Move}: trygt.`, "Brettet kan fortsatt løses etter det trekket. Prøv et annet.");
-    else verdict(fb, "bad", `${Move}: en felle.`, (e ? e.head + " " + e.why : "Brettet kan ikke løses etter det.") + " Prøv et annet.");
-    redraw();
+    // A wrong try is shown as it leaves the board, since that is what the words are about; then back to try again.
+    b.draw(after, {marks}); label2.textContent = "Etter trekket";
+    if (goal === "findTrap") verdict(fb, "info", `${Move}: trygt.`, "Brettet kan fortsatt løses etter det trekket.");
+    else verdict(fb, "bad", `${Move}: en felle.`, e ? e.head + " " + e.why : "Brettet kan ikke løses etter det.");
+    acts.innerHTML = `<button type="button" class="btn">Prøv et annet trekk</button>`;
+    acts.firstChild.onclick = () => { acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; redraw(); };
   }
   redraw();
 }
