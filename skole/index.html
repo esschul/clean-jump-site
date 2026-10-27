@@ -10,9 +10,9 @@
 <script>try { var t = localStorage.getItem('hiku:site-theme'); if (t && t !== 'auto') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>
 /* The site's look: a navy band, cream tiles standing on a darker edge, and the gold dashed arc of a jump. */
-:root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--rule:#ddd6ca;--tile:#fffaf2;--edge:#cbc2b3;--cell:#e7e1d6;
+:root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--rule:#ddd6ca;--tile:#fffaf2;--edge:#c4baa9;--cell:#dbd3c5;
   --navy:#3b4a7a;--navy-edge:#26305a;--on-navy:#f3eee6;--on-navy-muted:#c9cee6;--gold:#e0a43a;--link:#3b4a7a;
-  --good:#2f7a4f;--good-soft:#dcefe2;--bad:#b4472f;--bad-soft:#f6e0d8;--card:#fbf7f0}
+  --good:#2f7a4f;--good-soft:#dcefe2;--bad:#b4472f;--bad-soft:#f6e0d8;--card:#ece6db}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--rule:#2d3040;--tile:#454b64;--edge:#161822;--cell:#2d3040;
   --navy:#262c48;--navy-edge:#151a30;--on-navy:#ecebf2;--on-navy-muted:#aeb4d4;--gold:#f2c66d;--link:#9fb0ea;
   --good:#7fd19f;--good-soft:#203a2b;--bad:#f0937c;--bad-soft:#41261f;--card:#222533;color-scheme:dark}}
@@ -55,7 +55,8 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 .board .sq.num{background:var(--tile);box-shadow:0 3px 0 var(--edge)}
 .board button.sq{cursor:pointer}
 .board button.sq:focus-visible{outline:3px solid var(--link);outline-offset:2px}
-.board .sq.from{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--gold)}
+/* The number about to jump is gold, as a chosen number is in the game. */
+.board .sq.from{background:var(--gold);color:#2b2f45;box-shadow:0 3px 0 var(--edge)}
 .board .sq.target{outline:3px dashed var(--gold);outline-offset:-3px}
 .board .sq.selected{background:var(--gold);color:#2b2f45;box-shadow:0 3px 0 var(--edge)}
 .board .sq.alone{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--bad);background:var(--bad-soft)}
@@ -175,13 +176,15 @@ function board(host, n) {
     const box = wrap.getBoundingClientRect(), a = squares[from].getBoundingClientRect(), b = squares[to].getBoundingClientRect();
     const x1 = a.left + a.width / 2 - box.left, y1 = a.top + a.height / 2 - box.top, x2 = b.left + b.width / 2 - box.left, y2 = b.top + b.height / 2 - box.top;
     // A bow over the jump, bent to one side, the way a number jumps in the game.
-    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = x2 - x1, bend = Math.min(40, Math.hypot(dx, y2 - y1) * .35);
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = x2 - x1, bend = a.width * 1.4;
     // Up over a jump along a row, out to the left of a jump along a column.
     const qx = dx === 0 ? mx - bend : mx, qy = dx === 0 ? my : my - bend;
-    const ex = x2 - (x2 - qx) * .18, ey = y2 - (y2 - qy) * .18;
-    const ang = Math.atan2(y2 - qy, x2 - qx), s = 9;
+    // From the edge of one tile to the edge of the other, so the bow never hides a number.
+    const edge = (x, y) => { const d = Math.hypot(qx - x, qy - y) || 1, r = a.width * .5; return [x + (qx - x) / d * r, y + (qy - y) / d * r]; };
+    const [sx, sy] = edge(x1, y1), [ex, ey] = edge(x2, y2);
+    const ang = Math.atan2(ey - qy, ex - qx), s = 8;
     svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
-    svg.innerHTML = `<path d="M${x1} ${y1} Q${qx} ${qy} ${ex} ${ey}"/>` +
+    svg.innerHTML = `<path d="M${sx} ${sy} Q${qx} ${qy} ${ex} ${ey}"/>` +
       `<polygon points="${ex + Math.cos(ang) * s},${ey + Math.sin(ang) * s} ${ex + Math.cos(ang + 2.3) * s},${ey + Math.sin(ang + 2.3) * s} ${ex + Math.cos(ang - 2.3) * s},${ey + Math.sin(ang - 2.3) * s}"/>`;
   }
   return {draw};
