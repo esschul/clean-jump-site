@@ -30,8 +30,9 @@ async function daily(url, env) {
   if (found.error === "day") return json({error: "day"}, 400);
   if (found.error === "not today") return json({error: "not today"}, 403, {"cache-control": "no-store"});
   if (found.error) return json({error: found.error}, 503);
-  // The answer for a day never changes; let browsers and Cloudflare keep it for a while.
-  return json({day, boards: found.boards, hints: found.hints}, 200, {"cache-control": "public, max-age=600"});
+  // The answer for a day never changes, so a browser may keep it: it only asks for a day while that day is today
+  // somewhere, and the address names the day.
+  return json({day, boards: found.boards, hints: found.hints}, 200, {"cache-control": "public, max-age=2592000, immutable"});
 }
 
 /** The four boards of a day, as "size digit + squares", with their start hints; or {error}. */
