@@ -12,13 +12,13 @@
 /* The site's look: a navy band, cream tiles standing on a darker edge, and the gold dashed arc of a jump. */
 :root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--rule:#ddd6ca;--tile:#fffaf2;--edge:#c4baa9;--cell:#dbd3c5;
   --navy:#3b4a7a;--navy-edge:#26305a;--on-navy:#f3eee6;--on-navy-muted:#c9cee6;--gold:#e0a43a;--link:#3b4a7a;
-  --good:#2f7a4f;--good-soft:#dcefe2;--bad:#b4472f;--bad-soft:#f6e0d8;--card:#ece6db}
+  --good:#2f7a4f;--good-soft:#dcefe2;--bad:#b4472f;--bad-soft:#f6e0d8;--card:#ece6db;--line:#efd9a6}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--rule:#2d3040;--tile:#454b64;--edge:#161822;--cell:#2d3040;
   --navy:#262c48;--navy-edge:#151a30;--on-navy:#ecebf2;--on-navy-muted:#aeb4d4;--gold:#f2c66d;--link:#9fb0ea;
-  --good:#7fd19f;--good-soft:#203a2b;--bad:#f0937c;--bad-soft:#41261f;--card:#222533;color-scheme:dark}}
+  --good:#7fd19f;--good-soft:#203a2b;--bad:#f0937c;--bad-soft:#41261f;--card:#222533;--line:#4a4226;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--rule:#2d3040;--tile:#454b64;--edge:#161822;--cell:#2d3040;
   --navy:#262c48;--navy-edge:#151a30;--on-navy:#ecebf2;--on-navy-muted:#aeb4d4;--gold:#f2c66d;--link:#9fb0ea;
-  --good:#7fd19f;--good-soft:#203a2b;--bad:#f0937c;--bad-soft:#41261f;--card:#222533;color-scheme:dark}
+  --good:#7fd19f;--good-soft:#203a2b;--bad:#f0937c;--bad-soft:#41261f;--card:#222533;--line:#4a4226;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
 a{color:var(--link)}
@@ -62,6 +62,17 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 .board .sq.alone{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--bad);background:var(--bad-soft)}
 .board .sq.picked{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--link)}
 .board .sq.dim{opacity:.4}
+/* What a demonstration points at: the row and column of a number, the squares counted on a jump, a result that works. */
+.board .sq.line{background:var(--line)}
+.board .sq.line.num{background:var(--tile);box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--line)}
+.board .sq.good{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--good);background:var(--good-soft)}
+.board .sq .count{position:absolute;top:4px;left:7px;font-size:13px;font-weight:750;color:var(--link)}
+/* On an empty square the count is the square itself: big, in the middle. */
+.board .sq:not(.num) .count{position:static;font-size:clamp(16px,5vw,22px)}
+.board .sq.counted:not(.num){background:var(--line)}
+.saying{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:6px}
+.saying li{color:var(--muted)}
+.saying li:last-child{color:var(--ink);font-weight:600}
 .arc{position:absolute;inset:0;pointer-events:none;overflow:visible}
 .arc path{fill:none;stroke:var(--gold);stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round}
 .arc polygon{fill:var(--gold)}
@@ -142,7 +153,7 @@ const LESSONS = /*LESSONS*/[
   "none": "Ingen blir alene. Alle tallene har fortsatt et annet tall i raden eller kolonnen sin, og brettet kan fortsatt løses.",
   "steps": [
    {
-    "type": "example",
+    "type": "demo",
     "n": 4,
     "cells": [
      0,
@@ -162,11 +173,37 @@ const LESSONS = /*LESSONS*/[
      0,
      0
     ],
-    "move": [
-     "B3",
-     "B1"
-    ],
-    "text": "1-tallet på A3 har bare ett annet tall i raden og kolonnen sin: 2-tallet på B3. Se hva som skjer når 2-tallet hopper bort."
+    "frames": [
+     {
+      "text": "Se på 1-tallet på A3. I raden og kolonnen dens står bare ett annet tall: 2-tallet på B3.",
+      "line": "A3",
+      "marks": {
+       "A3": "from"
+      }
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "2-tallet på B3 hopper to ruter opp og lander på 3-tallet på B1. 3 − 2 = 1, så det står 1 der.",
+      "play": "B3-B1",
+      "line": "A3",
+      "marks": {
+       "A3": "from"
+      }
+     },
+     {
+      "text": "Nå er det ingen andre tall i raden eller kolonnen til A3.",
+      "line": "A3",
+      "marks": {
+       "A3": "alone"
+      }
+     },
+     {
+      "text": "Ingen kan hoppe på det, og det kan ikke hoppe noe sted. 1-tallet på A3 kan aldri forsvinne.",
+      "marks": {
+       "A3": "alone"
+      }
+     }
+    ]
    },
    {
     "type": "predict",
@@ -281,29 +318,92 @@ const LESSONS = /*LESSONS*/[
   "none": "Nei. Alle tallene kan fortsatt nås, og brettet kan fortsatt løses.",
   "steps": [
    {
-    "type": "example",
+    "type": "demo",
     "n": 4,
     "cells": [
-     0,
-     0,
-     0,
+     3,
      1,
+     3,
      0,
-     0,
-     0,
+     3,
      1,
+     3,
      0,
      0,
      0,
      0,
-     2,
-     1,
-     2,
-     3
+     0,
+     0,
+     0,
+     0,
+     0
     ],
-    "move": [
-     "A4",
-     "C4"
+    "frames": [
+     {
+      "text": "Fire 3-ere og to 1-ere. Et 3-tall hopper nøyaktig 3 ruter."
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "1-tallet på B1 hopper på 1-tallet på B2. 1 − 1 = 0, så begge forsvinner.",
+      "play": "B1-B2"
+     },
+     {
+      "go": "Tell",
+      "text": "Fra A1 til C1 er det 2 ruter. Begge er 3, så ingen av dem kan hoppe på den andre.",
+      "count": [
+       "A1",
+       "C1"
+      ],
+      "marks": {
+       "A1": "alone",
+       "C1": "alone"
+      }
+     },
+     {
+      "go": "Tell",
+      "text": "Fra A1 til A2 er det bare 1 rute. Det samme gjelder C1 og C2.",
+      "count": [
+       "A1",
+       "A2"
+      ],
+      "marks": {
+       "A1": "alone",
+       "A2": "alone"
+      }
+     },
+     {
+      "text": "Ingen andre tall kan lande på dem og endre dem. De blir 3-ere for alltid, og ingen av dem kan forsvinne.",
+      "marks": {
+       "A1": "alone",
+       "C1": "alone",
+       "A2": "alone",
+       "C2": "alone"
+      }
+     },
+     {
+      "go": "Prøv et annet trekk",
+      "reset": [],
+      "text": "Prøv heller dette: 1-tallet på B1 hopper på 3-tallet på C1.",
+      "arc": [
+       "B1",
+       "C1"
+      ],
+      "marks": {
+       "B1": "from"
+      }
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "3 − 1 = 2. Nå er det en 2-er på C1, og A1 står 2 ruter unna. Da kan den hoppe dit.",
+      "play": "B1-C1",
+      "count": [
+       "C1",
+       "A1"
+      ],
+      "marks": {
+       "C1": "good"
+      }
+     }
     ]
    },
    {
@@ -362,18 +462,18 @@ const LESSONS = /*LESSONS*/[
     "type": "findTrap",
     "n": 4,
     "cells": [
-     3,
+     0,
+     0,
      1,
-     3,
-     0,
-     3,
      1,
+     0,
+     0,
+     0,
+     0,
+     2,
+     1,
+     2,
      3,
-     0,
-     0,
-     0,
-     0,
-     0,
      0,
      0,
      0,
@@ -395,7 +495,7 @@ const LESSONS = /*LESSONS*/[
   "none": "Nei. Ingen to tall er avhengige av den samme partneren, og brettet kan fortsatt løses.",
   "steps": [
    {
-    "type": "example",
+    "type": "demo",
     "n": 4,
     "cells": [
      0,
@@ -415,9 +515,74 @@ const LESSONS = /*LESSONS*/[
      0,
      1
     ],
-    "move": [
-     "D1",
-     "D4"
+    "frames": [
+     {
+      "text": "Se på trekket: 3-tallet på D1 hopper til 1-tallet på D4.",
+      "arc": [
+       "D1",
+       "D4"
+      ],
+      "marks": {
+       "D1": "from"
+      }
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "3 − 1 = 2. Nå står det tre 2-ere: D2, B4 og D4.",
+      "play": "D1-D4"
+     },
+     {
+      "text": "2-tallet på D2 og 2-tallet på B4 kan bare nå D4.",
+      "marks": {
+       "D2": "from",
+       "B4": "from",
+       "D4": "good"
+      }
+     },
+     {
+      "go": "Prøv D2 til D4",
+      "text": "2-tallet på D2 hopper på D4. 2 − 2 = 0, så begge forsvinner. B4 står igjen alene.",
+      "play": "D2-D4",
+      "marks": {
+       "B4": "alone"
+      }
+     },
+     {
+      "go": "Prøv B4 til D4",
+      "reset": [
+       "D1-D4",
+       "B4-D4"
+      ],
+      "text": "Samme utgangspunkt, men nå hopper B4 på D4. 2 − 2 = 0. Nå er det D2 som står igjen alene.",
+      "marks": {
+       "D2": "alone"
+      }
+     },
+     {
+      "text": "Uansett hvilket par du fjerner, blir den tredje 2-eren igjen. Begge trengte D4, og D4 kan bare forsvinne én gang.",
+      "marks": {
+       "D2": "alone"
+      }
+     },
+     {
+      "go": "Se riktig rekkefølge",
+      "reset": [
+       "D2-D4"
+      ],
+      "text": "Riktig rekkefølge: 2-tallet på D2 hopper først på D4. 2 − 1 = 1.",
+      "marks": {
+       "D4": "good"
+      }
+     },
+     {
+      "go": "Videre",
+      "text": "Så 3-tallet på D1: 3 − 1 = 2 på D4. Og til slutt B4: 2 − 2 = 0. Brettet er tomt.",
+      "reset": [
+       "D2-D4",
+       "D1-D4",
+       "B4-D4"
+      ]
+     }
     ]
    },
    {
@@ -509,7 +674,7 @@ const LESSONS = /*LESSONS*/[
   "none": "Trygt. Brettet kan fortsatt løses etter det trekket.",
   "steps": [
    {
-    "type": "example",
+    "type": "demo",
     "n": 4,
     "cells": [
      0,
@@ -529,9 +694,73 @@ const LESSONS = /*LESSONS*/[
      1,
      3
     ],
-    "move": [
-     "D4",
-     "D1"
+    "frames": [
+     {
+      "text": "Både 2-tallet på D3 og 3-tallet på D4 skal lande på 1-tallet på D1. Rekkefølgen avgjør hva som blir igjen der.",
+      "arc": [
+       "D3",
+       "D1"
+      ],
+      "marks": {
+       "D3": "from",
+       "D4": "from"
+      }
+     },
+     {
+      "go": "D3 først",
+      "text": "2-tallet på D3 hopper først: 2 − 1 = 1 på D1.",
+      "play": "D3-D1",
+      "marks": {
+       "D1": "good"
+      }
+     },
+     {
+      "go": "Så D4",
+      "text": "Så 3-tallet på D4: 3 − 1 = 2 på D1.",
+      "play": "D4-D1",
+      "marks": {
+       "D1": "good"
+      }
+     },
+     {
+      "text": "Den 2-eren trengs. 3-tallet på B1 står 2 ruter unna, så 2-eren kan hoppe dit.",
+      "count": [
+       "D1",
+       "B1"
+      ],
+      "marks": {
+       "D1": "good"
+      },
+      "arc": [
+       "D1",
+       "B1"
+      ]
+     },
+     {
+      "go": "Prøv den andre rekkefølgen",
+      "reset": [
+       "D4-D1"
+      ],
+      "text": "Nå hopper 3-tallet på D4 først: 3 − 1 = 2 på D1.",
+      "marks": {
+       "D1": "from"
+      }
+     },
+     {
+      "go": "Så D3",
+      "text": "Så 2-tallet på D3: 2 − 2 = 0. Begge forsvinner, og D1 er tom.",
+      "play": "D3-D1",
+      "marks": {
+       "D1": "alone"
+      }
+     },
+     {
+      "text": "Nå er det ingen 2-er som kan nå B1, og en tom rute får aldri et tall igjen. Derfor må D3 hoppe før D4.",
+      "marks": {
+       "D1": "alone",
+       "B1": "from"
+      }
+     }
     ]
    },
    {
@@ -645,7 +874,7 @@ const LESSONS = /*LESSONS*/[
   "none": "Nei. Ingen tall blir skilt fra resten med en oddetallssum, og brettet kan fortsatt løses.",
   "steps": [
    {
-    "type": "example",
+    "type": "demo",
     "n": 5,
     "cells": [
      0,
@@ -674,9 +903,55 @@ const LESSONS = /*LESSONS*/[
      0,
      0
     ],
-    "move": [
-     "E3",
-     "A3"
+    "frames": [
+     {
+      "text": "Se på trekket: 4-tallet på E3 hopper til 3-tallet på A3.",
+      "arc": [
+       "E3",
+       "A3"
+      ],
+      "marks": {
+       "E3": "from"
+      }
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "4 − 3 = 1 på A3.",
+      "play": "E3-A3"
+     },
+     {
+      "text": "Nå står 1-tallet på C3 og 2-tallet på D3 for seg selv. Ingen andre tall kan noen gang hoppe på dem eller ta imot dem.",
+      "marks": {
+       "C3": "from",
+       "D3": "from"
+      }
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "De to kan bare møte hverandre. 1-tallet hopper på 2-tallet: 2 − 1 = 1. Nå står én 1-er igjen, og ingen kan hjelpe.",
+      "play": "C3-D3",
+      "marks": {
+       "D3": "alone"
+      }
+     },
+     {
+      "text": "Det var ikke uflaks. Før hoppet var summen 1 + 2 = 3. Etter hoppet er den 1. Summen gikk ned med 2.",
+      "marks": {
+       "D3": "alone"
+      }
+     },
+     {
+      "text": "Slik er det alltid: et hopp tar det minste tallet bort fra begge, så summen går ned med et partall. Fra 3 kan den aldri bli 0.",
+      "marks": {
+       "D3": "alone"
+      }
+     },
+     {
+      "text": "Til neste gang: legg sammen tall som blir skilt fra resten. Er summen et oddetall, blir minst ett igjen.",
+      "marks": {
+       "D3": "alone"
+      }
+     }
     ]
    },
    {
@@ -835,7 +1110,7 @@ function board(host, n) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("class", "arc"); svg.setAttribute("aria-hidden", "true");
   wrap.append(grid, svg); host.append(wrap);
   let squares = [];
-  function draw(cells, {marks = {}, arc = null, tap = null} = {}) {
+  function draw(cells, {marks = {}, arc = null, tap = null, counts = null} = {}) {
     grid.innerHTML = "<span></span>" + [...Array(n)].map((_, c) => `<span class="name">${COLS[c]}</span>`).join("");
     squares = [];
     for (let r = 0; r < n; r++) {
@@ -845,6 +1120,7 @@ function board(host, n) {
         const el = document.createElement(tap && v ? "button" : "div");
         el.className = "sq" + (v ? " num" : "") + (marks[i] ? " " + marks[i] : "");
         el.textContent = v || "";
+        if (counts && counts[i]) { el.classList.add("counted"); el.insertAdjacentHTML("beforeend", `<span class="count">${counts[i]}</span>`); }
         if (el.tagName === "BUTTON") { el.type = "button"; el.setAttribute("aria-label", `${v} på ${sq(n, i)}`); el.onclick = () => tap(i); }
         else if (v) el.setAttribute("aria-label", `${v} på ${sq(n, i)}`);
         grid.append(el); squares[i] = el;
@@ -896,7 +1172,9 @@ function verdict(box, cls, head, why, steps = []) {
 /** The engine's own words for a move, with the board they are about (before or after it), or null when it has none. */
 function explain(n, cells, from, to) {
   const e = trap(cells, n, {from, to, jumper: cells[from], target: cells[to]});
-  return e && {kind: e.kind, focus: e.focus, cells: e.cells, head: say(e.headline, LANG), why: say(e.reason, LANG),
+  // There is no undo button at school: its advice to undo is left out.
+  const why = say(e ? e.reason : {plain: ""}, LANG).replace(/\s*Angre, og [^.]*\./g, "");
+  return e && {kind: e.kind, focus: e.focus, cells: e.cells, head: say(e.headline, LANG), why,
     steps: (e.steps || []).map(st => say(st.text, LANG))};
 }
 
@@ -922,6 +1200,49 @@ function finish(k, firstTry) {
   if (next) next.hidden = false;
 }
 
+/**
+ * A demonstration: one sentence at a time with what happens on the board. Each frame may start again from the
+ * board as it was (reset: the moves to play from there), play a move, point at squares (marks), light a number's row
+ * and column (line), count the squares of a jump (count) or draw one (arc). "go" is the button that leads to it.
+ * Every move is checked against the rules as it is played, so a demonstration cannot show a jump the game forbids.
+ */
+function demo(k, s, b, label, acts, fb) {
+  const n = s.n, start = s.cells.slice(), said = [];
+  let cells = start.slice(), f = 0;
+  const playOn = (c, mv) => {
+    const [a, t] = mv.split("-").map(x => at(n, x));
+    if (!targets(c, n, a).includes(t)) throw new Error(`not a legal jump: ${mv}`);
+    return moved(c, a, t);
+  };
+  const frame = () => {
+    const fr = s.frames[f];
+    if (fr.reset) { cells = fr.reset.reduce(playOn, start.slice()); said.length = 0; }
+    if (fr.play) cells = playOn(cells, fr.play);
+    const marks = {}, counts = {};
+    if (fr.line) { const c = at(n, fr.line); cells.forEach((_, i) => { if (i !== c && inLine(n, i, c)) marks[i] = "line"; }); }
+    for (const [name, cls] of Object.entries(fr.marks || {})) marks[at(n, name)] = cls;
+    if (fr.count) {
+      const [a, z] = fr.count.map(x => at(n, x)), step = Math.floor(z / n) === Math.floor(a / n) ? Math.sign(z - a) : Math.sign(z - a) * n;
+      for (let i = a + step, c = 1; ; i += step, c++) { counts[i] = c; if (i === z) break; }
+    }
+    b.draw(cells, {marks, counts, arc: fr.arc ? fr.arc.map(x => at(n, x)) : null});
+    label.textContent = fr.label || "";
+    said.push(fr.text);
+    fb.className = "feedback info";
+    fb.innerHTML = `<ul class="saying"></ul>`;
+    for (const t of said) { const li = document.createElement("li"); li.textContent = t; fb.firstChild.append(li); }
+    const next = s.frames[f + 1];
+    acts.innerHTML = "";
+    if (next) {
+      const go = document.createElement("button");
+      go.type = "button"; go.className = "btn main"; go.textContent = next.go || "Videre";
+      go.onclick = () => { f++; frame(); };
+      acts.append(go);
+    } else finish(k, true);
+  };
+  frame();
+}
+
 const moveText = (n, cells, from, to) => `${num(n, cells, from)} hopper til ${sq(n, to)}`;
 
 function show(k) {
@@ -929,14 +1250,15 @@ function show(k) {
   const steps = lesson.steps, s = steps[k], n = s.n, cells = s.cells.slice();
   stepsEl.innerHTML = "";
   const el = document.createElement("article"); el.className = "step";
-  const label = s.type === "example" ? "Eksempel" : `Oppgave ${k} av ${steps.length - 1}`;
+  const label = s.type === "example" || s.type === "demo" ? "Eksempel" : `Oppgave ${k} av ${steps.length - 1}`;
   el.innerHTML = `<p class="kind">${label}</p><h3></h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>` +
     `<div class="actions"><button type="button" class="btn main next" hidden>${k === steps.length - 1 ? "Ferdig" : "Neste"}</button></div>`;
   const from = s.move ? at(n, s.move[0]) : -1, to = s.move ? at(n, s.move[1]) : -1;
   const mv = s.move ? moveText(n, cells, from, to) : "";
-  el.querySelector("h3").textContent = s.title || {example: "Se hva som skjer", predict: k === 1 ? "Hva tror du?" : "Og her?",
+  el.querySelector("h3").textContent = s.title || {demo: "Se hva som skjer", example: "Se hva som skjer", predict: k === 1 ? "Hva tror du?" : "Og her?",
     findTrap: "Finn fellen", findSafe: "Finn det trygge trekket"}[s.type];
   el.querySelector(".text").textContent = s.text || {
+    demo: "Trykk deg gjennom, ett steg om gangen.",
     example: `Se hva som skjer når ${mv}.`,
     predict: lesson.ask.replace("{move}", mv),
     findTrap: "Ett av trekkene her er en felle. Finn det. Trykk først på tallet som skal hoppe, og så på ruta det skal lande på.",
@@ -944,6 +1266,8 @@ function show(k) {
   stepsEl.append(el);
   const b = board(el.querySelector(".host"), n), label2 = el.querySelector(".boardlabel"), acts = el.querySelector(".actions"), fb = el.querySelector(".feedback");
   el.querySelector(".next").onclick = () => k < steps.length - 1 ? show(k + 1) : allDone();
+
+  if (s.type === "demo") return demo(k, s, b, label2, acts, fb);
 
   if (s.type === "example" || s.type === "predict") {
     const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000), e = ok ? null : explain(n, cells, from, to);
@@ -1032,7 +1356,7 @@ function allDone() {
   const k = LESSONS.indexOf(lesson), next = LESSONS[k + 1];
   stepsEl.innerHTML = `<article class="step"><p class="kind">Leksjon ${k + 1}</p><h3>Ferdig!</h3><p></p><div class="actions"></div></article>`;
   // The example is no exercise, so it is not counted.
-  const asked = lesson.steps.map((s, i) => i).filter(i => lesson.steps[i].type !== "example");
+  const asked = lesson.steps.map((s, i) => i).filter(i => !["example", "demo"].includes(lesson.steps[i].type));
   const right = asked.filter(i => saved.first[i]).length;
   stepsEl.querySelector("p:not(.kind)").textContent = `Du fikk ${right} av ${asked.length} oppgaver riktig på første forsøk.` + (next ? "" : " Det var den siste leksjonen så langt.");
   const acts = stepsEl.querySelector(".actions");
