@@ -181,6 +181,10 @@ frame-src {{host}};</code></pre>
   var form = document.getElementById('config'), stage = document.getElementById('stage');
   var base = '{{base}}', pageLang = '{{lang}}', card = '';
   var words = {script: '{{html_label}}', iframe: '{{html_noscript}}', title: '{{game_title}}'};
+  // A colour as the browser gives it (rgb(…)) as rrggbb.
+  function hexOf(colour) {
+    return (colour.match(/\d+/g) || [255, 255, 255]).slice(0, 3).map(function (v) { return ('0' + (+v).toString(16)).slice(-2); }).join('');
+  }
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function update() {
     var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
@@ -203,6 +207,8 @@ frame-src {{host}};</code></pre>
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
       if (o.color) q.push('color=' + o.color.slice(1));
+      // Without the script nothing reads the background around the frame, so the code carries the one chosen here.
+      if (o.color) q.push('bg=' + (card || (hex ? o.page : hexOf(getComputedStyle(stage).backgroundColor))));
       code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="' + words.title + '" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
       document.getElementById('preview').innerHTML = code;
     } else {
