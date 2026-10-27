@@ -351,28 +351,32 @@ function forAssistant(found, n) {
   const [first, ...rest] = found.focus;
   const name = i => `the ${found.cells[i]} on ${squareName(n, i)}`;
   const list = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " and " + items[items.length - 1];
+  // Only the one for this kind is worked out: the others may name squares this explanation does not have.
   const [question, pattern] = {
-    stranded: [`Is there any other number in the row or column of ${name(first)}?`,
+    stranded: () => [`Is there any other number in the row or column of ${name(first)}?`,
       "a number with nothing left in its row or column will always be left"],
-    unreachable: [`${name(first)} lines up with ${list(rest.map(name))}. How far apart are they, and can either of them ever become that number?`,
+    unreachable: () => [`${name(first)} lines up with ${list(rest.map(name))}. How far apart are they, and can either of them ever become that number?`,
       "two numbers in line only meet at the right distance: check whether either can ever become it"],
-    oddGroup: [`Which numbers can ${list(found.focus.map(name))} ever jump onto? Add them up: can they cancel out?`,
+    oddGroup: () => [`Which numbers can ${list(found.focus.map(name))} ever jump onto? Add them up: can they cancel out?`,
       "even and odd: a group of numbers cut off from the rest must add up to an even number"],
-    wrongMoment: [`Which numbers could ever clear ${name(first)}? And what happened to ${squareName(n, rest[0])}?`,
-      "order matters: when two numbers need the same square, ask which one needs it as it is now"],
-    needsSquare: [`How could ${name(first)} ever disappear? What did it need on ${squareName(n, rest[0])}?`,
-      "before a move, look at what it takes away: a number that needs that square to get away is left for good"],
-    follow: [`What can ever happen to ${name(first)}: where can it jump, and what can land on it?`,
+    wrongMoment: () => [`Which number has to land on ${squareName(n, rest[0])} before ${name(first)} goes there?`,
+      "when two numbers need the same square, check which one has to land there first"],
+    needsSquare: () => [`How could ${name(rest[1])} ever disappear? What did it need on ${squareName(n, rest[0])}?`,
+      "before you empty a square, check which numbers still need it"],
+    follow: () => [`What can ever happen to ${name(first)}: where can it jump, and what can land on it?`,
       "follow one number: where it can jump, what can land on it, and what it becomes"],
-    shared: [`What can ${name(rest[0])} and ${name(rest[1])} each disappear with?`,
+    shared: () => [`What can ${name(rest[0])} and ${name(rest[1])} each disappear with?`,
       "two numbers that need the same partner: only one of them can have it"],
-    rivals: [`What happens to ${name(rest[0])} once ${name(first)} is gone, and the other way round?`,
+    rivals: () => [`What happens to ${name(rest[0])} once ${name(first)} is gone, and the other way round?`,
       "two numbers that stand in each other's way: clearing one strands the other"],
-    alwaysLeft: [`What would it take for a number to clear ${name(first)}? Look at what is in its row and column.`,
+    alwaysLeft: () => [`What would it take for a number to clear ${name(first)}? Look at what is in its row and column.`,
       "look a few moves ahead for the number that will be left"],
-  }[found.kind];
+  }[found.kind]();
   return {code: KIND_CODES[found.kind], focus: [first], related: rest, question: question.charAt(0).toUpperCase() + question.slice(1),
-    headline: Explain.say(found.headline, "en"), reason: Explain.say(found.reason, "en"), pattern};
+    headline: Explain.say(found.headline, "en"),
+    // When the move came too early, the reason is what has to happen first, in order, and then the move.
+    reason: (found.steps?.length ? [Explain.say({key: "explain.tooEarly.first", args: []}, "en"),
+      ...found.steps.map((step, k) => `(${k + 1}) ${Explain.say(step.text, "en")}`)] : []).concat(Explain.say(found.reason, "en")).join(" "), pattern};
 }
 
 /** The reasons a lost position is lost, in the order to reveal them, for the assistant to tell one step at a time. */

@@ -206,21 +206,24 @@ function changes(cells, n, meet, index) {
 
 // ---- Right move, wrong moment
 
-/** Every way to clear `before`, as lists of moves, or null when there are too many to look at them all. */
+/** Every way to clear `before`, as lists of moves, or null when there are too many to look at them all, or the solver
+ *  gives up on one of the positions on the way: then some ways may be missing, and nothing can be said of every way. */
 function solutionsOf(before, n, memo) {
   const solutions = [], line = [];
-  let nodes = 0;
+  let nodes = 0, gaveUp = false;
   (function walk(p) {
-    if (solutions.length > 2000 || nodes > 20_000) return;
+    if (gaveUp || solutions.length > 2000 || nodes > 20_000) return;
     nodes++;
     if (p.every(v => v === 0)) { solutions.push(line.slice()); return; }
     for (let i = 0; i < p.length; i++) for (const t of targets(p, n, i)) {
-      const next = moved(p, i, t);
-      if (solvable(next, n, memo, 400_000) !== true) continue;
+      if (gaveUp || solutions.length > 2000 || nodes > 20_000) return;
+      const next = moved(p, i, t), r = solvable(next, n, memo, 400_000);
+      if (r === null) { gaveUp = true; return; }
+      if (!r) continue;
       line.push({from: i, to: t, jumper: p[i], target: p[t]}); walk(next); line.pop();
     }
   })(before);
-  return !solutions.length || solutions.length > 2000 || nodes > 20_000 ? null : solutions;
+  return gaveUp || !solutions.length || solutions.length > 2000 || nodes > 20_000 ? null : solutions;
 }
 
 /** The move is in every way to clear the board, but another number has to land on the same square first, while it
@@ -235,13 +238,45 @@ function wrongMoment(before, n, move, solutions) {
   // and only when every way to clear the board agrees on both.
   const then = firsts.map(f => f.find(m => m.from === first));
   if (!then.every(m => m.jumper === then[0].jumper && m.target === then[0].target)) return null;
-  const square = plain(squareName(n, move.to)), now = Math.abs(move.jumper - move.target);
+  const square = plain(squareName(n, move.to));
   const lander = numberAt(before, n, first), mover = numberAt(before, n, move.from);
-  return {kind: "wrongMoment", cells: before, focus: [first, move.to],
-    headline: cap(now === 0 ? phrase("explain.dependsOn.gone", lander, square) : phrase("explain.dependsOn", lander, square, count(now))),
-    reason: then[0].jumper === before[first]
-      ? phrase("explain.dependsOn.why", lander, square, count(then[0].target), mover)
-      : phrase("explain.dependsOn.whyBecomes", lander, count(then[0].jumper), square, count(then[0].target), mover)};
+  const steps = chain(before, n, move, first, solutions, at);
+  // With steps, the board first shows the move alone; the steps show the rest one by one.
+  return {kind: "wrongMoment", cells: before, focus: steps.length ? [move.from, move.to] : [move.from, move.to, first],
+    headline: cap(phrase("explain.tooEarly", mover, square)),
+    reason: steps.length ? phrase("explain.tooEarly.then", mover, square)
+      : then[0].jumper === before[first]
+        ? phrase("explain.dependsOn.why", lander, square, count(then[0].target), mover)
+        : phrase("explain.dependsOn.whyBecomes", lander, count(then[0].jumper), square, count(then[0].target), mover),
+    steps};
+}
+
+/** The moves that make the number on `lander`, and the square it lands on, what they are when it jumps there, the moves
+ *  that make those what they are, and so on back, and that jump: told only when every way to clear the board makes the
+ *  same few in the same order before the player's move. Empty otherwise, and the reason is told in words. */
+function chain(before, n, move, lander, solutions, at) {
+  const chains = solutions.map((s, k) => {
+    const early = s.slice(0, at[k]);
+    const jump = early.findIndex(m => m.from === lander && m.to === move.to);
+    // Back from the jump: a move matters when it lands on a square a move that matters later jumps from or onto.
+    const needed = [jump], squares = new Set([lander, move.to]);
+    for (let j = jump - 1; j >= 0; j--) if (squares.has(early[j].to)) { needed.push(j); squares.add(early[j].from); }
+    return needed.reverse().map(j => early[j]);
+  });
+  const same = (a, b) => a.length === b.length
+    && a.every((m, k) => m.from === b[k].from && m.to === b[k].to && m.jumper === b[k].jumper && m.target === b[k].target);
+  // More than four is no longer a short reason.
+  if (chains[0].length > 4 || !chains.every(c => same(c, chains[0]))) return [];
+  let cells = before;
+  const steps = [];
+  for (const m of chains[0]) {
+    if (cells[m.from] !== m.jumper || cells[m.to] !== m.target || !targets(cells, n, m.from).includes(m.to)) return [];
+    const next = moved(cells, m.from, m.to), from = plain(squareName(n, m.from)), to = plain(squareName(n, m.to));
+    steps.push({text: next[m.to] ? phrase("explain.step.leaves", count(m.jumper), from, count(m.target), to, count(next[m.to]))
+      : phrase("explain.step.vanish", count(m.jumper), from, count(m.target), to), cells, from: m.from, to: m.to});
+    cells = next;
+  }
+  return steps;
 }
 
 /** The move emptied a square another number needs: in every way to clear the board, that number jumps onto the square
@@ -255,9 +290,9 @@ function needsSquare(before, n, move, solutions) {
     const either = x => solutions.every(s => s.some(m => (m.from === x && m.to === square) || (m.from === square && m.to === x)));
     const x = before.findIndex((v, i) => v && i !== move.from && i !== move.to && either(i));
     if (x < 0) continue;
-    const name = numberAt(before, n, x), where = plain(squareName(n, square));
-    return {kind: "needsSquare", cells: before, focus: [x, square],
-      headline: cap(phrase("explain.dependsOn.gone", name, where)),
+    const name = numberAt(before, n, x), where = plain(squareName(n, square)), mover = numberAt(before, n, move.from);
+    return {kind: "needsSquare", cells: before, focus: [move.from, square, x],
+      headline: cap(square === move.from ? phrase("explain.jumpedAway", mover, name) : phrase("explain.emptied", mover, where, name)),
       reason: phrase(jumps(x) ? "explain.needs.jumps" : lands(x) ? "explain.needs.lands" : "explain.needs.either", name, where)};
   }
   return null;
@@ -448,15 +483,20 @@ export function trap(before, n, move) {
     || follow(after, n, true) || rivals(after, n, true) || alwaysLeft(after, n);
 }
 
-/** The move that made the board impossible to clear, from the boards played through, oldest first: the board before
- *  the first one that can no longer be cleared, and the move between them. Null when none is found in time. */
-export function wrongMove(positions, n) {
+/** The move that made the board impossible to clear, from the boards played through, oldest first, and the moves
+ *  between them when known: the board before the first one that can no longer be cleared, and the move between them.
+ *  Two equal numbers leave the same board whichever of them jumped, so the move played is told when it is known.
+ *  Null when none is found in time. */
+export function wrongMove(positions, n, moves = []) {
   const memo = new Map();
   for (let k = 1; k < positions.length; k++) {
     const r = solvable(positions[k], n, memo, 2_000_000);
     if (r === true) continue;
     if (r === null) return null;
-    const before = positions[k - 1];
+    const before = positions[k - 1], played = moves.length === positions.length - 1 && moves[k - 1];
+    if (played && targets(before, n, played.from).includes(played.to) && same(moved(before, played.from, played.to), positions[k])) {
+      return {before, move: {from: played.from, to: played.to, jumper: before[played.from], target: before[played.to]}};
+    }
     for (let i = 0; i < before.length; i++) for (const t of targets(before, n, i)) {
       if (same(moved(before, i, t), positions[k])) return {before, move: {from: i, to: t, jumper: before[i], target: before[t]}};
     }
@@ -471,7 +511,7 @@ export function lost(cells, n) {
 }
 
 /** Why the board went wrong, from the boards played through: the explanation, or null when there is no short one. */
-export function why(positions, n) {
-  const found = wrongMove(positions, n);
+export function why(positions, n, moves = []) {
+  const found = wrongMove(positions, n, moves);
   return found ? trap(found.before, n, found.move) : null;
 }

@@ -105,6 +105,13 @@ footer a{color:var(--link,var(--accent))}
 .whycard .head{font-weight:600}
 .whycard .reason{color:var(--muted)}
 .whycard .linky{align-self:flex-start}
+/* What has to happen first, numbered; each one shows on the board, and again goes back to the board before the move. */
+.whycard ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.whycard ol button{font:inherit;color:var(--ink);background:none;border:0;padding:2px 0;display:flex;gap:10px;align-items:baseline;text-align:left;cursor:pointer;width:100%;min-height:44px}
+.whycard .tip{font-weight:600;color:var(--accent);font-size:14px}
+.whycard ol b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--soft);color:var(--accent);font-size:13px;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;transform:translateY(2px)}
+.whycard ol button[aria-pressed="true"] b{background:var(--accent);color:var(--on-accent)}
+.whycard .when{font-size:13px;font-weight:600;color:var(--muted);margin-top:4px}
 /* The board takes the height that is left under the words, and is as wide as it is high. */
 .whyboard{display:grid;gap:4px;flex:1 1 0;min-height:180px;aspect-ratio:1;max-width:100%;align-self:center;margin-top:4px}
 .whyboard .name{font-size:11px;font-weight:600;color:var(--muted);text-align:center;align-self:center}
@@ -395,7 +402,7 @@ footer a{color:var(--link,var(--accent))}
   let tier = TIERS.includes(params.get('level')) ? params.get('level') : (store.get('tier') || 'easy');
   let n, cells, history, undos, selected = null, lost = false, lastMove = null, checkToken = 0;
   // The moves on today's board so far, as "B2-E2", for an assistant the game runs inside (see HikuGame below).
-  let moveLog = [];
+  let moveLog = [], played = [];
 
   const el = id => document.getElementById(id);
   const boardEl = el('board'), statusEl = el('status'), controlsEl = el('controls'), tabsEl = el('tabs');
@@ -451,10 +458,10 @@ footer a{color:var(--link,var(--accent))}
     boardEl.appendChild(card);
     whyLink.setAttribute('aria-expanded', 'true');
     done.focus();
-    const positions = [...history, cells], size = n, asked = checkToken;
+    const positions = [...history, cells], moves = played.slice(), size = n, asked = checkToken;
     // A moment for "looking for the reason" to show: the search can take a tenth of a second on a big board.
     setTimeout(() => {
-      const found = Explain.why(positions, size);
+      const found = Explain.why(positions, size, moves);
       if (asked !== checkToken || card !== whyCard) return;
       if (!found) { body.textContent = words('explain.none'); return; }
       body.className = 'head';
@@ -462,18 +469,61 @@ footer a{color:var(--link,var(--accent))}
       const reason = document.createElement('p');
       reason.className = 'reason';
       reason.textContent = Explain.say(found.reason, lang);
+      // A move that came too early, or emptied a square, is told on the board before it, with what to do instead: all at once.
+      const aboutMove = found.kind === 'wrongMoment' || found.kind === 'needsSquare';
+      const when = document.createElement('p');
+      when.className = 'when';
+      let board = whyBoard(found, size), shown = -1;
+      const show = k => {
+        shown = shown === k ? -1 : k;
+        const step = found.steps[shown];
+        when.textContent = step ? Explain.say({key: 'explain.beforeStep', args: [{count: shown + 1}]}, lang) : words('explain.beforeMove');
+        const next = whyBoard(step ? {cells: step.cells, focus: [step.from, step.to]} : found, size);
+        board.replaceWith(next);
+        board = next;
+        list.querySelectorAll('button').forEach((b, i) => b.setAttribute('aria-pressed', String(i === shown)));
+        // A step chosen far above the board brings the board into view, so its change is seen.
+        board.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+      };
+      const list = document.createElement('ol');
+      (found.steps || []).forEach((step, k) => {
+        const item = document.createElement('li'), button = document.createElement('button'), number = document.createElement('b');
+        button.type = 'button';
+        button.setAttribute('aria-pressed', 'false');
+        number.textContent = k + 1;
+        button.append(number, Explain.say(step.text, lang));
+        button.onclick = () => show(k);
+        item.appendChild(button);
+        list.appendChild(item);
+      });
+      if (list.children.length) {
+        const first = document.createElement('p'), hint = document.createElement('p');
+        first.textContent = words('explain.tooEarly.first');
+        hint.className = 'when';
+        hint.textContent = words('explain.tapStep');
+        card.append(first, hint, list);
+      }
+      // A habit to take to the next board: each kind of mistake has one to look out for before moving.
+      const tip = document.createElement('p');
+      tip.className = 'tip';
+      tip.textContent = words('explain.tip.' + found.kind);
+      if (aboutMove) {
+        when.textContent = words('explain.beforeMove');
+        card.append(reason, tip, when, board);
+        return;
+      }
       reason.hidden = true;
       const more = document.createElement('button');
       more.type = 'button';
       more.className = 'linky';
       more.textContent = words('explain.more');
       more.onclick = () => { reason.hidden = false; more.remove(); };
-      card.append(more, reason, whyBoard(found, size));
+      card.append(more, reason, tip, board);
     }, 30);
   }
 
-  // The board the reason is told on, with A, B, C … above and 1, 2, 3 … beside it. Screen readers get the words,
-  // which name every square that matters.
+  // The board the reason is told on, or a step of it, with A, B, C … above and 1, 2, 3 … beside it. Screen readers get
+  // the words, which name every square that matters.
   function whyBoard(found, size) {
     const grid = document.createElement('div');
     grid.className = 'whyboard';
@@ -545,7 +595,7 @@ footer a{color:var(--link,var(--accent))}
     tier = t;
     store.set('tier', t);
     const b = boardFor(t);
-    n = b.size; cells = b.cells; history = []; undos = 0; selected = null; lost = false; lastMove = null; moveLog = [];
+    n = b.size; cells = b.cells; history = []; undos = 0; selected = null; lost = false; lastMove = null; moveLog = []; played = [];
     checkToken++;
     render();
   }
@@ -555,6 +605,7 @@ footer a{color:var(--link,var(--accent))}
     const finish = () => {
       history.push(cells);
       moveLog.push(squareName(from) + '-' + squareName(to));
+      played.push({from, to});
       lastMove = {from, to, a: cells[from], b: cells[to]};
       cells = moved(cells, from, to);
       selected = null;
@@ -620,7 +671,7 @@ footer a{color:var(--link,var(--accent))}
 
   function undo() {
     if (!history.length) return;
-    cells = history.pop(); moveLog.pop(); undos++; selected = null; lost = false; lastMove = null; checkToken++;
+    cells = history.pop(); moveLog.pop(); played.pop(); undos++; selected = null; lost = false; lastMove = null; checkToken++;
     say(T.undone + ' ' + sentence(T.left(remaining())));
     render();
   }
