@@ -41,9 +41,11 @@ T = {
   levels=dict(easy="Lett", medium="Middels", hard="Vanskelig", expert="Ekspert"),
   f_align="Plassering", f_align_center="Midtstilt", f_align_left="Venstre",
   f_color='Farge', f_color_none='Spillets egne', f_color_own='Deres farge',
+  color_presets={'red': 'Rød', 'navy': 'Mørkeblå', 'blue': 'Blå', 'yellow': 'Gul', 'coral': 'Korall', 'green': 'Grønn'}, f_color_custom='Egen farge',
   opt_color='Deres farge på knapper, faner og lenker, for eksempel <code>#dd0000</code>. Spillet får da et nøytralt avisutseende med samme bakgrunn som der det står, og regner selv ut lesbar tekst og en lysere variant i mørk modus. Selve brettet beholder sitt eget utseende.',
   f_kind="Type", f_kind_script="Med skript (anbefalt)", f_kind_iframe="Bare iframe",
   f_page="Bakgrunn i forhåndsvisningen", f_page_light="Lys avisside", f_page_dark="Mørk avisside",
+  f_page_grey='Grå avisside', f_page_warm='Varm avisside',
   code="Kode", html_label="HTML", html_noscript="HTML uten skript",
   options="Valg", options_lead="Valgene settes som attributter på <code>&lt;div data-hiku&gt;</code>.",
   th_attr="Attributt", th_values="Verdier", th_what="Hva det gjør",
@@ -97,9 +99,11 @@ T = {
   levels=dict(easy="Easy", medium="Medium", hard="Hard", expert="Expert"),
   f_align="Position", f_align_center="Centred", f_align_left="Left",
   f_color='Colour', f_color_none="The game's own", f_color_own='Your colour',
+  color_presets={'red': 'Red', 'navy': 'Navy', 'blue': 'Blue', 'yellow': 'Yellow', 'coral': 'Coral', 'green': 'Green'}, f_color_custom='Your own colour',
   opt_color='Your colour for the buttons, tabs and links, such as <code>#dd0000</code>. The game then takes on a neutral news look with the same background as where it sits, and works out readable text and a lighter version for dark mode itself. The board keeps its own look.',
   f_kind="Type", f_kind_script="With script (recommended)", f_kind_iframe="Iframe only",
   f_page="Preview background", f_page_light="Light news page", f_page_dark="Dark news page",
+  f_page_grey='Grey news page', f_page_warm='Warm news page',
   code="Code", html_label="HTML", html_noscript="HTML without script",
   options="Options", options_lead="Options are set as attributes on <code>&lt;div data-hiku&gt;</code>.",
   th_attr="Attribute", th_values="Values", th_what="What it does",
@@ -153,9 +157,11 @@ T = {
   levels=dict(easy="Lätt", medium="Medel", hard="Svår", expert="Expert"),
   f_align="Placering", f_align_center="Centrerat", f_align_left="Vänster",
   f_color='Färg', f_color_none='Spelets egna', f_color_own='Er färg',
+  color_presets={'red': 'Röd', 'navy': 'Mörkblå', 'blue': 'Blå', 'yellow': 'Gul', 'coral': 'Korall', 'green': 'Grön'}, f_color_custom='Egen färg',
   opt_color='Er färg på knappar, flikar och länkar, till exempel <code>#dd0000</code>. Spelet får då ett neutralt tidningsutseende med samma bakgrund som där det står, och räknar själv ut läsbar text och en ljusare variant i mörkt läge. Själva brädet behåller sitt eget utseende.',
   f_kind="Typ", f_kind_script="Med skript (rekommenderas)", f_kind_iframe="Endast iframe",
   f_page="Bakgrund i förhandsvisningen", f_page_light="Ljus nyhetssida", f_page_dark="Mörk nyhetssida",
+  f_page_grey='Grå nyhetssida', f_page_warm='Varm nyhetssida',
   code="Kod", html_label="HTML", html_noscript="HTML utan skript",
   options="Inställningar", options_lead="Inställningarna anges som attribut på <code>&lt;div data-hiku&gt;</code>.",
   th_attr="Attribut", th_values="Värden", th_what="Vad det gör",
@@ -209,9 +215,11 @@ T = {
   levels=dict(easy="Let", medium="Middel", hard="Svær", expert="Ekspert"),
   f_align="Placering", f_align_center="Centreret", f_align_left="Venstre",
   f_color='Farve', f_color_none='Spillets egne', f_color_own='Jeres farve',
+  color_presets={'red': 'Rød', 'navy': 'Mørkeblå', 'blue': 'Blå', 'yellow': 'Gul', 'coral': 'Koral', 'green': 'Grøn'}, f_color_custom='Egen farve',
   opt_color='Jeres farve på knapper, faner og links, for eksempel <code>#dd0000</code>. Spillet får så et neutralt avisudseende med samme baggrund, som der hvor det står, og regner selv læsbar tekst og en lysere variant i mørk tilstand ud. Selve brættet beholder sit eget udseende.',
   f_kind="Type", f_kind_script="Med script (anbefalet)", f_kind_iframe="Kun iframe",
   f_page="Baggrund i forhåndsvisningen", f_page_light="Lys nyhedsside", f_page_dark="Mørk nyhedsside",
+  f_page_grey='Grå nyhedsside', f_page_warm='Varm nyhedsside',
   code="Kode", html_label="HTML", html_noscript="HTML uden script",
   options="Indstillinger", options_lead="Indstillingerne angives som attributter på <code>&lt;div data-hiku&gt;</code>.",
   th_attr="Attribut", th_values="Værdier", th_what="Hvad det gør",
@@ -265,9 +273,11 @@ T = {
   levels=dict(easy="Helppo", medium="Keskitaso", hard="Vaikea", expert="Asiantuntija"),
   f_align="Sijainti", f_align_center="Keskellä", f_align_left="Vasemmalla",
   f_color='Väri', f_color_none='Pelin omat', f_color_own='Oma väri',
+  color_presets={'red': 'Punainen', 'navy': 'Tummansininen', 'blue': 'Sininen', 'yellow': 'Keltainen', 'coral': 'Koralli', 'green': 'Vihreä'}, f_color_custom='Oma väri',
   opt_color='Oma värinne painikkeisiin, välilehtiin ja linkkeihin, esimerkiksi <code>#dd0000</code>. Peli saa silloin neutraalin uutissivun ilmeen ja saman taustan kuin kohta, jossa se on, ja laskee itse luettavan tekstin ja vaaleamman version tummaan tilaan. Itse lauta säilyttää oman ilmeensä.',
   f_kind="Tyyppi", f_kind_script="Skriptillä (suositus)", f_kind_iframe="Pelkkä iframe",
   f_page="Esikatselun tausta", f_page_light="Vaalea uutissivu", f_page_dark="Tumma uutissivu",
+  f_page_grey='Harmaa uutissivu', f_page_warm='Lämmin uutissivu',
   code="Koodi", html_label="HTML", html_noscript="HTML ilman skriptiä",
   options="Asetukset", options_lead="Asetukset annetaan <code>&lt;div data-hiku&gt;</code>-elementin attribuutteina.",
   th_attr="Attribuutti", th_values="Arvot", th_what="Mitä se tekee",
@@ -321,9 +331,11 @@ T = {
   levels=dict(easy="Leicht", medium="Mittel", hard="Schwer", expert="Experte"),
   f_align="Ausrichtung", f_align_center="Zentriert", f_align_left="Links",
   f_color='Farbe', f_color_none='Die des Spiels', f_color_own='Ihre Farbe',
+  color_presets={'red': 'Rot', 'navy': 'Dunkelblau', 'blue': 'Blau', 'yellow': 'Gelb', 'coral': 'Koralle', 'green': 'Grün'}, f_color_custom='Eigene Farbe',
   opt_color='Ihre Farbe für Schaltflächen, Reiter und Links, etwa <code>#dd0000</code>. Das Spiel erhält dann ein neutrales Nachrichtenaussehen mit dem gleichen Hintergrund wie dort, wo es steht, und berechnet lesbare Schrift und eine hellere Variante für den dunklen Modus selbst. Das Brett behält sein eigenes Aussehen.',
   f_kind="Art", f_kind_script="Mit Skript (empfohlen)", f_kind_iframe="Nur iframe",
   f_page="Hintergrund der Vorschau", f_page_light="Helle Nachrichtenseite", f_page_dark="Dunkle Nachrichtenseite",
+  f_page_grey='Graue Nachrichtenseite', f_page_warm='Warme Nachrichtenseite',
   code="Code", html_label="HTML", html_noscript="HTML ohne Skript",
   options="Optionen", options_lead="Die Optionen werden als Attribute am <code>&lt;div data-hiku&gt;</code> gesetzt.",
   th_attr="Attribut", th_values="Werte", th_what="Wirkung",
@@ -369,6 +381,9 @@ def build(lang):
     host_code = f'&lt;script src="{BASE}embed.js" async&gt;&lt;/script&gt;'
     langs_options = "".join(f'<option value="{l}">{e(t["lang_names"][l])}</option>' for l in LANGS)
     level_options = "".join(f'<option value="{k}">{e(v)}</option>' for k, v in t["levels"].items())
+    # Neutral presets, named by colour: they match the colours Norwegian news sites use without naming any of them.
+    presets = dict(red="#d60000", navy="#13264a", blue="#024588", yellow="#ffcc14", coral="#ff8482", green="#0a6e4f")
+    color_options = "".join(f'<option value="{presets[k]}">{e(v)}</option>' for k, v in t["color_presets"].items())
     switcher = " · ".join(
         f'<a href="{FILE[l]}" hreflang="{l}" lang="{l}"' + (' aria-current="page"' if l == lang else "") + f'>{NATIVE[l]}</a>'
         for l in LANGS)
@@ -376,7 +391,7 @@ def build(lang):
     values = dict(t)
     values.update(
         lang=lang, base=BASE, host=HOST, app=APP, host_code=host_code, game_title=GAME_TITLE[lang],
-        langs_options=langs_options, level_options=level_options, switcher=switcher, alternates=alternates,
+        langs_options=langs_options, level_options=level_options, color_options=color_options, switcher=switcher, alternates=alternates,
         p_host=t["p_host"].format(host=HOST_NAME), s3=t["s3"].format(host=HOST_NAME),
         medium=t["levels"]["medium"])
     out = TEMPLATE

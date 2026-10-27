@@ -53,6 +53,8 @@ td{color:var(--muted)}
 .stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
 .stage.light{background:#ffffff}
 .stage.dark{background:#15161c}
+.stage.grey{background:#ececec}
+.stage.warm{background:#faf6f6}
 .langs{margin-top:14px;font-size:14px;color:var(--muted)}
 .langs a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 footer{margin-top:56px;font-size:14px;color:var(--muted)}
@@ -91,8 +93,8 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
     <select name="level"><option value="">Leserens forrige nivå</option><option value="easy">Lett</option><option value="medium">Middels</option><option value="hard">Vanskelig</option><option value="expert">Ekspert</option></select>
   </label>
   <label>Farge
-    <span class="pick"><select name="colormode"><option value="">Spillets egne</option><option value="own">Deres farge</option></select>
-    <input type="color" name="color" value="#dd0000" aria-label="Deres farge"></span>
+    <span class="pick"><select name="colormode"><option value="">Spillets egne</option><option value="#d60000">Rød</option><option value="#13264a">Mørkeblå</option><option value="#024588">Blå</option><option value="#ffcc14">Gul</option><option value="#ff8482">Korall</option><option value="#0a6e4f">Grønn</option><option value="own">Egen farge</option></select>
+    <input type="color" name="color" value="#dd0000" aria-label="Egen farge"></span>
   </label>
   <label>Plassering
     <select name="align"><option value="">Midtstilt</option><option value="left">Venstre</option></select>
@@ -101,7 +103,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
     <select name="kind"><option value="script">Med skript (anbefalt)</option><option value="iframe">Bare iframe</option></select>
   </label>
   <label>Bakgrunn i forhåndsvisningen
-    <select name="page"><option value="light">Lys avisside</option><option value="dark">Mørk avisside</option></select>
+    <select name="page"><option value="light">Lys avisside</option><option value="grey">Grå avisside</option><option value="warm">Varm avisside</option><option value="dark">Mørk avisside</option></select>
   </label>
 </form>
 <div class="stage" id="stage"><div id="preview"></div></div>
@@ -187,9 +189,9 @@ frame-src https://hikupuzzle.com;</code></pre>
   function update() {
     var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
     stage.className = 'stage ' + o.page;
-    // The colour picker only counts when "your colour" is chosen.
+    // A preset is a colour of its own; the picker is shown and counts only for "your own colour".
     form.elements.color.hidden = o.colormode !== 'own';
-    if (o.colormode !== 'own') delete o.color;
+    if (o.colormode !== 'own') o.color = o.colormode || '';
     var attrs = ['lang', 'theme', 'level', 'color', 'align'].filter(function (k) { return o[k]; })
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
     var code;
@@ -208,6 +210,16 @@ frame-src https://hikupuzzle.com;</code></pre>
     document.getElementById('code-custom').innerHTML = esc(code);
     document.getElementById('code-custom-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
   }
+  // A link can choose for the reader: ?color=dd0000&page=grey opens with that colour and background, as when we show a
+  // site how the game would look with its own colours.
+  var asked = new URLSearchParams(location.search);
+  var wanted = (asked.get('color') || '').replace(/^#/, '').toLowerCase();
+  if (/^[0-9a-f]{6}$/.test(wanted)) {
+    var preset = [].slice.call(form.elements.colormode.options).filter(function (o) { return o.value === '#' + wanted; })[0];
+    form.elements.colormode.value = preset ? preset.value : 'own';
+    form.elements.color.value = '#' + wanted;
+  }
+  if (['light', 'grey', 'warm', 'dark'].indexOf(asked.get('page')) >= 0) form.elements.page.value = asked.get('page');
   form.addEventListener('change', update);
   form.elements.color.addEventListener('input', update);
   update();
