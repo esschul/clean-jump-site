@@ -47,6 +47,9 @@ td{color:var(--muted)}
 .config{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px;margin:16px 0}
 .config label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;color:var(--ink)}
 .config select{font:inherit;font-weight:400;font-size:15px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--card);color:var(--ink)}
+.config .pick{display:flex;gap:8px}.config .pick select{flex:1;min-width:0}
+.config input[type=color]{width:44px;height:38px;padding:3px;border-radius:10px;border:1px solid var(--edge);background:var(--card);cursor:pointer}
+.config input[type=color][hidden]{display:none}
 .stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
 .stage.light{background:#ffffff}
 .stage.dark{background:#15161c}
@@ -87,6 +90,10 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <label>Første bræt
     <select name="level"><option value="">Læserens seneste niveau</option><option value="easy">Let</option><option value="medium">Middel</option><option value="hard">Svær</option><option value="expert">Ekspert</option></select>
   </label>
+  <label>Farve
+    <span class="pick"><select name="colormode"><option value="">Spillets egne</option><option value="own">Jeres farve</option></select>
+    <input type="color" name="color" value="#dd0000" aria-label="Jeres farve"></span>
+  </label>
   <label>Placering
     <select name="align"><option value="">Centreret</option><option value="left">Venstre</option></select>
   </label>
@@ -110,6 +117,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <tr><th>Attribut</th><th>Værdier</th><th>Hvad det gør</th></tr>
   <tr><td><code>data-lang</code></td><td><code>nb</code>, <code>en</code>, <code>sv</code>, <code>da</code>, <code>fi</code>, <code>de</code></td><td>Spillets sprog: norsk, engelsk, svensk, dansk, finsk eller tysk. Uden dette bruges sidens eget sprog (<code>&lt;html lang="…"&gt;</code>), ellers norsk.</td></tr>
   <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Låser farverne. Uden dette følger spillet læserens lyse eller mørke tilstand.</td></tr>
+  <tr><td><code>data-color</code></td><td><code>#dd0000</code></td><td>Jeres farve på knapper, faner og links, for eksempel <code>#dd0000</code>. Spillet får så et neutralt avisudseende med samme baggrund, som der hvor det står, og regner selv læsbar tekst og en lysere variant i mørk tilstand ud. Selve brættet beholder sit eget udseende.</td></tr>
   <tr><td><code>data-align</code></td><td><code>left</code></td><td>Placerer spillet til venstre. Uden dette står det centreret i den plads, det får, og er aldrig bredere end 480 pixel.</td></tr>
   <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Hvilket af dagens fire brætter der vises først. Uden dette åbner spillet på det niveau, læseren spillede sidst, ellers på Let. Læseren kan altid skifte.</td></tr>
 </table>
@@ -135,7 +143,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <ul>
   <li><strong>Ingen cookies og ingen sporing.</strong> Ingen spildata eller resultater sendes til os. Resultater og stjerner gemmes kun i læserens egen browser. Linket til App Store indeholder navnet på det website, spillet står på, så vi i App Store Connect kan se, hvor mange der samlet kom fra hver side. Kun Apple får den oplysning, og kun hvis læseren trykker på linket. Vi tæller visninger med Cloudflare Web Analytics, uden cookies og uden at følge enkeltpersoner: vi ser, hvor mange der åbnede spillet og på hvilket website, ikke hvem. Ellers modtager værtstjenesten almindelige tekniske forespørgsler, når filerne indlæses, som for alle websider.</li>
   <li><strong>Tilgængelighed.</strong> Spillet kan spilles med skærmlæser og kun tastatur: hvert felt har et navn, og hvert træk læses op. Det følger lys og mørk tilstand, slår animationer fra for dem, der har bedt om det, og er bygget efter WCAG 2.2 niveau AA og testet med værktøjet axe. Det gør det lettere for jer at opfylde kravene til tilgængelighed.</li>
-  <li><strong>Isoleret spil.</strong> Selve spillet kører i en <code>iframe</code> fra en anden adresse og kan ikke læse eller påvirke siden omkring sig. Det lille indlæsningsscript, <code>embed.js</code>, kører på jeres side som andre eksterne scripts: det opretter rammen og tilpasser højden og gør ikke andet. Kildekoden er kort og kan læses på <a href="embed.js">embed.js</a>. Redaktioner, der ikke tillader eksterne scripts, bruger iframe-versionen.</li>
+  <li><strong>Isoleret spil.</strong> Selve spillet kører i en <code>iframe</code> fra en anden adresse og kan ikke læse eller påvirke siden omkring sig. Det lille indlæsningsscript, <code>embed.js</code>, kører på jeres side som andre eksterne scripts: det opretter rammen og tilpasser højden, og med <code>data-color</code> læser det baggrundsfarven, hvor spillet står. Det gør ikke andet. Kildekoden er kort og kan læses på <a href="embed.js">embed.js</a>. Redaktioner, der ikke tillader eksterne scripts, bruger iframe-versionen.</li>
   <li><strong>Let.</strong> Første gang indlæses omkring 70 kB komprimeret. Rammen indlæses først, når læseren nærmer sig den.</li>
   <li><strong>Nye brætter ved midnat</strong> i læserens tidszone. Biblioteket rækker i tre år, og brætterne er de samme som i appen.</li>
   <li><strong>Drives på Cloudflare.</strong> Værtstjenesten ser læserens IP-adresse, når filerne indlæses, som for alle websider.</li>
@@ -179,13 +187,17 @@ frame-src https://hikupuzzle.com;</code></pre>
   function update() {
     var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
     stage.className = 'stage ' + o.page;
-    var attrs = ['lang', 'theme', 'level', 'align'].filter(function (k) { return o[k]; })
+    // The colour picker only counts when "your colour" is chosen.
+    form.elements.color.hidden = o.colormode !== 'own';
+    if (o.colormode !== 'own') delete o.color;
+    var attrs = ['lang', 'theme', 'level', 'color', 'align'].filter(function (k) { return o[k]; })
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
     var code;
     if (o.kind === 'iframe') {
       var q = ['lang=' + (o.lang || pageLang)];
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
+      if (o.color) q.push('color=' + o.color.slice(1));
       code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="' + words.title + '" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
       document.getElementById('preview').innerHTML = code;
     } else {
@@ -197,6 +209,7 @@ frame-src https://hikupuzzle.com;</code></pre>
     document.getElementById('code-custom-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
   }
   form.addEventListener('change', update);
+  form.elements.color.addEventListener('input', update);
   update();
 })();
 

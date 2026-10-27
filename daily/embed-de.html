@@ -47,6 +47,9 @@ td{color:var(--muted)}
 .config{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px;margin:16px 0}
 .config label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;color:var(--ink)}
 .config select{font:inherit;font-weight:400;font-size:15px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--card);color:var(--ink)}
+.config .pick{display:flex;gap:8px}.config .pick select{flex:1;min-width:0}
+.config input[type=color]{width:44px;height:38px;padding:3px;border-radius:10px;border:1px solid var(--edge);background:var(--card);cursor:pointer}
+.config input[type=color][hidden]{display:none}
 .stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
 .stage.light{background:#ffffff}
 .stage.dark{background:#15161c}
@@ -87,6 +90,10 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <label>Erstes Brett
     <select name="level"><option value="">Letztes Level des Lesers</option><option value="easy">Leicht</option><option value="medium">Mittel</option><option value="hard">Schwer</option><option value="expert">Experte</option></select>
   </label>
+  <label>Farbe
+    <span class="pick"><select name="colormode"><option value="">Die des Spiels</option><option value="own">Ihre Farbe</option></select>
+    <input type="color" name="color" value="#dd0000" aria-label="Ihre Farbe"></span>
+  </label>
   <label>Ausrichtung
     <select name="align"><option value="">Zentriert</option><option value="left">Links</option></select>
   </label>
@@ -110,6 +117,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <tr><th>Attribut</th><th>Werte</th><th>Wirkung</th></tr>
   <tr><td><code>data-lang</code></td><td><code>nb</code>, <code>en</code>, <code>sv</code>, <code>da</code>, <code>fi</code>, <code>de</code></td><td>Sprache des Spiels: Norwegisch, Englisch, Schwedisch, Dänisch, Finnisch oder Deutsch. Ohne diese Angabe gilt die Sprache der umgebenden Seite (<code>&lt;html lang="…"&gt;</code>), sonst Norwegisch.</td></tr>
   <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Legt die Farben fest. Ohne diese Angabe folgt das Spiel dem hellen oder dunklen Modus des Lesers.</td></tr>
+  <tr><td><code>data-color</code></td><td><code>#dd0000</code></td><td>Ihre Farbe für Schaltflächen, Reiter und Links, etwa <code>#dd0000</code>. Das Spiel erhält dann ein neutrales Nachrichtenaussehen mit dem gleichen Hintergrund wie dort, wo es steht, und berechnet lesbare Schrift und eine hellere Variante für den dunklen Modus selbst. Das Brett behält sein eigenes Aussehen.</td></tr>
   <tr><td><code>data-align</code></td><td><code>left</code></td><td>Setzt das Spiel nach links. Ohne diese Angabe steht es zentriert im verfügbaren Platz und ist nie breiter als 480 Pixel.</td></tr>
   <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Welches der vier Bretter des Tages zuerst erscheint. Ohne diese Angabe öffnet das Spiel mit dem Level, das der Leser zuletzt gespielt hat, sonst mit Leicht. Der Leser kann jederzeit wechseln.</td></tr>
 </table>
@@ -135,7 +143,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <ul>
   <li><strong>Keine Cookies und kein Tracking.</strong> Es werden keine Spieldaten oder Ergebnisse an uns gesendet. Ergebnisse und Sterne werden nur im Browser des Lesers gespeichert. Der Link zum App Store enthält den Namen der Website, auf der das Spiel steht, damit wir in App Store Connect sehen, wie viele insgesamt von jeder Seite kamen. Diese Angabe erhält nur Apple, und nur wenn der Leser dem Link folgt. Wir zählen Aufrufe mit Cloudflare Web Analytics, ohne Cookies und ohne einzelne Personen zu verfolgen: Wir sehen, wie viele das Spiel geöffnet haben und auf welcher Website, nicht wer. Ansonsten erhält der Hoster beim Laden der Dateien übliche technische Anfragen, wie bei jeder Website.</li>
   <li><strong>Barrierefreiheit.</strong> Das Spiel lässt sich mit Screenreader und allein mit der Tastatur spielen: Jedes Feld hat einen Namen, und jeder Zug wird vorgelesen. Es folgt hellem und dunklem Modus, schaltet Animationen ab, wenn weniger Bewegung gewünscht ist, und ist nach WCAG 2.2 Stufe AA gebaut und mit dem Werkzeug axe geprüft. Das erleichtert Ihnen, Anforderungen an Barrierefreiheit wie den European Accessibility Act zu erfüllen.</li>
-  <li><strong>Isoliertes Spiel.</strong> Das Spiel selbst läuft in einem <code>iframe</code> von einer anderen Adresse und kann die umgebende Seite weder lesen noch beeinflussen. Das kleine Ladeskript <code>embed.js</code> läuft auf Ihrer Seite wie andere externe Skripte: Es erstellt den Rahmen und passt die Höhe an, sonst nichts. Der Quelltext ist kurz und unter <a href="embed.js">embed.js</a> einsehbar. Redaktionen, die keine externen Skripte erlauben, nutzen die iframe-Variante.</li>
+  <li><strong>Isoliertes Spiel.</strong> Das Spiel selbst läuft in einem <code>iframe</code> von einer anderen Adresse und kann die umgebende Seite weder lesen noch beeinflussen. Das kleine Ladeskript <code>embed.js</code> läuft auf Ihrer Seite wie andere externe Skripte: Es erstellt den Rahmen, passt die Höhe an und liest mit <code>data-color</code> die Hintergrundfarbe dort, wo das Spiel steht. Sonst nichts. Der Quelltext ist kurz und unter <a href="embed.js">embed.js</a> einsehbar. Redaktionen, die keine externen Skripte erlauben, nutzen die iframe-Variante.</li>
   <li><strong>Leicht.</strong> Beim ersten Mal werden etwa 70 kB komprimiert geladen. Der Rahmen lädt erst, wenn der Leser sich ihm nähert.</li>
   <li><strong>Neue Bretter um Mitternacht</strong> in der Zeitzone des Lesers. Die Bibliothek reicht für drei Jahre, und die Bretter sind dieselben wie in der App.</li>
   <li><strong>Gehostet bei Cloudflare.</strong> Der Hoster sieht beim Laden der Dateien die IP-Adresse des Lesers, wie bei jeder Website.</li>
@@ -179,13 +187,17 @@ frame-src https://hikupuzzle.com;</code></pre>
   function update() {
     var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
     stage.className = 'stage ' + o.page;
-    var attrs = ['lang', 'theme', 'level', 'align'].filter(function (k) { return o[k]; })
+    // The colour picker only counts when "your colour" is chosen.
+    form.elements.color.hidden = o.colormode !== 'own';
+    if (o.colormode !== 'own') delete o.color;
+    var attrs = ['lang', 'theme', 'level', 'color', 'align'].filter(function (k) { return o[k]; })
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
     var code;
     if (o.kind === 'iframe') {
       var q = ['lang=' + (o.lang || pageLang)];
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
+      if (o.color) q.push('color=' + o.color.slice(1));
       code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="' + words.title + '" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
       document.getElementById('preview').innerHTML = code;
     } else {
@@ -197,6 +209,7 @@ frame-src https://hikupuzzle.com;</code></pre>
     document.getElementById('code-custom-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
   }
   form.addEventListener('change', update);
+  form.elements.color.addEventListener('input', update);
   update();
 })();
 

@@ -47,6 +47,9 @@ td{color:var(--muted)}
 .config{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px;margin:16px 0}
 .config label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;color:var(--ink)}
 .config select{font:inherit;font-weight:400;font-size:15px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--card);color:var(--ink)}
+.config .pick{display:flex;gap:8px}.config .pick select{flex:1;min-width:0}
+.config input[type=color]{width:44px;height:38px;padding:3px;border-radius:10px;border:1px solid var(--edge);background:var(--card);cursor:pointer}
+.config input[type=color][hidden]{display:none}
 .stage{border-radius:18px;padding:24px 16px;margin:8px 0 12px;box-shadow:0 3px 0 var(--edge);transition:background .3s}
 .stage.light{background:#ffffff}
 .stage.dark{background:#15161c}
@@ -87,6 +90,10 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <label>Ensimmäinen lauta
     <select name="level"><option value="">Lukijan edellinen taso</option><option value="easy">Helppo</option><option value="medium">Keskitaso</option><option value="hard">Vaikea</option><option value="expert">Asiantuntija</option></select>
   </label>
+  <label>Väri
+    <span class="pick"><select name="colormode"><option value="">Pelin omat</option><option value="own">Oma väri</option></select>
+    <input type="color" name="color" value="#dd0000" aria-label="Oma väri"></span>
+  </label>
   <label>Sijainti
     <select name="align"><option value="">Keskellä</option><option value="left">Vasemmalla</option></select>
   </label>
@@ -110,6 +117,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <tr><th>Attribuutti</th><th>Arvot</th><th>Mitä se tekee</th></tr>
   <tr><td><code>data-lang</code></td><td><code>nb</code>, <code>en</code>, <code>sv</code>, <code>da</code>, <code>fi</code>, <code>de</code></td><td>Pelin kieli: norja, englanti, ruotsi, tanska, suomi tai saksa. Ilman tätä käytetään ympäröivän sivun kieltä (<code>&lt;html lang="…"&gt;</code>), muuten norjaa.</td></tr>
   <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Lukitsee värit. Ilman tätä peli seuraa lukijan vaaleaa tai tummaa tilaa.</td></tr>
+  <tr><td><code>data-color</code></td><td><code>#dd0000</code></td><td>Oma värinne painikkeisiin, välilehtiin ja linkkeihin, esimerkiksi <code>#dd0000</code>. Peli saa silloin neutraalin uutissivun ilmeen ja saman taustan kuin kohta, jossa se on, ja laskee itse luettavan tekstin ja vaaleamman version tummaan tilaan. Itse lauta säilyttää oman ilmeensä.</td></tr>
   <tr><td><code>data-align</code></td><td><code>left</code></td><td>Sijoittaa pelin vasemmalle. Ilman tätä peli on keskellä sille annettua tilaa eikä ole koskaan yli 480 pikseliä leveä.</td></tr>
   <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Mikä päivän neljästä laudasta näytetään ensin. Ilman tätä peli aukeaa tasolla, jota lukija pelasi viimeksi, muuten Helppo-tasolla. Lukija voi aina vaihtaa.</td></tr>
 </table>
@@ -135,7 +143,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
 <ul>
   <li><strong>Ei evästeitä eikä seurantaa.</strong> Meille ei lähetetä pelitietoja eikä tuloksia. Tulokset ja tähdet tallentuvat vain lukijan omaan selaimeen. App Store -linkki sisältää sen sivuston nimen, jolla peli on, jotta näemme App Store Connectissa, kuinka moni tuli kultakin sivulta yhteensä. Tieto menee vain Applelle ja vain, jos lukija avaa linkin. Laskemme näyttökerrat Cloudflare Web Analyticsilla ilman evästeitä ja seuraamatta yksittäisiä ihmisiä: näemme, kuinka moni avasi pelin ja millä sivustolla, emme sitä, kuka. Muuten palvelin vastaanottaa tavallisia teknisiä pyyntöjä, kun tiedostot latautuvat, kuten kaikilla verkkosivuilla.</li>
   <li><strong>Saavutettavuus.</strong> Peliä voi pelata ruudunlukijalla ja pelkällä näppäimistöllä: jokaisella ruudulla on nimi ja jokainen siirto luetaan ääneen. Se seuraa vaaleaa ja tummaa tilaa, poistaa animaatiot, jos niin on pyydetty, ja on tehty WCAG 2.2 AA -tason mukaan ja testattu axe-työkalulla. Se helpottaa saavutettavuusvaatimusten täyttämistä.</li>
-  <li><strong>Eristetty peli.</strong> Itse peli toimii <code>iframe</code>-kehyksessä toisesta osoitteesta eikä voi lukea tai muuttaa ympäröivää sivua. Pieni latausskripti, <code>embed.js</code>, toimii sivullanne kuten muutkin ulkoiset skriptit: se luo kehyksen ja säätää sen korkeuden eikä tee muuta. Sen lähdekoodi on lyhyt ja luettavissa osoitteessa <a href="embed.js">embed.js</a>. Toimitukset, jotka eivät salli ulkoisia skriptejä, käyttävät iframe-versiota.</li>
+  <li><strong>Eristetty peli.</strong> Itse peli toimii <code>iframe</code>-kehyksessä toisesta osoitteesta eikä voi lukea tai muuttaa ympäröivää sivua. Pieni latausskripti, <code>embed.js</code>, toimii sivullanne kuten muutkin ulkoiset skriptit: se luo kehyksen ja säätää sen korkeuden, ja <code>data-color</code>-asetuksen kanssa se lukee taustavärin pelin kohdalta. Muuta se ei tee. Sen lähdekoodi on lyhyt ja luettavissa osoitteessa <a href="embed.js">embed.js</a>. Toimitukset, jotka eivät salli ulkoisia skriptejä, käyttävät iframe-versiota.</li>
   <li><strong>Kevyt.</strong> Ensimmäisellä kerralla ladataan noin 70 kt pakattuna. Kehys latautuu vasta, kun lukija lähestyy sitä.</li>
   <li><strong>Uudet laudat keskiyöllä</strong> lukijan aikavyöhykkeellä. Kirjasto riittää kolmeksi vuodeksi, ja laudat ovat samat kuin sovelluksessa.</li>
   <li><strong>Ylläpitopalvelu on Cloudflare.</strong> Palvelin näkee lukijan IP-osoitteen, kun tiedostot latautuvat, kuten kaikilla verkkosivuilla.</li>
@@ -179,13 +187,17 @@ frame-src https://hikupuzzle.com;</code></pre>
   function update() {
     var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
     stage.className = 'stage ' + o.page;
-    var attrs = ['lang', 'theme', 'level', 'align'].filter(function (k) { return o[k]; })
+    // The colour picker only counts when "your colour" is chosen.
+    form.elements.color.hidden = o.colormode !== 'own';
+    if (o.colormode !== 'own') delete o.color;
+    var attrs = ['lang', 'theme', 'level', 'color', 'align'].filter(function (k) { return o[k]; })
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
     var code;
     if (o.kind === 'iframe') {
       var q = ['lang=' + (o.lang || pageLang)];
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
+      if (o.color) q.push('color=' + o.color.slice(1));
       code = '<iframe src="' + base + '?' + q.join('&') + '"\n  title="' + words.title + '" loading="lazy"\n  style="display:block;width:100%;max-width:480px;height:860px;border:0;margin:' + (o.align === 'left' ? '0' : '0 auto') + '"></iframe>';
       document.getElementById('preview').innerHTML = code;
     } else {
@@ -197,6 +209,7 @@ frame-src https://hikupuzzle.com;</code></pre>
     document.getElementById('code-custom-label').textContent = o.kind === 'iframe' ? words.iframe : words.script;
   }
   form.addEventListener('change', update);
+  form.elements.color.addEventListener('input', update);
   update();
 })();
 

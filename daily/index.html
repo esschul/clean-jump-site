@@ -62,7 +62,7 @@ svg.guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
 .lesson{background:var(--soft);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:14px}
 .lesson .head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:600}
 .lesson .tip{margin-top:4px}
-.linky{background:none;border:0;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
+.linky{background:none;border:0;padding:0;font:inherit;color:var(--link,var(--accent));text-decoration:underline;cursor:pointer}
 .info{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:0 2px 8px}
 .done{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;border-radius:18px;
   background:color-mix(in srgb,var(--well) 86%,transparent);animation:settle .45s ease .25s both}
@@ -86,10 +86,10 @@ svg.guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
 .spark{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--gold-bright);pointer-events:none;z-index:7;animation:spark .9s ease-out forwards}
 @keyframes spark{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
 footer{margin-top:18px;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-footer a{color:var(--accent)}
+footer a{color:var(--link,var(--accent))}
 .app{display:inline-flex;align-items:center;gap:6px;font-weight:600;text-decoration:none;border:1px solid var(--edge);border-radius:999px;padding:6px 12px}
 .more{margin-top:8px;font-size:14px;color:var(--muted)}
-.more a{color:var(--accent);font-weight:600}
+.more a{color:var(--link,var(--accent));font-weight:600}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 /* Why the board can no longer be cleared, laid over the board as the result is: the short reason, more on asking, and
    the board it is about, with the number it is about filled in and the ones it depends on ringed, as in the apps. */
@@ -136,6 +136,30 @@ footer a{color:var(--accent)}
   // as window.HIKU_PARAMS, and its own link and campaign as HIKU_HOME and HIKU_SITE.
   const params = new URLSearchParams(window.HIKU_PARAMS || location.search);
   if (params.get('theme') === 'dark' || params.get('theme') === 'light') document.documentElement.dataset.theme = params.get('theme');
+  // ?color=c8102e: the site's own colour for the buttons, the tabs and the picked number. The rest is worked out from
+  // it: a soft shade, the ring round a target, white or dark text on the buttons, whichever reads, and a lighter
+  // version in dark mode. The board keeps its own look, so the game stays readable whatever colour a site picks.
+  const brand = /^[0-9a-f]{6}$/i.test(params.get('color') || '') ? '#' + params.get('color') : null;
+  if (brand) {
+    const lin = c => c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4;
+    const [r, g, b] = [1, 3, 5].map(k => lin(parseInt(brand.slice(k, k + 2), 16) / 255));
+    const lum = .2126 * r + .7152 * g + .0722 * b, on = lum > .179 ? '#16171d' : '#ffffff';
+    // As text on the light page it needs 4.5:1; a light colour such as yellow is darkened for links.
+    const link = lum > .15 ? `color-mix(in srgb,${brand} 45%,#16171d)` : brand;
+    // A site with its own colour gets the neutral look news sites give their own content: a white card, grey squares,
+    // near-black text. The game's warm paper colour would stand out as a foreign box on a white or grey page.
+    // The page's own background, when the embed found one and it is light; the squares are a shade darker than it.
+    const ground = /^[0-9a-f]{6}$/i.test(params.get('bg') || '') ? '#' + params.get('bg') : '#ffffff';
+    const groundLum = [1, 3, 5].map(k => lin(parseInt(ground.slice(k, k + 2), 16) / 255)).reduce((s, c, k) => s + c * [.2126, .7152, .0722][k], 0);
+    const bg = groundLum > .6 ? ground : '#ffffff';
+    const paper = `--bg:${bg};--ink:#16171d;--muted:#5b5d68;--well:color-mix(in srgb,${bg} 94%,#16171d);--cell:color-mix(in srgb,${bg} 87%,#16171d);--tile:#ffffff;--edge:color-mix(in srgb,${bg} 78%,#16171d)`;
+    const night = '--bg:#16171d;--ink:#ececef;--muted:#b5b6bf;--well:#202128;--cell:#2b2c34;--tile:#3c3d46;--edge:#0c0c10';
+    const dark = `${night};--accent:color-mix(in srgb,${brand} 55%,#fff);--link:color-mix(in srgb,${brand} 55%,#fff);--on-accent:#16171d;--soft:color-mix(in srgb,${brand} 40%,#16171d);--guide:color-mix(in srgb,${brand} 40%,#fff)`;
+    const style = document.createElement('style');
+    style.textContent = `:root{${paper};--accent:${brand};--link:${link};--on-accent:${on};--soft:color-mix(in srgb,${brand} 12%,${bg});--guide:color-mix(in srgb,${brand} 75%,${bg})}` +
+      `@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){${dark}}}:root[data-theme="dark"]{${dark}}`;
+    document.head.appendChild(style);
+  }
   // ?compact=1: no title or rule, for a page that already shows them.
   if (params.get('compact') === '1') document.documentElement.classList.add('compact');
   // In a frame the page around sets the height, so a scrollbar here would only flicker in and out as the content
