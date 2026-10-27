@@ -271,7 +271,8 @@ const LESSONS = /*LESSONS*/[
      0
     ]
    }
-  ]
+  ],
+  "learned": "Nå kan du reglene: et tall hopper akkurat så langt som det viser, det største minus det minste blir igjen, og like tall forsvinner."
  },
  {
   "id": "alone",
@@ -515,7 +516,8 @@ const LESSONS = /*LESSONS*/[
     ]
    }
   ],
-  "pick": "Hvilket tall blir stående alene? Trykk på det på brettet."
+  "pick": "Hvilket tall blir stående alene? Trykk på det på brettet.",
+  "learned": "Før du flytter, se etter tall som bare har det tallet du flytter å møte. De blir stående alene."
  },
  {
   "id": "meet",
@@ -767,7 +769,8 @@ const LESSONS = /*LESSONS*/[
     ]
    }
   ],
-  "pick": "Hvilket tall kan ingen nå? Trykk på det på brettet."
+  "pick": "Hvilket tall kan ingen nå? Trykk på det på brettet.",
+  "learned": "Tell avstanden mellom tall på samme linje, og sjekk om noen av dem kan bli så store."
  },
  {
   "id": "partner",
@@ -1022,7 +1025,8 @@ const LESSONS = /*LESSONS*/[
     ]
    }
   ],
-  "pick": "Hvilket tall vil begge ha? Trykk på det på brettet."
+  "pick": "Hvilket tall vil begge ha? Trykk på det på brettet.",
+  "learned": "Se etter to tall som bare kan forsvinne sammen med det samme tallet. Bare ett av dem får det."
  },
  {
   "id": "order",
@@ -1292,7 +1296,8 @@ const LESSONS = /*LESSONS*/[
      "B4"
     ]
    }
-  ]
+  ],
+  "learned": "Når flere tall skal bruke den samme ruta, avgjør rekkefølgen. Og tøm aldri en rute som fortsatt trengs."
  },
  {
   "id": "parity",
@@ -1590,7 +1595,8 @@ const LESSONS = /*LESSONS*/[
     ]
    }
   ],
-  "pick": "Trykk på ett av tallene i den gruppen på brettet."
+  "pick": "Trykk på ett av tallene i den gruppen på brettet.",
+  "learned": "Tall som er skilt fra resten, må ha en partallssum for å kunne forsvinne alle sammen."
  },
  {
   "id": "ahead",
@@ -1869,7 +1875,8 @@ const LESSONS = /*LESSONS*/[
      "D4"
     ]
    }
-  ]
+  ],
+  "learned": "Følg tall som bare har ett valg, noen trekk fram, og se om de ender et sted ingen når."
  },
  {
   "id": "test",
@@ -3538,11 +3545,16 @@ function show(k, extra = null) {
 
 function allDone() {
   const k = LESSONS.indexOf(lesson), next = LESSONS[k + 1];
-  stepsEl.innerHTML = `<article class="step"><p class="kind">Leksjon ${k + 1}</p><h3>Ferdig!</h3><p></p><div class="actions"></div></article>`;
+  stepsEl.innerHTML = `<article class="step"><p class="kind">Leksjon ${k + 1}</p><h3>Leksjonen er ferdig!</h3><p class="learned"></p><p class="how"></p><div class="actions"></div></article>`;
+  // What was learned first, then how it went, told as encouragement: a retry is part of learning, not a failure.
+  stepsEl.querySelector(".learned").textContent = lesson.learned;
   // The example is no exercise, so it is not counted.
   const asked = lesson.steps.map((s, i) => i).filter(i => !["example", "demo"].includes(lesson.steps[i].type));
   const right = asked.filter(i => saved.first[i]).length;
-  stepsEl.querySelector("p:not(.kind)").textContent = `Du fikk ${right} av ${asked.length} oppgaver riktig på første forsøk.` + (next ? "" : " Det var den siste leksjonen så langt.");
+  stepsEl.querySelector(".how").textContent = asked.length < 2 ? "Du fikk det til."
+    : right === asked.length ? "Alt riktig på første forsøk. Sterkt!"
+    : right === 0 ? "Du fikk det til etter å ha prøvd igjen. Det er sånn man lærer."
+    : `Du klarte ${right} av ${asked.length} på første forsøk, og resten etter å ha prøvd igjen. Det er sånn man lærer.`;
   const acts = stepsEl.querySelector(".actions");
   if (next) { acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn main">Neste leksjon</button>`); acts.lastChild.onclick = () => { open(k + 1); scrollTo({top: 0}); }; }
   acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn">Ta leksjonen på nytt</button>`);
