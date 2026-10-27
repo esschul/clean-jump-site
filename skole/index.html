@@ -98,6 +98,9 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 details.recall{margin:12px 4px 0;font-size:15px}
 details.recall summary{cursor:pointer;font-weight:600;color:var(--link)}
 details.recall p{color:var(--muted);margin:6px 0 0}
+details.more{margin-top:8px;font-size:15px}
+details.more summary{cursor:pointer;font-weight:600;color:var(--link)}
+details.more p{color:var(--muted);margin:6px 0 0}
 .lessons ol{list-style:none;padding:0;margin:24px 0 0;display:flex;flex-wrap:wrap;gap:8px}
 .lessons button{font:inherit;font-size:15px;font-weight:600;border:0;border-radius:12px;padding:8px 14px;min-height:44px;cursor:pointer;background:var(--cell);color:var(--ink)}
 .lessons button[aria-current="true"]{background:var(--navy);color:var(--on-navy)}
@@ -1107,7 +1110,10 @@ function board(host, n) {
       eq.className = "eq"; eq.setAttribute("aria-hidden", "true");
       eq.textContent = a === b ? `${a} − ${b} = borte` : `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}`;
       eq.style.left = r.left - box.left + r.width / 2 + "px";
-      eq.style.top = r.top - box.top - 4 + "px";
+      // Above the square, as in the game, unless that hides a number and below would not.
+      const above = to - n >= 0 && cells[to - n], below = to + n < cells.length && cells[to + n];
+      if (above && !below) { eq.style.top = r.bottom - box.top + 4 + "px"; eq.style.transform = "translate(-50%, 0)"; }
+      else eq.style.top = r.top - box.top - 4 + "px";
       wrap.append(eq);
     });
     // Drawn once the squares are laid out, and only if no other board has been drawn since.
@@ -1139,7 +1145,7 @@ function board(host, n) {
   return {draw};
 }
 
-function verdict(box, cls, head, why, steps = []) {
+function verdict(box, cls, head, why, steps = [], more = "", moreLabel = "Vis hele forklaringen") {
   box.className = "feedback " + cls;
   box.innerHTML = `<p class="verdict"></p>` + (why ? `<p class="why"></p>` : "");
   box.querySelector(".verdict").textContent = head;
@@ -1147,8 +1153,12 @@ function verdict(box, cls, head, why, steps = []) {
   if (steps.length) {
     const ol = document.createElement("ol"); ol.className = "steplist";
     for (const t of steps) { const li = document.createElement("li"); li.textContent = t; ol.append(li); }
-    box.querySelector(".why").before(ol);
-    box.querySelector(".steplist").insertAdjacentHTML("beforebegin", `<p class="why">Før det må dette skje:</p>`);
+    box.append(ol);
+  }
+  // The whole proof is there for whoever wants it, behind a button.
+  if (more) {
+    box.insertAdjacentHTML("beforeend", `<details class="more"><summary>${moreLabel}</summary><p></p></details>`);
+    box.querySelector(".more p").textContent = more;
   }
 }
 
@@ -1161,13 +1171,63 @@ function explain(n, cells, from, to) {
     steps: (e.steps || []).map(st => say(st.text, LANG))};
 }
 
-/** The board a move leaves, or the one before it when that is what the explanation is about, with what it points at. */
-function showResult(b, label, n, cells, after, e, extra = {}, move = null) {
-  const before = e && same(e.cells, cells), marks = {...extra};
-  if (e) for (const i of e.focus) marks[i] ||= "alone";
-  else if (lesson.id === "alone") for (const i of alone(n, after)) marks[i] = "alone";
-  b.draw(before ? cells : after, {marks, sum: !before && move ? [move[1], cells[move[0]], cells[move[1]]] : null});
-  label.textContent = before ? "Før trekket ditt" : "Etter trekket";
+const Cap = t => t[0].toUpperCase() + t.slice(1);
+const ruter = d => d === 1 ? "1 rute" : `${d} ruter`;
+const PARITY_WHY = "Når et tall hopper på et annet, blir forskjellen igjen. Begge tallene mister like mye, det minste tallet, så summen minker med det dobbelte: alltid et partall. Fra et oddetall kommer summen aldri ned til 0.";
+
+/**
+ * What a trap does, said in a sentence or two about this board, with the numbers to mark on the board after the move.
+ * The engine's whole proof goes behind "Vis hele forklaringen". Each sentence only says what the engine proved.
+ */
+function teach(e, n, cells, after, from, to) {
+  const marks = {}, more = [e.head, e.why].filter(Boolean).join(" ");
+  const f = e.focus;
+  switch (e.kind) {
+    case "stranded": {
+      const x = f[0]; marks[x] = "alone";
+      const partner = from !== x && to !== x && inLine(n, from, x) && !after[from];
+      return {marks, more, text: `${Cap(num(n, after, x))} blir stående alene. ` +
+        (partner ? `${Cap(num(n, cells, from))} var det eneste tallet i samme rad eller kolonne.` : "Det er ingen andre tall igjen i raden eller kolonnen.")};
+    }
+    case "unreachable": {
+      const [a, m] = f, d = Math.abs(a % n - m % n) + Math.abs(Math.floor(a / n) - Math.floor(m / n));
+      marks[a] = "alone"; marks[m] = "alone";
+      return {marks, more, count: [a, m], text: `${Cap(num(n, after, a))} og ${num(n, after, m)} står ${ruter(d)} fra hverandre. Ingen av dem er ${d}, og ingen av dem kan bli det. Da kan de aldri møtes.`};
+    }
+    case "shared": {
+      const [c, x, y] = f; marks[x] = "alone"; marks[y] = "alone"; marks[c] = "good";
+      return {marks, more, text: `${Cap(num(n, after, x))} og ${num(n, after, y)} kan bare forsvinne sammen med ${num(n, after, c)}. Når den ene gjør det, blir den andre igjen.`};
+    }
+    case "oddGroup": {
+      for (const i of f) marks[i] = "alone";
+      const vals = f.map(i => after[i]), sum = vals.reduce((a, b) => a + b, 0);
+      return {marks, more: PARITY_WHY, moreLabel: "Vis hvorfor", text: `De markerte tallene kan ikke møte resten av brettet. Summen er ${vals.join(" + ")} = ${sum}. Det er et oddetall, så de kan aldri forsvinne alle sammen.`};
+    }
+    case "needsSquare": {
+      const [, square, x] = f; marks[square] = "alone"; marks[x] = "picked";
+      return {marks, more, text: `${e.head} En tom rute får aldri et tall igjen.`};
+    }
+    case "wrongMoment": {
+      marks[to] = "alone";
+      return {marks, more, steps: e.steps.length ? ["Først måtte dette skje:", ...e.steps] : [], text: e.head};
+    }
+    default:
+      for (const i of f) if (after[i]) marks[i] = "alone";
+      return {marks, more, text: e.head};
+  }
+}
+
+/** The board the move leaves, with its sum, and what the short words point at. */
+function showResult(b, label, n, cells, after, t, extra = {}, move = null) {
+  const marks = {...(t ? t.marks : {}), ...extra};
+  if (!t && lesson.id === "alone") for (const i of alone(n, after)) marks[i] = "alone";
+  let counts = null;
+  if (t && t.count) {
+    const [a, z] = t.count, step = Math.floor(z / n) === Math.floor(a / n) ? Math.sign(z - a) : Math.sign(z - a) * n;
+    counts = {}; for (let i = a + step, c = 1; ; i += step, c++) { counts[i] = c; if (i === z) break; }
+  }
+  b.draw(after, {marks, counts, sum: move ? [move[1], cells[move[0]], cells[move[1]]] : null});
+  label.textContent = "Etter trekket";
 }
 
 function recall(host) {
@@ -1263,8 +1323,9 @@ function show(k) {
     label2.textContent = `Trekk: ${mv}`;
     const reveal = picked => {
       if (s.type === "example") {
-        showResult(b, label2, n, cells, after, e, {}, [from, to]);
-        verdict(fb, "info", e ? e.head : "", e ? e.why : "", e ? e.steps : []);
+        const t = e && teach(e, n, cells, after, from, to);
+        showResult(b, label2, n, cells, after, t, {}, [from, to]);
+        verdict(fb, "info", t ? t.text : "", "", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
         return finish(k, true);
       }
       let right;
@@ -1273,8 +1334,9 @@ function show(k) {
         const answers = e ? ANSWERS[lesson.id](e, n, after) : [];
         right = answers.length ? answers.includes(picked) : picked === -1;
       }
-      showResult(b, label2, n, cells, after, e, picked >= 0 ? {[picked]: "picked"} : {}, [from, to]);
-      verdict(fb, right ? "good" : "bad", right ? "Riktig!" : "Ikke helt.", e ? e.head + " " + e.why : lesson.none, e ? e.steps : []);
+      const t = e && teach(e, n, cells, after, from, to);
+      showResult(b, label2, n, cells, after, t, picked >= 0 && !(t && t.marks[picked]) ? {[picked]: "picked"} : {}, [from, to]);
+      verdict(fb, right ? "good" : "bad", right ? "Riktig!" : "Ikke helt.", t ? t.text : lesson.none, t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
       finish(k, right);
     };
@@ -1326,15 +1388,16 @@ function show(k) {
     if (ok === null) { verdict(fb, "info", "Det trekket rakk vi ikke å sjekke. Prøv et annet."); return redraw(); }
     const e = ok ? null : explain(n, cells, from, to);
     // The move is shown as the explanation sees it, since that is what the words are about.
-    showResult(b, label2, n, cells, after, e, {}, [from, to]);
+    const t = e && teach(e, n, cells, after, from, to);
+    showResult(b, label2, n, cells, after, t, {}, [from, to]);
     if (goal === "findTrap" ? !ok : ok) {
       verdict(fb, "good", goal === "findTrap" ? "Riktig, det var fellen." : "Riktig, det trekket er trygt.",
-        goal === "findTrap" ? (e ? e.head + " " + e.why : "") : "Brettet kan fortsatt løses etter det.", e ? e.steps : []);
+        t ? t.text : "Brettet kan fortsatt løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
       return finish(k, tries === 1);
     }
     if (goal === "findTrap") verdict(fb, "info", `${Move}: trygt.`, "Brettet kan fortsatt løses etter det trekket.");
-    else verdict(fb, "bad", `${Move}: en felle.`, e ? e.head + " " + e.why : "Brettet kan ikke løses etter det.", e ? e.steps : []);
+    else verdict(fb, "bad", `${Move}: en felle.`, t ? t.text : "Brettet kan ikke løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
     acts.innerHTML = `<button type="button" class="btn">Prøv et annet trekk</button>`;
     acts.firstChild.onclick = () => { acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; redraw(); };
   }
