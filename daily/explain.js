@@ -406,8 +406,29 @@ export function follow(cells, n, summary = false, only = -1) {
   }
   // Whatever it becomes: a number that can jump once something has landed on it is not one that cannot jump.
   const neverJumps = ![...graph.values()].some(out => [...out.values()].some(e => e.jump));
-  return {kind: "follow", cells, focus, headline: cap(phrase(neverJumps ? "explain.follow.cannotJump" : "explain.follow", called(first))),
-    reason: sentences(told)};
+  // A number that can only make one jump, to where what it leaves is stuck, is told as that jump.
+  const out = [...graph.get(first)];
+  const once = graph.size === 2 && out.length === 1 && out[0][1].jump && !graph.get(out[0][0]).size ? at(out[0][0]) : null;
+  const headline = once ? phrase("explain.follow.jumpThenStuck", called(first), plain(squareName(n, once[0])), count(once[1]))
+    : phrase(neverJumps ? "explain.follow.cannotJump" : "explain.follow", called(first));
+  // A number stuck as it is: why, from what each number in line with it can ever be, when that shows it.
+  const why = graph.size === 1 ? stuckWhy(cells, n, start) : null;
+  return {kind: "follow", cells, focus, headline: cap(headline), reason: why || sentences(told)};
+}
+
+/** Why the number on `s` can never jump and nothing can land on it: no number is its value away, and each square in
+ *  line with it can only ever hold values other than their distance (a number there may jump away and be something
+ *  else elsewhere, so it is told of the square). Null when the values that could be do not show it. */
+function stuckWhy(cells, n, s) {
+  const meet = couldMeet(cells, n);
+  const mates = meet.pairs.filter(p => p.a === s || p.b === s).map(p => [p.a === s ? p.b : p.a, p.distance]);
+  // More than three in line is no longer short.
+  if (!mates.length || mates.length > 3) return null;
+  if (mates.some(([m, d]) => d === cells[s] || meet.values.get(m).has(d))) return null;
+  const can = m => anyOf([...meet.values.get(m)].sort((a, b) => b - a).map(count));
+  return sentences([cap(phrase("explain.stuck.noJump", numberAt(cells, n, s), count(cells[s]))),
+    ...mates.map(([m, d]) => cap(phrase("explain.stuck.mate", plain(squareName(n, m)), count(d), can(m)))),
+    phrase("explain.stuck.end", plain(squareName(n, s)))]);
 }
 
 // ---- Two that can never both go
