@@ -1648,16 +1648,87 @@ function teach(e, n, cells, after, from, to) {
     }
     case "needsSquare": {
       const [, square, x] = f; marks[square] = "alone"; marks[x] = "picked";
-      return {marks, more, text: `${e.head} En tom rute får aldri et tall igjen.`};
+      return {marks, text: `${e.head} En tom rute får aldri et tall igjen.`, why: {square,
+        until: ([a, b]) => (a === x && b === square) || (a === square && b === x),
+        at: `Her brukes ${sq(n, square)}.`,
+        end: `Dette er bare én måte å rydde brettet på, men alle måter bruker ${sq(n, square)} slik. Etter trekket ditt er ruta tom, og en tom rute får aldri et tall igjen.`}};
     }
     case "wrongMoment": {
       marks[to] = "alone";
-      return {marks, more, steps: e.steps.length ? ["Først måtte dette skje:", ...e.steps] : [], text: e.head};
+      return {marks, steps: e.steps.length ? ["Først måtte dette skje:", ...e.steps] : [], text: e.head, why: {square: to,
+        until: ([a, b]) => a === from && b === to,
+        at: `Først nå lander ${num(n, cells, from)} på ${sq(n, to)}.`,
+        end: `Dette er bare én måte å rydde brettet på, men i alle lander et annet tall på ${sq(n, to)} før ${num(n, cells, from)} gjør det.`}};
     }
     default:
       for (const i of f) if (after[i]) marks[i] = "alone";
       return {marks, more, text: e.head};
   }
+}
+
+/** One way to clear the board, found with the solver: a list of [from, to], or null when the solver cannot tell. */
+function solutionLine(n, cells) {
+  const line = [], memo = new Map();
+  let p = cells.slice();
+  while (p.some(Boolean)) {
+    let next = null;
+    for (let i = 0; i < p.length && !next; i++) for (const t of targets(p, n, i)) {
+      const q = moved(p, i, t);
+      if (q.every(v => !v) || solvable(q, n, memo, 500_000) === true) { next = [i, t]; break; }
+    }
+    if (!next) return null;
+    line.push(next); p = moved(p, next[0], next[1]);
+  }
+  return line;
+}
+
+const sumText = (a, b) => a === b ? `${a} − ${b} = 0, så begge forsvinner` : `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}`;
+
+/**
+ * "Vis hvorfor" for a move that emptied a needed square or came too early: one real way to clear the board from before
+ * the move, jump by jump on the board, up to where that square is used; framed as one way, since the engine proved
+ * only that every way uses the square so. "Tilbake til svaret" puts the answer back.
+ */
+function offerWhy(fb, b, label, n, cells, t, back) {
+  if (!t || !t.why) return;
+  const line = solutionLine(n, cells), end = line ? line.findIndex(t.why.until) : -1;
+  if (end < 0) return;
+  const row = document.createElement("div");
+  row.className = "actions whyextra";
+  row.innerHTML = `<button type="button" class="btn">Vis hvorfor</button>`;
+  fb.after(row);
+  row.firstChild.onclick = () => {
+    row.remove();
+    const box = document.createElement("div");
+    box.className = "feedback info whyextra";
+    box.innerHTML = `<ul class="saying"></ul><div class="actions"></div>`;
+    fb.after(box);
+    let p = cells.slice(), k = 0, sum = null;
+    const said = [`Slik kan brettet ryddes fra stillingen før trekket ditt. Følg med på ${sq(n, t.why.square)}.`];
+    const frame = () => {
+      // The whole way, to an empty board, so it is seen to work; the square is marked while it is in use.
+      const marks = {}, coming = k < line.length ? line[k] : null;
+      if (k <= end) marks[t.why.square] = "picked";
+      if (coming) marks[coming[0]] = "from";
+      b.draw(p, {marks, sum, arc: coming});
+      label.textContent = "Ett eksempel";
+      const ul = box.querySelector(".saying"); ul.innerHTML = "";
+      for (const s of said) { const li = document.createElement("li"); li.textContent = s; ul.append(li); }
+      const acts = box.querySelector(".actions"); acts.innerHTML = "";
+      const go = document.createElement("button");
+      go.type = "button"; go.className = "btn main"; go.textContent = coming ? "Vis hoppet" : "Tilbake til svaret";
+      go.onclick = () => {
+        if (!coming) { box.remove(); back(); offerWhy(fb, b, label, n, cells, t, back); return; }
+        const [a, z] = coming;
+        said.push(`${Cap(num(n, p, a))} hopper på ${num(n, p, z)}: ${sumText(p[a], p[z])}.` + (k === end ? " " + t.why.at : ""));
+        sum = [z, p[a], p[z]]; p = moved(p, a, z); k++;
+        if (k === line.length) said.push("Brettet er tomt. " + t.why.end);
+        frame();
+      };
+      acts.append(go);
+    };
+    frame();
+  };
 }
 
 /** The board the move leaves, with its sum, and what the short words point at. */
@@ -1784,6 +1855,7 @@ function show(k, extra = null) {
       showResult(b, label2, n, cells, after, t, picked >= 0 && !(t && t.marks[picked]) ? {[picked]: "picked"} : {}, [from, to]);
       verdict(fb, right ? "good" : "bad", right ? "Riktig!" : "Ikke helt.", t ? t.text : lesson.none, t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
+      offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
       // Missed once: before going on, one more of the same kind on a new board, so the answer just seen gets used.
       if ((!right || missed) && !extra && lesson.extra && lesson.extra.length) {
         miss(k);
@@ -1867,12 +1939,14 @@ function show(k, extra = null) {
       verdict(fb, "good", goal === "findTrap" ? "Riktig, det var fellen." : "Riktig, det trekket er trygt.",
         t ? t.text : "Brettet kan fortsatt løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
+      offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
       return finish(k, tries === 1);
     }
     if (goal === "findTrap") verdict(fb, "info", "Det trekket er trygt. Du leter etter fellen.", `${Move}: brettet kan fortsatt løses etter det.`);
     else verdict(fb, "bad", "Det var en felle. Du leter etter det trygge trekket.", t ? t.text : "Brettet kan ikke løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
+    offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
     acts.innerHTML = `<button type="button" class="btn">Prøv et annet trekk</button>`;
-    acts.firstChild.onclick = () => { acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; redraw(); };
+    acts.firstChild.onclick = () => { acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; el.querySelectorAll(".whyextra").forEach(x => x.remove()); redraw(); };
   }
   redraw();
 }
