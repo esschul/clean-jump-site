@@ -631,6 +631,156 @@ const LESSONS = /*LESSONS*/[
     ]
    }
   ]
+ },
+ {
+  "id": "parity",
+  "key": "hiku:skole:parity",
+  "short": "Partall",
+  "title": "Går gruppen opp?",
+  "rule": "Tall som aldri kan nå resten av brettet, må forsvinne seg imellom. Da må summen deres være et partall. Er den et oddetall, blir minst ett tall igjen.",
+  "check": "Blir noen tall skilt fra resten av brettet? Legg dem sammen. Er summen et oddetall, går det ikke.",
+  "recall": "Se etter tall som blir skilt fra resten. Legg dem sammen: et oddetall betyr at ett blir igjen.",
+  "predict": "pick",
+  "ask": "Blir noen tall skilt fra resten med en oddetallssum hvis {move}? Trykk på et av dem, eller velg «Ingen».",
+  "none": "Nei. Ingen tall blir skilt fra resten med en oddetallssum, og brettet kan fortsatt løses.",
+  "steps": [
+   {
+    "type": "example",
+    "n": 5,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     3,
+     0,
+     1,
+     2,
+     4,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "E3",
+     "A3"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 5,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     2,
+     1,
+     3,
+     3,
+     0
+    ],
+    "move": [
+     "D5",
+     "A5"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 5,
+    "cells": [
+     1,
+     0,
+     0,
+     2,
+     0,
+     2,
+     0,
+     0,
+     0,
+     4,
+     3,
+     0,
+     0,
+     1,
+     4,
+     3,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "E2",
+     "A2"
+    ]
+   },
+   {
+    "type": "findTrap",
+    "n": 5,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     4,
+     1,
+     0,
+     3,
+     0,
+     0,
+     0,
+     0,
+     2,
+     4,
+     0,
+     0,
+     0,
+     3,
+     0,
+     3,
+     0,
+     0,
+     2
+    ]
+   }
+  ]
  }
 ]/*END*/;
 
