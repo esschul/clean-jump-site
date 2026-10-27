@@ -88,12 +88,12 @@ footer{margin-top:56px;padding-block:24px;border-top:1px solid var(--rule);color
 <header class="band"><div class="wrap"><nav><a class="brand" href="/"><img src="../icon.png" alt="">Hiku</a><span class="where">Skolen</span></nav></div></header>
 <main class="wrap">
 <h1>Hiku-skolen</h1>
-<p class="lead">Her øver du på å se fellene før du går i dem. Hver leksjon er ett spørsmål du kan stille deg før du flytter.</p>
+<p class="lead">Her øver du på å se fellene før du går i dem. Hver leksjon er et spørsmål du kan stille deg selv før du flytter.</p>
 
 <section aria-labelledby="l1">
 <h2 id="l1">1. Hvilket tall blir stående alene?</h2>
 <p class="rule">Et tall kan bare forsvinne når det reduseres av et annet tall i samme rad eller kolonne. Er det ingen tall igjen der, blir det stående for alltid.</p>
-<p class="check"><b>Sjekk før du flytter</b>Se på raden og kolonnen du flytter fra. Er det et tall der som bare har det tallet du flytter igjen?</p>
+<p class="check"><b>Sjekk før du flytter</b>Står det et tall i samme rad eller kolonne som tallet du vil flytte? Har det tallet ingen andre å møte, blir det alene når du flytter.</p>
 <ol class="progress" id="progress" aria-label="Fremgang"></ol>
 <div id="steps"></div>
 </section>
@@ -116,19 +116,19 @@ const at = (n, name) => (Number(name.slice(1)) - 1) * n + COLS.indexOf(name[0]);
 const STEPS = [
   {type: "example", n: 4, cells: [0,3,0,2, 0,2,0,0, 1,2,0,0, 0,0,0,0], move: ["B3", "B1"],
    title: "Se hva som skjer",
-   text: "1-tallet på A3 har bare ett tall i samme rad eller kolonne: 2-tallet på B3. Følg med når 2-tallet hopper bort."},
+   text: "1-tallet på A3 har bare ett annet tall i raden og kolonnen sin: 2-tallet på B3. Se hva som skjer når 2-tallet hopper bort."},
   {type: "predict", n: 4, cells: [0,0,0,0, 0,1,3,0, 2,0,1,0, 0,0,3,0], move: ["C3", "C4"],
    title: "Blir noen alene?",
-   text: "Hvis 1-tallet på C3 hopper til C4, blir et tall stående alene? Trykk på tallet, eller velg «Ingen»."},
+   text: "Blir noe tall stående alene hvis 1-tallet på C3 hopper til C4? Trykk på det, eller velg «Ingen»."},
   {type: "predict", n: 4, cells: [0,1,0,0, 0,3,0,0, 1,3,0,0, 0,2,0,0], move: ["A3", "B3"],
    title: "Og her?",
-   text: "Hvis 1-tallet på A3 hopper til B3, blir et tall stående alene? Trykk på tallet, eller velg «Ingen»."},
+   text: "Blir noe tall stående alene hvis 1-tallet på A3 hopper til B3? Trykk på det, eller velg «Ingen»."},
   {type: "findTrap", n: 4, cells: [0,0,0,2, 0,0,0,0, 0,0,0,3, 0,2,0,3],
    title: "Finn fellen",
-   text: "Ett av trekkene her gjør at et tall blir stående alene. Finn det: trykk på et tall, så på der det skal lande."},
+   text: "Ett av trekkene her gjør at et tall blir stående alene. Finn det. Trykk først på tallet som skal hoppe, og så på ruta det skal lande på."},
   {type: "findSafe", n: 4, cells: [1,1,1,0, 0,0,0,0, 0,0,0,0, 0,3,0,0],
    title: "Finn det trygge trekket",
-   text: "Her er nesten alle trekk feller. Finn det ene trekket som lar brettet fortsatt kunne løses."},
+   text: "Her er nesten alle trekk feller. Finn det ene trekket som ikke ødelegger brettet."},
 ];
 
 const KEY = "hiku:skole:alone";
@@ -201,7 +201,7 @@ function explain(n, cells, from, to) {
 }
 
 function recall(host) {
-  host.insertAdjacentHTML("beforeend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p>Se på raden og kolonnen du flytter fra. Har et tall der bare det tallet du flytter igjen, blir det alene.</p></details>`);
+  host.insertAdjacentHTML("beforeend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p>Se etter tall i samme rad eller kolonne som tallet du vil flytte. Har et av dem ingen andre å møte, blir det alene.</p></details>`);
 }
 
 function finish(k, firstTry) {
@@ -239,7 +239,7 @@ function show(k) {
         const right = lone.length ? lone.includes(picked) : picked === -1;
         const head = right ? "Riktig!" : "Ikke helt.";
         const why = lone.length ? e.head + " " + e.why
-          : "Ingen blir alene: alle tallene har fortsatt et tall i samme rad eller kolonne, og brettet kan fortsatt løses.";
+          : "Ingen blir alene. Alle tallene har fortsatt et annet tall i raden eller kolonnen sin, og brettet kan fortsatt løses.";
         verdict(fb, right ? "good" : "bad", head, why);
         recall(fb);
         finish(k, right);
@@ -274,27 +274,27 @@ function show(k) {
   function tap(i) {
     if (selected != null && targets(cells, n, selected).includes(i)) return play(selected, i);
     selected = targets(cells, n, i).length ? i : null;
-    if (selected == null) verdict(fb, "info", `${num(n, cells, i)} kan ikke hoppe noe sted nå.`);
+    if (selected == null) verdict(fb, "info", `${num(n, cells, i)} kan ikke hoppe noen steder nå.`);
     redraw();
   }
   function play(from, to) {
     tries++; selected = null;
     const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000);
-    const move = `${num(n, cells, from)} til ${sq(n, to)}`;
-    if (ok === null) { verdict(fb, "info", "Det trekket klarte vi ikke å avgjøre. Prøv et annet."); return redraw(); }
+    const move = `${num(n, cells, from)} til ${sq(n, to)}`, Move = move[0].toUpperCase() + move.slice(1);
+    if (ok === null) { verdict(fb, "info", "Det trekket rakk vi ikke å sjekke. Prøv et annet."); return redraw(); }
     const e = ok ? null : explain(n, cells, from, to);
     const lone = alone(n, after), marks = {}; for (const i of lone) marks[i] = "alone";
     const won = goal === "findTrap" ? !ok : ok;
     if (won) {
       b.draw(after, {marks}); label2.textContent = "Etter trekket";
-      verdict(fb, "good", goal === "findTrap" ? `Riktig: ${move} er fellen.` : `Riktig: ${move} er trygt.`,
-        goal === "findTrap" ? (e ? e.head + " " + e.why : "") : "Etter det kan brettet fortsatt løses.");
+      verdict(fb, "good", goal === "findTrap" ? `Riktig, det var fellen.` : `Riktig, det trekket er trygt.`,
+        goal === "findTrap" ? (e ? e.head + " " + e.why : "") : "Brettet kan fortsatt løses etter det.");
       recall(fb);
       finish(k, tries === 1);
       return;
     }
-    if (goal === "findTrap") verdict(fb, "info", `${move} er trygt.`, "Brettet kan fortsatt løses etter det. Prøv et annet trekk.");
-    else verdict(fb, "bad", `${move} er en felle.`, (e ? e.head + " " + e.why : "Brettet kan ikke løses etter det.") + " Prøv et annet trekk.");
+    if (goal === "findTrap") verdict(fb, "info", `${Move}: trygt.`, "Brettet kan fortsatt løses etter det trekket. Prøv et annet.");
+    else verdict(fb, "bad", `${Move}: en felle.`, (e ? e.head + " " + e.why : "Brettet kan ikke løses etter det.") + " Prøv et annet.");
     redraw();
   }
   redraw();
