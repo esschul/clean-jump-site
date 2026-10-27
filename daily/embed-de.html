@@ -100,6 +100,9 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <label>Ausrichtung
     <select name="align"><option value="">Zentriert</option><option value="left">Links</option></select>
   </label>
+  <label>Titel und Regel
+    <select name="compact"><option value="">Anzeigen</option><option value="1">Ausblenden</option></select>
+  </label>
   <label>Art
     <select name="kind"><option value="script">Mit Skript (empfohlen)</option><option value="iframe">Nur iframe</option></select>
   </label>
@@ -122,6 +125,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Legt die Farben fest. Ohne diese Angabe folgt das Spiel dem hellen oder dunklen Modus des Lesers.</td></tr>
   <tr><td><code>data-color</code></td><td><code>#dd0000</code></td><td>Ihre Farbe für Schaltflächen, Reiter und Links, etwa <code>#dd0000</code>. Das Spiel erhält dann ein neutrales Nachrichtenaussehen mit dem gleichen Hintergrund wie dort, wo es steht, und berechnet lesbare Schrift und eine hellere Variante für den dunklen Modus selbst. Das Brett behält sein eigenes Aussehen.</td></tr>
   <tr><td><code>data-align</code></td><td><code>left</code></td><td>Setzt das Spiel nach links. Ohne diese Angabe steht es zentriert im verfügbaren Platz und ist nie breiter als 480 Pixel.</td></tr>
+  <tr><td><code>data-compact</code></td><td></td><td>Blendet den eigenen Titel und die Regel des Spiels aus, für Seiten mit eigener Überschrift über dem Spiel. Ohne diese Angabe wird beides angezeigt.</td></tr>
   <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Welches der vier Bretter des Tages zuerst erscheint. Ohne diese Angabe öffnet das Spiel mit dem Level, das der Leser zuletzt gespielt hat, sonst mit Leicht. Der Leser kann jederzeit wechseln.</td></tr>
 </table>
 </div>
@@ -206,11 +210,13 @@ frame-src https://hikupuzzle.com;</code></pre>
     if (o.colormode !== 'own') o.color = o.colormode || '';
     var attrs = ['lang', 'theme', 'level', 'color', 'align'].filter(function (k) { return o[k]; })
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
+    if (o.compact) attrs += ' data-compact';
     var code;
     if (o.kind === 'iframe') {
       var q = ['lang=' + (o.lang || pageLang)];
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
+      if (o.compact) q.push('compact=1');
       if (o.color) q.push('color=' + o.color.slice(1));
       // Without the script nothing reads the background around the frame, so the code carries the one chosen here.
       if (o.color) q.push('bg=' + (card || (hex ? o.page : hexOf(getComputedStyle(stage).backgroundColor))));

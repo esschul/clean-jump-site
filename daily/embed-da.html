@@ -100,6 +100,9 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <label>Placering
     <select name="align"><option value="">Centreret</option><option value="left">Venstre</option></select>
   </label>
+  <label>Titel og regel
+    <select name="compact"><option value="">Vis</option><option value="1">Skjul</option></select>
+  </label>
   <label>Type
     <select name="kind"><option value="script">Med script (anbefalet)</option><option value="iframe">Kun iframe</option></select>
   </label>
@@ -122,6 +125,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Låser farverne. Uden dette følger spillet læserens lyse eller mørke tilstand.</td></tr>
   <tr><td><code>data-color</code></td><td><code>#dd0000</code></td><td>Jeres farve på knapper, faner og links, for eksempel <code>#dd0000</code>. Spillet får så et neutralt avisudseende med samme baggrund, som der hvor det står, og regner selv læsbar tekst og en lysere variant i mørk tilstand ud. Selve brættet beholder sit eget udseende.</td></tr>
   <tr><td><code>data-align</code></td><td><code>left</code></td><td>Placerer spillet til venstre. Uden dette står det centreret i den plads, det får, og er aldrig bredere end 480 pixel.</td></tr>
+  <tr><td><code>data-compact</code></td><td></td><td>Skjuler spillets egen titel og regel, til sider med deres egen overskrift over spillet. Uden dette vises begge.</td></tr>
   <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Hvilket af dagens fire brætter der vises først. Uden dette åbner spillet på det niveau, læseren spillede sidst, ellers på Let. Læseren kan altid skifte.</td></tr>
 </table>
 </div>
@@ -206,11 +210,13 @@ frame-src https://hikupuzzle.com;</code></pre>
     if (o.colormode !== 'own') o.color = o.colormode || '';
     var attrs = ['lang', 'theme', 'level', 'color', 'align'].filter(function (k) { return o[k]; })
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
+    if (o.compact) attrs += ' data-compact';
     var code;
     if (o.kind === 'iframe') {
       var q = ['lang=' + (o.lang || pageLang)];
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
+      if (o.compact) q.push('compact=1');
       if (o.color) q.push('color=' + o.color.slice(1));
       // Without the script nothing reads the background around the frame, so the code carries the one chosen here.
       if (o.color) q.push('bg=' + (card || (hex ? o.page : hexOf(getComputedStyle(stage).backgroundColor))));

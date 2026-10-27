@@ -95,6 +95,9 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <label>{{f_align}}
     <select name="align"><option value="">{{f_align_center}}</option><option value="left">{{f_align_left}}</option></select>
   </label>
+  <label>{{f_compact}}
+    <select name="compact"><option value="">{{f_compact_show}}</option><option value="1">{{f_compact_hide}}</option></select>
+  </label>
   <label>{{f_kind}}
     <select name="kind"><option value="script">{{f_kind_script}}</option><option value="iframe">{{f_kind_iframe}}</option></select>
   </label>
@@ -117,6 +120,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>{{opt_theme}}</td></tr>
   <tr><td><code>data-color</code></td><td><code>#dd0000</code></td><td>{{opt_color}}</td></tr>
   <tr><td><code>data-align</code></td><td><code>left</code></td><td>{{opt_align}}</td></tr>
+  <tr><td><code>data-compact</code></td><td></td><td>{{opt_compact}}</td></tr>
   <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>{{opt_level}}</td></tr>
 </table>
 </div>
@@ -201,11 +205,13 @@ frame-src {{host}};</code></pre>
     if (o.colormode !== 'own') o.color = o.colormode || '';
     var attrs = ['lang', 'theme', 'level', 'color', 'align'].filter(function (k) { return o[k]; })
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
+    if (o.compact) attrs += ' data-compact';
     var code;
     if (o.kind === 'iframe') {
       var q = ['lang=' + (o.lang || pageLang)];
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
+      if (o.compact) q.push('compact=1');
       if (o.color) q.push('color=' + o.color.slice(1));
       // Without the script nothing reads the background around the frame, so the code carries the one chosen here.
       if (o.color) q.push('bg=' + (card || (hex ? o.page : hexOf(getComputedStyle(stage).backgroundColor))));

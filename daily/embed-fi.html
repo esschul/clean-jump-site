@@ -100,6 +100,9 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <label>Sijainti
     <select name="align"><option value="">Keskellä</option><option value="left">Vasemmalla</option></select>
   </label>
+  <label>Otsikko ja sääntö
+    <select name="compact"><option value="">Näytä</option><option value="1">Piilota</option></select>
+  </label>
   <label>Tyyppi
     <select name="kind"><option value="script">Skriptillä (suositus)</option><option value="iframe">Pelkkä iframe</option></select>
   </label>
@@ -122,6 +125,7 @@ footer{margin-top:56px;font-size:14px;color:var(--muted)}
   <tr><td><code>data-theme</code></td><td><code>light</code>, <code>dark</code></td><td>Lukitsee värit. Ilman tätä peli seuraa lukijan vaaleaa tai tummaa tilaa.</td></tr>
   <tr><td><code>data-color</code></td><td><code>#dd0000</code></td><td>Oma värinne painikkeisiin, välilehtiin ja linkkeihin, esimerkiksi <code>#dd0000</code>. Peli saa silloin neutraalin uutissivun ilmeen ja saman taustan kuin kohta, jossa se on, ja laskee itse luettavan tekstin ja vaaleamman version tummaan tilaan. Itse lauta säilyttää oman ilmeensä.</td></tr>
   <tr><td><code>data-align</code></td><td><code>left</code></td><td>Sijoittaa pelin vasemmalle. Ilman tätä peli on keskellä sille annettua tilaa eikä ole koskaan yli 480 pikseliä leveä.</td></tr>
+  <tr><td><code>data-compact</code></td><td></td><td>Piilottaa pelin oman otsikon ja säännön sivuilla, joilla on oma otsikko pelin yläpuolella. Ilman tätä molemmat näytetään.</td></tr>
   <tr><td><code>data-level</code></td><td><code>easy</code>, <code>medium</code>, <code>hard</code>, <code>expert</code></td><td>Mikä päivän neljästä laudasta näytetään ensin. Ilman tätä peli aukeaa tasolla, jota lukija pelasi viimeksi, muuten Helppo-tasolla. Lukija voi aina vaihtaa.</td></tr>
 </table>
 </div>
@@ -206,11 +210,13 @@ frame-src https://hikupuzzle.com;</code></pre>
     if (o.colormode !== 'own') o.color = o.colormode || '';
     var attrs = ['lang', 'theme', 'level', 'color', 'align'].filter(function (k) { return o[k]; })
       .map(function (k) { return ' data-' + k + '="' + o[k] + '"'; }).join('');
+    if (o.compact) attrs += ' data-compact';
     var code;
     if (o.kind === 'iframe') {
       var q = ['lang=' + (o.lang || pageLang)];
       if (o.theme) q.push('theme=' + o.theme);
       if (o.level) q.push('level=' + o.level);
+      if (o.compact) q.push('compact=1');
       if (o.color) q.push('color=' + o.color.slice(1));
       // Without the script nothing reads the background around the frame, so the code carries the one chosen here.
       if (o.color) q.push('bg=' + (card || (hex ? o.page : hexOf(getComputedStyle(stage).backgroundColor))));
