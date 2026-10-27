@@ -113,9 +113,9 @@ footer a{color:var(--link,var(--accent))}
 .whycard ol button[aria-pressed="true"] b{background:var(--accent);color:var(--on-accent)}
 .whycard .when{font-size:13px;font-weight:600;color:var(--muted);margin-top:4px}
 /* The board takes the height that is left under the words, and is as wide as it is high. */
-.whyboard{display:grid;gap:4px;flex:1 1 0;min-height:180px;aspect-ratio:1;max-width:100%;align-self:center;margin-top:4px}
-.whyboard .name{font-size:11px;font-weight:600;color:var(--muted);text-align:center;align-self:center}
-.whyboard .sq{position:static;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:clamp(12px,3.6vw,18px);font-variant-numeric:tabular-nums}
+.whyboard{display:grid;gap:4px;scroll-margin-bottom:16px;flex:1 1 0;min-height:180px;aspect-ratio:1;max-width:100%;align-self:center;margin-top:4px}
+.whyboard .name{font-size:11px;line-height:1;font-weight:600;color:var(--muted);text-align:center;align-self:center}
+.whyboard .sq{position:static;min-height:0;line-height:1;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:clamp(12px,3.6vw,18px);font-variant-numeric:tabular-nums}
 .whyboard .num{background:var(--tile);box-shadow:0 2px 0 var(--edge);opacity:.35}
 .whyboard .num.main{background:var(--accent);color:var(--on-accent);opacity:1}
 .whyboard .num.dep{background:var(--soft);outline:3px solid var(--guide);outline-offset:2px;opacity:1}
@@ -528,7 +528,8 @@ footer a{color:var(--link,var(--accent))}
     const grid = document.createElement('div');
     grid.className = 'whyboard';
     grid.setAttribute('aria-hidden', 'true');
-    grid.style.gridTemplateColumns = grid.style.gridTemplateRows = `14px repeat(${size}, 1fr)`;
+    // minmax(0, 1fr): rows share the square evenly, so a short card cannot push the last row out of it.
+    grid.style.gridTemplateColumns = grid.style.gridTemplateRows = `14px repeat(${size}, minmax(0, 1fr))`;
     const cell = (cls, text) => { const d = document.createElement('div'); d.className = cls; d.textContent = text; grid.appendChild(d); };
     cell('name', '');
     for (let c = 0; c < size; c++) cell('name', String.fromCharCode(65 + c));
