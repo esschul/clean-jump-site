@@ -166,6 +166,102 @@ const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
 // «Ingen»), "trap" answers safe or trap. The answer is worked out by the solver and the engine, never written down.
 const LESSONS = /*LESSONS*/[
  {
+  "id": "basics",
+  "key": "hiku:skole:basics",
+  "short": "Slik spiller du",
+  "title": "Slik spiller du",
+  "rule": "Målet er å få bort alle tallene. Et tall hopper akkurat så mange ruter som det viser, bortover eller opp og ned. Det må lande på et annet tall. Det største minus det minste blir igjen, og like tall forsvinner begge.",
+  "check": "Tell rutene: et 3-tall når et tall som står nøyaktig 3 ruter unna i samme rad eller kolonne.",
+  "recall": "Tell rutene før du hopper, og tenk på hva som blir igjen der du lander.",
+  "predict": "pick",
+  "ask": "",
+  "none": "",
+  "hint": "",
+  "extra": [],
+  "steps": [
+   {
+    "type": "demo",
+    "n": 4,
+    "cells": [
+     3,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     2,
+     2,
+     0,
+     0,
+     0,
+     0
+    ],
+    "frames": [
+     {
+      "text": "Målet er å få bort alle tallene på brettet."
+     },
+     {
+      "text": "Et tall hopper akkurat så mange ruter som det viser, bortover eller opp og ned, aldri på skrå. 3-tallet på A1 når 1-tallet på D1, 3 ruter unna.",
+      "count": [
+       "A1",
+       "D1"
+      ],
+      "marks": {
+       "A1": "picked"
+      }
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "Der det lander, blir det største minus det minste igjen: 3 − 1 = 2.",
+      "play": "A1-D1"
+     },
+     {
+      "text": "Er tallene like, forsvinner begge. 2-tallet på A3 hopper 2 ruter, til 2-tallet på C3."
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "2 − 2 = 0. Begge er borte.",
+      "play": "A3-C3"
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "Til slutt hopper 2-tallet på D1 to ruter ned, til 2-tallet på D3. Brettet er tomt.",
+      "play": "D1-D3"
+     },
+     {
+      "text": "Rekkefølgen er alt. Feil rekkefølge kan etterlate tall som aldri møtes. Det er det de neste leksjonene handler om."
+     }
+    ]
+   },
+   {
+    "type": "solve",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     1,
+     3,
+     2,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
   "id": "alone",
   "key": "hiku:skole:alone",
   "short": "Alene",
@@ -302,7 +398,7 @@ const LESSONS = /*LESSONS*/[
      0,
      3
     ],
-    "text": "Bare ett av trekkene her gjør at et tall blir stående alene. Trykk på tallet som skal hoppe, og så på ruta det skal lande på."
+    "text": "Finn trekket som gjør at et tall blir stående alene. Trykk på tallet som skal hoppe, og så på ruta det skal lande på."
    },
    {
     "type": "findSafe",
@@ -414,7 +510,7 @@ const LESSONS = /*LESSONS*/[
   "key": "hiku:skole:meet",
   "short": "Avstand",
   "title": "Hvilket tall kan aldri nås?",
-  "rule": "To tall på samme linje møtes bare når det ene er like stort som avstanden mellom dem. Et tall endrer seg bare når noe lander på det, så noen ganger kan det aldri få tallet som trengs.",
+  "rule": "To tall på samme linje møtes bare når det ene er like stort som avstanden mellom dem. Tallet i en rute endrer seg bare når et annet tall lander der, så noen ganger kan det aldri få tallet som trengs.",
   "check": "Tell avstanden mellom tallene på samme linje. Er ett av dem like stort som avstanden, eller kan det bli det?",
   "recall": "Tell avstanden til tallene på samme linje. Kan noen av dem noen gang bli like stort som avstanden?",
   "predict": "pick",
@@ -507,32 +603,6 @@ const LESSONS = /*LESSONS*/[
     "type": "predict",
     "n": 4,
     "cells": [
-     2,
-     1,
-     2,
-     3,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     1,
-     1,
-     0,
-     0,
-     0,
-     0
-    ],
-    "move": [
-     "A1",
-     "C1"
-    ]
-   },
-   {
-    "type": "predict",
-    "n": 4,
-    "cells": [
      0,
      0,
      0,
@@ -553,6 +623,32 @@ const LESSONS = /*LESSONS*/[
     "move": [
      "B3",
      "C3"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     2,
+     1,
+     2,
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A1",
+     "C1"
     ]
    },
    {
@@ -1010,32 +1106,6 @@ const LESSONS = /*LESSONS*/[
     "n": 4,
     "cells": [
      2,
-     0,
-     0,
-     0,
-     2,
-     0,
-     0,
-     3,
-     1,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0
-    ],
-    "move": [
-     "A3",
-     "A2"
-    ]
-   },
-   {
-    "type": "predict",
-    "n": 4,
-    "cells": [
-     2,
      3,
      0,
      0,
@@ -1055,6 +1125,32 @@ const LESSONS = /*LESSONS*/[
     "move": [
      "A2",
      "A1"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     3,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "A3",
+     "A2"
     ]
    },
    {
@@ -1191,7 +1287,7 @@ const LESSONS = /*LESSONS*/[
   "title": "Går gruppen opp?",
   "rule": "Tall som aldri kan nå resten av brettet, må forsvinne seg imellom. Da må summen deres være et partall. Er den et oddetall, blir minst ett tall igjen.",
   "check": "Blir noen tall skilt fra resten av brettet? Legg dem sammen. Er summen et oddetall, går det ikke.",
-  "recall": "Se etter tall som blir skilt fra resten. Legg dem sammen: et oddetall betyr at ett blir igjen.",
+  "recall": "Se etter tall som blir skilt fra resten. Legg dem sammen. Er summen et oddetall, blir minst ett tall igjen.",
   "predict": "pick",
   "ask": "Blir noen tall skilt fra resten med en oddetallssum hvis {move}? Trykk på et av dem, eller velg «Ingen».",
   "none": "Nei. Ingen tall blir skilt fra resten med en oddetallssum, og brettet kan fortsatt løses.",
@@ -1596,37 +1692,12 @@ const LESSONS = /*LESSONS*/[
       }
      },
      {
-      "text": "Uansett hva du gjør, blir tallet fra A1 stående til slutt. Trekket var en felle, men det synes først etter et par trekk.",
+      "text": "Uansett hva du gjør, blir det stående tall som ingen kan fjerne. Trekket var en felle, men det synes først etter et par trekk.",
       "marks": {
-       "A1": "alone"
+       "C1": "alone",
+       "D1": "alone"
       }
      }
-    ]
-   },
-   {
-    "type": "predict",
-    "n": 4,
-    "cells": [
-     0,
-     1,
-     3,
-     0,
-     0,
-     1,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     2,
-     0,
-     1,
-     0
-    ],
-    "move": [
-     "A4",
-     "C4"
     ]
    },
    {
@@ -1653,6 +1724,32 @@ const LESSONS = /*LESSONS*/[
     "move": [
      "D1",
      "A1"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     0,
+     1,
+     3,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     1,
+     0
+    ],
+    "move": [
+     "A4",
+     "C4"
     ]
    },
    {
@@ -1761,11 +1858,28 @@ const LESSONS = /*LESSONS*/[
  }
 ]/*END*/;
 
+/** Whether the number on square i takes part in no jump, from or onto it, in any position that can be reached;
+ *  false also when the search grows too large to be sure. */
+function neverMoves(cells, n, i, limit = 30_000) {
+  const seen = new Set([cells.join()]), stack = [cells];
+  while (stack.length) {
+    const p = stack.pop();
+    for (let a = 0; a < p.length; a++) for (const t of targets(p, n, a)) {
+      if (a === i || t === i) return false;
+      const q = moved(p, a, t), key = q.join();
+      if (seen.has(key)) continue;
+      if (seen.size >= limit) return false;
+      seen.add(key); stack.push(q);
+    }
+  }
+  return true;
+}
+
 /** Where the engine points, for a lesson's question: the numbers a player should have tapped. */
 const ANSWERS = {
   alone: (e, n, after) => alone(n, after),
-  // Both ends of a pair that can never meet are numbers that can never be reached.
-  meet: e => e.focus,
+  // The number the engine names, and any other it points at that, searched for here, never takes part in a jump again.
+  meet: (e, n, after) => e.focus.filter((i, k) => k === 0 || neverMoves(after, n, i)),
   partner: e => [e.focus[0]],
   parity: e => e.focus,
 };
@@ -2216,19 +2330,21 @@ function show(k, extra = null) {
   const el = document.createElement("article"); el.className = "step";
   const label = s.type === "example" || s.type === "demo" ? "Eksempel" : extra ? "En lignende oppgave" : `Oppgave ${k} av ${steps.length - 1}`;
   const banner = s.type === "findTrap" ? `<p class="goal trap"><span class="icon" aria-hidden="true">✕</span><span>Du leter etter fellen: trekket som gjør at brettet ikke kan løses.</span></p>`
+    : s.type === "solve" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>Få bort alle tallene.</span></p>`
     : s.type === "findSafe" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>Du leter etter det trygge trekket: det eneste som ikke ødelegger brettet.</span></p>` : "";
   el.innerHTML = `<div class="stephead"><p class="kind">${label}</p><ol class="progress" id="progress" aria-label="Fremgang"></ol></div><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div>` +
     `<div class="actions"><button type="button" class="btn main next" hidden>${k === steps.length - 1 ? "Ferdig" : "Neste"}</button></div>`;
   const from = s.move ? at(n, s.move[0]) : -1, to = s.move ? at(n, s.move[1]) : -1;
   const mv = s.move ? moveText(n, cells, from, to) : "";
   el.querySelector("h3").textContent = s.title || {demo: "Se hva som skjer", example: "Se hva som skjer", predict: k === 1 ? "Hva tror du?" : "Og her?",
-    findTrap: "Finn fellen", findSafe: "Finn det trygge trekket"}[s.type];
+    findTrap: "Finn fellen", findSafe: "Finn det trygge trekket", solve: "Rydd brettet"}[s.type];
   el.querySelector(".text").textContent = s.text || {
     demo: "",
     example: `Se hva som skjer når ${mv}.`,
     predict: lesson.ask.replace("{move}", mv),
-    findTrap: "Bare ett av trekkene her er en felle. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
-    findSafe: "Her er nesten alle trekk feller. Trykk på tallet som skal hoppe, og så på ruta det skal lande på."}[s.type];
+    findTrap: "Finn et trekk som gjør at brettet ikke kan løses. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
+    findSafe: "Her er nesten alle trekk feller. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
+    solve: "Trykk på tallet som skal hoppe, og så på ruta det skal lande på. Spill til brettet er tomt."}[s.type];
   stepsEl.append(el);
   drawProgress();
   const b = board(el.querySelector(".host"), n), label2 = el.querySelector(".boardlabel"), acts = el.querySelector(".actions"), fb = el.querySelector(".feedback");
@@ -2281,8 +2397,12 @@ function show(k, extra = null) {
       b.draw(cells, {marks: {[from]: "from"}, arc: [from, to]});
       acts.innerHTML = `<button type="button" class="btn">Trygt</button><button type="button" class="btn">Felle</button>`;
       const [safe, bad] = acts.children;
-      safe.onclick = () => { acts.innerHTML = ""; reveal("safe"); };
-      bad.onclick = () => { acts.innerHTML = ""; reveal("trap"); };
+      const answer = a => {
+        if (!judge(a) && !missed) { missed = true; miss(k); return verdict(fb, "bad", "Ikke helt. Tenk deg om en gang til.", lesson.hint); }
+        acts.innerHTML = ""; reveal(a);
+      };
+      safe.onclick = () => answer("safe");
+      bad.onclick = () => answer("trap");
       return;
     }
     const pick = i => { choice = i; b.draw(cells, {marks: {[from]: "from", [i]: "picked"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "false"); fb.className = "feedback"; fb.innerHTML = ""; };
@@ -2308,6 +2428,43 @@ function show(k, extra = null) {
     return;
   }
 
+  if (s.type === "solve") {
+    let p = cells.slice(), chosen = null, lost = false;
+    const redrawSolve = (sum = null) => {
+      const marks = {};
+      if (chosen != null) marks[chosen] = "selected";
+      b.draw(p, {marks, sum, arc: chosen == null ? null : targets(p, n, chosen).map(t => [chosen, t]), tap: lost ? null : tapSolve});
+    };
+    function tapSolve(i) {
+      if (chosen != null && targets(p, n, chosen).includes(i)) {
+        const a = chosen, sum = [i, p[a], p[i]], before = p;
+        chosen = null; p = moved(p, a, i);
+        if (p.every(v => !v)) {
+          redrawSolve(sum);
+          verdict(fb, "good", "Brettet er tomt!", "Du fikk bort alle tallene. Det er hele spillet: finn en rekkefølge der ingen blir stående igjen.");
+          return finish(k, !missed);
+        }
+        if (solvable(p, n, new Map(), 500_000) === false) {
+          lost = true; missed = true; miss(k);
+          const e = explain(n, before, a, i), t = e && teach(e, n, before, p, a, i);
+          showResult(b, label2, n, before, p, t, {}, [a, i]);
+          verdict(fb, "bad", "Nå kan ikke brettet løses lenger.", t ? t.text : "Tallene som er igjen, kan ikke lenger fjerne hverandre.");
+          acts.innerHTML = `<button type="button" class="btn main">Start på nytt</button>`;
+          acts.firstChild.onclick = () => { p = cells.slice(); lost = false; acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; redrawSolve(); };
+          return;
+        }
+        fb.className = "feedback"; fb.innerHTML = "";
+        return redrawSolve(sum);
+      }
+      chosen = targets(p, n, i).length ? i : null;
+      if (chosen == null) verdict(fb, "info", `${Cap(num(n, p, i))} kan ikke hoppe noen steder nå.`);
+      redrawSolve();
+    }
+    let missed = false;
+    redrawSolve();
+    return;
+  }
+
   // Find the trap, or the safe move: the player plays moves until the one asked for, and every other try is told.
   let selected = null, tries = 0;
   const goal = s.type;
@@ -2325,6 +2482,8 @@ function show(k, extra = null) {
   }
   function play(from, to) {
     tries++; selected = null;
+    // Saved at once, so leaving and coming back does not wipe out a wrong try.
+    const won0 = ok => goal === "findTrap" ? !ok : ok;
     const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000);
     const move = `${num(n, cells, from)} til ${sq(n, to)}`, Move = move[0].toUpperCase() + move.slice(1);
     if (ok === null) { verdict(fb, "info", "Det trekket rakk vi ikke å sjekke. Prøv et annet."); return redraw(); }
@@ -2332,7 +2491,8 @@ function show(k, extra = null) {
     // The move is shown as the explanation sees it, since that is what the words are about.
     const t = e && teach(e, n, cells, after, from, to);
     showResult(b, label2, n, cells, after, t, {}, [from, to]);
-    if (goal === "findTrap" ? !ok : ok) {
+    if (!won0(ok)) miss(k);
+    if (won0(ok)) {
       verdict(fb, "good", goal === "findTrap" ? "Riktig, det var fellen." : "Riktig, det trekket er trygt.",
         t ? t.text : "Brettet kan fortsatt løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
