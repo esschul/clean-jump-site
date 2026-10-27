@@ -74,6 +74,8 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 .saying li{color:var(--muted)}
 .saying li:last-child{color:var(--ink);font-weight:600}
 .arc{position:absolute;inset:0;pointer-events:none;overflow:visible}
+/* The sum of a jump over the square it landed on, as in the game. */
+.eq{position:absolute;z-index:3;background:var(--navy);color:var(--on-navy);font-weight:650;padding:5px 11px;border-radius:10px;transform:translate(-50%,-100%);pointer-events:none;white-space:nowrap;font-size:15px}
 .arc path{fill:none;stroke:var(--gold);stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round}
 .arc polygon{fill:var(--gold)}
 .boardlabel{text-align:center;font-size:13px;font-weight:650;color:var(--muted);margin:0}
@@ -1079,7 +1081,7 @@ function board(host, n) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("class", "arc"); svg.setAttribute("aria-hidden", "true");
   wrap.append(grid, svg); host.append(wrap);
   let squares = [];
-  function draw(cells, {marks = {}, arc = null, tap = null, counts = null} = {}) {
+  function draw(cells, {marks = {}, arc = null, tap = null, counts = null, sum = null} = {}) {
     grid.innerHTML = "<span></span>" + [...Array(n)].map((_, c) => `<span class="name">${COLS[c]}</span>`).join("");
     squares = [];
     for (let r = 0; r < n; r++) {
@@ -1096,6 +1098,19 @@ function board(host, n) {
       }
     }
     svg.innerHTML = "";
+    wrap.querySelectorAll(".eq").forEach(e => e.remove());
+    // The jump just made, [square, jumper, target]: "3 − 1 = 2", or "2 − 2 = borte" when both go.
+    const sumFor = drawing + 1;
+    if (sum) requestAnimationFrame(() => {
+      if (sumFor !== drawing) return;
+      const [to, a, b] = sum, box = wrap.getBoundingClientRect(), r = squares[to].getBoundingClientRect();
+      const eq = document.createElement("div");
+      eq.className = "eq"; eq.setAttribute("aria-hidden", "true");
+      eq.textContent = a === b ? `${a} − ${b} = borte` : `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}`;
+      eq.style.left = r.left - box.left + r.width / 2 + "px";
+      eq.style.top = r.top - box.top - 4 + "px";
+      wrap.append(eq);
+    });
     // Drawn once the squares are laid out, and only if no other board has been drawn since.
     const drawn = ++drawing;
     // One arc, or a list of them: every place a chosen number can jump.
@@ -1148,11 +1163,11 @@ function explain(n, cells, from, to) {
 }
 
 /** The board a move leaves, or the one before it when that is what the explanation is about, with what it points at. */
-function showResult(b, label, n, cells, after, e, extra = {}) {
+function showResult(b, label, n, cells, after, e, extra = {}, move = null) {
   const before = e && same(e.cells, cells), marks = {...extra};
   if (e) for (const i of e.focus) marks[i] ||= "alone";
   else if (lesson.id === "alone") for (const i of alone(n, after)) marks[i] = "alone";
-  b.draw(before ? cells : after, {marks});
+  b.draw(before ? cells : after, {marks, sum: !before && move ? [move[1], cells[move[0]], cells[move[1]]] : null});
   label.textContent = before ? "Før trekket ditt" : "Etter trekket";
 }
 
@@ -1186,7 +1201,8 @@ function demo(k, s, b, label, acts, fb) {
   const frame = () => {
     const fr = s.frames[f];
     if (fr.reset) { cells = fr.reset.reduce(playOn, start.slice()); said.length = 0; }
-    if (fr.play) cells = playOn(cells, fr.play);
+    let sum = null;
+    if (fr.play) { const [a, t] = fr.play.split("-").map(x => at(n, x)); sum = [t, cells[a], cells[t]]; cells = playOn(cells, fr.play); }
     const marks = {}, counts = {};
     if (fr.line) { const c = at(n, fr.line); cells.forEach((_, i) => { if (i !== c && inLine(n, i, c)) marks[i] = "line"; }); }
     for (const [name, cls] of Object.entries(fr.marks || {})) marks[at(n, name)] = cls;
@@ -1199,7 +1215,7 @@ function demo(k, s, b, label, acts, fb) {
     const arcs = [];
     if (fr.arc) arcs.push(fr.arc.map(x => at(n, x)));
     if (coming) { const [a, t] = coming.split("-").map(x => at(n, x)); marks[a] = "from"; arcs.push([a, t]); }
-    b.draw(cells, {marks, counts, arc: arcs.length ? arcs : null});
+    b.draw(cells, {marks, counts, sum, arc: arcs.length ? arcs : null});
     label.textContent = fr.label || "";
     said.push(fr.text);
     fb.className = "feedback info";
@@ -1248,7 +1264,7 @@ function show(k) {
     label2.textContent = `Trekk: ${mv}`;
     const reveal = picked => {
       if (s.type === "example") {
-        showResult(b, label2, n, cells, after, e);
+        showResult(b, label2, n, cells, after, e, {}, [from, to]);
         verdict(fb, "info", e ? e.head : "", e ? e.why : "", e ? e.steps : []);
         return finish(k, true);
       }
@@ -1258,7 +1274,7 @@ function show(k) {
         const answers = e ? ANSWERS[lesson.id](e, n, after) : [];
         right = answers.length ? answers.includes(picked) : picked === -1;
       }
-      showResult(b, label2, n, cells, after, e, picked >= 0 ? {[picked]: "picked"} : {});
+      showResult(b, label2, n, cells, after, e, picked >= 0 ? {[picked]: "picked"} : {}, [from, to]);
       verdict(fb, right ? "good" : "bad", right ? "Riktig!" : "Ikke helt.", e ? e.head + " " + e.why : lesson.none, e ? e.steps : []);
       recall(fb);
       finish(k, right);
@@ -1311,7 +1327,7 @@ function show(k) {
     if (ok === null) { verdict(fb, "info", "Det trekket rakk vi ikke å sjekke. Prøv et annet."); return redraw(); }
     const e = ok ? null : explain(n, cells, from, to);
     // The move is shown as the explanation sees it, since that is what the words are about.
-    showResult(b, label2, n, cells, after, e);
+    showResult(b, label2, n, cells, after, e, {}, [from, to]);
     if (goal === "findTrap" ? !ok : ok) {
       verdict(fb, "good", goal === "findTrap" ? "Riktig, det var fellen." : "Riktig, det trekket er trygt.",
         goal === "findTrap" ? (e ? e.head + " " + e.why : "") : "Brettet kan fortsatt løses etter det.", e ? e.steps : []);
