@@ -256,12 +256,13 @@ function show(k) {
       acts.firstChild.onclick = () => { acts.innerHTML = ""; reveal(null); };
     } else {
       let choice = null;
-      const pick = i => { choice = i; b.draw(cells, {marks: {[from]: "from", [i]: "picked"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "false"); go.disabled = false; };
+      const pick = i => { choice = i; b.draw(cells, {marks: {[from]: "from", [i]: "picked"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "false"); fb.className = "feedback"; fb.innerHTML = ""; };
       b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick});
-      acts.innerHTML = `<button type="button" class="btn" aria-pressed="false">Ingen</button><button type="button" class="btn main" disabled>Spill trekket</button>`;
+      acts.innerHTML = `<button type="button" class="btn" aria-pressed="false">Ingen</button><button type="button" class="btn main">Spill trekket</button>`;
       const [none, go] = acts.children;
-      none.onclick = () => { choice = -1; b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "true"); go.disabled = false; };
-      go.onclick = () => { acts.innerHTML = ""; reveal(choice); };
+      none.onclick = () => { choice = -1; b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "true"); fb.className = "feedback"; fb.innerHTML = ""; };
+      // Asked first: the answer is the point, so the move waits for one.
+      go.onclick = () => choice == null ? verdict(fb, "info", "Svar først: trykk på tallet du tror blir alene, eller velg «Ingen».") : (acts.innerHTML = "", reveal(choice));
     }
     return;
   }
