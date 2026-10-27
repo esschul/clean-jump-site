@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hiku-skolen</title>
+<!-- Not ready to be found: no links point here, it is not in the sitemap, and search engines are asked to leave it. -->
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="../icon.png">
+<script>try { var t = localStorage.getItem('hiku:site-theme'); if (t && t !== 'auto') document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<style>
+/* The site's look: a navy band, cream tiles standing on a darker edge, and the gold dashed arc of a jump. */
+:root{--bg:#f3eee6;--ink:#2b2f45;--muted:#5a5d6f;--rule:#ddd6ca;--tile:#fffaf2;--edge:#cbc2b3;--cell:#e7e1d6;
+  --navy:#3b4a7a;--navy-edge:#26305a;--on-navy:#f3eee6;--on-navy-muted:#c9cee6;--gold:#e0a43a;--link:#3b4a7a;
+  --good:#2f7a4f;--good-soft:#dcefe2;--bad:#b4472f;--bad-soft:#f6e0d8;--card:#fbf7f0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--rule:#2d3040;--tile:#454b64;--edge:#161822;--cell:#2d3040;
+  --navy:#262c48;--navy-edge:#151a30;--on-navy:#ecebf2;--on-navy-muted:#aeb4d4;--gold:#f2c66d;--link:#9fb0ea;
+  --good:#7fd19f;--good-soft:#203a2b;--bad:#f0937c;--bad-soft:#41261f;--card:#222533;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1d27;--ink:#ecebf2;--muted:#bdbfcc;--rule:#2d3040;--tile:#454b64;--edge:#161822;--cell:#2d3040;
+  --navy:#262c48;--navy-edge:#151a30;--on-navy:#ecebf2;--on-navy-muted:#aeb4d4;--gold:#f2c66d;--link:#9fb0ea;
+  --good:#7fd19f;--good-soft:#203a2b;--bad:#f0937c;--bad-soft:#41261f;--card:#222533;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--link)}
+.wrap{max-width:720px;margin:0 auto;padding-inline:20px}
+.band{background:var(--navy);color:var(--on-navy)}
+.band nav{display:flex;align-items:center;gap:12px;padding-block:16px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--on-navy);font:400 24px Georgia,serif}
+.brand img{width:30px;height:30px;border-radius:7px}
+.band .where{margin-left:auto;color:var(--on-navy-muted);font-size:15px}
+h1{font:400 clamp(40px,8vw,60px)/1.05 Georgia,serif;letter-spacing:-1.5px;margin:36px 0 12px}
+h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-wrap:balance}
+.lead{font-size:19px;color:var(--muted);margin:0 0 8px;max-width:34em}
+.rule{font-size:18px;margin:8px 0}
+.check{border-left:4px solid var(--gold);padding:4px 0 4px 14px;margin:16px 0;color:var(--ink)}
+.check b{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* One step at a time: an example, then the exercises. */
+.progress{display:flex;gap:8px;margin:28px 0 12px;list-style:none;padding:0}
+.progress li{width:34px;height:8px;border-radius:4px;background:var(--rule)}
+.progress li.done{background:var(--good)}
+.progress li.now{background:var(--gold)}
+.step{background:var(--card);border-radius:18px;box-shadow:0 0 0 1px var(--rule);padding:20px;margin-bottom:24px}
+.step .kind{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:650;margin:0}
+.step h3{font-size:20px;margin:4px 0 6px;text-wrap:balance}
+.step p{margin:6px 0}
+.move{font-weight:650}
+
+/* The board: square names above and beside, cream tiles on grey squares, as in the game. */
+.boardwrap{position:relative;width:min(100%,340px);margin:18px auto 10px}
+.board{display:grid;gap:5px;user-select:none;-webkit-user-select:none}
+.board .name{font-size:12px;font-weight:650;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.board .sq{aspect-ratio:1;border-radius:9px;background:var(--cell);border:0;padding:0;font:600 clamp(18px,6vw,26px) system-ui,sans-serif;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;position:relative}
+.board .sq.num{background:var(--tile);box-shadow:0 3px 0 var(--edge)}
+.board button.sq{cursor:pointer}
+.board button.sq:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.board .sq.from{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--gold)}
+.board .sq.target{outline:3px dashed var(--gold);outline-offset:-3px}
+.board .sq.selected{background:var(--gold);color:#2b2f45;box-shadow:0 3px 0 var(--edge)}
+.board .sq.alone{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--bad);background:var(--bad-soft)}
+.board .sq.picked{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--link)}
+.board .sq.dim{opacity:.4}
+.arc{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.arc path{fill:none;stroke:var(--gold);stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round}
+.arc polygon{fill:var(--gold)}
+.boardlabel{text-align:center;font-size:13px;font-weight:650;color:var(--muted);margin:0}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.btn{font:inherit;font-weight:650;font-size:16px;padding:11px 18px;border-radius:13px;border:0;cursor:pointer;background:var(--tile);color:var(--ink);box-shadow:0 4px 0 var(--edge);min-height:44px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.btn.main{background:var(--navy);color:var(--on-navy);box-shadow:0 4px 0 var(--navy-edge)}
+.btn[aria-pressed="true"]{box-shadow:0 4px 0 var(--edge),0 0 0 3px var(--link)}
+.feedback{border-radius:14px;padding:12px 16px;margin-top:14px}
+.feedback:empty{display:none}
+.feedback.good{background:var(--good-soft)}
+.feedback.bad{background:var(--bad-soft)}
+.feedback.info{background:var(--cell)}
+.feedback .verdict{font-weight:750;margin:0 0 4px}
+.feedback .why{color:var(--muted)}
+details.recall{margin-top:12px}
+details.recall summary{cursor:pointer;font-weight:650;color:var(--link)}
+.done-note{text-align:center;color:var(--muted)}
+footer{margin-top:56px;padding-block:24px;border-top:1px solid var(--rule);color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<header class="band"><div class="wrap"><nav><a class="brand" href="/"><img src="../icon.png" alt="">Hiku</a><span class="where">Skolen</span></nav></div></header>
+<main class="wrap">
+<h1>Hiku-skolen</h1>
+<p class="lead">Her øver du på å se fellene før du går i dem. Hver leksjon er ett spørsmål du kan stille deg før du flytter.</p>
+
+<section aria-labelledby="l1">
+<h2 id="l1">1. Hvem blir alene?</h2>
+<p class="rule">Et tall forsvinner bare når det møter et annet tall i samme rad eller kolonne. Har det ingen igjen der, blir det stående for alltid.</p>
+<p class="check"><b>Sjekk før du flytter</b>Se på raden og kolonnen du flytter fra. Er det et tall der som bare har det tallet du flytter igjen?</p>
+<ol class="progress" id="progress" aria-label="Fremgang"></ol>
+<div id="steps"></div>
+</section>
+</main>
+<footer><div class="wrap">Hiku-skolen er under arbeid. Forklaringene kommer fra den samme motoren som «Hvorfor?» i spillet.</div></footer>
+
+<script type="module">
+import {targets, moved, solvable, trap, say} from "../daily/explain.js";
+
+const LANG = "nb";
+const COLS = "ABCDEFGH";
+const sq = (n, i) => COLS[i % n] + (Math.floor(i / n) + 1);
+const num = (n, cells, i) => `${cells[i]}-tallet på ${sq(n, i)}`;
+const inLine = (n, a, b) => Math.floor(a / n) === Math.floor(b / n) || a % n === b % n;
+const alone = (n, cells) => cells.map((v, i) => v && !cells.some((w, j) => w && j !== i && inLine(n, i, j)) ? i : -1).filter(i => i >= 0);
+const at = (n, name) => (Number(name.slice(1)) - 1) * n + COLS.indexOf(name[0]);
+
+// The lesson's steps. The boards were picked from what tools/school/alone.mjs finds from small random boards, every move judged by
+// the solver: none comes from the daily library.
+const STEPS = [
+  {type: "example", n: 4, cells: [0,3,0,2, 0,2,0,0, 1,2,0,0, 0,0,0,0], move: ["B3", "B1"],
+   title: "Se hva som skjer",
+   text: "1-tallet på A3 har bare ett tall i samme rad eller kolonne: 2-tallet på B3. Følg med når 2-tallet hopper bort."},
+  {type: "predict", n: 4, cells: [0,0,0,0, 0,1,3,0, 2,0,1,0, 0,0,3,0], move: ["C3", "C4"],
+   title: "Blir noen alene?",
+   text: "Hvis 1-tallet på C3 hopper til C4, blir et tall stående alene? Trykk på tallet, eller velg «Ingen»."},
+  {type: "predict", n: 4, cells: [0,1,0,0, 0,3,0,0, 1,3,0,0, 0,2,0,0], move: ["A3", "B3"],
+   title: "Og her?",
+   text: "Hvis 1-tallet på A3 hopper til B3, blir et tall stående alene? Trykk på tallet, eller velg «Ingen»."},
+  {type: "findTrap", n: 4, cells: [0,0,0,2, 0,0,0,0, 0,0,0,3, 0,2,0,3],
+   title: "Finn fellen",
+   text: "Ett av trekkene her gjør at et tall blir stående alene. Finn det: trykk på et tall, så på der det skal lande."},
+  {type: "findSafe", n: 4, cells: [1,1,1,0, 0,0,0,0, 0,0,0,0, 0,3,0,0],
+   title: "Finn det trygge trekket",
+   text: "Her er nesten alle trekk feller. Finn det ene trekket som lar brettet fortsatt kunne løses."},
+];
+
+const KEY = "hiku:skole:alone";
+const saved = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } })();
+const store = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} };
+saved.done ||= []; saved.first ||= {};
+let current = Math.min(saved.done.length, STEPS.length - 1);
+
+const progress = document.getElementById("progress"), stepsEl = document.getElementById("steps");
+function drawProgress() {
+  progress.innerHTML = STEPS.map((_, k) => `<li class="${saved.done.includes(k) ? "done" : k === current ? "now" : ""}" aria-label="Steg ${k + 1}${saved.done.includes(k) ? ", ferdig" : ""}"></li>`).join("");
+}
+
+/** A board on the page: square names, numbers as tiles, an arc for a move, and taps on the squares when wanted. */
+function board(host, n) {
+  const wrap = document.createElement("div"); wrap.className = "boardwrap";
+  const grid = document.createElement("div"); grid.className = "board";
+  grid.style.gridTemplateColumns = `18px repeat(${n}, 1fr)`;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("class", "arc"); svg.setAttribute("aria-hidden", "true");
+  wrap.append(grid, svg); host.append(wrap);
+  let squares = [];
+  function draw(cells, {marks = {}, arc = null, tap = null} = {}) {
+    grid.innerHTML = "<span></span>" + [...Array(n)].map((_, c) => `<span class="name">${COLS[c]}</span>`).join("");
+    squares = [];
+    for (let r = 0; r < n; r++) {
+      grid.insertAdjacentHTML("beforeend", `<span class="name">${r + 1}</span>`);
+      for (let c = 0; c < n; c++) {
+        const i = r * n + c, v = cells[i];
+        const el = document.createElement(tap && v ? "button" : "div");
+        el.className = "sq" + (v ? " num" : "") + (marks[i] ? " " + marks[i] : "");
+        el.textContent = v || "";
+        if (el.tagName === "BUTTON") { el.type = "button"; el.setAttribute("aria-label", `${v} på ${sq(n, i)}`); el.onclick = () => tap(i); }
+        else if (v) el.setAttribute("aria-label", `${v} på ${sq(n, i)}`);
+        grid.append(el); squares[i] = el;
+      }
+    }
+    svg.innerHTML = "";
+    // Drawn once the squares are laid out, and only if no other board has been drawn since.
+    const drawn = ++drawing;
+    if (arc) requestAnimationFrame(() => { if (drawn === drawing) drawArc(arc); });
+  }
+  let drawing = 0;
+  function drawArc([from, to]) {
+    const box = wrap.getBoundingClientRect(), a = squares[from].getBoundingClientRect(), b = squares[to].getBoundingClientRect();
+    const x1 = a.left + a.width / 2 - box.left, y1 = a.top + a.height / 2 - box.top, x2 = b.left + b.width / 2 - box.left, y2 = b.top + b.height / 2 - box.top;
+    // A bow over the jump, bent to one side, the way a number jumps in the game.
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = x2 - x1, bend = Math.min(40, Math.hypot(dx, y2 - y1) * .35);
+    // Up over a jump along a row, out to the left of a jump along a column.
+    const qx = dx === 0 ? mx - bend : mx, qy = dx === 0 ? my : my - bend;
+    const ex = x2 - (x2 - qx) * .18, ey = y2 - (y2 - qy) * .18;
+    const ang = Math.atan2(y2 - qy, x2 - qx), s = 9;
+    svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+    svg.innerHTML = `<path d="M${x1} ${y1} Q${qx} ${qy} ${ex} ${ey}"/>` +
+      `<polygon points="${ex + Math.cos(ang) * s},${ey + Math.sin(ang) * s} ${ex + Math.cos(ang + 2.3) * s},${ey + Math.sin(ang + 2.3) * s} ${ex + Math.cos(ang - 2.3) * s},${ey + Math.sin(ang - 2.3) * s}"/>`;
+  }
+  return {draw};
+}
+
+function verdict(box, cls, head, why) {
+  box.className = "feedback " + cls;
+  box.innerHTML = `<p class="verdict"></p>` + (why ? `<p class="why"></p>` : "");
+  box.querySelector(".verdict").textContent = head;
+  if (why) box.querySelector(".why").textContent = why;
+}
+
+/** The engine's own words for a move, or null when it has no short proof. */
+function explain(n, cells, from, to) {
+  const e = trap(cells, n, {from, to, jumper: cells[from], target: cells[to]});
+  return e && {kind: e.kind, focus: e.focus, head: say(e.headline, LANG), why: say(e.reason, LANG)};
+}
+
+function recall(host) {
+  host.insertAdjacentHTML("beforeend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p>Se på raden og kolonnen du flytter fra. Har et tall der bare det tallet du flytter igjen, blir det alene.</p></details>`);
+}
+
+function finish(k, firstTry) {
+  if (!(k in saved.first)) saved.first[k] = firstTry;
+  if (!saved.done.includes(k)) saved.done.push(k);
+  store(); drawProgress();
+  const next = stepsEl.querySelector(".next");
+  if (next) next.hidden = false;
+}
+
+function show(k) {
+  current = k; drawProgress();
+  const s = STEPS[k], n = s.n, cells = s.cells.slice();
+  stepsEl.innerHTML = "";
+  const el = document.createElement("article"); el.className = "step";
+  const label = s.type === "example" ? "Eksempel" : `Oppgave ${k} av ${STEPS.length - 1}`;
+  el.innerHTML = `<p class="kind">${label}</p><h3></h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>` +
+    `<div class="actions"><button type="button" class="btn main next" hidden>${k === STEPS.length - 1 ? "Ferdig" : "Neste"}</button></div>`;
+  el.querySelector("h3").textContent = s.title;
+  el.querySelector(".text").textContent = s.text;
+  stepsEl.append(el);
+  const b = board(el.querySelector(".host"), n), label2 = el.querySelector(".boardlabel"), acts = el.querySelector(".actions"), fb = el.querySelector(".feedback");
+  el.querySelector(".next").onclick = () => k < STEPS.length - 1 ? show(k + 1) : allDone();
+
+  if (s.type === "example" || s.type === "predict") {
+    const from = at(n, s.move[0]), to = at(n, s.move[1]), after = moved(cells, from, to), lone = alone(n, after);
+    label2.textContent = `Trekk: ${num(n, cells, from)} til ${s.move[1]}`;
+    const reveal = picked => {
+      const marks = {}; for (const i of lone) marks[i] = "alone";
+      if (picked != null && picked >= 0 && !lone.includes(picked)) marks[picked] = "picked";
+      b.draw(after, {marks}); label2.textContent = "Etter trekket";
+      const e = lone.length ? explain(n, cells, from, to) : null;
+      if (s.type === "example") verdict(fb, "info", e ? e.head : "", e ? e.why : "");
+      else {
+        const right = lone.length ? lone.includes(picked) : picked === -1;
+        const head = right ? "Riktig!" : "Ikke helt.";
+        const why = lone.length ? e.head + " " + e.why
+          : "Ingen blir alene: alle tallene har fortsatt et tall i samme rad eller kolonne, og brettet kan fortsatt løses.";
+        verdict(fb, right ? "good" : "bad", head, why);
+        recall(fb);
+        finish(k, right);
+        return;
+      }
+      finish(k, true);
+    };
+    if (s.type === "example") {
+      b.draw(cells, {marks: {[from]: "from"}, arc: [from, to]});
+      acts.innerHTML = `<button type="button" class="btn main">Spill trekket</button>`;
+      acts.firstChild.onclick = () => { acts.innerHTML = ""; reveal(null); };
+    } else {
+      let choice = null;
+      const pick = i => { choice = i; b.draw(cells, {marks: {[from]: "from", [i]: "picked"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "false"); go.disabled = false; };
+      b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick});
+      acts.innerHTML = `<button type="button" class="btn" aria-pressed="false">Ingen</button><button type="button" class="btn main" disabled>Spill trekket</button>`;
+      const [none, go] = acts.children;
+      none.onclick = () => { choice = -1; b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: pick}); none.setAttribute("aria-pressed", "true"); go.disabled = false; };
+      go.onclick = () => { acts.innerHTML = ""; reveal(choice); };
+    }
+    return;
+  }
+
+  // Find the trap, or the safe move: the player plays moves until the one asked for, and every other try is told.
+  let selected = null, tries = 0;
+  const goal = s.type;
+  const redraw = () => {
+    const marks = {};
+    if (selected != null) { marks[selected] = "selected"; for (const t of targets(cells, n, selected)) marks[t] = "target"; }
+    b.draw(cells, {marks, tap});
+  };
+  function tap(i) {
+    if (selected != null && targets(cells, n, selected).includes(i)) return play(selected, i);
+    selected = targets(cells, n, i).length ? i : null;
+    if (selected == null) verdict(fb, "info", `${num(n, cells, i)} kan ikke hoppe noe sted nå.`);
+    redraw();
+  }
+  function play(from, to) {
+    tries++; selected = null;
+    const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000);
+    const move = `${num(n, cells, from)} til ${sq(n, to)}`;
+    if (ok === null) { verdict(fb, "info", "Det trekket klarte vi ikke å avgjøre. Prøv et annet."); return redraw(); }
+    const e = ok ? null : explain(n, cells, from, to);
+    const lone = alone(n, after), marks = {}; for (const i of lone) marks[i] = "alone";
+    const won = goal === "findTrap" ? !ok : ok;
+    if (won) {
+      b.draw(after, {marks}); label2.textContent = "Etter trekket";
+      verdict(fb, "good", goal === "findTrap" ? `Riktig: ${move} er fellen.` : `Riktig: ${move} er trygt.`,
+        goal === "findTrap" ? (e ? e.head + " " + e.why : "") : "Etter det kan brettet fortsatt løses.");
+      recall(fb);
+      finish(k, tries === 1);
+      return;
+    }
+    if (goal === "findTrap") verdict(fb, "info", `${move} er trygt.`, "Brettet kan fortsatt løses etter det. Prøv et annet trekk.");
+    else verdict(fb, "bad", `${move} er en felle.`, (e ? e.head + " " + e.why : "Brettet kan ikke løses etter det.") + " Prøv et annet trekk.");
+    redraw();
+  }
+  redraw();
+}
+
+function allDone() {
+  stepsEl.innerHTML = `<article class="step"><p class="kind">Leksjon 1</p><h3>Ferdig!</h3><p></p><div class="actions"><button type="button" class="btn">Ta leksjonen på nytt</button></div></article>`;
+  // The example is no exercise, so it is not counted.
+  const asked = STEPS.map((s, k) => k).filter(k => STEPS[k].type !== "example");
+  const right = asked.filter(k => saved.first[k]).length;
+  stepsEl.querySelector("p:not(.kind)").textContent = `Du fikk ${right} av ${asked.length} oppgaver riktig på første forsøk. Neste leksjon kommer snart.`;
+  stepsEl.querySelector("button").onclick = () => { saved.done = []; saved.first = {}; store(); show(0); };
+  current = STEPS.length; drawProgress();
+}
+
+drawProgress();
+show(current);
+</script>
+</body>
+</html>
