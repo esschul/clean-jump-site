@@ -28,22 +28,24 @@ a{color:var(--link)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--on-navy);font:400 24px Georgia,serif}
 .brand img{width:30px;height:30px;border-radius:7px}
 .band .where{margin-left:auto;color:var(--on-navy-muted);font-size:15px}
-h1{font:400 clamp(40px,8vw,60px)/1.05 Georgia,serif;letter-spacing:-1.5px;margin:36px 0 12px}
-h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-wrap:balance}
-.lead{font-size:19px;color:var(--muted);margin:0 0 8px;max-width:34em}
-.rule{font-size:18px;margin:8px 0}
-.check{border-left:4px solid var(--gold);padding:4px 0 4px 14px;margin:16px 0;color:var(--ink)}
-.check b{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{font:400 clamp(30px,5vw,40px)/1.1 Georgia,serif;letter-spacing:-.8px;margin:26px 0 4px}
+h2{font-weight:750;letter-spacing:-.02em;font-size:22px;margin:22px 0 6px;text-wrap:balance}
+.lead{font-size:16px;color:var(--muted);margin:0;max-width:36em}
+.rule{font-size:16px;margin:0 0 10px;max-width:38em}
+.check{font-size:15px;border-left:3px solid var(--gold);padding:2px 0 2px 12px;margin:0 0 16px;color:var(--ink);max-width:38em}
+.check b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
 /* One step at a time: an example, then the exercises. */
-.progress{display:flex;gap:8px;margin:28px 0 12px;list-style:none;padding:0}
-.progress li{width:34px;height:8px;border-radius:4px;background:var(--rule)}
+.stephead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.progress{display:flex;gap:5px;margin:0;list-style:none;padding:0}
+.progress li{width:18px;height:6px;border-radius:3px;background:var(--rule)}
 .progress li.done{background:var(--good)}
 .progress li.now{background:var(--gold)}
-.step{background:var(--card);border-radius:18px;box-shadow:0 0 0 1px var(--rule);padding:20px;margin-bottom:24px}
-.step .kind{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:650;margin:0}
-.step h3{font-size:20px;margin:4px 0 6px;text-wrap:balance}
-.step p{margin:6px 0}
+.step{background:var(--card);border-radius:16px;box-shadow:0 0 0 1px var(--rule);padding:16px 18px;margin-bottom:24px}
+.step .kind{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
+.step h3{font-size:18px;margin:6px 0 2px;text-wrap:balance}
+.step p{margin:4px 0}
+.step .text:empty{display:none}
 .move{font-weight:650}
 /* What to look for in a find exercise, so the trap and the safe move are never mixed up. */
 .step .goal{display:flex;gap:10px;align-items:center;border-radius:12px;padding:10px 14px;margin:10px 0 4px;font-weight:650}
@@ -54,8 +56,8 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 .goal.safe .icon{background:var(--good)}
 
 /* The board: square names above and beside, cream tiles on grey squares, as in the game. */
-.boardwrap{position:relative;width:min(100%,340px);margin:18px auto 10px}
-.board{display:grid;gap:5px;user-select:none;-webkit-user-select:none}
+.boardwrap{position:relative;width:min(100%,300px);margin:14px auto 6px}
+.board{display:grid;gap:4px;user-select:none;-webkit-user-select:none}
 .board .name{font-size:12px;font-weight:650;color:var(--muted);display:flex;align-items:center;justify-content:center}
 .board .sq{aspect-ratio:1;border-radius:9px;background:var(--cell);border:0;padding:0;font:600 clamp(18px,6vw,26px) system-ui,sans-serif;color:var(--ink);
   display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;position:relative}
@@ -66,20 +68,26 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:26px;margin:40px 0 8px;text-w
 .board .sq.from{background:var(--gold);color:#2b2f45;box-shadow:0 3px 0 var(--edge)}
 .board .sq.target{outline:3px dashed var(--gold);outline-offset:-3px}
 .board .sq.selected{background:var(--gold);color:#2b2f45;box-shadow:0 3px 0 var(--edge)}
-.board .sq.alone{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--bad);background:var(--bad-soft)}
-.board .sq.picked{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--link)}
+/* Rings are outlines, drawn over the tile's own edge so they show all the way round. */
+.board .sq.alone{outline:3px solid var(--bad);outline-offset:0;background:var(--bad-soft)}
+.board .sq.picked{outline:3px solid var(--link);outline-offset:0}
 .board .sq.dim{opacity:.4}
 /* What a demonstration points at: the row and column of a number, the squares counted on a jump, a result that works. */
 .board .sq.line{background:var(--line)}
-.board .sq.line.num{background:var(--tile);box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--line)}
-.board .sq.good{box-shadow:0 3px 0 var(--edge),0 0 0 3px var(--good);background:var(--good-soft)}
+.board .sq.line.num{background:var(--tile);outline:3px solid var(--line);outline-offset:0}
+.board .sq.good{outline:3px solid var(--good);outline-offset:0;background:var(--good-soft)}
 .board .sq .count{position:absolute;top:4px;left:7px;font-size:13px;font-weight:750;color:var(--link)}
 /* On an empty square the count is the square itself: big, in the middle. */
 .board .sq:not(.num) .count{position:static;font-size:clamp(16px,5vw,22px)}
 .board .sq.counted:not(.num){background:var(--line)}
-.saying{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:6px}
-.saying li{color:var(--muted)}
-.saying li:last-child{color:var(--ink);font-weight:600}
+/* A step's sentence: room for three lines, so the button below does not move from step to step. */
+.feedback.telling,.whyextra .saying{min-height:6.4em}
+@media (max-width:480px){.feedback.telling,.whyextra .saying{min-height:9.6em}}
+.telling .now,.saying .now{font-weight:600;margin:0}
+details.earlier{margin-top:8px;font-size:14px;color:var(--muted)}
+details.earlier summary{cursor:pointer;color:var(--link);font-weight:600}
+details.earlier ol{margin:6px 0 0;padding-left:20px}
+.boardlabel{min-height:1.4em}
 .arc{position:absolute;inset:0;pointer-events:none;overflow:visible}
 /* The sum of a jump over the square it landed on, as in the game. */
 .eq{position:absolute;z-index:3;background:var(--navy);color:var(--on-navy);font-weight:650;padding:5px 11px;border-radius:10px;transform:translate(-50%,-100%);pointer-events:none;white-space:nowrap;font-size:15px}
@@ -108,14 +116,20 @@ details.recall p{color:var(--muted);margin:6px 0 0}
 details.more{margin-top:8px;font-size:15px}
 details.more summary{cursor:pointer;font-weight:600;color:var(--link)}
 details.more p{color:var(--muted);margin:6px 0 0}
-.lessons ol{list-style:none;padding:0;margin:24px 0 0;display:flex;flex-wrap:wrap;gap:8px}
-.lessons button{font:inherit;font-size:15px;font-weight:600;border:0;border-radius:12px;padding:8px 14px;min-height:44px;cursor:pointer;background:var(--cell);color:var(--ink)}
-.lessons button[aria-current="true"]{background:var(--navy);color:var(--on-navy)}
-.lessons button .tick{color:var(--good);margin-left:6px}
-.lessons button[aria-current="true"] .tick{color:var(--on-navy)}
+/* The lessons in one row: scrolled sideways on a narrow screen rather than wrapped. */
+.lessons{margin:18px -20px 0;padding:0 20px;overflow-x:auto;scrollbar-width:none}
+.lessons::-webkit-scrollbar{display:none}
+.lessons ol{list-style:none;padding:2px 0;margin:0;display:flex;gap:6px;width:max-content}
+@media (min-width:600px){.lessons{overflow:visible}.lessons ol{flex-wrap:wrap;width:auto}}
+.lessons button{font:inherit;font-size:14px;font-weight:600;border:0;border-radius:999px;padding:6px 14px 6px 6px;min-height:40px;cursor:pointer;
+  background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.lessons button .no{width:26px;height:26px;border-radius:50%;background:var(--cell);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-variant-numeric:tabular-nums}
+.lessons button.done .no{background:var(--good);color:var(--card)}
+.lessons button[aria-current="true"]{background:var(--navy);color:var(--on-navy);box-shadow:none}
+.lessons button[aria-current="true"] .no{background:var(--on-navy);color:var(--navy)}
 .steplist{margin:6px 0 0;padding-left:22px}
 .done-note{text-align:center;color:var(--muted)}
-footer{margin-top:56px;padding-block:24px;border-top:1px solid var(--rule);color:var(--muted);font-size:14px}
+footer{margin-top:40px;padding-block:18px;border-top:1px solid var(--rule);color:var(--muted);font-size:13px}
 </style>
 </head>
 <body>
@@ -129,7 +143,6 @@ footer{margin-top:56px;padding-block:24px;border-top:1px solid var(--rule);color
 <h2 id="lesson-title"></h2>
 <p class="rule" id="lesson-rule"></p>
 <p class="check"><b>Sjekk før du flytter</b><span id="lesson-check"></span></p>
-<ol class="progress" id="progress" aria-label="Fremgang"></ol>
 <div id="steps"></div>
 </section>
 </main>
@@ -1559,6 +1572,30 @@ const LESSONS = /*LESSONS*/[
       }
      },
      {
+      "go": "Prøv en tredje vei",
+      "reset": [
+       "B1-C1"
+      ],
+      "text": "Tilbake til etter trekket. Hva om 3-tallet på C4 hopper først, til C1?"
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "3 − 1 = 2 på C1.",
+      "play": "C4-C1"
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "Og 3-tallet på A1 hopper til D1: 3 − 1 = 2 på D1.",
+      "play": "A1-D1"
+     },
+     {
+      "text": "Nå står to 2-ere bare 1 rute fra hverandre. Ingen av dem kan hoppe på den andre, og ingen andre tall er igjen.",
+      "marks": {
+       "C1": "alone",
+       "D1": "alone"
+      }
+     },
+     {
       "text": "Uansett hva du gjør, blir tallet fra A1 stående til slutt. Trekket var en felle, men det synes først etter et par trekk.",
       "marks": {
        "A1": "alone"
@@ -1733,7 +1770,7 @@ const ANSWERS = {
   parity: e => e.focus,
 };
 
-const lessonsEl = document.getElementById("lessons"), progress = document.getElementById("progress"), stepsEl = document.getElementById("steps");
+const lessonsEl = document.getElementById("lessons"), stepsEl = document.getElementById("steps");
 let lesson, saved, current;
 const load = key => { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } };
 const store = () => { try { localStorage.setItem(lesson.key, JSON.stringify(saved)); } catch (e) {} };
@@ -1744,8 +1781,9 @@ function drawLessons() {
   LESSONS.forEach((l, k) => {
     const li = document.createElement("li"), b = document.createElement("button");
     b.type = "button";
-    b.textContent = `${k + 1}. ${l.short}`;
-    if (finished(l)) b.insertAdjacentHTML("beforeend", `<span class="tick" aria-label="ferdig">✓</span>`);
+    b.innerHTML = `<span class="no">${finished(l) ? "✓" : k + 1}</span>`;
+    b.append(l.short);
+    if (finished(l)) { b.classList.add("done"); b.setAttribute("aria-label", `${k + 1}. ${l.short}, ferdig`); }
     b.setAttribute("aria-current", String(l === lesson));
     b.onclick = () => open(k);
     li.append(b); lessonsEl.append(li);
@@ -1765,6 +1803,8 @@ function open(k) {
 }
 
 function drawProgress() {
+  const progress = document.getElementById("progress");
+  if (!progress) return;
   progress.innerHTML = lesson.steps.map((_, k) => `<li class="${saved.done.includes(k) ? "done" : k === current ? "now" : ""}" aria-label="Steg ${k + 1}${saved.done.includes(k) ? ", ferdig" : ""}"></li>`).join("");
 }
 
@@ -1915,8 +1955,20 @@ function teach(e, n, cells, after, from, to) {
         end: `Dette er bare én måte å rydde brettet på, men i alle lander et annet tall på ${sq(n, to)} før ${num(n, cells, from)} gjør det.`}};
     }
     case "follow": {
-      marks[f[0]] = "alone";
-      return {marks, text: e.head, way: f[0]};
+      // Told of the square, since what stands there changes on the way: what ends up there, and that nobody clears it.
+      const start = f[0], way = wayToStuck(after, n, start) || [];
+      marks[start] = "alone";
+      if (!way.length) return {marks, way: start, text: `${Cap(num(n, after, start))} står fast: det kan ikke hoppe, og ingenting kan lande på det.`};
+      let p = after.slice(), token = start;
+      const said = [];
+      for (const [a, z] of way) {
+        said.push(a === token ? `${num(n, p, a)} hopper til ${sq(n, z)}` : `${num(n, p, a)} lander på ${sq(n, z)}`);
+        p = moved(p, a, z); token = a === token ? z : token;
+      }
+      const end = `blir det stående en ${p[token]} på ${sq(n, token)} som ingen kan fjerne`;
+      return {marks, way: start, text: way.length === 1
+        ? `Tallet på ${sq(n, start)} kan aldri forsvinne. Hvis ${said[0]}, ${end}.`
+        : `Tallet på ${sq(n, start)} kan aldri forsvinne. Hvis ${said.slice(0, -1).join(", ")} og ${said[said.length - 1]}, ${end}.`};
     }
     default:
       for (const i of f) if (after[i]) marks[i] = "alone";
@@ -1968,7 +2020,7 @@ function offerWay(fb, b, label, n, after, t, back) {
     row.remove();
     const box = document.createElement("div");
     box.className = "feedback info whyextra";
-    box.innerHTML = `<ul class="saying"></ul><div class="actions"></div>`;
+    box.innerHTML = `<div class="saying"></div><div class="actions"></div>`;
     fb.after(box);
     let p = after.slice(), token = t.way, k = 0, sum = null;
     const said = [`Følg ${num(n, p, token)} etter trekket ditt. Hva kan skje med det?`];
@@ -1977,8 +2029,7 @@ function offerWay(fb, b, label, n, after, t, back) {
       if (coming) marks[coming[0]] = "from";
       b.draw(p, {marks, sum, arc: coming});
       label.textContent = "Følg tallet";
-      const ul = box.querySelector(".saying"); ul.innerHTML = "";
-      for (const s of said) { const li = document.createElement("li"); li.textContent = s; ul.append(li); }
+      tell(box.querySelector(".saying"), said);
       const acts = box.querySelector(".actions"); acts.innerHTML = "";
       const go = document.createElement("button");
       go.type = "button"; go.className = "btn main"; go.textContent = coming ? "Vis hoppet" : "Tilbake til svaret";
@@ -1994,6 +2045,21 @@ function offerWay(fb, b, label, n, after, t, back) {
     };
     frame();
   };
+}
+
+/**
+ * The sentence for this step, in a box of steady height so the button below it stays where it is; the ones before
+ * are folded away under "Tidligere steg".
+ */
+function tell(host, said) {
+  host.innerHTML = `<p class="now"></p>`;
+  host.firstChild.textContent = said[said.length - 1];
+  if (said.length > 1) {
+    const d = document.createElement("details"); d.className = "earlier";
+    d.innerHTML = `<summary>Tidligere steg</summary><ol></ol>`;
+    for (const t of said.slice(0, -1)) { const li = document.createElement("li"); li.textContent = t; d.lastChild.append(li); }
+    host.append(d);
+  }
 }
 
 /** One way to clear the board, found with the solver: a list of [from, to], or null when the solver cannot tell. */
@@ -2031,7 +2097,7 @@ function offerWhy(fb, b, label, n, cells, t, back) {
     row.remove();
     const box = document.createElement("div");
     box.className = "feedback info whyextra";
-    box.innerHTML = `<ul class="saying"></ul><div class="actions"></div>`;
+    box.innerHTML = `<div class="saying"></div><div class="actions"></div>`;
     fb.after(box);
     let p = cells.slice(), k = 0, sum = null;
     const said = [`Slik kan brettet ryddes fra stillingen før trekket ditt. Følg med på ${sq(n, t.why.square)}.`];
@@ -2042,8 +2108,7 @@ function offerWhy(fb, b, label, n, cells, t, back) {
       if (coming) marks[coming[0]] = "from";
       b.draw(p, {marks, sum, arc: coming});
       label.textContent = "Ett eksempel";
-      const ul = box.querySelector(".saying"); ul.innerHTML = "";
-      for (const s of said) { const li = document.createElement("li"); li.textContent = s; ul.append(li); }
+      tell(box.querySelector(".saying"), said);
       const acts = box.querySelector(".actions"); acts.innerHTML = "";
       const go = document.createElement("button");
       go.type = "button"; go.className = "btn main"; go.textContent = coming ? "Vis hoppet" : "Tilbake til svaret";
@@ -2128,8 +2193,8 @@ function demo(k, s, b, label, acts, fb) {
     label.textContent = fr.label || "";
     said.push(fr.text);
     fb.className = "feedback info";
-    fb.innerHTML = `<ul class="saying"></ul>`;
-    for (const t of said) { const li = document.createElement("li"); li.textContent = t; fb.firstChild.append(li); }
+    fb.classList.add("telling");
+    tell(fb, said);
     const next = s.frames[f + 1];
     acts.innerHTML = "";
     if (next) {
@@ -2152,19 +2217,20 @@ function show(k, extra = null) {
   const label = s.type === "example" || s.type === "demo" ? "Eksempel" : extra ? "En lignende oppgave" : `Oppgave ${k} av ${steps.length - 1}`;
   const banner = s.type === "findTrap" ? `<p class="goal trap"><span class="icon" aria-hidden="true">✕</span><span>Du leter etter fellen: trekket som gjør at brettet ikke kan løses.</span></p>`
     : s.type === "findSafe" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>Du leter etter det trygge trekket: det eneste som ikke ødelegger brettet.</span></p>` : "";
-  el.innerHTML = `<p class="kind">${label}</p><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>` +
+  el.innerHTML = `<div class="stephead"><p class="kind">${label}</p><ol class="progress" id="progress" aria-label="Fremgang"></ol></div><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div>` +
     `<div class="actions"><button type="button" class="btn main next" hidden>${k === steps.length - 1 ? "Ferdig" : "Neste"}</button></div>`;
   const from = s.move ? at(n, s.move[0]) : -1, to = s.move ? at(n, s.move[1]) : -1;
   const mv = s.move ? moveText(n, cells, from, to) : "";
   el.querySelector("h3").textContent = s.title || {demo: "Se hva som skjer", example: "Se hva som skjer", predict: k === 1 ? "Hva tror du?" : "Og her?",
     findTrap: "Finn fellen", findSafe: "Finn det trygge trekket"}[s.type];
   el.querySelector(".text").textContent = s.text || {
-    demo: "Trykk deg gjennom, ett steg om gangen.",
+    demo: "",
     example: `Se hva som skjer når ${mv}.`,
     predict: lesson.ask.replace("{move}", mv),
     findTrap: "Bare ett av trekkene her er en felle. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
     findSafe: "Her er nesten alle trekk feller. Trykk på tallet som skal hoppe, og så på ruta det skal lande på."}[s.type];
   stepsEl.append(el);
+  drawProgress();
   const b = board(el.querySelector(".host"), n), label2 = el.querySelector(".boardlabel"), acts = el.querySelector(".actions"), fb = el.querySelector(".feedback");
   el.querySelector(".next").onclick = () => k < steps.length - 1 ? show(k + 1) : allDone();
 
