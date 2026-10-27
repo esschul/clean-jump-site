@@ -437,8 +437,8 @@ ARC = ('<svg class="arc" viewBox="0 0 110 62" aria-hidden="true"><path d="M7.2 4
        '<circle cx="102.8" cy="54.8" r="7.2" fill="currentColor"/></svg>')
 APPLE = ('<svg width="14" height="16" viewBox="0 0 13 15" aria-hidden="true"><path fill="currentColor" d="M10.8 8c0-1.9 1.6-2.8 1.6-2.9-.9-1.3-2.2-1.5-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6C3.3 3.7 2.2 4.4 1.6 5.5.3 7.7 1.3 11 2.5 12.8c.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.4-.6 1.1 0 1.4.6 2.4.6 1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2-.1 0-2-.8-2-2.8zM9 2.3c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.8 2.2.8.1 1.6-.4 2.1-1z"/></svg>')
 
-# Google Play's mark, in one colour like the Apple one.
-PLAY_MARK = ('<svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path fill="currentColor" d="M2 1.7c0-.8.8-1.2 1.5-.8l9.4 6.3c.6.4.6 1.2 0 1.6l-9.4 6.3c-.7.4-1.5 0-1.5-.8z"/></svg>')
+# The Android robot's head, in one colour like the Apple mark.
+ANDROID_MARK = ('<svg width="17" height="11" viewBox="1 3.8 14 9.2" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M1.5 12.5a6.5 6.5 0 0 1 13 0zM5.3 8.6a.85.85 0 1 0 0 1.7a.85.85 0 1 0 0-1.7zm5.4 0a.85.85 0 1 0 0 1.7a.85.85 0 1 0 0-1.7z"/><path stroke="currentColor" stroke-width="1.1" stroke-linecap="round" d="M4.2 6.6 2.9 4.4m8.9 2.2 1.3-2.2"/></svg>')
 
 
 def store_text(lang):
@@ -522,7 +522,7 @@ def home_page(lang, root, t, r, st):
     <div class="ctas">
       <a class="btn tile play-down" href="#spill">{t["play_cta"]} <span aria-hidden="true">↓</span></a>
       <a class="btn line" href="{app}">{APPLE}{t["app_cta"]}</a>
-      <a class="btn line" href="{GOOGLE_PLAY}">{PLAY_MARK}{t["play_store_cta"]}</a>
+      <a class="btn line" href="{GOOGLE_PLAY}">{ANDROID_MARK}{t["play_store_cta"]}</a>
     </div>
     <p class="also"><a href="{root}{ai_url(lang)}">{CHAT[lang]["hero"]}&nbsp;→</a></p>
   </div>
@@ -537,7 +537,7 @@ def home_page(lang, root, t, r, st):
   <div>
     <h2>{t["app_title"]}</h2>
     <p>{t["app_short"]} {t["a11y_short"]}</p>
-    <p class="ctas"><a class="btn navy" href="{app}">{APPLE}{t["app_cta"]}</a> <a class="btn navy" href="{GOOGLE_PLAY}">{PLAY_MARK}{t["play_store_cta"]}</a></p>
+    <p class="ctas"><a class="btn navy" href="{app}">{APPLE}{t["app_cta"]}</a> <a class="btn navy" href="{GOOGLE_PLAY}">{ANDROID_MARK}{t["play_store_cta"]}</a></p>
   </div>
   <div class="shots" tabindex="0" role="region" aria-label="{t["shots_label"]}">{shots}</div>
 </div></section>
