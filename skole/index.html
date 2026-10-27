@@ -178,7 +178,7 @@ const LESSONS = /*LESSONS*/[
       "text": "Se på 1-tallet på A3. I raden og kolonnen dens står bare ett annet tall: 2-tallet på B3.",
       "line": "A3",
       "marks": {
-       "A3": "from"
+       "A3": "picked"
       }
      },
      {
@@ -186,9 +186,7 @@ const LESSONS = /*LESSONS*/[
       "text": "2-tallet på B3 hopper to ruter opp og lander på 3-tallet på B1. 3 − 2 = 1, så det står 1 der.",
       "play": "B3-B1",
       "line": "A3",
-      "marks": {
-       "A3": "from"
-      }
+      "marks": {}
      },
      {
       "text": "Nå er det ingen andre tall i raden eller kolonnen til A3.",
@@ -340,7 +338,7 @@ const LESSONS = /*LESSONS*/[
     ],
     "frames": [
      {
-      "text": "Fire 3-ere og to 1-ere. Et 3-tall hopper nøyaktig 3 ruter."
+      "text": "Fire 3-ere og to 1-ere. Et 3-tall hopper nøyaktig 3 ruter. Se på hoppet fra B1 til B2."
      },
      {
       "go": "Prøv hoppet",
@@ -383,14 +381,7 @@ const LESSONS = /*LESSONS*/[
      {
       "go": "Prøv et annet trekk",
       "reset": [],
-      "text": "Prøv heller dette: 1-tallet på B1 hopper på 3-tallet på C1.",
-      "arc": [
-       "B1",
-       "C1"
-      ],
-      "marks": {
-       "B1": "from"
-      }
+      "text": "Tilbake til start. Prøv heller at 1-tallet på B1 hopper på 3-tallet på C1."
      },
      {
       "go": "Prøv hoppet",
@@ -517,14 +508,7 @@ const LESSONS = /*LESSONS*/[
     ],
     "frames": [
      {
-      "text": "Se på trekket: 3-tallet på D1 hopper til 1-tallet på D4.",
-      "arc": [
-       "D1",
-       "D4"
-      ],
-      "marks": {
-       "D1": "from"
-      }
+      "text": "Se på trekket: 3-tallet på D1 hopper til 1-tallet på D4."
      },
      {
       "go": "Prøv hoppet",
@@ -532,28 +516,30 @@ const LESSONS = /*LESSONS*/[
       "play": "D1-D4"
      },
      {
-      "text": "2-tallet på D2 og 2-tallet på B4 kan bare nå D4.",
+      "text": "2-tallet på D2 og 2-tallet på B4 kan bare nå D4. Prøv først D2.",
       "marks": {
-       "D2": "from",
-       "B4": "from",
-       "D4": "good"
+       "B4": "from"
       }
      },
      {
-      "go": "Prøv D2 til D4",
-      "text": "2-tallet på D2 hopper på D4. 2 − 2 = 0, så begge forsvinner. B4 står igjen alene.",
+      "go": "Prøv hoppet",
+      "text": "2 − 2 = 0, så begge forsvinner. B4 står igjen alene.",
       "play": "D2-D4",
       "marks": {
        "B4": "alone"
       }
      },
      {
-      "go": "Prøv B4 til D4",
+      "go": "Tilbake",
       "reset": [
-       "D1-D4",
-       "B4-D4"
+       "D1-D4"
       ],
-      "text": "Samme utgangspunkt, men nå hopper B4 på D4. 2 − 2 = 0. Nå er det D2 som står igjen alene.",
+      "text": "Tilbake til de tre 2-erne. Prøv nå B4."
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "2 − 2 = 0. Nå er det D2 som står igjen alene.",
+      "play": "B4-D4",
       "marks": {
        "D2": "alone"
       }
@@ -566,22 +552,23 @@ const LESSONS = /*LESSONS*/[
      },
      {
       "go": "Se riktig rekkefølge",
-      "reset": [
-       "D2-D4"
-      ],
-      "text": "Riktig rekkefølge: 2-tallet på D2 hopper først på D4. 2 − 1 = 1.",
-      "marks": {
-       "D4": "good"
-      }
+      "reset": [],
+      "text": "Riktig rekkefølge: 2-tallet på D2 må hoppe på D4 før 3-tallet gjør det."
      },
      {
-      "go": "Videre",
-      "text": "Så 3-tallet på D1: 3 − 1 = 2 på D4. Og til slutt B4: 2 − 2 = 0. Brettet er tomt.",
-      "reset": [
-       "D2-D4",
-       "D1-D4",
-       "B4-D4"
-      ]
+      "go": "Prøv hoppet",
+      "text": "2 − 1 = 1 på D4.",
+      "play": "D2-D4"
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "3 − 1 = 2 på D4.",
+      "play": "D1-D4"
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "2 − 2 = 0. Brettet er tomt.",
+      "play": "B4-D4"
      }
     ]
    },
@@ -696,27 +683,16 @@ const LESSONS = /*LESSONS*/[
     ],
     "frames": [
      {
-      "text": "Både 2-tallet på D3 og 3-tallet på D4 skal lande på 1-tallet på D1. Rekkefølgen avgjør hva som blir igjen der.",
-      "arc": [
-       "D3",
-       "D1"
-      ],
-      "marks": {
-       "D3": "from",
-       "D4": "from"
-      }
+      "text": "Både 2-tallet på D3 og 3-tallet på D4 skal lande på 1-tallet på D1. Rekkefølgen avgjør hva som blir igjen der. Først D3."
      },
      {
-      "go": "D3 først",
-      "text": "2-tallet på D3 hopper først: 2 − 1 = 1 på D1.",
-      "play": "D3-D1",
-      "marks": {
-       "D1": "good"
-      }
+      "go": "Prøv hoppet",
+      "text": "2 − 1 = 1 på D1.",
+      "play": "D3-D1"
      },
      {
-      "go": "Så D4",
-      "text": "Så 3-tallet på D4: 3 − 1 = 2 på D1.",
+      "go": "Prøv hoppet",
+      "text": "3 − 1 = 2 på D1.",
       "play": "D4-D1",
       "marks": {
        "D1": "good"
@@ -738,17 +714,17 @@ const LESSONS = /*LESSONS*/[
      },
      {
       "go": "Prøv den andre rekkefølgen",
-      "reset": [
-       "D4-D1"
-      ],
-      "text": "Nå hopper 3-tallet på D4 først: 3 − 1 = 2 på D1.",
-      "marks": {
-       "D1": "from"
-      }
+      "reset": [],
+      "text": "Tilbake til start. Nå hopper 3-tallet på D4 først."
      },
      {
-      "go": "Så D3",
-      "text": "Så 2-tallet på D3: 2 − 2 = 0. Begge forsvinner, og D1 er tom.",
+      "go": "Prøv hoppet",
+      "text": "3 − 1 = 2 på D1.",
+      "play": "D4-D1"
+     },
+     {
+      "go": "Prøv hoppet",
+      "text": "2 − 2 = 0. Begge forsvinner, og D1 er tom.",
       "play": "D3-D1",
       "marks": {
        "D1": "alone"
@@ -905,14 +881,7 @@ const LESSONS = /*LESSONS*/[
     ],
     "frames": [
      {
-      "text": "Se på trekket: 4-tallet på E3 hopper til 3-tallet på A3.",
-      "arc": [
-       "E3",
-       "A3"
-      ],
-      "marks": {
-       "E3": "from"
-      }
+      "text": "Se på trekket: 4-tallet på E3 hopper til 3-tallet på A3."
      },
      {
       "go": "Prøv hoppet",
@@ -920,7 +889,7 @@ const LESSONS = /*LESSONS*/[
       "play": "E3-A3"
      },
      {
-      "text": "Nå står 1-tallet på C3 og 2-tallet på D3 for seg selv. Ingen andre tall kan noen gang hoppe på dem eller ta imot dem.",
+      "text": "Nå står 1-tallet på C3 og 2-tallet på D3 for seg selv. Ingen andre tall kan noen gang hoppe på dem eller ta imot dem. De kan bare møte hverandre.",
       "marks": {
        "C3": "from",
        "D3": "from"
@@ -928,7 +897,7 @@ const LESSONS = /*LESSONS*/[
      },
      {
       "go": "Prøv hoppet",
-      "text": "De to kan bare møte hverandre. 1-tallet hopper på 2-tallet: 2 − 1 = 1. Nå står én 1-er igjen, og ingen kan hjelpe.",
+      "text": "2 − 1 = 1. Nå står én 1-er igjen, og ingen kan hjelpe.",
       "play": "C3-D3",
       "marks": {
        "D3": "alone"
@@ -1225,7 +1194,12 @@ function demo(k, s, b, label, acts, fb) {
       const [a, z] = fr.count.map(x => at(n, x)), step = Math.floor(z / n) === Math.floor(a / n) ? Math.sign(z - a) : Math.sign(z - a) * n;
       for (let i = a + step, c = 1; ; i += step, c++) { counts[i] = c; if (i === z) break; }
     }
-    b.draw(cells, {marks, counts, arc: fr.arc ? fr.arc.map(x => at(n, x)) : null});
+    // The jump the next button plays is shown before it is played: the number in gold, the arc to where it lands.
+    const coming = s.frames[f + 1] && !s.frames[f + 1].reset && s.frames[f + 1].play;
+    const arcs = [];
+    if (fr.arc) arcs.push(fr.arc.map(x => at(n, x)));
+    if (coming) { const [a, t] = coming.split("-").map(x => at(n, x)); marks[a] = "from"; arcs.push([a, t]); }
+    b.draw(cells, {marks, counts, arc: arcs.length ? arcs : null});
     label.textContent = fr.label || "";
     said.push(fr.text);
     fb.className = "feedback info";
