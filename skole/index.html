@@ -177,7 +177,7 @@ const LESSONS = /*LESSONS*/[
     ],
     "frames": [
      {
-      "text": "Se på 1-tallet på A3. I raden og kolonnen dens står bare ett annet tall: 2-tallet på B3.",
+      "text": "Se på 1-tallet på A3. I raden og kolonnen til A3 står bare ett annet tall: 2-tallet på B3.",
       "line": "A3",
       "marks": {
        "A3": "picked"
@@ -310,7 +310,7 @@ const LESSONS = /*LESSONS*/[
   "key": "hiku:skole:meet",
   "short": "Avstand",
   "title": "Hvilket tall kan aldri nås?",
-  "rule": "To tall på samme linje møtes bare når det ene er like stort som avstanden mellom dem. Et tall endrer seg bare når noe lander på det, så noen ganger kan det aldri bli stort nok.",
+  "rule": "To tall på samme linje møtes bare når det ene er like stort som avstanden mellom dem. Et tall endrer seg bare når noe lander på det, så noen ganger kan det aldri få tallet som trengs.",
   "check": "Tell avstanden mellom tallene på samme linje. Er ett av dem like stort som avstanden, eller kan det bli det?",
   "recall": "Tell avstanden til tallene på samme linje. Kan noen av dem noen gang bli like stort som avstanden?",
   "predict": "pick",
@@ -519,9 +519,7 @@ const LESSONS = /*LESSONS*/[
      },
      {
       "text": "2-tallet på D2 og 2-tallet på B4 kan bare nå D4. Prøv først D2.",
-      "marks": {
-       "B4": "from"
-      }
+      "marks": {}
      },
      {
       "go": "Prøv hoppet",
@@ -555,7 +553,7 @@ const LESSONS = /*LESSONS*/[
      {
       "go": "Se riktig rekkefølge",
       "reset": [],
-      "text": "Riktig rekkefølge: 2-tallet på D2 må hoppe på D4 før 3-tallet gjør det."
+      "text": "Riktig rekkefølge: la en av 2-erne hoppe til D4 før 3-tallet gjør det. Vi tar D2 først."
      },
      {
       "go": "Prøv hoppet",
@@ -912,13 +910,13 @@ const LESSONS = /*LESSONS*/[
       }
      },
      {
-      "text": "Slik er det alltid: et hopp tar det minste tallet bort fra begge, så summen går ned med et partall. Fra 3 kan den aldri bli 0.",
+      "text": "Her forsvant 1 fra begge tallene, så summen ble 2 mindre. Med 2 og 3 ville summen blitt 4 mindre. Den minker alltid med et partall, så fra 3 kan den aldri bli 0.",
       "marks": {
        "D3": "alone"
       }
      },
      {
-      "text": "Til neste gang: legg sammen tall som blir skilt fra resten. Er summen et oddetall, blir minst ett igjen.",
+      "text": "Til neste gang: legg sammen tall som blir skilt fra resten. Er summen et oddetall, blir minst ett igjen. En partallssum er ingen garanti, men et oddetall er alltid en felle.",
       "marks": {
        "D3": "alone"
       }
@@ -1033,7 +1031,8 @@ const LESSONS = /*LESSONS*/[
 /** Where the engine points, for a lesson's question: the numbers a player should have tapped. */
 const ANSWERS = {
   alone: (e, n, after) => alone(n, after),
-  meet: e => [e.focus[0]],
+  // Both ends of a pair that can never meet are numbers that can never be reached.
+  meet: e => e.focus,
   partner: e => [e.focus[0]],
   parity: e => e.focus,
 };
@@ -1225,7 +1224,7 @@ function demo(k, s, b, label, acts, fb) {
     acts.innerHTML = "";
     if (next) {
       const go = document.createElement("button");
-      go.type = "button"; go.className = "btn main"; go.textContent = next.go || "Videre";
+      go.type = "button"; go.className = "btn main"; go.textContent = (next.go || "Videre").replace("Prøv hoppet", "Vis hoppet");
       go.onclick = () => { f++; frame(); };
       acts.append(go);
     } else finish(k, true);
