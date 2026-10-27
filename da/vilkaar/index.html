@@ -98,6 +98,17 @@ section p{color:var(--muted);max-width:38em;margin:0 0 14px;text-wrap:pretty}
 .also{margin:18px 0 0;font-size:15px}
 .also a{color:var(--on-navy-muted)}
 .also-dark{margin:16px 0 0}
+/* The school: a small board with a trap on it, as the school shows one, beside the words. */
+.two.flip > .minitrap{order:-1}
+.minitrap{position:relative;width:min(100%,260px);justify-self:center}
+.miniboard{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.miniboard .sq{aspect-ratio:1;border-radius:9px;background:var(--cell);display:flex;align-items:center;justify-content:center;font:650 24px system-ui,sans-serif;color:var(--ink)}
+.miniboard .num{background:var(--tile);box-shadow:0 3px 0 var(--edge)}
+.miniboard .from{background:var(--gold);color:#2b2f45}
+.miniboard .alone{outline:3px solid #b4472f;background:#f6e0d8;color:#2b2f45}
+.minitrap svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.minitrap path{fill:none;stroke:var(--gold);stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round}
+.minitrap marker path{fill:var(--gold);stroke:none}
 /* A short conversation about a real board, as on the ChatGPT page. */
 .chat{display:flex;flex-direction:column;gap:12px;max-width:440px}
 .chat p{margin:0;padding:12px 16px;border-radius:18px;font-size:16px;line-height:1.45;max-width:85%;color:var(--ink)}

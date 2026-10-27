@@ -555,7 +555,7 @@ def home_page(lang, root, t, r, st):
   </div>
 </div></section>
 
-<section><div class="wrap">
+{school_block(lang, root)}<section><div class="wrap">
 <ul class="facts">
   <li id="aviser">{tile(1)}<div><span id="daglig"></span><h3>{t["news_title"]}</h3><p>{t["news_short"]}</p><p><a href="{root}daily/{GUIDE[lang]}">{t["news_link"]}&nbsp;→</a></p></div></li>
   <li id="regler">{tile(2)}<div><h3>{r["h1"]}</h3><p>{r["lead"]}</p><p><a href="{root}{rules_url(lang)}">{r["tips_title"]}&nbsp;→</a></p></div></li>
@@ -569,6 +569,29 @@ def home_page(lang, root, t, r, st):
                + target + "'); else if (h === '#support') location.replace('" + target + "#support'); })();</script>")
     return dict(title="Hiku – " + TITLE[lang], og_title="Hiku – " + TITLE[lang], description=t["description"],
                 top=top, main=main, scripts=f'<script src="{root}daily/embed.js" async></script>' + forward)
+
+
+# The school is in Norwegian only for now, so only the Norwegian home page shows it.
+def school_block(lang, root):
+    if lang != "nb":
+        return ""
+    # A small board with a trap as the school shows it: the 2 on B3 about to jump to B1, which leaves the 1 on A3 alone.
+    cells = {1: "3", 3: "2", 5: "2", 8: "1", 9: "2"}
+    marks = {9: " from", 8: " alone"}
+    squares = "".join(f'<span class="sq{" num" if i in cells else ""}{marks.get(i, "")}">{cells.get(i, "")}</span>' for i in range(16))
+    return f'''<section id="skolen"><div class="wrap two flip">
+  <div class="minitrap" role="img" aria-label="Et lite brett: 2-tallet på B3 skal hoppe til B1, og da blir 1-tallet på A3 stående alene.">
+    <div class="miniboard">{squares}</div>
+    <svg viewBox="0 0 200 200" aria-hidden="true"><defs><marker id="minitip" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z"/></marker></defs><path d="M58 117 Q20 75 58 33" marker-end="url(#minitip)"/></svg>
+  </div>
+  <div>
+    <h2>Hiku-skolen</h2>
+    <p>Hvorfor ble det tallet stående igjen? Sju korte leksjoner viser deg mønstrene bak fellene, på små brett du spiller selv. Til slutt kan du ta en prøve.</p>
+    <div class="ctas"><a class="btn tile" href="{root}skole/">Begynn på skolen</a></div>
+  </div>
+</div></section>
+
+'''
 
 
 def rules_page(lang, root, home, t, r, st):
@@ -677,6 +700,8 @@ def sitemap():
         links = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{DOMAIN}{here(l)}"/>' for l in LANGS)
         urls += [f"<url><loc>{DOMAIN}{here(l)}</loc>{links}</url>" for l in LANGS]
     urls += [f"<url><loc>{DOMAIN}daily/{GUIDE[l]}</loc></url>" for l in LANGS]
+    # The school, in Norwegian only.
+    urls.append(f"<url><loc>{DOMAIN}skole/</loc></url>")
     return ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
             'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' + "\n".join(urls) + "\n</urlset>\n")
 
