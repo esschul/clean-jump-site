@@ -587,7 +587,7 @@ def school_block(lang, root):
   <div>
     <h2>Hiku-skolen</h2>
     <p>Hvorfor ble det tallet stående igjen? Sju korte leksjoner viser deg mønstrene bak fellene, på små brett du spiller selv. Til slutt kan du ta en prøve.</p>
-    <div class="ctas"><a class="btn tile" href="{root}skole/">Begynn på skolen</a></div>
+    <div class="ctas"><a class="btn tile" href="{root}skole/#leksjon-1">Begynn på skolen</a></div>
   </div>
 </div></section>
 

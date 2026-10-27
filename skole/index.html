@@ -85,8 +85,12 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:22px;margin:22px 0 6px;text-w
 .board .sq:not(.num) .count{position:static;font-size:clamp(16px,5vw,22px)}
 .board .sq.counted:not(.num){background:var(--line)}
 /* A step's sentence: room for three lines, so the button below does not move from step to step. */
-.feedback.telling,.whyextra .saying{min-height:6.4em}
-@media (max-width:480px){.feedback.telling,.whyextra .saying{min-height:9.6em}}
+.step .feedback.telling,.whyextra .saying{min-height:6.4em}
+/* The words of a demonstration are read with the board, not answered: plain text under it, no box. */
+.feedback.telling{background:none;padding:4px 2px 0;border-radius:0}
+.feedback.telling .now{font-size:17px;font-weight:600;text-align:center;text-wrap:balance}
+.feedback.telling details.earlier{text-align:center}
+@media (max-width:480px){.step .feedback.telling,.whyextra .saying{min-height:9.6em}}
 .telling .now,.saying .now{font-weight:600;margin:0}
 details.earlier{margin-top:8px;font-size:14px;color:var(--muted)}
 details.earlier summary{cursor:pointer;color:var(--link);font-weight:600}
@@ -105,7 +109,12 @@ details.earlier ol{margin:6px 0 0;padding-left:20px}
 .btn.main{background:var(--navy);color:var(--on-navy);box-shadow:0 4px 0 var(--navy-edge)}
 .btn[aria-pressed="true"]{box-shadow:0 4px 0 var(--edge),0 0 0 3px var(--link)}
 .feedback{border-radius:14px;padding:12px 16px;margin-top:14px}
-.feedback:empty{display:none}
+/* Room for the answer before it comes, and a row of buttons that keeps its height, so nothing jumps when they change. */
+.step .feedback.telling:empty{display:block;visibility:hidden}
+.step .feedback.telling:empty{min-height:6.4em}
+.step .actions{min-height:48px}
+.extras{display:grid;gap:8px}
+.extras:empty{display:none}
 .feedback.good{background:var(--good-soft)}
 .feedback.bad{background:var(--bad-soft)}
 .feedback.info{background:var(--cell)}
@@ -2930,7 +2939,14 @@ function board(host, n) {
       eq.style.left = r.left - box.left + r.width / 2 + "px";
       // Above the square, as in the game, unless that hides a number and below would not.
       const above = to - n >= 0 && cells[to - n], below = to + n < cells.length && cells[to + n];
+      const right = to % n < n - 1 && !cells[to + 1];
       if (above && !below) { eq.style.top = r.bottom - box.top + 4 + "px"; eq.style.transform = "translate(-50%, 0)"; }
+      else if (above && below) {
+        // Numbers above and below: beside the square instead, on the side that is free.
+        eq.style.top = r.top - box.top + r.height / 2 + "px";
+        eq.style.left = (right ? r.right - box.left + 6 : r.left - box.left - 6) + "px";
+        eq.style.transform = right ? "translate(0, -50%)" : "translate(-100%, -50%)";
+      }
       else eq.style.top = r.top - box.top - 4 + "px";
       wrap.append(eq);
     });
@@ -3100,13 +3116,13 @@ function offerWay(fb, b, label, n, after, t, back) {
   const row = document.createElement("div");
   row.className = "actions whyextra";
   row.innerHTML = `<button type="button" class="btn">Vis hvorfor</button>`;
-  fb.after(row);
+  fb.parentElement.querySelector(".extras").prepend(row);
   row.firstChild.onclick = () => {
     row.remove();
     const box = document.createElement("div");
     box.className = "feedback info whyextra";
     box.innerHTML = `<div class="saying"></div><div class="actions"></div>`;
-    fb.after(box);
+    fb.parentElement.querySelector(".extras").prepend(box);
     let p = after.slice(), token = t.way, k = 0, sum = null;
     const said = [`Følg ${num(n, p, token)} etter trekket ditt. Hva kan skje med det?`];
     const frame = () => {
@@ -3177,13 +3193,13 @@ function offerWhy(fb, b, label, n, cells, t, back) {
   const row = document.createElement("div");
   row.className = "actions whyextra";
   row.innerHTML = `<button type="button" class="btn">Vis hvorfor</button>`;
-  fb.after(row);
+  fb.parentElement.querySelector(".extras").prepend(row);
   row.firstChild.onclick = () => {
     row.remove();
     const box = document.createElement("div");
     box.className = "feedback info whyextra";
     box.innerHTML = `<div class="saying"></div><div class="actions"></div>`;
-    fb.after(box);
+    fb.parentElement.querySelector(".extras").prepend(box);
     let p = cells.slice(), k = 0, sum = null;
     const said = [`Slik kan brettet ryddes fra stillingen før trekket ditt. Følg med på ${sq(n, t.why.square)}.`];
     const frame = () => {
@@ -3225,8 +3241,9 @@ function showResult(b, label, n, cells, after, t, extra = {}, move = null) {
 }
 
 function recall(host) {
-  host.insertAdjacentHTML("afterend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p></p></details>`);
-  host.nextElementSibling.querySelector("p").textContent = lesson.recall;
+  const extras = host.parentElement.querySelector(".extras");
+  extras.insertAdjacentHTML("beforeend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p></p></details>`);
+  extras.lastElementChild.querySelector("p").textContent = lesson.recall;
 }
 
 /** A wrong first answer: it counts as missed, though the step is not done yet. */
@@ -3235,12 +3252,37 @@ function miss(k) {
 }
 const extraAt = {};
 
+let nextStep = () => {}, nextLabel = "Neste";
+
+/** Where the step card stands on the screen now, or null when there is none. */
+const cardTop = () => stepsEl.firstElementChild ? stepsEl.firstElementChild.getBoundingClientRect().top : null;
+
+/**
+ * The new step card in place of the old, where the old one stood on the screen, so the page does not jump: the
+ * list keeps its height while they swap, and a card whose top was above the screen is shown from its top.
+ */
+function place(el, was) {
+  stepsEl.style.minHeight = stepsEl.offsetHeight + "px";
+  stepsEl.replaceChildren(el);
+  // Released once the new card has its board and buttons, which are filled in after this.
+  requestAnimationFrame(() => { stepsEl.style.minHeight = ""; });
+  if (was == null) return;
+  const d = el.getBoundingClientRect().top - Math.max(was, 12);
+  if (d) scrollBy(0, d);
+}
+
 function finish(k, firstTry) {
   if (!(k in saved.first)) saved.first[k] = firstTry;
   if (!saved.done.includes(k)) saved.done.push(k);
   store(); drawProgress(); drawLessons();
-  const next = stepsEl.querySelector(".next");
-  if (next) next.hidden = false;
+  // "Neste" in the same row as the answer buttons, after them, so nothing below the board moves.
+  const acts = stepsEl.querySelector(".step .actions");
+  if (acts && !acts.querySelector(".next")) {
+    const next = document.createElement("button");
+    next.type = "button"; next.className = "btn main next"; next.textContent = nextLabel;
+    next.onclick = () => nextStep();
+    acts.append(next);
+  }
 }
 
 /**
@@ -3297,14 +3339,13 @@ const moveText = (n, cells, from, to) => `${num(n, cells, from)} hopper til ${sq
 function show(k, extra = null) {
   current = k; drawProgress();
   const steps = lesson.steps, s = extra || steps[k], n = s.n, cells = s.cells.slice();
-  stepsEl.innerHTML = "";
+  const was = cardTop();
   const el = document.createElement("article"); el.className = "step";
   const label = s.type === "example" || s.type === "demo" ? "Eksempel" : extra ? "En lignende oppgave" : `Oppgave ${k} av ${steps.length - 1}`;
   const banner = s.type === "findTrap" ? `<p class="goal trap"><span class="icon" aria-hidden="true">✕</span><span>Du leter etter fellen: trekket som gjør at brettet ikke kan løses.</span></p>`
     : s.type === "solve" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>Få bort alle tallene.</span></p>`
     : s.type === "findSafe" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>Du leter etter det trygge trekket: det eneste som ikke ødelegger brettet.</span></p>` : "";
-  el.innerHTML = `<div class="stephead"><p class="kind">${label}</p><ol class="progress" id="progress" aria-label="Fremgang"></ol></div><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div>` +
-    `<div class="actions"><button type="button" class="btn main next" hidden>${k === steps.length - 1 ? "Ferdig" : "Neste"}</button></div>`;
+  el.innerHTML = `<div class="stephead"><p class="kind">${label}</p><ol class="progress" id="progress" aria-label="Fremgang"></ol></div><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div><div class="extras"></div>`;
   const from = s.move ? at(n, s.move[0]) : -1, to = s.move ? at(n, s.move[1]) : -1;
   const mv = s.move ? moveText(n, cells, from, to) : "";
   el.querySelector("h3").textContent = s.title || {demo: "Se hva som skjer", example: "Se hva som skjer", predict: k === 1 ? "Hva tror du?" : "Og her?",
@@ -3316,12 +3357,16 @@ function show(k, extra = null) {
     findTrap: "Finn et trekk som gjør at brettet ikke kan løses. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
     findSafe: "Her er nesten alle trekk feller. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
     solve: "Trykk på tallet som skal hoppe, og så på ruta det skal lande på. Spill til brettet er tomt."}[s.type];
-  stepsEl.append(el);
+  place(el, was);
   drawProgress();
+
   const b = board(el.querySelector(".host"), n), label2 = el.querySelector(".boardlabel"), acts = el.querySelector(".actions"), fb = el.querySelector(".feedback");
-  el.querySelector(".next").onclick = () => k < steps.length - 1 ? show(k + 1) : allDone();
+  nextStep = () => k < steps.length - 1 ? show(k + 1) : allDone();
+  nextLabel = k === steps.length - 1 ? "Ferdig" : "Neste";
 
   if (s.type === "demo") return demo(k, s, b, label2, acts, fb);
+  // In an exercise the buttons sit right under the board and the answer comes below them, however long it is.
+  fb.before(acts);
 
   if (s.type === "example" || s.type === "predict") {
     const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000), e = ok ? null : explain(n, cells, from, to);
@@ -3531,13 +3576,13 @@ function runTest() {
   const answers = [];
   const show = i => {
     const q = qs[i], n = q.n, cells = q.cells;
-    stepsEl.innerHTML = "";
+    const was = cardTop();
     const el = document.createElement("article"); el.className = "step";
     el.innerHTML = `<div class="stephead"><p class="kind">Spørsmål ${i + 1} av ${qs.length}</p><ol class="progress" aria-label="Fremgang">` +
       qs.map((_, j) => `<li class="${j < i ? (answers[j] ? "done" : "missed") : j === i ? "now" : ""}"></li>`).join("") + `</ol></div>` +
-      `<h3>Trygt eller felle?</h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div>`;
+      `<h3>Trygt eller felle?</h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>`;
     el.querySelector(".text").textContent = `Se på trekket: ${moveText(n, cells, q.from, q.to)}.`;
-    stepsEl.append(el);
+    place(el, was);
     const b = board(el.querySelector(".host"), n), label = el.querySelector(".boardlabel"), fb = el.querySelector(".feedback"), acts = el.querySelector(".actions");
     b.draw(cells, {marks: {[q.from]: "from"}, arc: [q.from, q.to]});
     label.textContent = `Trekk: ${moveText(n, cells, q.from, q.to)}`;
