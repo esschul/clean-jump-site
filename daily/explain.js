@@ -319,7 +319,7 @@ function needsSquare(before, n, move, solutions) {
 
 /** Every way one number can go, over every position that can be reached: for each "square,value" it can have, the
  *  steps out of it. Null when the number is cleared somewhere, so it is no proof, or the search is too large. */
-function followGraph(cells, n, start, limit = 60_000) {
+export function followGraph(cells, n, start, limit = 60_000) {
   const edges = new Map(), seen = new Set([key(cells) + "|" + start]), queue = [[cells, start]];
   while (queue.length) {
     const [p, token] = queue.pop(), here = `${token},${p[token]}`;

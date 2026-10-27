@@ -136,7 +136,7 @@ footer{margin-top:56px;padding-block:24px;border-top:1px solid var(--rule);color
 <footer><div class="wrap">Hiku-skolen er under arbeid. Forklaringene kommer fra den samme motoren som «Hvorfor?» i spillet.</div></footer>
 
 <script type="module">
-import {targets, moved, solvable, trap, say} from "../daily/explain.js";
+import {targets, moved, solvable, trap, say, followGraph} from "../daily/explain.js";
 
 const LANG = "nb";
 const COLS = "ABCDEFGH";
@@ -1467,6 +1467,260 @@ const LESSONS = /*LESSONS*/[
     ]
    }
   ]
+ },
+ {
+  "id": "ahead",
+  "key": "hiku:skole:ahead",
+  "short": "Se fram",
+  "title": "Hva skjer etterpå?",
+  "rule": "Noen feller ser trygge ut. Ingen står alene, og alle har noen å møte. Først etter et par trekk står et tall fast. Da hjelper det å følge ett tall noen trekk fram.",
+  "check": "Finn et tall som bare har én ting det kan gjøre. Spill det i hodet: hvor havner det, og hva kan skje med det der?",
+  "recall": "Følg tall som bare har ett valg. Spill dem noen trekk fram i hodet, og se om de ender et sted ingen når.",
+  "predict": "trap",
+  "ask": "Se på trekket: {move}. Det ser trygt ut. Er det trygt, eller er det en felle som viser seg senere?",
+  "none": "Trygt. Brettet kan fortsatt løses etter det trekket.",
+  "hint": "Følg et tall som bare har ett valg etter trekket, og se hvor det ender.",
+  "steps": [
+   {
+    "type": "demo",
+    "n": 4,
+    "cells": [
+     3,
+     1,
+     2,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3,
+     0
+    ],
+    "frames": [
+     {
+      "text": "Se på trekket: 1-tallet på B1 hopper på 2-tallet på C1."
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "2 − 1 = 1. Det ser greit ut: ingen tall står alene, og alle har noen å møte.",
+      "play": "B1-C1"
+     },
+     {
+      "text": "Men følg 3-tallet på A1. Hva kan det gjøre? Det hopper 3 ruter, og det eneste tallet 3 ruter unna står på D1.",
+      "marks": {
+       "A1": "picked"
+      }
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "3 − 1 = 2 på D1. Nå følger vi den 2-eren.",
+      "play": "A1-D1",
+      "marks": {
+       "D1": "picked"
+      }
+     },
+     {
+      "text": "Hva kan skje med 2-tallet på D1? Det kan ikke hoppe noe sted. Bare 1-tallet på C1 kan lande på det.",
+      "marks": {
+       "D1": "picked"
+      }
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "2 − 1 = 1. Nå står 1-tallet på D1 og 3-tallet på C4 igjen, og de står ikke på samme linje.",
+      "play": "C1-D1",
+      "marks": {
+       "D1": "alone",
+       "C4": "alone"
+      }
+     },
+     {
+      "go": "Prøv den andre veien",
+      "reset": [
+       "B1-C1"
+      ],
+      "text": "Tilbake til etter trekket. Hva om 1-tallet på C1 hopper på D1 først?",
+      "marks": {
+       "A1": "picked"
+      }
+     },
+     {
+      "go": "Vis hoppet",
+      "text": "1 − 1 = 0, så begge forsvinner. Da står 3-tallet på A1 helt alene i raden sin.",
+      "play": "C1-D1",
+      "marks": {
+       "A1": "alone"
+      }
+     },
+     {
+      "text": "Uansett hva du gjør, blir tallet fra A1 stående til slutt. Trekket var en felle, men det synes først etter et par trekk.",
+      "marks": {
+       "A1": "alone"
+      }
+     }
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     0,
+     1,
+     3,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     1,
+     0
+    ],
+    "move": [
+     "A4",
+     "C4"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     1,
+     0,
+     2,
+     3,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0
+    ],
+    "move": [
+     "D1",
+     "A1"
+    ]
+   },
+   {
+    "type": "findTrap",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     2,
+     2,
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     2
+    ]
+   }
+  ],
+  "extra": [
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     2,
+     2,
+     0,
+     0,
+     0,
+     3
+    ],
+    "move": [
+     "D3",
+     "D1"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     2,
+     1
+    ],
+    "move": [
+     "C4",
+     "A4"
+    ]
+   },
+   {
+    "type": "predict",
+    "n": 4,
+    "cells": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     1,
+     0,
+     0,
+     3,
+     1
+    ],
+    "move": [
+     "D3",
+     "D4"
+    ]
+   }
+  ]
  }
 ]/*END*/;
 
@@ -1660,10 +1914,86 @@ function teach(e, n, cells, after, from, to) {
         at: `Først nå lander ${num(n, cells, from)} på ${sq(n, to)}.`,
         end: `Dette er bare én måte å rydde brettet på, men i alle lander et annet tall på ${sq(n, to)} før ${num(n, cells, from)} gjør det.`}};
     }
+    case "follow": {
+      marks[f[0]] = "alone";
+      return {marks, text: e.head, way: f[0]};
+    }
     default:
       for (const i of f) if (after[i]) marks[i] = "alone";
       return {marks, more, text: e.head};
   }
+}
+
+/**
+ * The way one number goes to where it gets stuck, as moves that can be played on the board one after another, or
+ * null when the follow graph's way cannot be played out from this board as it stands. The same as
+ * tools/school/way.mjs, which the candidate search uses (keep the two the same).
+ */
+function wayToStuck(cells, n, start) {
+  const graph = followGraph(cells, n, start);
+  if (!graph) return null;
+  const seen = new Set();
+  function go(p, token, path) {
+    const node = `${token},${p[token]}`, out = graph.get(node);
+    if (!out) return null;
+    if (!out.size) return path;
+    if (seen.has(node) || path.length > 4) return null;
+    seen.add(node);
+    for (const [to, step] of out) {
+      const [t] = to.split(",").map(Number);
+      for (const [a, z] of step.jump ? [[token, t]] : [...step.who].map(w => [w, token])) {
+        if (!targets(p, n, a).includes(z)) continue;
+        const q = moved(p, a, z), next = a === token ? z : token;
+        if (`${next},${q[next]}` !== to) continue;
+        const r = go(q, next, [...path, [a, z]]);
+        if (r) return r;
+      }
+    }
+    seen.delete(node);
+    return null;
+  }
+  return go(cells.slice(), start, []);
+}
+
+/** "Vis hvorfor" for a number that is never cleared: its way on the board, jump by jump, to where it is stuck. */
+function offerWay(fb, b, label, n, after, t, back) {
+  if (!t || t.way == null) return;
+  const way = wayToStuck(after, n, t.way);
+  if (!way || !way.length) return;
+  const row = document.createElement("div");
+  row.className = "actions whyextra";
+  row.innerHTML = `<button type="button" class="btn">Vis hvorfor</button>`;
+  fb.after(row);
+  row.firstChild.onclick = () => {
+    row.remove();
+    const box = document.createElement("div");
+    box.className = "feedback info whyextra";
+    box.innerHTML = `<ul class="saying"></ul><div class="actions"></div>`;
+    fb.after(box);
+    let p = after.slice(), token = t.way, k = 0, sum = null;
+    const said = [`Følg ${num(n, p, token)} etter trekket ditt. Hva kan skje med det?`];
+    const frame = () => {
+      const coming = way[k] || null, marks = {[token]: coming ? "picked" : "alone"};
+      if (coming) marks[coming[0]] = "from";
+      b.draw(p, {marks, sum, arc: coming});
+      label.textContent = "Følg tallet";
+      const ul = box.querySelector(".saying"); ul.innerHTML = "";
+      for (const s of said) { const li = document.createElement("li"); li.textContent = s; ul.append(li); }
+      const acts = box.querySelector(".actions"); acts.innerHTML = "";
+      const go = document.createElement("button");
+      go.type = "button"; go.className = "btn main"; go.textContent = coming ? "Vis hoppet" : "Tilbake til svaret";
+      go.onclick = () => {
+        if (!coming) { box.remove(); back(); offerWay(fb, b, label, n, after, t, back); return; }
+        const [a, z] = coming;
+        said.push(`${Cap(num(n, p, a))} hopper på ${num(n, p, z)}: ${sumText(p[a], p[z])}.`);
+        sum = [z, p[a], p[z]]; p = moved(p, a, z); token = a === token ? z : token; k++;
+        if (k === way.length) said.push(`Nå kan ${num(n, p, token)} ikke hoppe, og ingenting kan lande på det, uansett hva som skjer på resten av brettet. Det blir stående.`);
+        frame();
+      };
+      acts.append(go);
+    };
+    frame();
+  };
 }
 
 /** One way to clear the board, found with the solver: a list of [from, to], or null when the solver cannot tell. */
@@ -1856,6 +2186,7 @@ function show(k, extra = null) {
       verdict(fb, right ? "good" : "bad", right ? "Riktig!" : "Ikke helt.", t ? t.text : lesson.none, t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
       offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
+      offerWay(fb, b, label2, n, after, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
       // Missed once: before going on, one more of the same kind on a new board, so the answer just seen gets used.
       if ((!right || missed) && !extra && lesson.extra && lesson.extra.length) {
         miss(k);
@@ -1940,11 +2271,13 @@ function show(k, extra = null) {
         t ? t.text : "Brettet kan fortsatt løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
       offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
+      offerWay(fb, b, label2, n, after, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
       return finish(k, tries === 1);
     }
     if (goal === "findTrap") verdict(fb, "info", "Det trekket er trygt. Du leter etter fellen.", `${Move}: brettet kan fortsatt løses etter det.`);
     else verdict(fb, "bad", "Det var en felle. Du leter etter det trygge trekket.", t ? t.text : "Brettet kan ikke løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
     offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
+    offerWay(fb, b, label2, n, after, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
     acts.innerHTML = `<button type="button" class="btn">Prøv et annet trekk</button>`;
     acts.firstChild.onclick = () => { acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; el.querySelectorAll(".whyextra").forEach(x => x.remove()); redraw(); };
   }
