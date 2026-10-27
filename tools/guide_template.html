@@ -50,6 +50,7 @@ td{color:var(--muted)}
 .stage.dark{background:#15161c}
 .stage.grey{background:#ececec}
 .stage.warm{background:#faf6f6}
+#preview.card{border-radius:8px;padding:18px 12px 6px;max-width:520px;margin:0 auto}
 .langs{margin-top:14px;font-size:14px;color:var(--muted)}
 .langs a[aria-current]{color:var(--ink);font-weight:600;text-decoration:none}
 footer{margin-top:56px;font-size:14px;color:var(--muted)}
@@ -178,12 +179,19 @@ frame-src {{host}};</code></pre>
 // The configurator: every change rebuilds the preview with the real embed and writes the code to copy.
 (function () {
   var form = document.getElementById('config'), stage = document.getElementById('stage');
-  var base = '{{base}}', pageLang = '{{lang}}';
+  var base = '{{base}}', pageLang = '{{lang}}', card = '';
   var words = {script: '{{html_label}}', iframe: '{{html_noscript}}', title: '{{game_title}}'};
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function update() {
     var o = {}; new FormData(form).forEach(function (v, k) { o[k] = v; });
-    stage.className = 'stage ' + o.page;
+    // A page colour from a link is shown as it is; the named ones come from the stylesheet. A card colour from a link
+    // puts the game in a card on that page, as news sites show their own content.
+    var hex = /^[0-9a-f]{6}$/.test(o.page);
+    stage.className = 'stage ' + (hex ? '' : o.page);
+    stage.style.background = hex ? '#' + o.page : '';
+    var preview = document.getElementById('preview');
+    preview.className = card ? 'card' : '';
+    preview.style.background = card ? '#' + card : '';
     // A preset is a colour of its own; the picker is shown and counts only for "your own colour".
     form.elements.color.hidden = o.colormode !== 'own';
     if (o.colormode !== 'own') o.color = o.colormode || '';
@@ -208,13 +216,22 @@ frame-src {{host}};</code></pre>
   // A link can choose for the reader: ?color=dd0000&page=grey opens with that colour and background, as when we show a
   // site how the game would look with its own colours.
   var asked = new URLSearchParams(location.search);
+  card = /^[0-9a-f]{6}$/i.test(asked.get('card') || '') ? asked.get('card').toLowerCase() : '';
+  // A page colour from the link joins the list of backgrounds, so it can be chosen again after trying the others.
+  var askedPage = (asked.get('page') || '').toLowerCase();
+  if (/^[0-9a-f]{6}$/.test(askedPage)) {
+    var option = document.createElement('option');
+    option.value = askedPage;
+    option.textContent = '#' + askedPage;
+    form.elements.page.appendChild(option);
+  }
   var wanted = (asked.get('color') || '').replace(/^#/, '').toLowerCase();
   if (/^[0-9a-f]{6}$/.test(wanted)) {
     var preset = [].slice.call(form.elements.colormode.options).filter(function (o) { return o.value === '#' + wanted; })[0];
     form.elements.colormode.value = preset ? preset.value : 'own';
     form.elements.color.value = '#' + wanted;
   }
-  if (['light', 'grey', 'warm', 'dark'].indexOf(asked.get('page')) >= 0) form.elements.page.value = asked.get('page');
+  if (['light', 'grey', 'warm', 'dark'].indexOf(askedPage) >= 0 || /^[0-9a-f]{6}$/.test(askedPage)) form.elements.page.value = askedPage;
   form.addEventListener('change', update);
   form.elements.color.addEventListener('input', update);
   update();
