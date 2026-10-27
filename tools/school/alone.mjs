@@ -1,5 +1,5 @@
 // Usage: node tools/school/alone.mjs  (runs 90 s, writes tools/school/alone-candidates.json, which is not committed)
-// Candidates for the lesson "Hvem blir alene?": every legal move of small random boards, judged by the solver alone.
+// Candidates for the lesson "Hvilket tall blir stående alene?": every legal move of small random boards, judged by the solver alone.
 import {targets, moved, solvable, certificate} from '../../daily/explain.js';
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const inLine = (n, a, b) => Math.floor(a / n) === Math.floor(b / n) || a % n === b % n;
