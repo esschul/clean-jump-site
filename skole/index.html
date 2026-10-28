@@ -20,7 +20,7 @@
   --navy:#262c48;--navy-edge:#151a30;--on-navy:#ecebf2;--on-navy-muted:#aeb4d4;--gold:#f2c66d;--link:#9fb0ea;
   --good:#7fd19f;--good-soft:#203a2b;--bad:#f0937c;--bad-soft:#41261f;--card:#222533;--line:#4a4226;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
 a{color:var(--link)}
 .wrap{max-width:720px;margin:0 auto;padding-inline:20px}
 .band{background:var(--navy);color:var(--on-navy)}
@@ -29,12 +29,20 @@ a{color:var(--link)}
 .brand img{width:30px;height:30px;border-radius:7px}
 .band .langpick{margin-left:auto;font:inherit;font-size:14px;color:var(--on-navy);background:transparent;border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:4px 10px}
 .band .langpick option{color:#2b2f45;background:#fffaf2}
-h1{font:400 clamp(30px,5vw,40px)/1.1 Georgia,serif;letter-spacing:-.8px;margin:26px 0 4px}
-h2{font-weight:750;letter-spacing:-.02em;font-size:22px;margin:22px 0 6px;text-wrap:balance}
-.lead{font-size:16px;color:var(--muted);margin:0;max-width:36em}
-.rule{font-size:16px;margin:0 0 10px;max-width:38em}
-.check{font-size:15px;border-left:3px solid var(--gold);padding:2px 0 2px 12px;margin:0 0 16px;color:var(--ink);max-width:38em}
-.check b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* A small scale: the school's name, the lesson's question, running text, and quiet labels. Spacing in 8, 16 and 24. */
+.schoolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px}
+h1{font:400 28px/1.15 Georgia,serif;letter-spacing:-.5px;margin:0}
+.lessonpick{display:none;font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:transparent;border:0;border-radius:999px;
+  box-shadow:inset 0 0 0 1px var(--rule);padding:8px 14px;min-height:40px;cursor:pointer;white-space:nowrap}
+.lessonpick::after{content:"";display:inline-block;width:7px;height:7px;margin:0 0 3px 10px;border:solid var(--muted);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.lessonpick[aria-expanded="true"]::after{transform:rotate(-135deg);margin-bottom:-1px}
+.lead{font-size:15px;color:var(--muted);margin:8px 0 0;max-width:40em}
+h2{font-weight:700;letter-spacing:-.02em;font-size:28px;line-height:1.2;margin:24px 0 8px;text-wrap:balance}
+.cue{color:var(--muted);margin:0 0 16px;max-width:40em}
+details.rule{margin:0 0 8px;font-size:15px;max-width:40em}
+details.rule summary{cursor:pointer;font-weight:600;color:var(--link)}
+details.rule p{color:var(--muted);margin:8px 0 0}
+@media (max-width:600px){.lessonpick{display:block}.lead{display:none}h1{font-size:22px}h2{font-size:24px;margin-top:16px}}
 
 /* One step at a time: an example, then the exercises. */
 .stephead{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -46,10 +54,10 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:22px;margin:22px 0 6px;text-w
 .scores{list-style:none;padding:0;margin:10px 0;display:grid;gap:4px}
 .scores li.missed{color:var(--bad);font-weight:600}
 .lead2{color:var(--muted)}
-.step{background:var(--card);border-radius:16px;box-shadow:0 0 0 1px var(--rule);padding:16px 18px;margin-bottom:24px}
+.step{background:var(--card);border-radius:14px;box-shadow:0 0 0 1px var(--rule);padding:16px;margin-bottom:24px}
 .step .kind{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
-.step h3{font-size:18px;margin:6px 0 2px;text-wrap:balance}
-.step p{margin:4px 0}
+.step h3{font-size:18px;margin:8px 0 0;text-wrap:balance}
+.step p{margin:8px 0 0}
 .step .text:empty{display:none}
 .move{font-weight:650}
 /* What to look for in a find exercise, so the trap and the safe move are never mixed up. */
@@ -61,7 +69,7 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:22px;margin:22px 0 6px;text-w
 .goal.safe .icon{background:var(--good)}
 
 /* The board: square names above and beside, cream tiles on grey squares, as in the game. */
-.boardwrap{position:relative;width:min(100%,300px);margin:14px auto 6px}
+.boardwrap{position:relative;width:min(100%,300px);margin:16px auto 8px}
 .board{display:grid;gap:4px;user-select:none;-webkit-user-select:none}
 .board .name{font-size:12px;font-weight:650;color:var(--muted);display:flex;align-items:center;justify-content:center}
 .board .sq{aspect-ratio:1;border-radius:9px;background:var(--cell);border:0;padding:0;font:600 clamp(18px,6vw,26px) system-ui,sans-serif;color:var(--ink);
@@ -84,15 +92,12 @@ h2{font-weight:750;letter-spacing:-.02em;font-size:22px;margin:22px 0 6px;text-w
 /* A counted square: a small dark tag with its count in the corner, never mistaken for a number on the board. */
 .board .sq .count{position:absolute;bottom:4px;left:4px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--navy);color:var(--on-navy);font:700 12px/20px system-ui,sans-serif;text-align:center;font-variant-numeric:tabular-nums}
 .board .sq.counted:not(.num){background:var(--line)}
-/* A step's sentence: room for three lines, so the button below does not move from step to step. */
-.step .feedback.telling,.whyextra .saying{min-height:6.4em}
-/* The words of a demonstration are read with the board, not answered: plain text under it, no box. */
-.step .feedback.telling{background:none;padding:4px 2px 0;border-radius:0}
-.feedback.telling .now{font-size:17px;font-weight:600;text-align:center;text-wrap:balance}
-.feedback.telling details.earlier{text-align:center}
-@media (max-width:480px){.step .feedback.telling,.whyextra .saying{min-height:9.6em}}
-.telling .now,.saying .now{font-weight:600;margin:0}
-details.earlier{margin-top:8px;font-size:14px;color:var(--muted)}
+/* A demonstration's sentence: plain text over its button, with room for three lines so the button and the board below
+   stay put from one sentence to the next. */
+.step .feedback.telling,.whyextra .saying{min-height:4.8em}
+.step .feedback.telling{background:none;padding:0;border-radius:0;margin-top:8px}
+.telling .now,.saying .now{margin:0}
+details.earlier{margin-top:0;font-size:14px;color:var(--muted)}
 details.earlier summary{cursor:pointer;color:var(--link);font-weight:600}
 details.earlier ol{margin:6px 0 0;padding-left:20px}
 .boardlabel{min-height:1.4em}
@@ -103,23 +108,17 @@ details.earlier ol{margin:6px 0 0;padding-left:20px}
 .arc polygon{fill:var(--gold)}
 .boardlabel{text-align:center;font-size:13px;font-weight:650;color:var(--muted);margin:0}
 
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px}
 .btn{font:inherit;font-weight:650;font-size:16px;padding:11px 18px;border-radius:13px;border:0;cursor:pointer;background:var(--tile);color:var(--ink);box-shadow:0 4px 0 var(--edge);min-height:44px}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
 .btn.main{background:var(--navy);color:var(--on-navy);box-shadow:0 4px 0 var(--navy-edge)}
 .btn[aria-pressed="true"]{box-shadow:0 4px 0 var(--edge),0 0 0 3px var(--link)}
-.feedback{border-radius:14px;padding:12px 16px;margin-top:14px}
+.feedback{border-radius:12px;padding:12px 16px;margin-top:16px}
 /* Room for the answer before it comes, and a row of buttons that keeps its height, so nothing jumps when they change. */
+.feedback:empty{padding:0;margin:0}
 .step .feedback.telling:empty{display:block;visibility:hidden}
-.step .feedback.telling:empty{min-height:6.4em}
 .step .actions{min-height:48px}
-/* On a phone a demonstration reads top down: its sentence and button under the title, the board below them, so the
-   button is in sight as soon as the card is. */
-@media (max-width:600px){.step.demo{display:flex;flex-direction:column}
-  .step.demo .stephead,.step.demo h3{order:0}.step.demo .feedback{order:1}.step.demo .actions{order:2;margin-top:4px}
-  .step.demo .host{order:3}.step.demo .boardlabel{order:4}.step.demo .extras{order:5}
-  .step.demo .feedback.telling,.step.demo .feedback.telling:empty{min-height:3.4em;margin-top:8px}}
-.extras{display:grid;gap:8px}
+.extras{display:grid;gap:8px;margin-top:8px}
 .extras:empty{display:none}
 .feedback.good{background:var(--good-soft)}
 .feedback.bad{background:var(--bad-soft)}
@@ -135,11 +134,10 @@ details.recall p{color:var(--muted);margin:6px 0 0}
 details.more{margin-top:8px;font-size:15px}
 details.more summary{cursor:pointer;font-weight:600;color:var(--link)}
 details.more p{color:var(--muted);margin:6px 0 0}
-/* The lessons in one row: scrolled sideways on a narrow screen rather than wrapped. */
-.lessons{margin:18px -20px 0;padding:0 20px;overflow-x:auto;scrollbar-width:none}
-.lessons::-webkit-scrollbar{display:none}
-.lessons ol{list-style:none;padding:2px 0;margin:0;display:flex;gap:6px;width:max-content}
-@media (min-width:600px){.lessons{overflow:visible}.lessons ol{flex-wrap:wrap;width:auto}}
+/* The lessons: a wrapping row on a wide screen; on a phone a list that "Leksjon 3 av 8" opens. */
+.lessons{margin-top:16px}
+.lessons ol{list-style:none;padding:2px 0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:600px){.lessons{display:none;margin-top:8px}.lessons.open{display:block}.lessons ol{flex-direction:column}.lessons button{width:100%}}
 .lessons button{font:inherit;font-size:14px;font-weight:600;border:0;border-radius:999px;padding:6px 14px 6px 6px;min-height:40px;cursor:pointer;
   background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule);display:flex;align-items:center;gap:8px;white-space:nowrap}
 .lessons button .no{width:26px;height:26px;border-radius:50%;background:var(--cell);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-variant-numeric:tabular-nums}
@@ -154,15 +152,15 @@ footer{margin-top:40px;padding-block:18px;border-top:1px solid var(--rule);color
 <body>
 <header class="band"><div class="wrap"><nav><a class="brand" href="/"><img src="/icon.png" alt="">Hiku</a><select class="langpick" id="langpick" aria-label="Språk"></select></nav></div></header>
 <main class="wrap">
-<h1 data-t="h1">Hiku-skolen</h1>
+<div class="schoolbar"><h1 data-t="h1">Hiku-skolen</h1><button type="button" class="lessonpick" id="lessonpick" aria-expanded="false" aria-controls="lessonnav"></button></div>
 <p class="lead" data-t="lead">Her øver du på å se fellene før du går i dem. Hver leksjon er et spørsmål du kan stille deg selv før du flytter.</p>
 
-<nav class="lessons" aria-label="Leksjoner" data-t-label="lessons"><ol id="lessons"></ol></nav>
+<nav class="lessons" id="lessonnav" aria-label="Leksjoner" data-t-label="lessons"><ol id="lessons"></ol></nav>
 <section aria-labelledby="lesson-title">
 <h2 id="lesson-title"></h2>
-<p class="rule" id="lesson-rule"></p>
-<p class="check"><b data-t="check">Sjekk før du flytter</b><span id="lesson-check"></span></p>
+<p class="cue" id="lesson-cue"></p>
 <div id="steps"></div>
+<details class="rule" id="lesson-more"><summary id="lesson-more-label"></summary><p id="lesson-more-text"></p></details>
 </section>
 </main>
 <footer><div class="wrap" data-t="footer">Hiku-skolen er under arbeid. Forklaringene kommer fra den samme motoren som «Hvorfor?» i spillet.</div></footer>
@@ -305,6 +303,8 @@ const TEXT = /*TEXTS*/{
   "h1": "Hiku-skolen",
   "lead": "Her øver du på å se fellene før du går i dem. Hver leksjon er et spørsmål du kan stille deg selv før du flytter.",
   "lessons": "Leksjoner",
+  "lesson.of": "Leksjon {k} av {n}",
+  "rule": "Regelen",
   "check": "Sjekk før du flytter",
   "footer": "Hiku-skolen er under arbeid. Forklaringene kommer fra den samme motoren som «Hvorfor?» i spillet.",
   "title": "Hiku-skolen",
@@ -430,6 +430,8 @@ const TEXT = /*TEXTS*/{
   "h1": "Hiku School",
   "lead": "Practise spotting traps before you fall into them. Each lesson gives you a question to ask yourself before you move.",
   "lessons": "Lessons",
+  "lesson.of": "Lesson {k} of {n}",
+  "rule": "The rule",
   "check": "Check before you move",
   "footer": "Hiku School is a work in progress. The explanations come from the same engine as “Why?” in the game.",
   "title": "Hiku School",
@@ -556,6 +558,8 @@ const TEXT = /*TEXTS*/{
   "h1": "Hiku-skolan",
   "lead": "Här övar du på att se fällorna innan du går i dem. Varje lektion är en fråga du kan ställa dig själv innan du flyttar.",
   "lessons": "Lektioner",
+  "lesson.of": "Lektion {k} av {n}",
+  "rule": "Regeln",
   "check": "Kolla innan du flyttar",
   "footer": "Hiku-skolan är under arbete. Förklaringarna kommer från samma motor som ”Varför?” i spelet.",
   "title": "Hiku-skolan",
@@ -682,6 +686,8 @@ const TEXT = /*TEXTS*/{
   "h1": "Hiku-skolen",
   "lead": "Her øver du dig i at se fælderne, før du går i dem. Hver lektion er et spørgsmål, du kan stille dig selv, før du flytter.",
   "lessons": "Lektioner",
+  "lesson.of": "Lektion {k} af {n}",
+  "rule": "Reglen",
   "check": "Tjek, før du flytter",
   "footer": "Hiku-skolen er under udvikling. Forklaringerne kommer fra den samme motor som »Hvorfor?« i spillet.",
   "title": "Hiku-skolen",
@@ -808,6 +814,8 @@ const TEXT = /*TEXTS*/{
   "h1": "Hiku-koulu",
   "lead": "Täällä harjoittelet huomaamaan ansat ennen kuin astut niihin. Jokaisella oppitunnilla saat kysymyksen, jonka voit esittää itsellesi ennen siirtoa.",
   "lessons": "Oppitunnit",
+  "lesson.of": "Oppitunti {k}/{n}",
+  "rule": "Sääntö",
   "check": "Tarkista ennen siirtoa",
   "footer": "Hiku-koulu on vielä työn alla. Selitykset tuottaa sama moottori, jota pelin ”Miksi?”-toiminto käyttää.",
   "title": "Hiku-koulu",
@@ -934,6 +942,8 @@ const TEXT = /*TEXTS*/{
   "h1": "Hiku-Schule",
   "lead": "Hier übst du, Fallen zu erkennen, bevor du hineintappst. Jede Lektion behandelt eine Frage, die du dir vor einem Zug stellen kannst.",
   "lessons": "Lektionen",
+  "lesson.of": "Lektion {k} von {n}",
+  "rule": "Die Regel",
   "check": "Vor dem Zug prüfen",
   "footer": "Die Hiku-Schule ist noch in Arbeit. Die Erklärungen stammen aus derselben Engine wie „Warum?“ im Spiel.",
   "title": "Hiku-Schule",
@@ -5367,18 +5377,29 @@ function drawLessons() {
     b.append(l.short);
     if (finished(l)) { b.classList.add("done"); b.setAttribute("aria-label", tr("lesson.finished", {k: k + 1, name: l.short})); }
     b.setAttribute("aria-current", String(l === lesson));
-    b.onclick = () => open(k);
+    b.onclick = () => { setNav(false); open(k); };
     li.append(b); lessonsEl.append(li);
   });
+  pick.textContent = tr("lesson.of", {k: LESSONS.indexOf(lesson) + 1, n: LESSONS.length});
 }
+
+// On a phone the lessons are one line, "Leksjon 3 av 8", that opens the list of them.
+const pick = document.getElementById("lessonpick"), nav = document.getElementById("lessonnav");
+const setNav = on => { nav.classList.toggle("open", on); pick.setAttribute("aria-expanded", String(on)); };
+pick.onclick = () => setNav(!nav.classList.contains("open"));
 
 function open(k) {
   lesson = LESSONS[k];
   try { history.replaceState(null, "", `#leksjon-${k + 1}`); } catch (e) {}
   saved = load(lesson.key); saved.done ||= []; saved.first ||= {};
   document.getElementById("lesson-title").textContent = `${k + 1}. ${lesson.title}`;
-  document.getElementById("lesson-rule").textContent = lesson.rule;
-  document.getElementById("lesson-check").textContent = lesson.check;
+  // One thing to look for above the board; the rule behind it folded away below. The test is told how it works, and
+  // its questions are what is folded. The first lesson's rule is what its demonstration shows, so it is left out.
+  document.getElementById("lesson-cue").textContent = lesson.test ? lesson.rule : lesson.check;
+  const more = document.getElementById("lesson-more");
+  more.hidden = lesson.id === "basics"; more.open = false;
+  document.getElementById("lesson-more-label").textContent = lesson.test ? tr("check") : tr("rule");
+  document.getElementById("lesson-more-text").textContent = lesson.test ? lesson.check : lesson.rule;
   drawLessons();
   if (lesson.test) return runTest();
   current = Math.min(saved.done.length, lesson.steps.length - 1);
@@ -5483,6 +5504,15 @@ function verdict(box, cls, head, why, steps = [], more = "", moreLabel = tr("mor
     box.insertAdjacentHTML("beforeend", `<details class="more"><summary>${moreLabel}</summary><p></p></details>`);
     box.querySelector(".more p").textContent = more;
   }
+  inSight(box);
+}
+
+/** Scrolls so an element's foot is on the screen, without taking its card's top off it. */
+function inSight(el) {
+  requestAnimationFrame(() => {
+    const r = el.getBoundingClientRect(), card = (el.closest(".step") || el).getBoundingClientRect();
+    if (r.bottom > innerHeight) scrollBy({top: Math.max(0, Math.min(card.top - 12, r.bottom - innerHeight + 24)), behavior: "smooth"});
+  });
 }
 
 /** The engine's own words for a move, with the board they are about (before or after it), or null when it has none. */
@@ -5633,14 +5663,15 @@ function offerWay(fb, b, label, n, after, t, back) {
  * The sentence for this step, in a box of steady height so the button below it stays where it is; the ones before
  * are folded away under "Tidligere steg".
  */
-function tell(host, said) {
+function tell(host, said, past = host) {
   host.innerHTML = `<p class="now"></p>`;
   host.firstChild.textContent = said[said.length - 1];
+  if (past !== host) past.querySelector(".earlier")?.remove();
   if (said.length > 1) {
     const d = document.createElement("details"); d.className = "earlier";
     d.innerHTML = `<summary>${tr("earlier")}</summary><ol></ol>`;
     for (const t of said.slice(0, -1)) { const li = document.createElement("li"); li.textContent = t; d.lastChild.append(li); }
-    host.append(d);
+    past.append(d);
   }
 }
 
@@ -5773,7 +5804,7 @@ function finish(k, firstTry) {
  * Every move is checked against the rules as it is played, so a demonstration cannot show a jump the game forbids.
  */
 function demo(k, s, b, label, acts, fb) {
-  const n = s.n, start = s.cells.slice(), said = [];
+  const el = acts.closest(".step"), n = s.n, start = s.cells.slice(), said = [];
   let cells = start.slice(), f = 0;
   const playOn = (c, mv) => {
     const [a, t] = mv.split("-").map(x => at(n, x));
@@ -5802,21 +5833,15 @@ function demo(k, s, b, label, acts, fb) {
     said.push(fr.text);
     fb.className = "feedback info";
     fb.classList.add("telling");
-    tell(fb, said);
+    tell(fb, said, el.querySelector(".extras"));
     const next = s.frames[f + 1];
     acts.innerHTML = "";
     if (next) {
       const go = document.createElement("button");
       go.type = "button"; go.className = "btn main"; go.textContent = next.go || tr("on");
-      go.onclick = () => { f++; frame(); seen(); };
+      go.onclick = () => { f++; frame(); inSight(el); };
       acts.append(go);
     } else finish(k, true);
-  };
-  // On a phone the board stands under the sentence and its button: once the demonstration is under way, the card is
-  // brought up so the board it talks about is in sight too.
-  const seen = () => {
-    const r = acts.closest(".step").getBoundingClientRect();
-    if (innerWidth <= 600 && r.bottom > innerHeight) scrollBy({top: Math.min(r.top - 12, r.bottom - innerHeight + 24), behavior: "smooth"});
   };
   frame();
 }
@@ -5832,11 +5857,10 @@ function show(k, extra = null) {
   const banner = s.type === "findTrap" ? `<p class="goal trap"><span class="icon" aria-hidden="true">✕</span><span>${tr("goal.trap")}</span></p>`
     : s.type === "solve" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>${tr("goal.solve")}</span></p>`
     : s.type === "findSafe" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>${tr("goal.safe")}</span></p>` : "";
-  el.innerHTML = `<div class="stephead"><p class="kind">${label}</p><ol class="progress" id="progress" aria-label="${tr("progress")}"></ol></div><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div><div class="extras"></div>`;
+  el.innerHTML = `<div class="stephead"><p class="kind">${label}</p><ol class="progress" id="progress" aria-label="${tr("progress")}"></ol></div>${s.title ? "<h3></h3>" : ""}${banner}<p class="text"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div><div class="host"></div><p class="boardlabel"></p><div class="extras"></div>`;
   const from = s.move ? at(n, s.move[0]) : -1, to = s.move ? at(n, s.move[1]) : -1;
   const mv = s.move ? moveText(n, cells, from, to) : "";
-  el.querySelector("h3").textContent = s.title || tr({demo: "title.demo", example: "title.demo", predict: k === 1 ? "title.predict" : "title.predict2",
-    findTrap: "title.findTrap", findSafe: "title.findSafe", solve: "title.solve"}[s.type]);
+  if (s.title) el.querySelector("h3").textContent = s.title;
   el.querySelector(".text").textContent = s.text || {
     demo: "",
     example: tr("text.example", {mv}),
@@ -5850,8 +5874,8 @@ function show(k, extra = null) {
   nextLabel = k === steps.length - 1 ? tr("done") : tr("next");
 
   if (s.type === "demo") return demo(k, s, b, label2, acts, fb);
-  // In an exercise the buttons sit right under the board and the answer comes below them, however long it is.
-  fb.before(acts);
+  // In an exercise the question and its buttons stand above the board, and the answer comes under the board.
+  label2.after(fb);
 
   if (s.type === "example" || s.type === "predict") {
     const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000), e = ok ? null : explain(n, cells, from, to);
@@ -6076,7 +6100,7 @@ function runTest() {
     const el = document.createElement("article"); el.className = "step";
     el.innerHTML = `<div class="stephead"><p class="kind">${tr("test.q", {i: i + 1, n: qs.length})}</p><ol class="progress" aria-label="${tr("progress")}">` +
       qs.map((_, j) => `<li class="${j < i ? (answers[j] ? "done" : "missed") : j === i ? "now" : ""}"></li>`).join("") + `</ol></div>` +
-      `<h3>${tr("test.h")}</h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>`;
+      `<h3>${tr("test.h")}</h3><p class="text"></p><div class="actions"></div><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div>`;
     el.querySelector(".text").textContent = tr("test.text", {mv: moveText(n, cells, q.from, q.to)});
     place(el, was);
     const b = board(el.querySelector(".host"), n), label = el.querySelector(".boardlabel"), fb = el.querySelector(".feedback"), acts = el.querySelector(".actions");
