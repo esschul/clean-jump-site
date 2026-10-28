@@ -1,0 +1,7 @@
+# Addresses typed on a phone, which may start with a capital letter or say "skolen": all to the school.
+/Skole /skole/ 301
+/Skole/ /skole/ 301
+/skolen /skole/ 301
+/skolen/ /skole/ 301
+/Skolen /skole/ 301
+/Skolen/ /skole/ 301
