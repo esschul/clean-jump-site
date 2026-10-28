@@ -303,6 +303,636 @@ const TEXT = /*TEXTS*/{
   "footer": "Hiku-skolen er under arbeid. Forklaringene kommer fra den samme motoren som «Hvorfor?» i spillet.",
   "title": "Hiku-skolen",
   "lang.label": "Språk"
+ },
+ "en": {
+  "list.and": " and ",
+  "tile": "the {v} on {sq}",
+  "sum.gone": "{a} − {b} = gone",
+  "more": "Show the full explanation",
+  "squares.one": "1 square",
+  "squares": "{d} squares",
+  "parity.why": "When one number jumps onto another, the difference is left. Both numbers lose the same amount, the smaller number, so the total drops by twice that amount: always an even number. An odd total can never reach 0.",
+  "alone": "{x} is left alone.",
+  "alone.one": "{a} was the only other number in the same row or column.",
+  "alone.two": "{a} and {b} were the only other numbers in the same row or column.",
+  "alone.none": "There are no other numbers left in the row or column.",
+  "meet": "{a} and {b} are {apart} apart. Neither is {d}, and neither can ever become {d}. So they can never meet.",
+  "partner": "{x} and {y} can only disappear together with {c}. When one does, the other is left.",
+  "why": "Show why",
+  "parity": "The highlighted numbers cannot meet the rest of the board. Their total is {sum}. That is an odd number, so they can never all disappear.",
+  "needs": "An empty square never gets a number again.",
+  "needs.at": "{sq} is used here.",
+  "needs.end": "This is just one way to clear the board, but every way uses {sq} like this. After your move, the square is empty, and an empty square never gets a number again.",
+  "early.first": "This had to happen first:",
+  "early.at": "Only now does {x} land on {sq}.",
+  "early.end": "This is just one way to clear the board, but in every way, another number lands on {sq} before {x} does.",
+  "follow.stuck": "{x} is stuck: it cannot jump, and nothing can land on it.",
+  "follow.jumps": "{x} jumps to {sq}",
+  "follow.lands": "{x} lands on {sq}",
+  "follow": "The number on {start} can never disappear. If {steps}, a {v} is left on {end} that nothing can clear.",
+  "way.intro": "Follow {x} after your move. What can happen to it?",
+  "way.label": "Follow the number",
+  "show.jump": "Show the jump",
+  "back.answer": "Back to the answer",
+  "jump": "{x} jumps onto {y}: {sum}.",
+  "way.end": "Now {x} cannot jump, and nothing can land on it, whatever happens on the rest of the board. It is left there.",
+  "earlier": "Earlier steps",
+  "sum.vanish": "{a} − {b} = 0, so both disappear",
+  "example.intro": "Here is how to clear the board from the position before your move. Watch {sq}.",
+  "example.label": "One example",
+  "empty": "The board is empty.",
+  "after": "After the move",
+  "recall": "What should you check before your next move?",
+  "on": "Continue",
+  "label.example": "Example",
+  "label.similar": "A similar puzzle",
+  "label.task": "Puzzle {k} of {n}",
+  "goal.trap": "Look for the trap: the move that makes the board impossible to clear.",
+  "goal.solve": "Clear all the numbers.",
+  "goal.safe": "Look for the safe move: the only one that keeps the board possible to clear.",
+  "progress": "Progress",
+  "title.demo": "See what happens",
+  "title.predict": "What do you think?",
+  "title.predict2": "And here?",
+  "title.findTrap": "Find the trap",
+  "title.findSafe": "Find the safe move",
+  "title.solve": "Clear the board",
+  "text.example": "See what happens when {mv}.",
+  "text.findTrap": "Find a move that makes the board impossible to clear. Tap the number that will jump, then the square it will land on.",
+  "text.findSafe": "Almost every move here is a trap. Tap the number that will jump, then the square it will land on.",
+  "text.solve": "Tap the number that will jump, then the square it will land on. Play until the board is empty.",
+  "right": "Correct!",
+  "notquite": "Not quite.",
+  "similar": "Try a similar one",
+  "safe": "Safe",
+  "trap": "Trap",
+  "think": "Not quite. Think it through again.",
+  "again": "Not quite. Try again.",
+  "yes": "Yes",
+  "no": "No",
+  "back": "Back",
+  "solved": "The board is empty!",
+  "solved.text": "You cleared all the numbers. That is the whole game: find an order that leaves none behind.",
+  "lost": "The board can no longer be cleared.",
+  "lost.text": "The numbers left can no longer clear each other.",
+  "restart": "Start again",
+  "cannot": "{x} cannot jump anywhere now.",
+  "move.short": "{x} to {sq}",
+  "unchecked": "We did not have time to check that move. Try another.",
+  "found.trap": "Correct, that was the trap.",
+  "found.safe": "Correct, that move is safe.",
+  "still": "The board can still be cleared after that.",
+  "tried.safe": "That move is safe. You are looking for the trap.",
+  "tried.safe.text": "{move}: the board can still be cleared after that.",
+  "tried.trap": "That was a trap. You are looking for the safe move.",
+  "not.solvable": "The board cannot be cleared after that.",
+  "try.other": "Try another move",
+  "lesson.n": "Lesson {k}",
+  "lesson.done": "Lesson complete!",
+  "how.one": "You did it.",
+  "how.all": "Everything right on the first try. Great work!",
+  "how.none": "You did it after trying again. That is how you learn.",
+  "how.some": "You got {r} of {n} on the first try, and the rest after trying again. That is how you learn.",
+  "lesson.finished": "{k}. {name}, complete",
+  "step": "Step {k}",
+  "step.done": "Step {k}, complete",
+  "move": "{x} jumps to {sq}",
+  "next": "Next",
+  "done": "Done",
+  "next.lesson": "Next lesson",
+  "redo": "Repeat the lesson",
+  "test.q": "Question {i} of {n}",
+  "test.h": "Safe or trap?",
+  "test.text": "Look at the move: {mv}.",
+  "move.label": "Move: {mv}",
+  "test.wrong.safe": "Wrong. The move is safe.",
+  "test.wrong.trap": "Wrong. It is a trap.",
+  "test.safe": "The board can still be cleared after that move.",
+  "test.pattern": "Pattern: {p}. {t}",
+  "test.next": "Next question",
+  "test.result": "See the result",
+  "test.title": "Test",
+  "test.score": "You got {r} out of {n}.",
+  "test.all": "Everything right. You spot the traps before you fall into them.",
+  "test.good": "Well done. Practise the patterns you missed a little more.",
+  "test.more": "Go through the lessons you missed again, then try once more.",
+  "test.row": "{p}: {r} of {n}",
+  "test.safes": "Safe moves",
+  "test.practice": "Practise {p}",
+  "test.again": "Take the test again",
+  "test.none": "The test could not be set up.",
+  "h1": "Hiku School",
+  "lead": "Practise spotting traps before you fall into them. Each lesson gives you a question to ask yourself before you move.",
+  "lessons": "Lessons",
+  "check": "Check before you move",
+  "footer": "Hiku School is a work in progress. The explanations come from the same engine as “Why?” in the game.",
+  "title": "Hiku School",
+  "lang.label": "Language",
+  "undo": "\\s*Undo, and [^.]*\\."
+ },
+ "sv": {
+  "list.and": " och ",
+  "tile": "{v}:an på {sq}",
+  "sum.gone": "{a} − {b} = borta",
+  "more": "Visa hela förklaringen",
+  "squares.one": "1 ruta",
+  "squares": "{d} rutor",
+  "parity.why": "När ett tal hoppar på ett annat blir skillnaden kvar. Båda talen minskar lika mycket, med det minsta talet, så summan minskar med det dubbla: alltid ett jämnt tal. Från ett udda tal kan summan aldrig komma ner till 0.",
+  "alone": "{x} blir stående ensam.",
+  "alone.one": "{a} var det enda talet i samma rad eller kolumn.",
+  "alone.two": "{a} och {b} var de enda talen i samma rad eller kolumn.",
+  "alone.none": "Det finns inga andra tal kvar i raden eller kolumnen.",
+  "meet": "{a} och {b} står {apart} från varandra. Ingen av dem är {d}, och ingen av dem kan bli det. Då kan de aldrig mötas.",
+  "partner": "{x} och {y} kan bara försvinna tillsammans med {c}. När den ena gör det blir den andra kvar.",
+  "why": "Visa varför",
+  "parity": "De markerade talen kan inte möta resten av brädet. Summan är {sum}. Det är ett udda tal, så de kan aldrig försvinna allihop.",
+  "needs": "En tom ruta får aldrig ett tal igen.",
+  "needs.at": "Här används {sq}.",
+  "needs.end": "Det här är bara ett sätt att rensa brädet, men alla sätt använder {sq} så här. Efter ditt drag är rutan tom, och en tom ruta får aldrig ett tal igen.",
+  "early.first": "Först måste det här hända:",
+  "early.at": "Först nu landar {x} på {sq}.",
+  "early.end": "Det här är bara ett sätt att rensa brädet, men i alla landar ett annat tal på {sq} innan {x} gör det.",
+  "follow.stuck": "{x} sitter fast: den kan inte hoppa, och inget kan landa på den.",
+  "follow.jumps": "{x} hoppar till {sq}",
+  "follow.lands": "{x} landar på {sq}",
+  "follow": "Talet på {start} kan aldrig försvinna. Om {steps}, blir talet {v} kvar på {end}, och ingen kan ta bort det.",
+  "way.intro": "Följ {x} efter ditt drag. Vad kan hända med den?",
+  "way.label": "Följ talet",
+  "show.jump": "Visa hoppet",
+  "back.answer": "Tillbaka till svaret",
+  "jump": "{x} hoppar på {y}: {sum}.",
+  "way.end": "Nu kan {x} inte hoppa, och inget kan landa på den, oavsett vad som händer på resten av brädet. Den blir kvar.",
+  "earlier": "Tidigare steg",
+  "sum.vanish": "{a} − {b} = 0, så båda försvinner",
+  "example.intro": "Så här kan brädet rensas från läget före ditt drag. Håll koll på {sq}.",
+  "example.label": "Ett exempel",
+  "empty": "Brädet är tomt.",
+  "after": "Efter draget",
+  "recall": "Vad bör du kolla före nästa drag?",
+  "on": "Vidare",
+  "label.example": "Exempel",
+  "label.similar": "En liknande uppgift",
+  "label.task": "Uppgift {k} av {n}",
+  "goal.trap": "Du letar efter fällan: draget som gör att brädet inte går att lösa.",
+  "goal.solve": "Få bort alla talen.",
+  "goal.safe": "Du letar efter det säkra draget: det enda som inte förstör brädet.",
+  "progress": "Framsteg",
+  "title.demo": "Se vad som händer",
+  "title.predict": "Vad tror du?",
+  "title.predict2": "Och här?",
+  "title.findTrap": "Hitta fällan",
+  "title.findSafe": "Hitta det säkra draget",
+  "title.solve": "Rensa brädet",
+  "text.example": "Se vad som händer när {mv}.",
+  "text.findTrap": "Hitta ett drag som gör att brädet inte går att lösa. Tryck på talet som ska hoppa och sedan på rutan där det ska landa.",
+  "text.findSafe": "Här är nästan alla drag fällor. Tryck på talet som ska hoppa och sedan på rutan där det ska landa.",
+  "text.solve": "Tryck på talet som ska hoppa och sedan på rutan där det ska landa. Spela tills brädet är tomt.",
+  "right": "Rätt!",
+  "notquite": "Inte riktigt.",
+  "similar": "Prova en liknande",
+  "safe": "Säkert",
+  "trap": "Fälla",
+  "think": "Inte riktigt. Tänk en gång till.",
+  "again": "Inte riktigt. Prova igen.",
+  "yes": "Ja",
+  "no": "Nej",
+  "back": "Tillbaka",
+  "solved": "Brädet är tomt!",
+  "solved.text": "Du fick bort alla talen. Det är hela spelet: hitta en ordning där inget blir kvar.",
+  "lost": "Nu går brädet inte längre att lösa.",
+  "lost.text": "Talen som är kvar kan inte längre ta bort varandra.",
+  "restart": "Börja om",
+  "cannot": "{x} kan inte hoppa någonstans nu.",
+  "move.short": "{x} till {sq}",
+  "unchecked": "Det draget hann vi inte kontrollera. Prova ett annat.",
+  "found.trap": "Rätt, det var fällan.",
+  "found.safe": "Rätt, det draget är säkert.",
+  "still": "Brädet går fortfarande att lösa efter det.",
+  "tried.safe": "Det draget är säkert. Du letar efter fällan.",
+  "tried.safe.text": "{move}: brädet går fortfarande att lösa efter det.",
+  "tried.trap": "Det var en fälla. Du letar efter det säkra draget.",
+  "not.solvable": "Brädet går inte att lösa efter det.",
+  "try.other": "Prova ett annat drag",
+  "lesson.n": "Lektion {k}",
+  "lesson.done": "Lektionen är klar!",
+  "how.one": "Du klarade det.",
+  "how.all": "Allt rätt på första försöket. Starkt!",
+  "how.none": "Du klarade det efter att ha provat igen. Det är så man lär sig.",
+  "how.some": "Du klarade {r} av {n} på första försöket och resten efter att ha provat igen. Det är så man lär sig.",
+  "lesson.finished": "{k}. {name}, klar",
+  "step": "Steg {k}",
+  "step.done": "Steg {k}, klart",
+  "move": "{x} hoppar till {sq}",
+  "next": "Nästa",
+  "done": "Klar",
+  "next.lesson": "Nästa lektion",
+  "redo": "Gör om lektionen",
+  "test.q": "Fråga {i} av {n}",
+  "test.h": "Säkert eller fälla?",
+  "test.text": "Titta på draget: {mv}.",
+  "move.label": "Drag: {mv}",
+  "test.wrong.safe": "Fel. Draget är säkert.",
+  "test.wrong.trap": "Fel. Det är en fälla.",
+  "test.safe": "Brädet går fortfarande att lösa efter det draget.",
+  "test.pattern": "Mönster: {p}. {t}",
+  "test.next": "Nästa fråga",
+  "test.result": "Se resultatet",
+  "test.title": "Prov",
+  "test.score": "Du fick {r} av {n}.",
+  "test.all": "Allt rätt. Du ser fällorna innan du går i dem.",
+  "test.good": "Bra jobbat. Öva lite mer på mönstren du missade.",
+  "test.more": "Gör om lektionerna där du svarade fel och prova igen.",
+  "test.row": "{p}: {r} av {n}",
+  "test.safes": "Säkra drag",
+  "test.practice": "Öva på {p}",
+  "test.again": "Gör om provet",
+  "test.none": "Provet kunde inte skapas.",
+  "h1": "Hiku-skolan",
+  "lead": "Här övar du på att se fällorna innan du går i dem. Varje lektion är en fråga du kan ställa dig själv innan du flyttar.",
+  "lessons": "Lektioner",
+  "check": "Kolla innan du flyttar",
+  "footer": "Hiku-skolan är under arbete. Förklaringarna kommer från samma motor som ”Varför?” i spelet.",
+  "title": "Hiku-skolan",
+  "lang.label": "Språk",
+  "undo": "\\s*Ångra, och [^.]*\\."
+ },
+ "da": {
+  "list.and": " og ",
+  "tile": "{v} på {sq}",
+  "sum.gone": "{a} − {b} = væk",
+  "more": "Vis hele forklaringen",
+  "squares.one": "1 felt",
+  "squares": "{d} felter",
+  "parity.why": "Når et tal hopper på et andet, bliver forskellen tilbage. Begge tal mister lige meget, det mindste tal, så summen falder med det dobbelte: altid et lige tal. Fra et ulige tal kan summen aldrig nå ned til 0.",
+  "alone": "{x} bliver stående alene.",
+  "alone.one": "{a} var det eneste tal i samme række eller kolonne.",
+  "alone.two": "{a} og {b} var de eneste tal i samme række eller kolonne.",
+  "alone.none": "Der er ingen andre tal tilbage i rækken eller kolonnen.",
+  "meet": "{a} og {b} står {apart} fra hinanden. Ingen af dem er {d}, og ingen af dem kan blive det. Så kan de aldrig mødes.",
+  "partner": "{x} og {y} kan kun forsvinde sammen med {c}. Når det ene gør det, bliver det andet tilbage.",
+  "why": "Vis hvorfor",
+  "parity": "De markerede tal kan ikke møde resten af brættet. Summen er {sum}. Det er et ulige tal, så de kan aldrig forsvinde alle sammen.",
+  "needs": "Et tomt felt får aldrig et tal igen.",
+  "needs.at": "Her bruges {sq}.",
+  "needs.end": "Dette er kun én måde at rydde brættet på, men alle måder bruger {sq} sådan. Efter dit træk er feltet tomt, og et tomt felt får aldrig et tal igen.",
+  "early.first": "Først skulle dette ske:",
+  "early.at": "Først nu lander {x} på {sq}.",
+  "early.end": "Dette er kun én måde at rydde brættet på, men i dem alle lander et andet tal på {sq}, før {x} gør det.",
+  "follow.stuck": "{x} sidder fast: det kan ikke hoppe, og intet kan lande på det.",
+  "follow.jumps": "{x} hopper til {sq}",
+  "follow.lands": "{x} lander på {sq}",
+  "follow": "Tallet på {start} kan aldrig forsvinde. Hvis {steps}, bliver der stående et {v}-tal på {end}, som ingen kan fjerne.",
+  "way.intro": "Følg {x} efter dit træk. Hvad kan der ske med det?",
+  "way.label": "Følg tallet",
+  "show.jump": "Vis hoppet",
+  "back.answer": "Tilbage til svaret",
+  "jump": "{x} hopper på {y}: {sum}.",
+  "way.end": "Nu kan {x} ikke hoppe, og intet kan lande på det, uanset hvad der sker på resten af brættet. Det bliver stående.",
+  "earlier": "Tidligere trin",
+  "sum.vanish": "{a} − {b} = 0, så begge forsvinder",
+  "example.intro": "Sådan kan brættet ryddes fra stillingen før dit træk. Hold øje med {sq}.",
+  "example.label": "Et eksempel",
+  "empty": "Brættet er tomt.",
+  "after": "Efter trækket",
+  "recall": "Hvad bør du tjekke før næste træk?",
+  "on": "Videre",
+  "label.example": "Eksempel",
+  "label.similar": "En lignende opgave",
+  "label.task": "Opgave {k} af {n}",
+  "goal.trap": "Du leder efter fælden: trækket, der gør, at brættet ikke kan løses.",
+  "goal.solve": "Fjern alle tallene.",
+  "goal.safe": "Du leder efter det sikre træk: det eneste, der ikke ødelægger brættet.",
+  "progress": "Fremskridt",
+  "title.demo": "Se, hvad der sker",
+  "title.predict": "Hvad tror du?",
+  "title.predict2": "Og her?",
+  "title.findTrap": "Find fælden",
+  "title.findSafe": "Find det sikre træk",
+  "title.solve": "Ryd brættet",
+  "text.example": "Se, hvad der sker, når {mv}.",
+  "text.findTrap": "Find et træk, der gør, at brættet ikke kan løses. Tryk på tallet, der skal hoppe, og så på feltet, det skal lande på.",
+  "text.findSafe": "Her er næsten alle træk fælder. Tryk på tallet, der skal hoppe, og så på feltet, det skal lande på.",
+  "text.solve": "Tryk på tallet, der skal hoppe, og så på feltet, det skal lande på. Spil, til brættet er tomt.",
+  "right": "Rigtigt!",
+  "notquite": "Ikke helt.",
+  "similar": "Prøv en lignende",
+  "safe": "Sikkert",
+  "trap": "Fælde",
+  "think": "Ikke helt. Tænk dig om en gang til.",
+  "again": "Ikke helt. Prøv igen.",
+  "yes": "Ja",
+  "no": "Nej",
+  "back": "Tilbage",
+  "solved": "Brættet er tomt!",
+  "solved.text": "Du fik fjernet alle tallene. Det er hele spillet: find en rækkefølge, hvor ingen bliver stående tilbage.",
+  "lost": "Nu kan brættet ikke længere løses.",
+  "lost.text": "De tal, der er tilbage, kan ikke længere fjerne hinanden.",
+  "restart": "Start forfra",
+  "cannot": "{x} kan ikke hoppe nogen steder nu.",
+  "move.short": "{x} til {sq}",
+  "unchecked": "Det træk nåede vi ikke at tjekke. Prøv et andet.",
+  "found.trap": "Rigtigt, det var fælden.",
+  "found.safe": "Rigtigt, det træk er sikkert.",
+  "still": "Brættet kan stadig løses efter det.",
+  "tried.safe": "Det træk er sikkert. Du leder efter fælden.",
+  "tried.safe.text": "{move}: brættet kan stadig løses efter det.",
+  "tried.trap": "Det var en fælde. Du leder efter det sikre træk.",
+  "not.solvable": "Brættet kan ikke løses efter det.",
+  "try.other": "Prøv et andet træk",
+  "lesson.n": "Lektion {k}",
+  "lesson.done": "Lektionen er færdig!",
+  "how.one": "Du klarede det.",
+  "how.all": "Alt rigtigt i første forsøg. Flot!",
+  "how.none": "Du klarede det efter at have prøvet igen. Det er sådan, man lærer.",
+  "how.some": "Du klarede {r} af {n} i første forsøg og resten efter at have prøvet igen. Det er sådan, man lærer.",
+  "lesson.finished": "{k}. {name}, færdig",
+  "step": "Trin {k}",
+  "step.done": "Trin {k}, færdig",
+  "move": "{x} hopper til {sq}",
+  "next": "Næste",
+  "done": "Færdig",
+  "next.lesson": "Næste lektion",
+  "redo": "Tag lektionen igen",
+  "test.q": "Spørgsmål {i} af {n}",
+  "test.h": "Sikkert eller fælde?",
+  "test.text": "Se på trækket: {mv}.",
+  "move.label": "Træk: {mv}",
+  "test.wrong.safe": "Forkert. Trækket er sikkert.",
+  "test.wrong.trap": "Forkert. Det er en fælde.",
+  "test.safe": "Brættet kan stadig løses efter det træk.",
+  "test.pattern": "Mønster: {p}. {t}",
+  "test.next": "Næste spørgsmål",
+  "test.result": "Se resultatet",
+  "test.title": "Prøve",
+  "test.score": "Du fik {r} af {n}.",
+  "test.all": "Alt rigtigt. Du ser fælderne, før du går i dem.",
+  "test.good": "Godt klaret. Øv dig lidt mere på de mønstre, du svarede forkert på.",
+  "test.more": "Tag en runde mere med de lektioner, hvor du svarede forkert, og prøv igen.",
+  "test.row": "{p}: {r} af {n}",
+  "test.safes": "Sikre træk",
+  "test.practice": "Øv dig på {p}",
+  "test.again": "Tag prøven igen",
+  "test.none": "Prøven kunne ikke sættes op.",
+  "h1": "Hiku-skolen",
+  "lead": "Her øver du dig i at se fælderne, før du går i dem. Hver lektion er et spørgsmål, du kan stille dig selv, før du flytter.",
+  "lessons": "Lektioner",
+  "check": "Tjek, før du flytter",
+  "footer": "Hiku-skolen er under udvikling. Forklaringerne kommer fra den samme motor som »Hvorfor?« i spillet.",
+  "title": "Hiku-skolen",
+  "lang.label": "Sprog",
+  "undo": "\\s*Fortryd, og [^.]*\\."
+ },
+ "fi": {
+  "list.and": " ja ",
+  "tile": "ruudun {sq} {v}",
+  "sum.gone": "{a} − {b} = poissa",
+  "more": "Näytä koko selitys",
+  "squares.one": "1 ruudun",
+  "squares": "{d} ruudun",
+  "parity.why": "Kun luku hyppää toisen päälle, jäljelle jää erotus. Molemmista luvuista vähennetään yhtä paljon eli pienempi luku. Summa pienenee siis kaksinkertaisella määrällä, joka on aina parillinen. Pariton summa ei voi koskaan pienentyä nollaan.",
+  "alone": "{x} jää yksin.",
+  "alone.one": "{a} oli ainoa muu luku samalla rivillä tai sarakkeella.",
+  "alone.two": "{a} ja {b} olivat ainoat muut luvut samalla rivillä tai sarakkeella.",
+  "alone.none": "Rivillä tai sarakkeella ei ole enää muita lukuja.",
+  "meet": "{a} ja {b} ovat {apart} päässä toisistaan. Kumpikaan ei ole {d}, eikä kummastakaan voi tulla sitä. Siksi ne eivät voi koskaan kohdata.",
+  "partner": "{x} ja {y} voivat kadota vain, jos parina on {c}. Kun toinen katoaa sen kanssa, toinen jää jäljelle.",
+  "why": "Näytä miksi",
+  "parity": "Merkityt luvut eivät voi kohdata muun laudan lukuja. Summa on {sum}. Se on pariton, joten ne eivät voi kaikki kadota.",
+  "needs": "Tyhjään ruutuun ei tule enää koskaan lukua.",
+  "needs.at": "Tässä käytetään ruutua {sq}.",
+  "needs.end": "Tämä on vain yksi tapa tyhjentää lauta, mutta kaikissa tavoissa ruutua {sq} käytetään näin. Siirtosi jälkeen ruutu on tyhjä, eikä tyhjään ruutuun tule enää koskaan lukua.",
+  "early.first": "Ensin tämän täytyi tapahtua:",
+  "early.at": "Vasta nyt {x} laskeutuu ruutuun {sq}.",
+  "early.end": "Tämä on vain yksi tapa tyhjentää lauta, mutta kaikissa tavoissa ruutuun {sq} laskeutuu toinen luku ennen kuin {x} laskeutuu sinne.",
+  "follow.stuck": "{x} on jumissa: se ei voi hypätä, eikä mikään voi laskeutua sen päälle.",
+  "follow.jumps": "{x} hyppää ruutuun {sq}",
+  "follow.lands": "{x} laskeutuu ruutuun {sq}",
+  "follow": "Ruudun {start} luku ei voi koskaan kadota. Jos {steps}, ruutuun {end} jää {v}, jota mikään ei voi poistaa.",
+  "way.intro": "Seuraa siirtosi jälkeen, mitä tälle luvulle tapahtuu: {x}. Mitä sille voi tapahtua?",
+  "way.label": "Seuraa lukua",
+  "show.jump": "Näytä hyppy",
+  "back.answer": "Takaisin vastaukseen",
+  "jump": "{x} hyppää toisen luvun päälle. Kohteena on {y}: {sum}.",
+  "way.end": "Nyt {x} ei voi hypätä, eikä mikään voi laskeutua sen päälle, tapahtuipa muualla laudalla mitä tahansa. Se jää paikalleen.",
+  "earlier": "Aiemmat vaiheet",
+  "sum.vanish": "{a} − {b} = 0, joten molemmat katoavat",
+  "example.intro": "Näin laudan voi tyhjentää tilanteesta ennen siirtoasi. Seuraa ruutua {sq}.",
+  "example.label": "Yksi esimerkki",
+  "empty": "Lauta on tyhjä.",
+  "after": "Siirron jälkeen",
+  "recall": "Mitä kannattaa tarkistaa ennen seuraavaa siirtoa?",
+  "on": "Jatka",
+  "label.example": "Esimerkki",
+  "label.similar": "Samantapainen tehtävä",
+  "label.task": "Tehtävä {k}/{n}",
+  "goal.trap": "Etsit ansaa: siirtoa, jonka jälkeen lautaa ei voi enää tyhjentää.",
+  "goal.solve": "Poista kaikki luvut.",
+  "goal.safe": "Etsit turvallista siirtoa: ainoaa, jonka jälkeen laudan voi yhä tyhjentää.",
+  "progress": "Edistyminen",
+  "title.demo": "Katso mitä tapahtuu",
+  "title.predict": "Mitä luulet?",
+  "title.predict2": "Entä tässä?",
+  "title.findTrap": "Etsi ansa",
+  "title.findSafe": "Etsi turvallinen siirto",
+  "title.solve": "Tyhjennä lauta",
+  "text.example": "Katso mitä tapahtuu, kun {mv}.",
+  "text.findTrap": "Etsi siirto, jonka jälkeen lautaa ei voi enää tyhjentää. Napauta hyppäävää lukua ja sitten ruutua, johon se laskeutuu.",
+  "text.findSafe": "Tässä lähes kaikki siirrot ovat ansoja. Napauta hyppäävää lukua ja sitten ruutua, johon se laskeutuu.",
+  "text.solve": "Napauta hyppäävää lukua ja sitten ruutua, johon se laskeutuu. Pelaa, kunnes lauta on tyhjä.",
+  "right": "Oikein!",
+  "notquite": "Ei aivan.",
+  "similar": "Kokeile samantapaista",
+  "safe": "Turvallinen",
+  "trap": "Ansa",
+  "think": "Ei aivan. Mieti vielä.",
+  "again": "Ei aivan. Yritä uudelleen.",
+  "yes": "Kyllä",
+  "no": "Ei",
+  "back": "Takaisin",
+  "solved": "Lauta on tyhjä!",
+  "solved.text": "Sait kaikki luvut pois. Siinä on koko pelin idea: löydä järjestys, jossa yksikään luku ei jää jäljelle.",
+  "lost": "Nyt lautaa ei voi enää tyhjentää.",
+  "lost.text": "Jäljellä olevat luvut eivät voi enää poistaa toisiaan.",
+  "restart": "Aloita alusta",
+  "cannot": "{x} ei voi nyt hypätä mihinkään.",
+  "move.short": "{x} hyppää ruutuun {sq}",
+  "unchecked": "Emme ehtineet tarkistaa tuota siirtoa. Kokeile toista.",
+  "found.trap": "Oikein, se oli ansa.",
+  "found.safe": "Oikein, tuo siirto on turvallinen.",
+  "still": "Laudan voi yhä tyhjentää sen jälkeen.",
+  "tried.safe": "Tuo siirto on turvallinen. Etsit ansaa.",
+  "tried.safe.text": "{move}: laudan voi yhä tyhjentää sen jälkeen.",
+  "tried.trap": "Se oli ansa. Etsit turvallista siirtoa.",
+  "not.solvable": "Lautaa ei voi tyhjentää sen jälkeen.",
+  "try.other": "Kokeile toista siirtoa",
+  "lesson.n": "Oppitunti {k}",
+  "lesson.done": "Oppitunti suoritettu!",
+  "how.one": "Onnistuit.",
+  "how.all": "Kaikki oikein ensimmäisellä yrityksellä. Hienoa!",
+  "how.none": "Onnistuit, kun yritit uudelleen. Niin sitä oppii.",
+  "how.some": "Sait {r}/{n} oikein ensimmäisellä yrityksellä ja loput, kun yritit uudelleen. Niin sitä oppii.",
+  "lesson.finished": "{k}. {name}, suoritettu",
+  "step": "Vaihe {k}",
+  "step.done": "Vaihe {k}, suoritettu",
+  "move": "{x} hyppää ruutuun {sq}",
+  "next": "Seuraava",
+  "done": "Valmis",
+  "next.lesson": "Seuraava oppitunti",
+  "redo": "Tee oppitunti uudelleen",
+  "test.q": "Kysymys {i}/{n}",
+  "test.h": "Turvallinen vai ansa?",
+  "test.text": "Katso siirtoa: {mv}.",
+  "move.label": "Siirto: {mv}",
+  "test.wrong.safe": "Väärin. Siirto on turvallinen.",
+  "test.wrong.trap": "Väärin. Se on ansa.",
+  "test.safe": "Laudan voi yhä tyhjentää tuon siirron jälkeen.",
+  "test.pattern": "Kuvio: {p}. {t}",
+  "test.next": "Seuraava kysymys",
+  "test.result": "Näytä tulos",
+  "test.title": "Koe",
+  "test.score": "Sait {r}/{n} oikein.",
+  "test.all": "Kaikki oikein. Huomaat ansat ennen kuin astut niihin.",
+  "test.good": "Hyvin tehty. Harjoittele vielä hieman kuvioita, joissa vastasit väärin.",
+  "test.more": "Tee uudelleen oppitunnit, joissa vastasit väärin, ja yritä sitten uudelleen.",
+  "test.row": "{p}: {r}/{n}",
+  "test.safes": "Turvalliset siirrot",
+  "test.practice": "Harjoittele: {p}",
+  "test.again": "Tee koe uudelleen",
+  "test.none": "Koetta ei voitu luoda.",
+  "h1": "Hiku-koulu",
+  "lead": "Täällä harjoittelet huomaamaan ansat ennen kuin astut niihin. Jokainen oppitunti antaa kysymyksen, jonka voit kysyä itseltäsi ennen siirtoa.",
+  "lessons": "Oppitunnit",
+  "check": "Tarkista ennen siirtoa",
+  "footer": "Hiku-koulu on vielä työn alla. Selitykset tulevat samasta moottorista kuin pelin ”Miksi?”-toiminnossa.",
+  "title": "Hiku-koulu",
+  "lang.label": "Kieli",
+  "undo": "\\s*Peru siirto ja [^.]*\\."
+ },
+ "de": {
+  "list.and": " und ",
+  "tile": "die {v} auf {sq}",
+  "sum.gone": "{a} − {b} = weg",
+  "more": "Ganze Erklärung zeigen",
+  "squares.one": "1 Feld",
+  "squares": "{d} Felder",
+  "parity.why": "Wenn eine Zahl auf eine andere springt, bleibt die Differenz übrig. Beide Zahlen verlieren gleich viel, nämlich die kleinere Zahl. Die Summe sinkt also um das Doppelte: immer um eine gerade Zahl. Eine ungerade Summe kann deshalb nie 0 werden.",
+  "alone": "{x} bleibt allein stehen.",
+  "alone.one": "{a} war die einzige andere Zahl in derselben Zeile oder Spalte.",
+  "alone.two": "{a} und {b} waren die einzigen anderen Zahlen in derselben Zeile oder Spalte.",
+  "alone.none": "In der Zeile oder Spalte ist keine andere Zahl mehr übrig.",
+  "meet": "{a} und {b} sind {apart} voneinander entfernt. Keine von beiden ist eine {d}, und keine kann dazu werden. Deshalb können sie sich nie treffen.",
+  "partner": "{x} und {y} können nur mit derselben Zahl verschwinden: {c}. Wenn die eine das tut, bleibt die andere übrig.",
+  "why": "Zeig mir, warum",
+  "parity": "Die markierten Zahlen können den Rest des Bretts nicht treffen. Ihre Summe ist {sum}. Das ist eine ungerade Zahl. Deshalb können sie nie alle verschwinden.",
+  "needs": "Ein leeres Feld bekommt nie wieder eine Zahl.",
+  "needs.at": "Hier wird {sq} gebraucht.",
+  "needs.end": "Das ist nur eine Möglichkeit, das Brett zu leeren. Aber bei jeder Möglichkeit wird {sq} so gebraucht. Nach deinem Zug ist das Feld leer, und ein leeres Feld bekommt nie wieder eine Zahl.",
+  "early.first": "Zuerst musste das passieren:",
+  "early.at": "Erst jetzt landet {x} auf {sq}.",
+  "early.end": "Das ist nur eine Möglichkeit, das Brett zu leeren. Aber bei jeder Möglichkeit landet eine andere Zahl auf {sq}, bevor {x} dort landet.",
+  "follow.stuck": "{x} steckt fest: Sie kann nicht springen, und nichts kann auf ihr landen.",
+  "follow.jumps": "{x} springt nach {sq}",
+  "follow.lands": "{x} landet auf {sq}",
+  "follow": "Die Zahl auf {start} kann nie verschwinden. Falls es so weitergeht: {steps}. Dann bleibt eine {v} auf {end} stehen, die niemand entfernen kann.",
+  "way.intro": "Verfolge nach deinem Zug diese Zahl: {x}. Was kann mit ihr passieren?",
+  "way.label": "Zahl verfolgen",
+  "show.jump": "Sprung zeigen",
+  "back.answer": "Zurück zur Antwort",
+  "jump": "{x} springt auf {y}: {sum}.",
+  "way.end": "{x} kann jetzt nicht springen, und nichts kann auf ihr landen. Das gilt unabhängig davon, was auf dem Rest des Bretts passiert. Sie bleibt stehen.",
+  "earlier": "Frühere Schritte",
+  "sum.vanish": "{a} − {b} = 0, also verschwinden beide",
+  "example.intro": "So lässt sich das Brett aus der Stellung vor deinem Zug leeren. Achte auf {sq}.",
+  "example.label": "Ein Beispiel",
+  "empty": "Das Brett ist leer.",
+  "after": "Nach dem Zug",
+  "recall": "Was solltest du vor dem nächsten Zug prüfen?",
+  "on": "Weiter",
+  "label.example": "Beispiel",
+  "label.similar": "Eine ähnliche Aufgabe",
+  "label.task": "Aufgabe {k} von {n}",
+  "goal.trap": "Du suchst die Falle: den Zug, nach dem sich das Brett nicht mehr lösen lässt.",
+  "goal.solve": "Entferne alle Zahlen.",
+  "goal.safe": "Du suchst den sicheren Zug: den einzigen, nach dem sich das Brett noch lösen lässt.",
+  "progress": "Fortschritt",
+  "title.demo": "Schau, was passiert",
+  "title.predict": "Was denkst du?",
+  "title.predict2": "Und hier?",
+  "title.findTrap": "Finde die Falle",
+  "title.findSafe": "Finde den sicheren Zug",
+  "title.solve": "Leere das Brett",
+  "text.example": "Schau, was bei diesem Zug passiert: {mv}.",
+  "text.findTrap": "Finde einen Zug, nach dem sich das Brett nicht mehr lösen lässt. Tippe auf die Zahl, die springen soll, und dann auf das Feld, auf dem sie landen soll.",
+  "text.findSafe": "Hier sind fast alle Züge Fallen. Tippe auf die Zahl, die springen soll, und dann auf das Feld, auf dem sie landen soll.",
+  "text.solve": "Tippe auf die Zahl, die springen soll, und dann auf das Feld, auf dem sie landen soll. Spiele, bis das Brett leer ist.",
+  "right": "Richtig!",
+  "notquite": "Nicht ganz.",
+  "similar": "Ähnliche Aufgabe",
+  "safe": "Sicher",
+  "trap": "Falle",
+  "think": "Nicht ganz. Denk noch einmal nach.",
+  "again": "Nicht ganz. Versuch es noch einmal.",
+  "yes": "Ja",
+  "no": "Nein",
+  "back": "Zurück",
+  "solved": "Das Brett ist leer!",
+  "solved.text": "Du hast alle Zahlen entfernt. Darum geht es im Spiel: Finde eine Reihenfolge, bei der keine Zahl übrig bleibt.",
+  "lost": "Jetzt lässt sich das Brett nicht mehr lösen.",
+  "lost.text": "Die übrigen Zahlen können sich nicht mehr gegenseitig entfernen.",
+  "restart": "Neu starten",
+  "cannot": "{x} kann jetzt nirgendwohin springen.",
+  "move.short": "{x} nach {sq}",
+  "unchecked": "Wir konnten diesen Zug nicht rechtzeitig prüfen. Versuch einen anderen.",
+  "found.trap": "Richtig, das war die Falle.",
+  "found.safe": "Richtig, dieser Zug ist sicher.",
+  "still": "Danach lässt sich das Brett noch lösen.",
+  "tried.safe": "Dieser Zug ist sicher. Du suchst die Falle.",
+  "tried.safe.text": "{move}: Danach lässt sich das Brett noch lösen.",
+  "tried.trap": "Das war eine Falle. Du suchst den sicheren Zug.",
+  "not.solvable": "Danach lässt sich das Brett nicht mehr lösen.",
+  "try.other": "Anderen Zug versuchen",
+  "lesson.n": "Lektion {k}",
+  "lesson.done": "Lektion geschafft!",
+  "how.one": "Du hast es geschafft.",
+  "how.all": "Alles beim ersten Versuch richtig. Stark!",
+  "how.none": "Nach weiteren Versuchen hast du es geschafft. So lernt man.",
+  "how.some": "Du hast {r} von {n} beim ersten Versuch geschafft und den Rest nach weiteren Versuchen. So lernt man.",
+  "lesson.finished": "{k}. {name}, abgeschlossen",
+  "step": "Schritt {k}",
+  "step.done": "Schritt {k}, abgeschlossen",
+  "move": "{x} springt nach {sq}",
+  "next": "Weiter",
+  "done": "Fertig",
+  "next.lesson": "Nächste Lektion",
+  "redo": "Lektion wiederholen",
+  "test.q": "Frage {i} von {n}",
+  "test.h": "Sicher oder Falle?",
+  "test.text": "Schau dir den Zug an: {mv}.",
+  "move.label": "Zug: {mv}",
+  "test.wrong.safe": "Falsch. Der Zug ist sicher.",
+  "test.wrong.trap": "Falsch. Das ist eine Falle.",
+  "test.safe": "Nach diesem Zug lässt sich das Brett noch lösen.",
+  "test.pattern": "Muster: {p}. {t}",
+  "test.next": "Nächste Frage",
+  "test.result": "Ergebnis ansehen",
+  "test.title": "Test",
+  "test.score": "Du hast {r} von {n} richtig beantwortet.",
+  "test.all": "Alles richtig. Du erkennst die Fallen, bevor du hineintappst.",
+  "test.good": "Gut gemacht. Übe noch etwas die Muster, bei denen du falsch lagst.",
+  "test.more": "Wiederhole die Lektionen, bei denen du falsch lagst, und versuch es noch einmal.",
+  "test.row": "{p}: {r} von {n}",
+  "test.safes": "Sichere Züge",
+  "test.practice": "{p} üben",
+  "test.again": "Test wiederholen",
+  "test.none": "Der Test konnte nicht zusammengestellt werden.",
+  "h1": "Hiku-Schule",
+  "lead": "Hier übst du, Fallen zu erkennen, bevor du hineintappst. Jede Lektion behandelt eine Frage, die du dir vor einem Zug stellen kannst.",
+  "lessons": "Lektionen",
+  "check": "Vor dem Zug prüfen",
+  "footer": "Die Hiku-Schule ist noch in Arbeit. Die Erklärungen stammen aus derselben Engine wie „Warum?“ im Spiel.",
+  "title": "Hiku-Schule",
+  "lang.label": "Sprache",
+  "undo": "\\s*Nimm den Zug zurück und [^.]*\\."
  }
 }/*TEXTSEND*/;
 // Pieces that go inside a sentence keep their first letter as it is; every other text starts with a capital.
@@ -3022,7 +3652,1678 @@ const ANSWERS = {
 };
 
 // The lessons' words in this page's language, laid over the Norwegian ones by lesson and step.
-const LESSON_TEXT = /*LTEXTS*/{}/*LTEXTSEND*/;
+const LESSON_TEXT = /*LTEXTS*/{
+ "en": {
+  "basics": {
+   "short": "How to play",
+   "title": "How to play",
+   "rule": "The goal is to clear all the numbers. A number jumps exactly as many squares as it shows, along a row or column. It must land on another number. The larger minus the smaller is left, and equal numbers both disappear.",
+   "check": "Count the squares: a 3 can reach a number exactly 3 squares away in the same row or column.",
+   "recall": "Count the squares before you jump, and think about what will be left where you land.",
+   "learned": "Now you know the rules: a number jumps exactly as far as it shows, the larger minus the smaller is left, and equal numbers disappear.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "The goal is to clear all the numbers on the board."
+      },
+      {
+       "text": "A number jumps exactly as many squares as it shows, along a row or column, never diagonally. The 3 on A1 can reach the 1 on D1, 3 squares away."
+      },
+      {
+       "text": "Where it lands, the larger minus the smaller is left: 3 − 1 = 2.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "If the numbers are equal, both disappear. The 2 on A3 jumps 2 squares to the 2 on C3."
+      },
+      {
+       "text": "2 − 2 = 0. Both are gone.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Finally, the 2 on D1 jumps two squares down to the 2 on D3. The board is empty.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "The order matters. The wrong order can leave numbers that will never meet. That is what the next lessons are about."
+      }
+     ]
+    }
+   }
+  },
+  "alone": {
+   "short": "Alone",
+   "title": "Which number will be left alone?",
+   "rule": "A number can only disappear when another number in the same row or column reduces it. If no other numbers are left there, it stays forever.",
+   "check": "Is there a number in the same row or column as the number you want to move? If it has no other number to meet, it will be left alone when you move.",
+   "recall": "Look for numbers in the same row or column as the number you want to move. If one has no other number to meet, it will be left alone.",
+   "ask": "If {move}, will a number be left alone?",
+   "pick": "Which number will be left alone? Tap it on the board.",
+   "none": "None will be left alone. Every number still has another number in its row or column, and the board can still be cleared.",
+   "hint": "Look at the row and column of the number that jumps. Is there a number there that will have no other number to meet once it is gone?",
+   "learned": "Before you move, look for numbers that can only meet the number you are moving. They will be left alone.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Look at the 1 on A3. There is only one other number in A3's row or column: the 2 on B3."
+      },
+      {
+       "text": "The 2 on B3 jumps two squares up and lands on the 3 on B1. 3 − 2 = 1, so a 1 is left there.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Now there are no other numbers in A3's row or column."
+      },
+      {
+       "text": "Nothing can jump onto it, and it cannot jump anywhere. The 1 on A3 can never disappear."
+      }
+     ]
+    },
+    "3": {
+     "text": "Find the move that leaves a number alone. Tap the number that will jump, then the square it will land on."
+    }
+   }
+  },
+  "meet": {
+   "short": "Distance",
+   "title": "Which number can never be reached?",
+   "rule": "Two numbers in the same row or column can only meet when one equals the distance between them. The number on a square only changes when another number lands there, so sometimes it can never become the number it needs to be.",
+   "check": "Count the distance between numbers in the same row or column. Does one equal the distance, or can it become that number?",
+   "recall": "Count the distance to numbers in the same row or column. Can any of them ever equal the distance?",
+   "ask": "If {move}, will a number become impossible to reach?",
+   "pick": "Which number can nothing reach? Tap it on the board.",
+   "none": "No. Every number can still be reached, and the board can still be cleared.",
+   "hint": "Picture the board after the jump. Count the distance between numbers in the same row or column. Does any of them equal the distance, or can it become that number?",
+   "learned": "Count the distance between numbers in the same row or column, and check whether any of them can become that number.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Four 3s and two 1s. A 3 jumps exactly 3 squares. Look at the jump from B1 to B2."
+      },
+      {
+       "text": "The 1 on B1 jumps onto the 1 on B2. 1 − 1 = 0, so both disappear.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "A1 and C1 are 2 squares apart. Both are 3s, so neither can jump onto the other.",
+       "go": "Count"
+      },
+      {
+       "text": "A1 and A2 are only 1 square apart. The same goes for C1 and C2.",
+       "go": "Count"
+      },
+      {
+       "text": "No other numbers can land on them and change them. They will stay 3s forever, and none can disappear."
+      },
+      {
+       "text": "Back to the start. Instead, try having the 1 on B1 jump onto the 3 on C1.",
+       "go": "Try another move"
+      },
+      {
+       "text": "3 − 1 = 2. Now there is a 2 on C1, and A1 is 2 squares away. So it can jump there.",
+       "go": "Show the jump"
+      }
+     ]
+    }
+   }
+  },
+  "partner": {
+   "short": "Same partner",
+   "title": "Which number do two others need?",
+   "rule": "When two numbers can only disappear together with the same number, only one gets it. The other is left.",
+   "check": "Do two numbers have only one possible partner left, and is it the same one?",
+   "recall": "Look for two numbers that each have only one partner to disappear with. If it is the same one, it will not work.",
+   "ask": "If {move}, will two numbers need the same partner?",
+   "pick": "Which number do both need? Tap it on the board.",
+   "none": "No. No two numbers depend on the same partner, and the board can still be cleared.",
+   "hint": "Picture the board after the jump. Find two numbers that each have only one number to disappear with. Is it the same number?",
+   "learned": "Look for two numbers that can only disappear together with the same number. Only one gets it.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Look at the move: the 3 on D1 jumps to the 1 on D4."
+      },
+      {
+       "text": "3 − 1 = 2. Now there are three 2s: on D2, B4 and D4.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "The 2 on D2 and the 2 on B4 can only reach D4. Try D2 first."
+      },
+      {
+       "text": "2 − 2 = 0, so both disappear. B4 is left alone.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Back to the three 2s. Now try B4.",
+       "go": "Back"
+      },
+      {
+       "text": "2 − 2 = 0. Now D2 is left alone.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Whichever pair you clear, the third 2 is left. Both needed D4, and D4 can only disappear once."
+      },
+      {
+       "text": "The right order: let one of the 2s jump to D4 before the 3 does. We will take D2 first.",
+       "go": "See the right order"
+      },
+      {
+       "text": "2 − 1 = 1 on D4.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "3 − 1 = 2 on D4.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "2 − 2 = 0. The board is empty.",
+       "go": "Show the jump"
+      }
+     ]
+    }
+   }
+  },
+  "order": {
+   "short": "Order",
+   "title": "What has to happen first?",
+   "rule": "Sometimes a move is right, but comes too early: another number has to land on the square first. And an empty square never gets a number again.",
+   "check": "Will several numbers jump to or from the same square? Work out which has to go first, and do not empty a square that is still needed.",
+   "recall": "If several numbers need the same square, you have to work out the order. And never empty a square that something still needs to jump to or from.",
+   "ask": "Look at the move: {move}. Is it safe now, or is it a trap?",
+   "none": "Safe. The board can still be cleared after that move.",
+   "hint": "Does something else need to jump to or from the same squares later?",
+   "learned": "When several numbers need the same square, the order matters. And never empty a square that is still needed.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Both the 2 on D3 and the 3 on D4 need to land on the 1 on D1. The order decides what is left there. D3 first."
+      },
+      {
+       "text": "2 − 1 = 1 on D1.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "3 − 1 = 2 on D1.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "That 2 is needed. The 3 on B1 is 2 squares away, so the 2 can jump there."
+      },
+      {
+       "text": "Back to the start. Now the 3 on D4 jumps first.",
+       "go": "Try the other order"
+      },
+      {
+       "text": "3 − 1 = 2 on D1.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "2 − 2 = 0. Both disappear, and D1 is empty.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Now there is no 2 that can reach B1, and an empty square never gets a number again. That is why D3 has to jump before D4."
+      }
+     ]
+    }
+   }
+  },
+  "parity": {
+   "short": "Even totals",
+   "title": "Does the group's total work?",
+   "rule": "Numbers that can never reach the rest of the board have to clear each other. Their total must be even. If it is odd, at least one number is left.",
+   "check": "Will any numbers be cut off from the rest of the board? Add them together. If the total is odd, it will not work.",
+   "recall": "Look for numbers that become cut off from the rest. Add them together. If the total is odd, at least one number is left.",
+   "ask": "If {move}, will any numbers be cut off from the rest with an odd total?",
+   "pick": "Tap one of the numbers in that group on the board.",
+   "none": "No. No numbers become cut off from the rest with an odd total, and the board can still be cleared.",
+   "hint": "Picture the board after the jump. Will any numbers be cut off from the rest? Add them together.",
+   "learned": "Numbers cut off from the rest need an even total for all of them to disappear.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Look at the move: the 4 on E3 jumps to the 3 on A3."
+      },
+      {
+       "text": "4 − 3 = 1 on A3.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Now the 1 on C3 and the 2 on D3 are on their own. No other numbers can ever jump onto them or have them land on them. They can only meet each other."
+      },
+      {
+       "text": "2 − 1 = 1. Now one 1 is left, and nothing can help.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "That was not bad luck. Before the jump, the total was 1 + 2 = 3. After the jump, it is 1. The total dropped by 2."
+      },
+      {
+       "text": "Here, both numbers lost 1, so the total dropped by 2. With 2 and 3, the total would drop by 4. It always drops by an even number, so from 3 it can never reach 0."
+      },
+      {
+       "text": "Next time: add together numbers that become cut off from the rest. If the total is odd, at least one is left. An even total is no guarantee, but an odd total is always a trap."
+      }
+     ]
+    }
+   }
+  },
+  "ahead": {
+   "short": "Look ahead",
+   "title": "What happens next?",
+   "rule": "Some traps look safe. No number is alone, and each has another number to meet. Only after a couple of moves does a number get stuck. It helps to follow one number a few moves ahead.",
+   "check": "Find a number that has only one thing it can do. Play it out in your head: where does it end up, and what can happen to it there?",
+   "recall": "Follow numbers that have only one choice. Play them a few moves ahead in your head, and see whether they end up somewhere nothing can reach.",
+   "ask": "Look at the move: {move}. It looks safe. Is it safe, or is it a trap that only shows up later?",
+   "none": "Safe. The board can still be cleared after that move.",
+   "hint": "Follow a number that has only one choice after the move, and see where it ends up.",
+   "learned": "Follow numbers that have only one choice a few moves ahead, and see whether they end up somewhere nothing can reach.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Look at the move: the 1 on B1 jumps onto the 2 on C1."
+      },
+      {
+       "text": "2 − 1 = 1. It looks fine: no number is alone, and each has another number to meet.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "But follow the 3 on A1. What can it do? It jumps 3 squares, and the only number 3 squares away is on D1."
+      },
+      {
+       "text": "3 − 1 = 2 on D1. Now we follow that 2.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "What can happen to the 2 on D1? It cannot jump anywhere. Only the 1 on C1 can land on it."
+      },
+      {
+       "text": "2 − 1 = 1. Now the 1 on D1 and the 3 on C4 are left, and they are not in the same row or column.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Back to just after the move. What if the 1 on C1 jumps onto D1 first?",
+       "go": "Try the other way"
+      },
+      {
+       "text": "1 − 1 = 0, so both disappear. That leaves the 3 on A1 all alone in its row.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Back to just after the move. What if the 3 on C4 jumps first, to C1?",
+       "go": "Try a third way"
+      },
+      {
+       "text": "3 − 1 = 2 on C1.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "And the 3 on A1 jumps to D1: 3 − 1 = 2 on D1.",
+       "go": "Show the jump"
+      },
+      {
+       "text": "Now two 2s are only 1 square apart. Neither can jump onto the other, and no other numbers are left."
+      },
+      {
+       "text": "Whatever you do, numbers are left that nothing can clear. The move was a trap, but it only shows after a couple of moves."
+      }
+     ]
+    }
+   }
+  },
+  "test": {
+   "short": "Test",
+   "title": "Test",
+   "rule": "Ten moves from all the lessons, mixed together, with no pattern names and no hints. Look at the move and answer: safe or trap?",
+   "check": "Will any number be left alone? Can they meet? Do two need the same partner? Does something have to happen first? Does the total work? What happens next?"
+  }
+ },
+ "sv": {
+  "basics": {
+   "short": "Så spelar du",
+   "title": "Så spelar du",
+   "rule": "Målet är att få bort alla talen. Ett tal hoppar precis så många rutor som det visar, åt sidan eller upp och ner. Det måste landa på ett annat tal. Det största minus det minsta blir kvar, och lika tal försvinner båda.",
+   "check": "Räkna rutorna: en 3:a når ett tal som står exakt 3 rutor bort i samma rad eller kolumn.",
+   "recall": "Räkna rutorna innan du hoppar och tänk på vad som blir kvar där du landar.",
+   "learned": "Nu kan du reglerna: ett tal hoppar precis så långt som det visar, det största minus det minsta blir kvar, och lika tal försvinner.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Målet är att få bort alla talen på brädet."
+      },
+      {
+       "text": "Ett tal hoppar precis så många rutor som det visar, åt sidan eller upp och ner, aldrig snett. 3:an på A1 når 1:an på D1, 3 rutor bort."
+      },
+      {
+       "text": "Där det landar blir det största minus det minsta kvar: 3 − 1 = 2.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Är talen lika försvinner båda. 2:an på A3 hoppar 2 rutor, till 2:an på C3."
+      },
+      {
+       "text": "2 − 2 = 0. Båda är borta.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Till sist hoppar 2:an på D1 två rutor ner, till 2:an på D3. Brädet är tomt.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Ordningen är viktig. Fel ordning kan lämna kvar tal som aldrig möts. Det är det de nästa lektionerna handlar om."
+      }
+     ]
+    }
+   }
+  },
+  "alone": {
+   "short": "Ensam",
+   "title": "Vilket tal blir stående ensamt?",
+   "rule": "Ett tal kan bara försvinna när det minskas av ett annat tal i samma rad eller kolumn. Finns det inga tal kvar där blir det stående för alltid.",
+   "check": "Står det ett tal i samma rad eller kolumn som talet du vill flytta? Har det talet inga andra att möta blir det ensamt när du flyttar.",
+   "recall": "Leta efter tal i samma rad eller kolumn som talet du vill flytta. Har något av dem inga andra att möta blir det ensamt.",
+   "ask": "Om {move}, blir då ett tal stående ensamt?",
+   "pick": "Vilket tal blir stående ensamt? Tryck på det på brädet.",
+   "none": "Inget blir ensamt. Alla talen har fortfarande ett annat tal i sin rad eller kolumn, och brädet går fortfarande att lösa.",
+   "hint": "Titta på raden och kolumnen där talet som hoppar står. Finns det ett tal där som inte har några andra att möta när det är borta?",
+   "learned": "Innan du flyttar, leta efter tal som bara har talet du flyttar att möta. De blir stående ensamma.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Titta på 1:an på A3. I raden och kolumnen där A3 ligger står bara ett annat tal: 2:an på B3."
+      },
+      {
+       "text": "2:an på B3 hoppar två rutor upp och landar på 3:an på B1. 3 − 2 = 1, så det står 1 där.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Nu finns det inga andra tal i raden eller kolumnen där A3 ligger."
+      },
+      {
+       "text": "Inget kan hoppa på den, och den kan inte hoppa någonstans. 1:an på A3 kan aldrig försvinna."
+      }
+     ]
+    },
+    "3": {
+     "text": "Hitta draget som gör att ett tal blir stående ensamt. Tryck på talet som ska hoppa och sedan på rutan där det ska landa."
+    }
+   }
+  },
+  "meet": {
+   "short": "Avstånd",
+   "title": "Vilket tal kan aldrig nås?",
+   "rule": "Två tal på samma linje möts bara när det ena är lika stort som avståndet mellan dem. Talet i en ruta ändras bara när ett annat tal landar där, så ibland kan det aldrig få det värde som behövs.",
+   "check": "Räkna avståndet mellan talen på samma linje. Är ett av dem lika stort som avståndet, eller kan det bli det?",
+   "recall": "Räkna avståndet till talen på samma linje. Kan något av dem någonsin bli lika stort som avståndet?",
+   "ask": "Om {move}, blir då ett tal omöjligt att nå?",
+   "pick": "Vilket tal kan inget annat nå? Tryck på det på brädet.",
+   "none": "Nej. Alla talen kan fortfarande nås, och brädet går fortfarande att lösa.",
+   "hint": "Tänk dig brädet efter hoppet. Räkna avståndet mellan talen som står på samma linje. Är något av dem lika stort som avståndet, eller kan de bli det?",
+   "learned": "Räkna avståndet mellan tal på samma linje och kolla om något av dem kan bli så stort.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Fyra 3:or och två 1:or. En 3:a hoppar exakt 3 rutor. Titta på hoppet från B1 till B2."
+      },
+      {
+       "text": "1:an på B1 hoppar på 1:an på B2. 1 − 1 = 0, så båda försvinner.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Från A1 till C1 är det 2 rutor. Båda är 3, så ingen av dem kan hoppa på den andra.",
+       "go": "Räkna"
+      },
+      {
+       "text": "Från A1 till A2 är det bara 1 ruta. Samma sak gäller C1 och C2.",
+       "go": "Räkna"
+      },
+      {
+       "text": "Inga andra tal kan landa på dem och ändra dem. De förblir 3:or för alltid, och ingen av dem kan försvinna."
+      },
+      {
+       "text": "Tillbaka till början. Prova i stället att låta 1:an på B1 hoppa på 3:an på C1.",
+       "go": "Prova ett annat drag"
+      },
+      {
+       "text": "3 − 1 = 2. Nu finns det en 2:a på C1, och A1 ligger 2 rutor bort. Då kan den hoppa dit.",
+       "go": "Visa hoppet"
+      }
+     ]
+    }
+   }
+  },
+  "partner": {
+   "short": "Samma partner",
+   "title": "Vilket tal vill två andra ha?",
+   "rule": "När två tal bara kan försvinna tillsammans med samma tal får bara ett av dem det. Det andra blir kvar.",
+   "check": "Har två tal bara en möjlig partner kvar, och är det samma?",
+   "recall": "Leta efter två tal som bara har en partner att försvinna med. Är det samma går det inte.",
+   "ask": "Om {move}, behöver då två tal samma partner?",
+   "pick": "Vilket tal vill båda ha? Tryck på det på brädet.",
+   "none": "Nej. Inga två tal är beroende av samma partner, och brädet går fortfarande att lösa.",
+   "hint": "Tänk dig brädet efter hoppet. Hitta två tal som bara har ett tal att försvinna tillsammans med. Är det samma tal?",
+   "learned": "Leta efter två tal som bara kan försvinna tillsammans med samma tal. Bara ett av dem får det.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Titta på draget: 3:an på D1 hoppar till 1:an på D4."
+      },
+      {
+       "text": "3 − 1 = 2. Nu står det tre 2:or: D2, B4 och D4.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "2:an på D2 och 2:an på B4 kan bara nå D4. Prova D2 först."
+      },
+      {
+       "text": "2 − 2 = 0, så båda försvinner. B4 blir kvar ensam.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Tillbaka till de tre 2:orna. Prova nu B4.",
+       "go": "Tillbaka"
+      },
+      {
+       "text": "2 − 2 = 0. Nu är det D2 som blir kvar ensam.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Oavsett vilket par du tar bort blir den tredje 2:an kvar. Båda behövde D4, och D4 kan bara försvinna en gång."
+      },
+      {
+       "text": "Rätt ordning: låt en av 2:orna hoppa till D4 innan 3:an gör det. Vi tar D2 först.",
+       "go": "Se rätt ordning"
+      },
+      {
+       "text": "2 − 1 = 1 på D4.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "3 − 1 = 2 på D4.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "2 − 2 = 0. Brädet är tomt.",
+       "go": "Visa hoppet"
+      }
+     ]
+    }
+   }
+  },
+  "order": {
+   "short": "Ordning",
+   "title": "Vad måste hända först?",
+   "rule": "Ibland är draget rätt men kommer för tidigt: ett annat tal måste landa på rutan först. Och en tom ruta får aldrig ett tal igen.",
+   "check": "Ska flera tal hoppa till eller från samma ruta? Ta reda på vilket som måste hoppa först, och töm inte en ruta som fortfarande behövs.",
+   "recall": "Ska flera tal använda samma ruta måste du hitta ordningen. Och töm aldrig en ruta som något fortfarande ska hoppa till eller från.",
+   "ask": "Titta på draget: {move}. Är det säkert nu, eller är det en fälla?",
+   "none": "Säkert. Brädet går fortfarande att lösa efter det draget.",
+   "hint": "Ska något annat hoppa till eller från samma rutor senare?",
+   "learned": "När flera tal ska använda samma ruta avgör ordningen. Och töm aldrig en ruta som fortfarande behövs.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Både 2:an på D3 och 3:an på D4 ska landa på 1:an på D1. Ordningen avgör vad som blir kvar där. Först D3."
+      },
+      {
+       "text": "2 − 1 = 1 på D1.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "3 − 1 = 2 på D1.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Den 2:an behövs. 3:an på B1 står 2 rutor bort, så 2:an kan hoppa dit."
+      },
+      {
+       "text": "Tillbaka till början. Nu hoppar 3:an på D4 först.",
+       "go": "Prova den andra ordningen"
+      },
+      {
+       "text": "3 − 1 = 2 på D1.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "2 − 2 = 0. Båda försvinner, och D1 är tom.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Nu finns det ingen 2:a som kan nå B1, och en tom ruta får aldrig ett tal igen. Därför måste D3 hoppa före D4."
+      }
+     ]
+    }
+   }
+  },
+  "parity": {
+   "short": "Jämna tal",
+   "title": "Går gruppen jämnt upp?",
+   "rule": "Tal som aldrig kan nå resten av brädet måste försvinna med hjälp av varandra. Då måste deras summa vara ett jämnt tal. Är den ett udda tal blir minst ett tal kvar.",
+   "check": "Blir några tal avskilda från resten av brädet? Lägg ihop dem. Är summan ett udda tal går det inte.",
+   "recall": "Leta efter tal som blir avskilda från resten. Lägg ihop dem. Är summan ett udda tal blir minst ett tal kvar.",
+   "ask": "Om {move}, blir då några tal avskilda från resten med en udda summa?",
+   "pick": "Tryck på ett av talen i den gruppen på brädet.",
+   "none": "Nej. Inga tal blir avskilda från resten med en udda summa, och brädet går fortfarande att lösa.",
+   "hint": "Tänk dig brädet efter hoppet. Blir några tal avskilda från resten? Lägg ihop dem.",
+   "learned": "Tal som är avskilda från resten måste ha en jämn summa för att kunna försvinna allihop.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Titta på draget: 4:an på E3 hoppar till 3:an på A3."
+      },
+      {
+       "text": "4 − 3 = 1 på A3.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Nu står 1:an på C3 och 2:an på D3 för sig själva. Inga andra tal kan någonsin hoppa på dem eller ta emot dem. De kan bara möta varandra."
+      },
+      {
+       "text": "2 − 1 = 1. Nu står en enda 1:a kvar, och inget kan hjälpa.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Det var inte otur. Före hoppet var summan 1 + 2 = 3. Efter hoppet är den 1. Summan minskade med 2."
+      },
+      {
+       "text": "Här försvann 1 från båda talen, så summan blev 2 mindre. Med 2 och 3 skulle summan ha blivit 4 mindre. Den minskar alltid med ett jämnt tal, så från 3 kan den aldrig bli 0."
+      },
+      {
+       "text": "Till nästa gång: lägg ihop tal som blir avskilda från resten. Är summan ett udda tal blir minst ett kvar. En jämn summa är ingen garanti, men ett udda tal är alltid en fälla."
+      }
+     ]
+    }
+   }
+  },
+  "ahead": {
+   "short": "Se framåt",
+   "title": "Vad händer sedan?",
+   "rule": "Vissa fällor ser säkra ut. Inget står ensamt, och alla har något att möta. Först efter ett par drag sitter ett tal fast. Då hjälper det att följa ett tal några drag framåt.",
+   "check": "Hitta ett tal som bara har en sak det kan göra. Spela det i huvudet: var hamnar det, och vad kan hända med det där?",
+   "recall": "Följ tal som bara har ett val. Spela dem några drag framåt i huvudet och se om de hamnar någonstans där inget kan nå dem.",
+   "ask": "Titta på draget: {move}. Det ser säkert ut. Är det säkert, eller är det en fälla som visar sig senare?",
+   "none": "Säkert. Brädet går fortfarande att lösa efter det draget.",
+   "hint": "Följ ett tal som bara har ett val efter draget och se var det hamnar.",
+   "learned": "Följ tal som bara har ett val några drag framåt och se om de hamnar någonstans där inget kan nå dem.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Titta på draget: 1:an på B1 hoppar på 2:an på C1."
+      },
+      {
+       "text": "2 − 1 = 1. Det ser bra ut: inget tal står ensamt, och alla har något att möta.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Men följ 3:an på A1. Vad kan den göra? Den hoppar 3 rutor, och det enda talet 3 rutor bort står på D1."
+      },
+      {
+       "text": "3 − 1 = 2 på D1. Nu följer vi den 2:an.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Vad kan hända med 2:an på D1? Den kan inte hoppa någonstans. Bara 1:an på C1 kan landa på den."
+      },
+      {
+       "text": "2 − 1 = 1. Nu står 1:an på D1 och 3:an på C4 kvar, och de står inte på samma linje.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Tillbaka till läget efter draget. Vad händer om 1:an på C1 hoppar på D1 först?",
+       "go": "Prova den andra vägen"
+      },
+      {
+       "text": "1 − 1 = 0, så båda försvinner. Då står 3:an på A1 helt ensam i sin rad.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Tillbaka till läget efter draget. Vad händer om 3:an på C4 hoppar först, till C1?",
+       "go": "Prova en tredje väg"
+      },
+      {
+       "text": "3 − 1 = 2 på C1.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Och 3:an på A1 hoppar till D1: 3 − 1 = 2 på D1.",
+       "go": "Visa hoppet"
+      },
+      {
+       "text": "Nu står två 2:or bara 1 ruta från varandra. Ingen av dem kan hoppa på den andra, och inga andra tal finns kvar."
+      },
+      {
+       "text": "Oavsett vad du gör blir det kvar tal som inget kan ta bort. Draget var en fälla, men det syns först efter ett par drag."
+      }
+     ]
+    }
+   }
+  },
+  "test": {
+   "short": "Prov",
+   "title": "Prov",
+   "rule": "Tio drag från alla lektionerna, blandade, utan namn på mönstret och utan ledtrådar. Titta på draget och svara: säkert eller fälla?",
+   "check": "Blir något ensamt? Kan de mötas? Behöver två samma partner? Måste något hända först? Går summan jämnt upp? Vad händer sedan?"
+  }
+ },
+ "da": {
+  "basics": {
+   "short": "Sådan spiller du",
+   "title": "Sådan spiller du",
+   "rule": "Målet er at fjerne alle tallene. Et tal hopper præcis så mange felter, som det viser, vandret eller lodret. Det skal lande på et andet tal. Det største minus det mindste bliver tilbage, og ens tal forsvinder begge.",
+   "check": "Tæl felterne: et 3-tal når et tal, der står præcis 3 felter væk i samme række eller kolonne.",
+   "recall": "Tæl felterne, før du hopper, og tænk på, hvad der bliver tilbage, hvor du lander.",
+   "learned": "Nu kan du reglerne: et tal hopper præcis så langt, som det viser, det største minus det mindste bliver tilbage, og ens tal forsvinder.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Målet er at fjerne alle tallene på brættet."
+      },
+      {
+       "text": "Et tal hopper præcis så mange felter, som det viser, vandret eller lodret, aldrig på skrå. 3-tallet på A1 når 1-tallet på D1, 3 felter væk."
+      },
+      {
+       "text": "Hvor det lander, bliver det største minus det mindste tilbage: 3 − 1 = 2.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Er tallene ens, forsvinder begge. 2-tallet på A3 hopper 2 felter, til 2-tallet på C3."
+      },
+      {
+       "text": "2 − 2 = 0. Begge er væk.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Til sidst hopper 2-tallet på D1 to felter ned, til 2-tallet på D3. Brættet er tomt.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Rækkefølgen er vigtig. En forkert rækkefølge kan efterlade tal, der aldrig mødes. Det er det, de næste lektioner handler om."
+      }
+     ]
+    }
+   }
+  },
+  "alone": {
+   "short": "Alene",
+   "title": "Hvilket tal bliver stående alene?",
+   "rule": "Et tal kan kun forsvinde, når det bliver mindre ved hjælp af et andet tal i samme række eller kolonne. Er der ingen tal tilbage der, bliver det stående for altid.",
+   "check": "Står der et tal i samme række eller kolonne som tallet, du vil flytte? Har det tal ingen andre at møde, bliver det alene, når du flytter.",
+   "recall": "Se efter tal i samme række eller kolonne som tallet, du vil flytte. Har et af dem ingen andre at møde, bliver det alene.",
+   "ask": "Hvis {move}, bliver et tal så stående alene?",
+   "pick": "Hvilket tal bliver stående alene? Tryk på det på brættet.",
+   "none": "Ingen bliver alene. Alle tallene har stadig et andet tal i deres række eller kolonne, og brættet kan stadig løses.",
+   "hint": "Se på rækken og kolonnen, hvor tallet, der hopper, står. Står der et tal, som ikke har nogen andre at møde, når det er væk?",
+   "learned": "Før du flytter, så se efter tal, der kun kan møde det tal, du flytter. De bliver stående alene.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Se på 1-tallet på A3. I rækken og kolonnen gennem A3 står der kun ét andet tal: 2-tallet på B3."
+      },
+      {
+       "text": "2-tallet på B3 hopper to felter op og lander på 3-tallet på B1. 3 − 2 = 1, så der står 1 der.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Nu er der ingen andre tal i rækken eller kolonnen gennem A3."
+      },
+      {
+       "text": "Ingen kan hoppe på det, og det kan ikke hoppe nogen steder. 1-tallet på A3 kan aldrig forsvinde."
+      }
+     ]
+    },
+    "3": {
+     "text": "Find trækket, der får et tal til at blive stående alene. Tryk på tallet, der skal hoppe, og så på feltet, det skal lande på."
+    }
+   }
+  },
+  "meet": {
+   "short": "Afstand",
+   "title": "Hvilket tal kan aldrig nås?",
+   "rule": "To tal på samme linje mødes kun, når det ene er lige så stort som afstanden mellem dem. Tallet i et felt ændrer sig kun, når et andet tal lander der, så nogle gange kan det aldrig blive det tal, der er brug for.",
+   "check": "Tæl afstanden mellem tallene på samme linje. Er et af dem lige så stort som afstanden, eller kan det blive det?",
+   "recall": "Tæl afstanden til tallene på samme linje. Kan nogen af dem nogensinde blive lige så store som afstanden?",
+   "ask": "Hvis {move}, bliver et tal så umuligt at nå?",
+   "pick": "Hvilket tal kan ingen nå? Tryk på det på brættet.",
+   "none": "Nej. Alle tallene kan stadig nås, og brættet kan stadig løses.",
+   "hint": "Forestil dig brættet efter hoppet. Tæl afstanden mellem tallene, der står på samme linje. Er nogen af dem lige så store som afstanden, eller kan de blive det?",
+   "learned": "Tæl afstanden mellem tal på samme linje, og tjek, om nogen af dem kan blive så store.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Fire 3-taller og to 1-taller. Et 3-tal hopper præcis 3 felter. Se på hoppet fra B1 til B2."
+      },
+      {
+       "text": "1-tallet på B1 hopper på 1-tallet på B2. 1 − 1 = 0, så begge forsvinder.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Fra A1 til C1 er der 2 felter. Begge er 3, så ingen af dem kan hoppe på det andet.",
+       "go": "Tæl"
+      },
+      {
+       "text": "Fra A1 til A2 er der kun 1 felt. Det samme gælder C1 og C2.",
+       "go": "Tæl"
+      },
+      {
+       "text": "Ingen andre tal kan lande på dem og ændre dem. De bliver ved med at være 3-taller for altid, og ingen af dem kan forsvinde."
+      },
+      {
+       "text": "Tilbage til start. Prøv i stedet at lade 1-tallet på B1 hoppe på 3-tallet på C1.",
+       "go": "Prøv et andet træk"
+      },
+      {
+       "text": "3 − 1 = 2. Nu er der et 2-tal på C1, og A1 er 2 felter væk. Så kan det hoppe derhen.",
+       "go": "Vis hoppet"
+      }
+     ]
+    }
+   }
+  },
+  "partner": {
+   "short": "Samme partner",
+   "title": "Hvilket tal vil to andre have?",
+   "rule": "Når to tal kun kan forsvinde sammen med det samme tal, får kun det ene det. Det andet bliver stående.",
+   "check": "Har to tal kun én mulig partner tilbage, og er det den samme?",
+   "recall": "Se efter to tal, der kun har én partner at forsvinde med. Er det den samme, går det ikke.",
+   "ask": "Hvis {move}, får to tal så brug for den samme partner?",
+   "pick": "Hvilket tal vil begge have? Tryk på det på brættet.",
+   "none": "Nej. Ingen to tal er afhængige af den samme partner, og brættet kan stadig løses.",
+   "hint": "Forestil dig brættet efter hoppet. Find to tal, der kun har ét tal at forsvinde sammen med. Er det det samme tal?",
+   "learned": "Se efter to tal, der kun kan forsvinde sammen med det samme tal. Kun det ene får det.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Se på trækket: 3-tallet på D1 hopper til 1-tallet på D4."
+      },
+      {
+       "text": "3 − 1 = 2. Nu står der tre 2-taller: D2, B4 og D4.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "2-tallet på D2 og 2-tallet på B4 kan kun nå D4. Prøv først D2."
+      },
+      {
+       "text": "2 − 2 = 0, så begge forsvinder. B4 står alene tilbage.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Tilbage til de tre 2-taller. Prøv nu B4.",
+       "go": "Tilbage"
+      },
+      {
+       "text": "2 − 2 = 0. Nu er det D2, der står alene tilbage.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Uanset hvilket par du fjerner, bliver det tredje 2-tal tilbage. Begge havde brug for D4, og D4 kan kun forsvinde én gang."
+      },
+      {
+       "text": "Den rigtige rækkefølge: lad et af 2-tallerne hoppe til D4, før 3-tallet gør det. Vi tager D2 først.",
+       "go": "Se rigtig rækkefølge"
+      },
+      {
+       "text": "2 − 1 = 1 på D4.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "3 − 1 = 2 på D4.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "2 − 2 = 0. Brættet er tomt.",
+       "go": "Vis hoppet"
+      }
+     ]
+    }
+   }
+  },
+  "order": {
+   "short": "Rækkefølge",
+   "title": "Hvad skal ske først?",
+   "rule": "Nogle gange er trækket rigtigt, men kommer for tidligt: et andet tal skal lande på feltet først. Og et tomt felt får aldrig et tal igen.",
+   "check": "Skal flere tal hoppe til eller fra det samme felt? Find ud af, hvilket der skal først, og tøm ikke et felt, der stadig er brug for.",
+   "recall": "Skal flere tal bruge det samme felt, skal du finde rækkefølgen. Og tøm aldrig et felt, som noget stadig skal hoppe til eller fra.",
+   "ask": "Se på trækket: {move}. Er det sikkert nu, eller er det en fælde?",
+   "none": "Sikkert. Brættet kan stadig løses efter det træk.",
+   "hint": "Skal noget andet hoppe til eller fra de samme felter senere?",
+   "learned": "Når flere tal skal bruge det samme felt, er rækkefølgen afgørende. Og tøm aldrig et felt, der stadig er brug for.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Både 2-tallet på D3 og 3-tallet på D4 skal lande på 1-tallet på D1. Rækkefølgen afgør, hvad der bliver tilbage der. Først D3."
+      },
+      {
+       "text": "2 − 1 = 1 på D1.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "3 − 1 = 2 på D1.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Der er brug for det 2-tal. 3-tallet på B1 står 2 felter væk, så 2-tallet kan hoppe derhen."
+      },
+      {
+       "text": "Tilbage til start. Nu hopper 3-tallet på D4 først.",
+       "go": "Prøv omvendt rækkefølge"
+      },
+      {
+       "text": "3 − 1 = 2 på D1.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "2 − 2 = 0. Begge forsvinder, og D1 er tomt.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Nu er der intet 2-tal, der kan nå B1, og et tomt felt får aldrig et tal igen. Derfor skal D3 hoppe før D4."
+      }
+     ]
+    }
+   }
+  },
+  "parity": {
+   "short": "Lige tal",
+   "title": "Går gruppen op?",
+   "rule": "Tal, der aldrig kan nå resten af brættet, skal forsvinde med hinandens hjælp. Derfor skal deres sum være et lige tal. Er den et ulige tal, bliver mindst ét tal tilbage.",
+   "check": "Bliver nogle tal adskilt fra resten af brættet? Læg dem sammen. Er summen et ulige tal, går det ikke.",
+   "recall": "Se efter tal, der bliver adskilt fra resten. Læg dem sammen. Er summen et ulige tal, bliver mindst ét tal tilbage.",
+   "ask": "Hvis {move}, bliver nogle tal så adskilt fra resten med en ulige sum?",
+   "pick": "Tryk på et af tallene i den gruppe på brættet.",
+   "none": "Nej. Ingen tal bliver adskilt fra resten med en ulige sum, og brættet kan stadig løses.",
+   "hint": "Forestil dig brættet efter hoppet. Bliver nogle tal adskilt fra resten? Læg dem sammen.",
+   "learned": "Tal, der er adskilt fra resten, skal have en lige sum for at kunne forsvinde alle sammen.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Se på trækket: 4-tallet på E3 hopper til 3-tallet på A3."
+      },
+      {
+       "text": "4 − 3 = 1 på A3.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Nu står 1-tallet på C3 og 2-tallet på D3 for sig selv. Ingen andre tal kan nogensinde hoppe på dem eller tage imod dem. De kan kun møde hinanden."
+      },
+      {
+       "text": "2 − 1 = 1. Nu står ét 1-tal tilbage, og ingen kan hjælpe.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Det var ikke uheld. Før hoppet var summen 1 + 2 = 3. Efter hoppet er den 1. Summen faldt med 2."
+      },
+      {
+       "text": "Her forsvandt 1 fra begge tal, så summen blev 2 mindre. Med 2 og 3 ville summen være blevet 4 mindre. Den falder altid med et lige tal, så fra 3 kan den aldrig blive 0."
+      },
+      {
+       "text": "Til næste gang: læg tal sammen, der bliver adskilt fra resten. Er summen et ulige tal, bliver mindst ét tilbage. En lige sum er ingen garanti, men et ulige tal er altid en fælde."
+      }
+     ]
+    }
+   }
+  },
+  "ahead": {
+   "short": "Se frem",
+   "title": "Hvad sker der bagefter?",
+   "rule": "Nogle fælder ser sikre ud. Ingen står alene, og alle har nogen at møde. Først efter et par træk sidder et tal fast. Så hjælper det at følge ét tal nogle træk frem.",
+   "check": "Find et tal, der kun har én ting, det kan gøre. Spil det i hovedet: hvor ender det, og hvad kan der ske med det der?",
+   "recall": "Følg tal, der kun har ét valg. Spil dem nogle træk frem i hovedet, og se, om de ender et sted, ingen når.",
+   "ask": "Se på trækket: {move}. Det ser sikkert ud. Er det sikkert, eller er det en fælde, der viser sig senere?",
+   "none": "Sikkert. Brættet kan stadig løses efter det træk.",
+   "hint": "Følg et tal, der kun har ét valg efter trækket, og se, hvor det ender.",
+   "learned": "Følg tal, der kun har ét valg, nogle træk frem, og se, om de ender et sted, ingen når.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Se på trækket: 1-tallet på B1 hopper på 2-tallet på C1."
+      },
+      {
+       "text": "2 − 1 = 1. Det ser fint ud: ingen tal står alene, og alle har nogen at møde.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Men følg 3-tallet på A1. Hvad kan det gøre? Det hopper 3 felter, og det eneste tal 3 felter væk står på D1."
+      },
+      {
+       "text": "3 − 1 = 2 på D1. Nu følger vi det 2-tal.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Hvad kan der ske med 2-tallet på D1? Det kan ikke hoppe nogen steder. Kun 1-tallet på C1 kan lande på det."
+      },
+      {
+       "text": "2 − 1 = 1. Nu står 1-tallet på D1 og 3-tallet på C4 tilbage, og de står ikke på samme linje.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Tilbage til stillingen efter trækket. Hvad hvis 1-tallet på C1 hopper på D1 først?",
+       "go": "Prøv den anden vej"
+      },
+      {
+       "text": "1 − 1 = 0, så begge forsvinder. Så står 3-tallet på A1 helt alene i sin række.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Tilbage til stillingen efter trækket. Hvad hvis 3-tallet på C4 hopper først, til C1?",
+       "go": "Prøv en tredje vej"
+      },
+      {
+       "text": "3 − 1 = 2 på C1.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Og 3-tallet på A1 hopper til D1: 3 − 1 = 2 på D1.",
+       "go": "Vis hoppet"
+      },
+      {
+       "text": "Nu står to 2-taller kun 1 felt fra hinanden. Ingen af dem kan hoppe på det andet, og der er ingen andre tal tilbage."
+      },
+      {
+       "text": "Uanset hvad du gør, bliver der stående tal, som ingen kan fjerne. Trækket var en fælde, men det viser sig først efter et par træk."
+      }
+     ]
+    }
+   }
+  },
+  "test": {
+   "short": "Prøve",
+   "title": "Prøve",
+   "rule": "Ti træk fra alle lektionerne, blandet sammen, uden navn på mønsteret og uden hint. Se på trækket og svar: sikkert eller fælde?",
+   "check": "Bliver nogen alene? Kan de mødes? Har to brug for den samme partner? Skal noget ske først? Går summen op? Hvad sker der bagefter?"
+  }
+ },
+ "fi": {
+  "basics": {
+   "short": "Näin pelaat",
+   "title": "Näin pelaat",
+   "rule": "Tavoitteena on poistaa kaikki luvut. Luku hyppää täsmälleen näyttämänsä määrän ruutuja vaaka- tai pystysuoraan. Sen täytyy laskeutua toisen luvun päälle. Jäljelle jää suurempi luku miinus pienempi, ja yhtä suuret luvut katoavat molemmat.",
+   "check": "Laske ruudut: 3 yltää lukuun, joka on täsmälleen 3 ruudun päässä samalla rivillä tai sarakkeella.",
+   "recall": "Laske ruudut ennen hyppyä ja mieti, mitä laskeutumisruutuun jää.",
+   "learned": "Nyt osaat säännöt: luku hyppää täsmälleen näyttämänsä matkan, jäljelle jää suurempi luku miinus pienempi, ja yhtä suuret luvut katoavat.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Tavoitteena on poistaa kaikki luvut laudalta."
+      },
+      {
+       "text": "Luku hyppää täsmälleen näyttämänsä määrän ruutuja vaaka- tai pystysuoraan, ei koskaan vinottain. Ruudun A1 3 yltää ruudun D1 lukuun 1, joka on 3 ruudun päässä."
+      },
+      {
+       "text": "Laskeutumisruutuun jää suurempi luku miinus pienempi: 3 − 1 = 2.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Jos luvut ovat yhtä suuret, molemmat katoavat. Ruudun A3 2 hyppää 2 ruutua ruudun C3 luvun 2 päälle."
+      },
+      {
+       "text": "2 − 2 = 0. Molemmat ovat poissa.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Lopuksi ruudun D1 2 hyppää kaksi ruutua alas ruudun D3 luvun 2 päälle. Lauta on tyhjä.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Järjestys on tärkeä. Väärä järjestys voi jättää jäljelle lukuja, jotka eivät koskaan kohtaa. Siitä seuraavat oppitunnit kertovat."
+      }
+     ]
+    }
+   }
+  },
+  "alone": {
+   "short": "Yksin",
+   "title": "Mikä luku jää yksin?",
+   "rule": "Luku voi kadota vain, kun toinen luku samalla rivillä tai sarakkeella pienentää sitä. Jos siellä ei ole enää muita lukuja, se jää paikalleen ikuisesti.",
+   "check": "Onko siirrettävän luvun kanssa samalla rivillä tai sarakkeella toinen luku? Jos sillä ei ole muita lukuja, joita se voisi kohdata, se jää yksin, kun siirrät.",
+   "recall": "Etsi lukuja, jotka ovat samalla rivillä tai sarakkeella kuin siirrettävä luku. Jos jokin niistä ei voi kohdata muita lukuja, se jää yksin.",
+   "ask": "Jos {move}, jääkö jokin luku yksin?",
+   "pick": "Mikä luku jää yksin? Napauta sitä laudalla.",
+   "none": "Mikään luku ei jää yksin. Kaikilla luvuilla on yhä toinen luku samalla rivillä tai sarakkeella, ja laudan voi yhä tyhjentää.",
+   "hint": "Katso hyppäävän luvun riviä ja saraketta. Onko siellä luku, joka ei voi kohdata muita lukuja, kun hyppäävä luku on poissa?",
+   "learned": "Etsi ennen siirtoa lukuja, jotka voivat kohdata vain siirrettävän luvun. Ne jäävät yksin.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Katso ruudun A3 lukua 1. Ruudun A3 rivillä ja sarakkeella on vain yksi muu luku: ruudun B3 2."
+      },
+      {
+       "text": "Ruudun B3 2 hyppää kaksi ruutua ylös ja laskeutuu ruudun B1 luvun 3 päälle. 3 − 2 = 1, joten ruutuun jää 1.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Nyt ruudun A3 rivillä tai sarakkeella ei ole muita lukuja."
+      },
+      {
+       "text": "Mikään ei voi hypätä sen päälle, eikä se voi hypätä mihinkään. Ruudun A3 1 ei voi koskaan kadota."
+      }
+     ]
+    },
+    "3": {
+     "text": "Etsi siirto, joka jättää jonkin luvun yksin. Napauta hyppäävää lukua ja sitten ruutua, johon se laskeutuu."
+    }
+   }
+  },
+  "meet": {
+   "short": "Etäisyys",
+   "title": "Mihin lukuun ei voi koskaan päästä?",
+   "rule": "Kaksi samalla linjalla olevaa lukua kohtaavat vain, kun toinen niistä on yhtä suuri kuin niiden välinen etäisyys. Ruudun luku muuttuu vain, kun toinen luku laskeutuu siihen. Siksi siitä ei joskus voi koskaan tulla tarvittavaa lukua.",
+   "check": "Laske samalla linjalla olevien lukujen välinen etäisyys. Onko toinen niistä yhtä suuri kuin etäisyys, tai voiko siitä tulla niin suuri?",
+   "recall": "Laske etäisyys samalla linjalla oleviin lukuihin. Voiko jostakin niistä koskaan tulla yhtä suuri kuin etäisyys?",
+   "ask": "Jos {move}, jääkö jokin luku niin, ettei siihen voi enää päästä?",
+   "pick": "Mihin lukuun mikään ei voi päästä? Napauta sitä laudalla.",
+   "none": "Ei. Kaikkiin lukuihin voi yhä päästä, ja laudan voi yhä tyhjentää.",
+   "hint": "Kuvittele lauta hypyn jälkeen. Laske samalla linjalla olevien lukujen välinen etäisyys. Onko jokin niistä yhtä suuri kuin etäisyys, tai voiko siitä tulla niin suuri?",
+   "learned": "Laske samalla linjalla olevien lukujen välinen etäisyys ja tarkista, voiko jostakin niistä tulla niin suuri.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Neljä kolmosta ja kaksi ykköstä. 3 hyppää täsmälleen 3 ruutua. Katso hyppyä ruudusta B1 ruutuun B2."
+      },
+      {
+       "text": "Ruudun B1 1 hyppää ruudun B2 luvun 1 päälle. 1 − 1 = 0, joten molemmat katoavat.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Ruudusta A1 ruutuun C1 on 2 ruutua. Molemmissa on 3, joten kumpikaan ei voi hypätä toisen päälle.",
+       "go": "Laske"
+      },
+      {
+       "text": "Ruudusta A1 ruutuun A2 on vain 1 ruutu. Sama koskee ruutuja C1 ja C2.",
+       "go": "Laske"
+      },
+      {
+       "text": "Mitkään muut luvut eivät voi laskeutua niiden päälle ja muuttaa niitä. Ne pysyvät kolmosina ikuisesti, eikä mikään niistä voi kadota."
+      },
+      {
+       "text": "Takaisin alkuun. Kokeile sen sijaan, että ruudun B1 1 hyppää ruudun C1 luvun 3 päälle.",
+       "go": "Kokeile toista siirtoa"
+      },
+      {
+       "text": "3 − 1 = 2. Nyt ruudussa C1 on 2, ja ruutu A1 on 2 ruudun päässä. Siksi se voi hypätä sinne.",
+       "go": "Näytä hyppy"
+      }
+     ]
+    }
+   }
+  },
+  "partner": {
+   "short": "Sama pari",
+   "title": "Minkä luvun kaksi muuta tarvitsevat?",
+   "rule": "Kun kaksi lukua voi kadota vain saman luvun kanssa, vain toinen niistä saa sen parikseen. Toinen jää jäljelle.",
+   "check": "Onko kahdella luvulla jäljellä vain yksi mahdollinen pari, ja onko se sama luku?",
+   "recall": "Etsi kaksi lukua, joilla on vain yksi pari, jonka kanssa ne voivat kadota. Jos pari on sama, se ei onnistu.",
+   "ask": "Jos {move}, tarvitsevatko kaksi lukua saman parin?",
+   "pick": "Minkä luvun molemmat tarvitsevat? Napauta sitä laudalla.",
+   "none": "Ei. Mitkään kaksi lukua eivät ole riippuvaisia samasta parista, ja laudan voi yhä tyhjentää.",
+   "hint": "Kuvittele lauta hypyn jälkeen. Etsi kaksi lukua, jotka voivat kadota vain yhden luvun kanssa. Onko se sama luku?",
+   "learned": "Etsi kaksi lukua, jotka voivat kadota vain saman luvun kanssa. Vain toinen niistä saa sen parikseen.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Katso siirtoa: ruudun D1 3 hyppää ruudun D4 luvun 1 päälle."
+      },
+      {
+       "text": "3 − 1 = 2. Nyt laudalla on kolme kakkosta ruuduissa D2, B4 ja D4.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Ruudun D2 2 ja ruudun B4 2 pääsevät vain ruutuun D4. Kokeile ensin ruutua D2."
+      },
+      {
+       "text": "2 − 2 = 0, joten molemmat katoavat. Ruudun B4 luku jää yksin.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Takaisin kolmeen kakkoseen. Kokeile nyt ruutua B4.",
+       "go": "Takaisin"
+      },
+      {
+       "text": "2 − 2 = 0. Nyt ruudun D2 luku jää yksin.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Poistatpa kumman parin tahansa, kolmas kakkonen jää jäljelle. Molemmat tarvitsivat ruudun D4 luvun, ja se voi kadota vain kerran."
+      },
+      {
+       "text": "Oikea järjestys: anna toisen kakkosen hypätä ruutuun D4 ennen kolmosta. Aloitetaan ruudusta D2.",
+       "go": "Näytä oikea järjestys"
+      },
+      {
+       "text": "2 − 1 = 1 ruudussa D4.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "3 − 1 = 2 ruudussa D4.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "2 − 2 = 0. Lauta on tyhjä.",
+       "go": "Näytä hyppy"
+      }
+     ]
+    }
+   }
+  },
+  "order": {
+   "short": "Järjestys",
+   "title": "Mitä täytyy tapahtua ensin?",
+   "rule": "Joskus siirto on oikea, mutta tulee liian aikaisin: toisen luvun täytyy laskeutua ruutuun ensin. Tyhjään ruutuun ei tule enää koskaan lukua.",
+   "check": "Pitääkö usean luvun hypätä samaan ruutuun tai samasta ruudusta? Selvitä, minkä täytyy hypätä ensin. Älä tyhjennä ruutua, jota vielä tarvitaan.",
+   "recall": "Jos usean luvun pitää käyttää samaa ruutua, sinun täytyy selvittää järjestys. Älä koskaan tyhjennä ruutua, johon tai josta jonkin pitää vielä hypätä.",
+   "ask": "Katso siirtoa: {move}. Onko se nyt turvallinen vai onko se ansa?",
+   "none": "Turvallinen. Laudan voi yhä tyhjentää tuon siirron jälkeen.",
+   "hint": "Pitääkö jonkin muun hypätä samoihin ruutuihin tai samoista ruuduista myöhemmin?",
+   "learned": "Kun usean luvun pitää käyttää samaa ruutua, järjestys ratkaisee. Älä koskaan tyhjennä ruutua, jota vielä tarvitaan.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Sekä ruudun D3 2 että ruudun D4 3 laskeutuvat ruudun D1 luvun 1 päälle. Järjestys ratkaisee, mitä ruutuun jää. Ensin D3."
+      },
+      {
+       "text": "2 − 1 = 1 ruudussa D1.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "3 − 1 = 2 ruudussa D1.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Tuota kakkosta tarvitaan. Ruudun B1 3 on 2 ruudun päässä, joten kakkonen voi hypätä sinne."
+      },
+      {
+       "text": "Takaisin alkuun. Nyt ruudun D4 3 hyppää ensin.",
+       "go": "Kokeile toista järjestystä"
+      },
+      {
+       "text": "3 − 1 = 2 ruudussa D1.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "2 − 2 = 0. Molemmat katoavat, ja ruutu D1 on tyhjä.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Nyt ei ole kakkosta, joka pääsisi ruutuun B1, eikä tyhjään ruutuun tule enää koskaan lukua. Siksi ruudun D3 luvun täytyy hypätä ennen ruudun D4 lukua."
+      }
+     ]
+    }
+   }
+  },
+  "parity": {
+   "short": "Parillisuus",
+   "title": "Voiko ryhmä kadota kokonaan?",
+   "rule": "Lukujen, jotka eivät voi koskaan päästä muun laudan lukuihin, täytyy kadota keskenään. Siksi niiden summan täytyy olla parillinen. Jos summa on pariton, ainakin yksi luku jää jäljelle.",
+   "check": "Jäävätkö jotkin luvut erilleen muusta laudasta? Laske ne yhteen. Jos summa on pariton, ne eivät voi kaikki kadota.",
+   "recall": "Etsi lukuja, jotka jäävät erilleen muista. Laske ne yhteen. Jos summa on pariton, ainakin yksi luku jää jäljelle.",
+   "ask": "Jos {move}, jääkö muista erilleen lukuja, joiden summa on pariton?",
+   "pick": "Napauta laudalla yhtä tuon ryhmän luvuista.",
+   "none": "Ei. Muista ei jää erilleen lukuja, joiden summa olisi pariton, ja laudan voi yhä tyhjentää.",
+   "hint": "Kuvittele lauta hypyn jälkeen. Jäävätkö jotkin luvut erilleen muista? Laske ne yhteen.",
+   "learned": "Muista erillään olevien lukujen summan täytyy olla parillinen, jotta ne voivat kaikki kadota.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Katso siirtoa: ruudun E3 4 hyppää ruudun A3 luvun 3 päälle."
+      },
+      {
+       "text": "4 − 3 = 1 ruudussa A3.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Nyt ruudun C3 1 ja ruudun D3 2 ovat erillään muista. Mitkään muut luvut eivät voi koskaan hypätä niiden päälle tai ottaa niitä vastaan. Ne voivat kohdata vain toisensa."
+      },
+      {
+       "text": "2 − 1 = 1. Nyt jäljellä on yksi ykkönen, eikä mikään voi auttaa.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Se ei ollut huonoa tuuria. Ennen hyppyä summa oli 1 + 2 = 3. Hypyn jälkeen se on 1. Summa pieneni kahdella."
+      },
+      {
+       "text": "Tässä molemmista luvuista vähennettiin 1, joten summa pieneni kahdella. Jos luvut olisivat 2 ja 3, summa pienenisi neljällä. Se pienenee aina parillisella määrällä, joten kolmesta se ei voi koskaan päästä nollaan."
+      },
+      {
+       "text": "Ensi kerralla: laske yhteen luvut, jotka jäävät erilleen muista. Jos summa on pariton, ainakin yksi jää jäljelle. Parillinen summa ei takaa onnistumista, mutta pariton summa on aina ansa."
+      }
+     ]
+    }
+   }
+  },
+  "ahead": {
+   "short": "Katso eteenpäin",
+   "title": "Mitä tapahtuu sen jälkeen?",
+   "rule": "Jotkin ansat näyttävät turvallisilta. Mikään luku ei ole yksin, ja kaikilla on toinen luku, jonka ne voivat kohdata. Vasta parin siirron jälkeen jokin luku jää jumiin. Silloin auttaa, kun seuraat yhtä lukua muutaman siirron eteenpäin.",
+   "check": "Etsi luku, jolla on vain yksi mahdollinen toiminto. Pelaa se mielessäsi: minne se päätyy, ja mitä sille voi tapahtua siellä?",
+   "recall": "Seuraa lukuja, joilla on vain yksi vaihtoehto. Pelaa niitä mielessäsi muutama siirto eteenpäin ja katso, päätyvätkö ne paikkaan, johon mikään ei pääse.",
+   "ask": "Katso siirtoa: {move}. Se näyttää turvalliselta. Onko se turvallinen vai ansa, joka paljastuu myöhemmin?",
+   "none": "Turvallinen. Laudan voi yhä tyhjentää tuon siirron jälkeen.",
+   "hint": "Seuraa lukua, jolla on siirron jälkeen vain yksi vaihtoehto, ja katso, minne se päätyy.",
+   "learned": "Seuraa lukuja, joilla on vain yksi vaihtoehto, muutama siirto eteenpäin. Katso, päätyvätkö ne paikkaan, johon mikään ei pääse.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Katso siirtoa: ruudun B1 1 hyppää ruudun C1 luvun 2 päälle."
+      },
+      {
+       "text": "2 − 1 = 1. Tilanne näyttää hyvältä: mikään luku ei ole yksin, ja kaikilla on toinen luku, jonka ne voivat kohdata.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Mutta seuraa ruudun A1 lukua 3. Mitä se voi tehdä? Se hyppää 3 ruutua, ja ainoa luku 3 ruudun päässä on ruudussa D1."
+      },
+      {
+       "text": "3 − 1 = 2 ruudussa D1. Nyt seuraamme tuota kakkosta.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Mitä ruudun D1 luvulle 2 voi tapahtua? Se ei voi hypätä mihinkään. Vain ruudun C1 1 voi laskeutua sen päälle."
+      },
+      {
+       "text": "2 − 1 = 1. Nyt jäljellä ovat ruudun D1 1 ja ruudun C4 3, eivätkä ne ole samalla linjalla.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Takaisin siirron jälkeiseen tilanteeseen. Entä jos ruudun C1 1 hyppää ensin ruutuun D1?",
+       "go": "Kokeile toista tapaa"
+      },
+      {
+       "text": "1 − 1 = 0, joten molemmat katoavat. Silloin ruudun A1 3 jää aivan yksin rivilleen.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Takaisin siirron jälkeiseen tilanteeseen. Entä jos ruudun C4 3 hyppää ensin ruutuun C1?",
+       "go": "Kokeile kolmatta tapaa"
+      },
+      {
+       "text": "3 − 1 = 2 ruudussa C1.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Ja ruudun A1 3 hyppää ruutuun D1: 3 − 1 = 2 ruudussa D1.",
+       "go": "Näytä hyppy"
+      },
+      {
+       "text": "Nyt kaksi kakkosta on vain 1 ruudun päässä toisistaan. Kumpikaan ei voi hypätä toisen päälle, eikä muita lukuja ole jäljellä."
+      },
+      {
+       "text": "Teitpä mitä tahansa, jäljelle jää lukuja, joita mikään ei voi poistaa. Siirto oli ansa, mutta sen huomaa vasta parin siirron jälkeen."
+      }
+     ]
+    }
+   }
+  },
+  "test": {
+   "short": "Koe",
+   "title": "Koe",
+   "rule": "Kymmenen siirtoa kaikilta oppitunneilta sekaisin, ilman kuvion nimeä ja ilman vihjeitä. Katso siirtoa ja vastaa: turvallinen vai ansa?",
+   "check": "Jääkö jokin luku yksin? Voivatko luvut kohdata? Tarvitsevatko kaksi lukua saman parin? Pitääkö jotakin tapahtua ensin? Voiko summa pienentyä nollaan? Mitä tapahtuu sen jälkeen?"
+  }
+ },
+ "de": {
+  "basics": {
+   "short": "So spielst du",
+   "title": "So spielst du",
+   "rule": "Das Ziel ist, alle Zahlen zu entfernen. Eine Zahl springt genau so viele Felder, wie sie anzeigt, waagerecht oder senkrecht. Sie muss auf einer anderen Zahl landen. Die größere minus die kleinere bleibt übrig, und gleiche Zahlen verschwinden beide.",
+   "check": "Zähle die Felder: Eine 3 erreicht eine Zahl, die genau 3 Felder entfernt in derselben Zeile oder Spalte steht.",
+   "recall": "Zähle vor dem Sprung die Felder und überlege, was dort übrig bleibt, wo du landest.",
+   "learned": "Jetzt kennst du die Regeln: Eine Zahl springt genau so weit, wie sie anzeigt. Die größere minus die kleinere bleibt übrig, und gleiche Zahlen verschwinden.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Das Ziel ist, alle Zahlen vom Brett zu entfernen."
+      },
+      {
+       "text": "Eine Zahl springt genau so viele Felder, wie sie anzeigt, waagerecht oder senkrecht, nie schräg. Die 3 auf A1 erreicht die 1 auf D1, 3 Felder entfernt."
+      },
+      {
+       "text": "Dort, wo sie landet, bleibt die größere minus die kleinere übrig: 3 − 1 = 2.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Sind die Zahlen gleich, verschwinden beide. Die 2 auf A3 springt 2 Felder weit, auf die 2 auf C3."
+      },
+      {
+       "text": "2 − 2 = 0. Beide sind weg.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Zum Schluss springt die 2 auf D1 zwei Felder nach unten, auf die 2 auf D3. Das Brett ist leer.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Die Reihenfolge ist wichtig. In der falschen Reihenfolge können Zahlen übrig bleiben, die sich nie treffen. Darum geht es in den nächsten Lektionen."
+      }
+     ]
+    }
+   }
+  },
+  "alone": {
+   "short": "Allein",
+   "title": "Welche Zahl bleibt allein stehen?",
+   "rule": "Eine Zahl kann nur verschwinden, wenn eine andere Zahl in derselben Zeile oder Spalte sie verringert. Ist dort keine andere Zahl mehr, bleibt sie für immer stehen.",
+   "check": "Steht eine Zahl in derselben Zeile oder Spalte wie die Zahl, die du bewegen willst? Kann diese Zahl sonst keine andere treffen, bleibt sie nach deinem Zug allein.",
+   "recall": "Achte auf Zahlen in derselben Zeile oder Spalte wie die Zahl, die du bewegen willst. Kann eine davon sonst keine andere treffen, bleibt sie allein.",
+   "ask": "Bei diesem Zug: {move}. Bleibt dann eine Zahl allein stehen?",
+   "pick": "Welche Zahl bleibt allein stehen? Tippe sie auf dem Brett an.",
+   "none": "Keine bleibt allein. Alle Zahlen haben noch eine andere Zahl in ihrer Zeile oder Spalte, und das Brett lässt sich noch lösen.",
+   "hint": "Schau auf die Zeile und Spalte der springenden Zahl. Steht dort eine Zahl, die keine andere mehr treffen kann, wenn die springende Zahl weg ist?",
+   "learned": "Achte vor deinem Zug auf Zahlen, die nur die Zahl treffen können, die du bewegst. Sie bleiben allein stehen.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Schau auf die 1 auf A3. In der Zeile und Spalte von A3 steht nur eine andere Zahl: die 2 auf B3."
+      },
+      {
+       "text": "Die 2 auf B3 springt zwei Felder nach oben und landet auf der 3 auf B1. 3 − 2 = 1, also steht dort eine 1.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Jetzt ist keine andere Zahl mehr in der Zeile oder Spalte von A3."
+      },
+      {
+       "text": "Keine Zahl kann auf sie springen, und sie kann nirgendwohin springen. Die 1 auf A3 kann nie verschwinden."
+      }
+     ]
+    },
+    "3": {
+     "text": "Finde den Zug, nach dem eine Zahl allein stehen bleibt. Tippe auf die Zahl, die springen soll, und dann auf das Feld, auf dem sie landen soll."
+    }
+   }
+  },
+  "meet": {
+   "short": "Abstand",
+   "title": "Welche Zahl ist nie erreichbar?",
+   "rule": "Zwei Zahlen in derselben Zeile oder Spalte treffen sich nur, wenn eine so groß ist wie der Abstand zwischen ihnen. Die Zahl auf einem Feld ändert sich nur, wenn eine andere Zahl dort landet. Deshalb kann sie manchmal nie den nötigen Wert bekommen.",
+   "check": "Zähle den Abstand zwischen Zahlen in derselben Zeile oder Spalte. Ist eine so groß wie der Abstand, oder kann sie so groß werden?",
+   "recall": "Zähle den Abstand zu den Zahlen in derselben Zeile oder Spalte. Kann eine von ihnen jemals so groß werden wie der Abstand?",
+   "ask": "Bei diesem Zug: {move}. Wird dann eine Zahl unerreichbar?",
+   "pick": "Welche Zahl kann keine andere erreichen? Tippe sie auf dem Brett an.",
+   "none": "Nein. Alle Zahlen sind noch erreichbar, und das Brett lässt sich noch lösen.",
+   "hint": "Stell dir das Brett nach dem Sprung vor. Zähle den Abstand zwischen Zahlen in derselben Zeile oder Spalte. Ist eine so groß wie der Abstand, oder kann sie so groß werden?",
+   "learned": "Zähle den Abstand zwischen Zahlen in derselben Zeile oder Spalte und prüfe, ob eine so groß werden kann.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Vier Dreien und zwei Einsen. Eine 3 springt genau 3 Felder weit. Schau auf den Sprung von B1 nach B2."
+      },
+      {
+       "text": "Die 1 auf B1 springt auf die 1 auf B2. 1 − 1 = 0, also verschwinden beide.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Von A1 nach C1 sind es 2 Felder. Beide Zahlen sind eine 3, also kann keine auf die andere springen.",
+       "go": "Zählen"
+      },
+      {
+       "text": "Von A1 nach A2 ist es nur 1 Feld. Dasselbe gilt für C1 und C2.",
+       "go": "Zählen"
+      },
+      {
+       "text": "Keine andere Zahl kann auf ihnen landen und sie verändern. Sie bleiben für immer Dreien, und keine kann verschwinden."
+      },
+      {
+       "text": "Zurück zum Anfang. Lass stattdessen die 1 auf B1 auf die 3 auf C1 springen.",
+       "go": "Anderen Zug versuchen"
+      },
+      {
+       "text": "3 − 1 = 2. Jetzt steht eine 2 auf C1, und A1 ist 2 Felder entfernt. Also kann sie dorthin springen.",
+       "go": "Sprung zeigen"
+      }
+     ]
+    }
+   }
+  },
+  "partner": {
+   "short": "Derselbe Partner",
+   "title": "Welche Zahl brauchen zwei andere?",
+   "rule": "Wenn zwei Zahlen nur mit derselben Zahl verschwinden können, bekommt nur eine von ihnen diesen Partner. Die andere bleibt stehen.",
+   "check": "Haben zwei Zahlen nur noch einen möglichen Partner, und ist es derselbe?",
+   "recall": "Achte auf zwei Zahlen, die nur einen Partner zum Verschwinden haben. Ist es derselbe, geht es nicht.",
+   "ask": "Bei diesem Zug: {move}. Brauchen dann zwei Zahlen denselben Partner?",
+   "pick": "Welche Zahl brauchen beide? Tippe sie auf dem Brett an.",
+   "none": "Nein. Keine zwei Zahlen sind auf denselben Partner angewiesen, und das Brett lässt sich noch lösen.",
+   "hint": "Stell dir das Brett nach dem Sprung vor. Finde zwei Zahlen, die nur mit einer einzigen Zahl verschwinden können. Ist es dieselbe Zahl?",
+   "learned": "Achte auf zwei Zahlen, die nur mit derselben Zahl verschwinden können. Nur eine von ihnen bekommt diesen Partner.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Schau dir den Zug an: Die 3 auf D1 springt auf die 1 auf D4."
+      },
+      {
+       "text": "3 − 1 = 2. Jetzt stehen drei Zweien auf dem Brett: D2, B4 und D4.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Die 2 auf D2 und die 2 auf B4 können nur D4 erreichen. Versuch zuerst D2."
+      },
+      {
+       "text": "2 − 2 = 0, also verschwinden beide. B4 bleibt allein stehen.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Zurück zu den drei Zweien. Versuch jetzt B4.",
+       "go": "Zurück"
+      },
+      {
+       "text": "2 − 2 = 0. Jetzt bleibt D2 allein stehen.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Egal welches Paar du entfernst, die dritte 2 bleibt übrig. Beide brauchten D4, und D4 kann nur einmal verschwinden."
+      },
+      {
+       "text": "Die richtige Reihenfolge: Lass eine der Zweien nach D4 springen, bevor die 3 es tut. Wir nehmen zuerst D2.",
+       "go": "Richtige Reihenfolge"
+      },
+      {
+       "text": "2 − 1 = 1 auf D4.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "3 − 1 = 2 auf D4.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "2 − 2 = 0. Das Brett ist leer.",
+       "go": "Sprung zeigen"
+      }
+     ]
+    }
+   }
+  },
+  "order": {
+   "short": "Reihenfolge",
+   "title": "Was muss zuerst passieren?",
+   "rule": "Manchmal ist ein Zug richtig, kommt aber zu früh: Eine andere Zahl muss zuerst auf dem Feld landen. Und ein leeres Feld bekommt nie wieder eine Zahl.",
+   "check": "Sollen mehrere Zahlen auf dasselbe Feld oder von dort springen? Finde heraus, welche zuerst dran sein muss. Leere kein Feld, das noch gebraucht wird.",
+   "recall": "Wenn mehrere Zahlen dasselbe Feld brauchen, musst du die Reihenfolge herausfinden. Leere nie ein Feld, auf das oder von dem noch etwas springen soll.",
+   "ask": "Schau dir den Zug an: {move}. Ist er jetzt sicher, oder ist er eine Falle?",
+   "none": "Sicher. Nach diesem Zug lässt sich das Brett noch lösen.",
+   "hint": "Soll später noch etwas auf dieselben Felder oder von dort springen?",
+   "learned": "Wenn mehrere Zahlen dasselbe Feld brauchen, entscheidet die Reihenfolge. Leere nie ein Feld, das noch gebraucht wird.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Die 2 auf D3 und die 3 auf D4 sollen beide auf der 1 auf D1 landen. Die Reihenfolge entscheidet, was dort übrig bleibt. Zuerst D3."
+      },
+      {
+       "text": "2 − 1 = 1 auf D1.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "3 − 1 = 2 auf D1.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Diese 2 wird gebraucht. Die 3 auf B1 steht 2 Felder entfernt, also kann die 2 dorthin springen."
+      },
+      {
+       "text": "Zurück zum Anfang. Jetzt springt die 3 auf D4 zuerst.",
+       "go": "Andere Reihenfolge"
+      },
+      {
+       "text": "3 − 1 = 2 auf D1.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "2 − 2 = 0. Beide verschwinden, und D1 ist leer.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Jetzt gibt es keine 2 mehr, die B1 erreichen kann. Ein leeres Feld bekommt nie wieder eine Zahl. Deshalb muss D3 vor D4 springen."
+      }
+     ]
+    }
+   }
+  },
+  "parity": {
+   "short": "Gerade Zahlen",
+   "title": "Geht die Gruppe auf?",
+   "rule": "Zahlen, die den Rest des Bretts nie erreichen können, müssen sich gegenseitig entfernen. Dafür muss ihre Summe gerade sein. Ist sie ungerade, bleibt mindestens eine Zahl übrig.",
+   "check": "Werden Zahlen vom Rest des Bretts abgeschnitten? Rechne sie zusammen. Ist die Summe ungerade, geht es nicht.",
+   "recall": "Achte auf Zahlen, die vom Rest abgeschnitten werden. Rechne sie zusammen. Ist die Summe ungerade, bleibt mindestens eine Zahl übrig.",
+   "ask": "Bei diesem Zug: {move}. Werden dann Zahlen mit einer ungeraden Summe vom Rest abgeschnitten?",
+   "pick": "Tippe auf dem Brett eine der Zahlen in dieser Gruppe an.",
+   "none": "Nein. Es werden keine Zahlen mit einer ungeraden Summe vom Rest abgeschnitten, und das Brett lässt sich noch lösen.",
+   "hint": "Stell dir das Brett nach dem Sprung vor. Werden Zahlen vom Rest abgeschnitten? Rechne sie zusammen.",
+   "learned": "Zahlen, die vom Rest abgeschnitten sind, müssen eine gerade Summe haben, damit sie alle verschwinden können.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Schau dir den Zug an: Die 4 auf E3 springt auf die 3 auf A3."
+      },
+      {
+       "text": "4 − 3 = 1 auf A3.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Jetzt sind die 1 auf C3 und die 2 auf D3 für sich. Keine andere Zahl kann jemals auf sie springen oder sie als Sprungziel aufnehmen. Sie können nur einander treffen."
+      },
+      {
+       "text": "2 − 1 = 1. Jetzt bleibt eine einzelne 1 übrig, und niemand kann helfen.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Das war kein Pech. Vor dem Sprung war die Summe 1 + 2 = 3. Nach dem Sprung ist sie 1. Die Summe ist um 2 gesunken."
+      },
+      {
+       "text": "Hier wurde von beiden Zahlen 1 abgezogen, also wurde die Summe um 2 kleiner. Bei 2 und 3 wäre die Summe um 4 kleiner geworden. Sie sinkt immer um eine gerade Zahl. Deshalb kann sie von 3 aus nie 0 werden."
+      },
+      {
+       "text": "Für das nächste Mal: Rechne Zahlen zusammen, die vom Rest abgeschnitten werden. Ist die Summe ungerade, bleibt mindestens eine übrig. Eine gerade Summe ist keine Garantie, aber eine ungerade Summe ist immer eine Falle."
+      }
+     ]
+    }
+   }
+  },
+  "ahead": {
+   "short": "Vorausschauen",
+   "title": "Was passiert danach?",
+   "rule": "Manche Fallen sehen sicher aus. Keine Zahl steht allein, und jede kann eine andere treffen. Erst nach ein paar Zügen steckt eine Zahl fest. Dann hilft es, eine Zahl ein paar Züge weiterzuverfolgen.",
+   "check": "Finde eine Zahl, die nur eine Möglichkeit hat. Spiele im Kopf weiter: Wo landet sie, und was kann dort mit ihr passieren?",
+   "recall": "Verfolge Zahlen, die nur eine Möglichkeit haben. Spiele im Kopf ein paar Züge weiter und prüfe, ob sie irgendwo landen, wo keine andere sie erreicht.",
+   "ask": "Schau dir den Zug an: {move}. Er sieht sicher aus. Ist er sicher, oder ist er eine Falle, die sich erst später zeigt?",
+   "none": "Sicher. Nach diesem Zug lässt sich das Brett noch lösen.",
+   "hint": "Verfolge eine Zahl, die nach dem Zug nur eine Möglichkeit hat, und schau, wo sie landet.",
+   "learned": "Verfolge Zahlen, die nur eine Möglichkeit haben, ein paar Züge weiter. Prüfe, ob sie irgendwo landen, wo keine andere sie erreicht.",
+   "steps": {
+    "0": {
+     "frames": [
+      {
+       "text": "Schau dir den Zug an: Die 1 auf B1 springt auf die 2 auf C1."
+      },
+      {
+       "text": "2 − 1 = 1. Das sieht gut aus: Keine Zahl steht allein, und jede kann eine andere treffen.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Aber verfolge die 3 auf A1. Was kann sie tun? Sie springt 3 Felder weit, und die einzige Zahl in 3 Feldern Abstand steht auf D1."
+      },
+      {
+       "text": "3 − 1 = 2 auf D1. Jetzt verfolgen wir diese 2.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Was kann mit der 2 auf D1 passieren? Sie kann nirgendwohin springen. Nur die 1 auf C1 kann auf ihr landen."
+      },
+      {
+       "text": "2 − 1 = 1. Jetzt bleiben die 1 auf D1 und die 3 auf C4 übrig. Sie stehen weder in derselben Zeile noch in derselben Spalte.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Zurück zur Stellung nach dem Zug. Was, wenn die 1 auf C1 zuerst nach D1 springt?",
+       "go": "Anderen Weg versuchen"
+      },
+      {
+       "text": "1 − 1 = 0, also verschwinden beide. Dann steht die 3 auf A1 ganz allein in ihrer Zeile.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Zurück zur Stellung nach dem Zug. Was, wenn die 3 auf C4 zuerst springt, nach C1?",
+       "go": "Dritten Weg versuchen"
+      },
+      {
+       "text": "3 − 1 = 2 auf C1.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Und die 3 auf A1 springt nach D1: 3 − 1 = 2 auf D1.",
+       "go": "Sprung zeigen"
+      },
+      {
+       "text": "Jetzt stehen zwei Zweien nur 1 Feld voneinander entfernt. Keine kann auf die andere springen, und es sind keine anderen Zahlen mehr übrig."
+      },
+      {
+       "text": "Egal was du tust, es bleiben Zahlen stehen, die niemand entfernen kann. Der Zug war eine Falle, aber das zeigt sich erst nach ein paar Zügen."
+      }
+     ]
+    }
+   }
+  },
+  "test": {
+   "short": "Test",
+   "title": "Test",
+   "rule": "Zehn Züge aus allen Lektionen, bunt gemischt, ohne den Namen des Musters und ohne Hinweise. Schau dir den Zug an und antworte: sicher oder Falle?",
+   "check": "Bleibt eine Zahl allein? Können sie sich treffen? Brauchen zwei denselben Partner? Muss zuerst etwas anderes passieren? Geht die Summe auf? Was passiert danach?"
+  }
+ }
+}/*LTEXTSEND*/;
 for (const l of LESSONS) {
   const o = (LESSON_TEXT[LANG] || {})[l.id];
   if (!o) continue;

@@ -571,27 +571,32 @@ def home_page(lang, root, t, r, st):
                 top=top, main=main, scripts=f'<script src="{root}daily/embed.js" async></script>' + forward)
 
 
-# The school, shown on every home page. Its lessons are in Norwegian for now, which the other languages say.
+# The school, shown on every home page and in the menu, in the language of the page.
 SCHOOL = {
 "nb": dict(nav="Skolen", title="Hiku-skolen", cta="Begynn på skolen", note="",
   text="Hvorfor ble det tallet stående igjen? Sju korte leksjoner viser deg mønstrene bak fellene, på små brett du spiller selv. Til slutt kan du ta en prøve.",
   board="Et lite brett: 2-tallet på B3 skal hoppe til B1, og da blir 1-tallet på A3 stående alene."),
-"en": dict(nav="School", title="The Hiku school", cta="Start the school", note="The lessons are in Norwegian for now.",
+"en": dict(nav="School", title="The Hiku school", cta="Start the school", note="",
   text="Why was that number left behind? Seven short lessons show you the patterns behind the traps, on small boards you play yourself, with a test at the end.",
   board="A small board: the 2 on B3 is about to jump to B1, which leaves the 1 on A3 alone."),
-"sv": dict(nav="Skolan", title="Hiku-skolan", cta="Börja i skolan", note="Lektionerna är på norska än så länge.",
+"sv": dict(nav="Skolan", title="Hiku-skolan", cta="Börja i skolan", note="",
   text="Varför blev det talet kvar? Sju korta lektioner visar mönstren bakom fällorna, på små bräden du spelar själv, med ett prov på slutet.",
   board="Ett litet bräde: 2:an på B3 ska hoppa till B1, och då blir 1:an på A3 ensam."),
-"da": dict(nav="Skolen", title="Hiku-skolen", cta="Begynd på skolen", note="Lektionerne er på norsk indtil videre.",
+"da": dict(nav="Skolen", title="Hiku-skolen", cta="Begynd på skolen", note="",
   text="Hvorfor blev det tal stående tilbage? Syv korte lektioner viser dig mønstrene bag fælderne, på små brætter du selv spiller, med en prøve til sidst.",
   board="Et lille bræt: 2-tallet på B3 skal hoppe til B1, og så bliver 1-tallet på A3 stående alene."),
-"fi": dict(nav="Koulu", title="Hiku-koulu", cta="Aloita koulu", note="Oppitunnit ovat toistaiseksi norjaksi.",
+"fi": dict(nav="Koulu", title="Hiku-koulu", cta="Aloita koulu", note="",
   text="Miksi tuo luku jäi jäljelle? Seitsemän lyhyttä oppituntia näyttää ansojen taustalla olevat kuviot pienillä laudoilla, joita pelaat itse. Lopuksi on koe.",
   board="Pieni lauta: ruudun B3 kakkonen hyppää ruutuun B1, ja silloin ruudun A3 ykkönen jää yksin."),
-"de": dict(nav="Schule", title="Die Hiku-Schule", cta="Zur Schule", note="Die Lektionen sind vorerst auf Norwegisch.",
+"de": dict(nav="Schule", title="Die Hiku-Schule", cta="Zur Schule", note="",
   text="Warum ist diese Zahl übrig geblieben? Sieben kurze Lektionen zeigen dir die Muster hinter den Fallen, auf kleinen Brettern, die du selbst spielst, mit einem Test am Ende.",
   board="Ein kleines Brett: Die 2 auf B3 springt gleich nach B1, und dann bleibt die 1 auf A3 allein."),
 }
+
+
+def school_url(lang):
+    """One address for the school in every language; the language comes along as ?lang= (Norwegian needs none)."""
+    return "skole/#leksjon-1" if lang == "nb" else f"skole/?lang={lang}#leksjon-1"
 
 
 def school_block(lang, root):
@@ -609,7 +614,7 @@ def school_block(lang, root):
   <div>
     <h2>{sc["title"]}</h2>
     <p>{sc["text"]}</p>{note}
-    <div class="ctas"><a class="btn tile" href="{root}skole/#leksjon-1">{sc["cta"]}</a></div>
+    <div class="ctas"><a class="btn tile" href="{root}{school_url(lang)}">{sc["cta"]}</a></div>
   </div>
 </div></section>
 
@@ -691,7 +696,7 @@ def build(lang, template, page):
     current = ' aria-current="page"'
     nav = (f'<a href="{home}#spill">{t["nav_play"]}</a>'
            f'<a href="{root}{rules_url(lang)}"{current if page == "rules" else ""}>{r["nav"]}</a>'
-           f'<a href="{home}#appen">{t["nav_app"]}</a><a href="{root}skole/#leksjon-1">{SCHOOL[lang]["nav"]}</a>'
+           f'<a href="{home}#appen">{t["nav_app"]}</a><a href="{root}{school_url(lang)}">{SCHOOL[lang]["nav"]}</a>'
            f'<a href="{home}#aviser">{t["nav_news"]}</a>')
     v = dict(t)
     v.update(home_page(lang, root, t, r, st) if page == "home" else rules_page(lang, root, home, t, r, st) if page == "rules"
