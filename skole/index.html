@@ -307,7 +307,7 @@ const TEXT = /*TEXTS*/{
  "en": {
   "list.and": " and ",
   "tile": "the {v} on {sq}",
-  "sum.gone": "{a} − {b} = gone",
+  "sum.gone": "{a} − {b} = 0, so both disappear",
   "more": "Show the full explanation",
   "squares.one": "1 square",
   "squares": "{d} squares",
@@ -329,7 +329,7 @@ const TEXT = /*TEXTS*/{
   "follow.stuck": "{x} is stuck: it cannot jump, and nothing can land on it.",
   "follow.jumps": "{x} jumps to {sq}",
   "follow.lands": "{x} lands on {sq}",
-  "follow": "The number on {start} can never disappear. If {steps}, a {v} is left on {end} that nothing can clear.",
+  "follow": "The number on {start} can never disappear. If {steps}, a {v} is left on {end}, and nothing can clear it.",
   "way.intro": "Follow {x} after your move. What can happen to it?",
   "way.label": "Follow the number",
   "show.jump": "Show the jump",
@@ -349,7 +349,7 @@ const TEXT = /*TEXTS*/{
   "label.task": "Puzzle {k} of {n}",
   "goal.trap": "Look for the trap: the move that makes the board impossible to clear.",
   "goal.solve": "Clear all the numbers.",
-  "goal.safe": "Look for the safe move: the only one that keeps the board possible to clear.",
+  "goal.safe": "Look for the safe move: the only one after which the board can still be cleared.",
   "progress": "Progress",
   "title.demo": "See what happens",
   "title.predict": "What do you think?",
@@ -415,7 +415,7 @@ const TEXT = /*TEXTS*/{
   "test.score": "You got {r} out of {n}.",
   "test.all": "Everything right. You spot the traps before you fall into them.",
   "test.good": "Well done. Practise the patterns you missed a little more.",
-  "test.more": "Go through the lessons you missed again, then try once more.",
+  "test.more": "Go through the lessons where you made mistakes, then try again.",
   "test.row": "{p}: {r} of {n}",
   "test.safes": "Safe moves",
   "test.practice": "Practise {p}",
@@ -664,7 +664,7 @@ const TEXT = /*TEXTS*/{
   "test.next": "Næste spørgsmål",
   "test.result": "Se resultatet",
   "test.title": "Prøve",
-  "test.score": "Du fik {r} af {n}.",
+  "test.score": "Du fik {r} af {n} rigtige.",
   "test.all": "Alt rigtigt. Du ser fælderne, før du går i dem.",
   "test.good": "Godt klaret. Øv dig lidt mere på de mønstre, du svarede forkert på.",
   "test.more": "Tag en runde mere med de lektioner, hvor du svarede forkert, og prøv igen.",
@@ -696,14 +696,14 @@ const TEXT = /*TEXTS*/{
   "alone.none": "Rivillä tai sarakkeella ei ole enää muita lukuja.",
   "meet": "{a} ja {b} ovat {apart} päässä toisistaan. Kumpikaan ei ole {d}, eikä kummastakaan voi tulla sitä. Siksi ne eivät voi koskaan kohdata.",
   "partner": "{x} ja {y} voivat kadota vain, jos parina on {c}. Kun toinen katoaa sen kanssa, toinen jää jäljelle.",
-  "why": "Näytä miksi",
+  "why": "Näytä perustelu",
   "parity": "Merkityt luvut eivät voi kohdata muun laudan lukuja. Summa on {sum}. Se on pariton, joten ne eivät voi kaikki kadota.",
   "needs": "Tyhjään ruutuun ei tule enää koskaan lukua.",
   "needs.at": "Tässä käytetään ruutua {sq}.",
-  "needs.end": "Tämä on vain yksi tapa tyhjentää lauta, mutta kaikissa tavoissa ruutua {sq} käytetään näin. Siirtosi jälkeen ruutu on tyhjä, eikä tyhjään ruutuun tule enää koskaan lukua.",
+  "needs.end": "Tämä on vain yksi tapa tyhjentää lauta, mutta kaikissa ratkaisuissa ruutua {sq} käytetään näin. Siirtosi jälkeen ruutu on tyhjä, eikä tyhjään ruutuun tule enää koskaan lukua.",
   "early.first": "Ensin tämän täytyi tapahtua:",
   "early.at": "Vasta nyt {x} laskeutuu ruutuun {sq}.",
-  "early.end": "Tämä on vain yksi tapa tyhjentää lauta, mutta kaikissa tavoissa ruutuun {sq} laskeutuu toinen luku ennen kuin {x} laskeutuu sinne.",
+  "early.end": "Tämä on vain yksi tapa tyhjentää lauta, mutta kaikissa ratkaisuissa ruutuun {sq} laskeutuu toinen luku ennen kuin {x} laskeutuu sinne.",
   "follow.stuck": "{x} on jumissa: se ei voi hypätä, eikä mikään voi laskeutua sen päälle.",
   "follow.jumps": "{x} hyppää ruutuun {sq}",
   "follow.lands": "{x} laskeutuu ruutuun {sq}",
@@ -729,13 +729,13 @@ const TEXT = /*TEXTS*/{
   "goal.solve": "Poista kaikki luvut.",
   "goal.safe": "Etsit turvallista siirtoa: ainoaa, jonka jälkeen laudan voi yhä tyhjentää.",
   "progress": "Edistyminen",
-  "title.demo": "Katso mitä tapahtuu",
+  "title.demo": "Katso, mitä tapahtuu",
   "title.predict": "Mitä luulet?",
   "title.predict2": "Entä tässä?",
   "title.findTrap": "Etsi ansa",
   "title.findSafe": "Etsi turvallinen siirto",
   "title.solve": "Tyhjennä lauta",
-  "text.example": "Katso mitä tapahtuu, kun {mv}.",
+  "text.example": "Katso, mitä tapahtuu, kun {mv}.",
   "text.findTrap": "Etsi siirto, jonka jälkeen lautaa ei voi enää tyhjentää. Napauta hyppäävää lukua ja sitten ruutua, johon se laskeutuu.",
   "text.findSafe": "Tässä lähes kaikki siirrot ovat ansoja. Napauta hyppäävää lukua ja sitten ruutua, johon se laskeutuu.",
   "text.solve": "Napauta hyppäävää lukua ja sitten ruutua, johon se laskeutuu. Pelaa, kunnes lauta on tyhjä.",
@@ -800,10 +800,10 @@ const TEXT = /*TEXTS*/{
   "test.again": "Tee koe uudelleen",
   "test.none": "Koetta ei voitu luoda.",
   "h1": "Hiku-koulu",
-  "lead": "Täällä harjoittelet huomaamaan ansat ennen kuin astut niihin. Jokainen oppitunti antaa kysymyksen, jonka voit kysyä itseltäsi ennen siirtoa.",
+  "lead": "Täällä harjoittelet huomaamaan ansat ennen kuin astut niihin. Jokaisella oppitunnilla saat kysymyksen, jonka voit esittää itsellesi ennen siirtoa.",
   "lessons": "Oppitunnit",
   "check": "Tarkista ennen siirtoa",
-  "footer": "Hiku-koulu on vielä työn alla. Selitykset tulevat samasta moottorista kuin pelin ”Miksi?”-toiminnossa.",
+  "footer": "Hiku-koulu on vielä työn alla. Selitykset tuottaa sama moottori, jota pelin ”Miksi?”-toiminto käyttää.",
   "title": "Hiku-koulu",
   "lang.label": "Kieli",
   "undo": "\\s*Peru siirto ja [^.]*\\."
@@ -918,7 +918,7 @@ const TEXT = /*TEXTS*/{
   "test.title": "Test",
   "test.score": "Du hast {r} von {n} richtig beantwortet.",
   "test.all": "Alles richtig. Du erkennst die Fallen, bevor du hineintappst.",
-  "test.good": "Gut gemacht. Übe noch etwas die Muster, bei denen du falsch lagst.",
+  "test.good": "Gut gemacht. Übe die Muster, bei denen du falsch lagst, noch etwas.",
   "test.more": "Wiederhole die Lektionen, bei denen du falsch lagst, und versuch es noch einmal.",
   "test.row": "{p}: {r} von {n}",
   "test.safes": "Sichere Züge",
@@ -3696,12 +3696,12 @@ const LESSON_TEXT = /*LTEXTS*/{
    "short": "Alone",
    "title": "Which number will be left alone?",
    "rule": "A number can only disappear when another number in the same row or column reduces it. If no other numbers are left there, it stays forever.",
-   "check": "Is there a number in the same row or column as the number you want to move? If it has no other number to meet, it will be left alone when you move.",
+   "check": "Is there another number in the same row or column as the number you want to move? If that other number has no one else to meet, it will be left alone when you move.",
    "recall": "Look for numbers in the same row or column as the number you want to move. If one has no other number to meet, it will be left alone.",
    "ask": "If {move}, will a number be left alone?",
    "pick": "Which number will be left alone? Tap it on the board.",
    "none": "None will be left alone. Every number still has another number in its row or column, and the board can still be cleared.",
-   "hint": "Look at the row and column of the number that jumps. Is there a number there that will have no other number to meet once it is gone?",
+   "hint": "Look at the row and column of the number that jumps. Is there another number there that will have no one else to meet once the jumping number is gone?",
    "learned": "Before you move, look for numbers that can only meet the number you are moving. They will be left alone.",
    "steps": {
     "0": {
@@ -3733,10 +3733,10 @@ const LESSON_TEXT = /*LTEXTS*/{
    "check": "Count the distance between numbers in the same row or column. Does one equal the distance, or can it become that number?",
    "recall": "Count the distance to numbers in the same row or column. Can any of them ever equal the distance?",
    "ask": "If {move}, will a number become impossible to reach?",
-   "pick": "Which number can nothing reach? Tap it on the board.",
+   "pick": "Which number cannot be reached by any other number? Tap it on the board.",
    "none": "No. Every number can still be reached, and the board can still be cleared.",
    "hint": "Picture the board after the jump. Count the distance between numbers in the same row or column. Does any of them equal the distance, or can it become that number?",
-   "learned": "Count the distance between numbers in the same row or column, and check whether any of them can become that number.",
+   "learned": "Count the distance between numbers in the same row or column, and check whether any of them can ever equal that distance.",
    "steps": {
     "0": {
      "frames": [
@@ -3881,9 +3881,9 @@ const LESSON_TEXT = /*LTEXTS*/{
    "rule": "Numbers that can never reach the rest of the board have to clear each other. Their total must be even. If it is odd, at least one number is left.",
    "check": "Will any numbers be cut off from the rest of the board? Add them together. If the total is odd, it will not work.",
    "recall": "Look for numbers that become cut off from the rest. Add them together. If the total is odd, at least one number is left.",
-   "ask": "If {move}, will any numbers be cut off from the rest with an odd total?",
+   "ask": "If {move}, will any numbers become cut off from the rest and have an odd total?",
    "pick": "Tap one of the numbers in that group on the board.",
-   "none": "No. No numbers become cut off from the rest with an odd total, and the board can still be cleared.",
+   "none": "No. No numbers become cut off from the rest and have an odd total, and the board can still be cleared.",
    "hint": "Picture the board after the jump. Will any numbers be cut off from the rest? Add them together.",
    "learned": "Numbers cut off from the rest need an even total for all of them to disappear.",
    "steps": {
@@ -3897,7 +3897,7 @@ const LESSON_TEXT = /*LTEXTS*/{
        "go": "Show the jump"
       },
       {
-       "text": "Now the 1 on C3 and the 2 on D3 are on their own. No other numbers can ever jump onto them or have them land on them. They can only meet each other."
+       "text": "Now the 1 on C3 and the 2 on D3 are on their own. No other numbers can ever jump onto these two, and these two can never land on any other numbers. They can only meet each other."
       },
       {
        "text": "2 − 1 = 1. Now one 1 is left, and nothing can help.",
@@ -3921,11 +3921,11 @@ const LESSON_TEXT = /*LTEXTS*/{
    "title": "What happens next?",
    "rule": "Some traps look safe. No number is alone, and each has another number to meet. Only after a couple of moves does a number get stuck. It helps to follow one number a few moves ahead.",
    "check": "Find a number that has only one thing it can do. Play it out in your head: where does it end up, and what can happen to it there?",
-   "recall": "Follow numbers that have only one choice. Play them a few moves ahead in your head, and see whether they end up somewhere nothing can reach.",
+   "recall": "Follow numbers that have only one choice. Play through a few moves in your head, and see whether they end up somewhere nothing can reach.",
    "ask": "Look at the move: {move}. It looks safe. Is it safe, or is it a trap that only shows up later?",
    "none": "Safe. The board can still be cleared after that move.",
    "hint": "Follow a number that has only one choice after the move, and see where it ends up.",
-   "learned": "Follow numbers that have only one choice a few moves ahead, and see whether they end up somewhere nothing can reach.",
+   "learned": "Follow numbers that have only one choice. Look a few moves ahead, and see whether they end up somewhere nothing can reach.",
    "steps": {
     "0": {
      "frames": [
@@ -3991,7 +3991,7 @@ const LESSON_TEXT = /*LTEXTS*/{
   "basics": {
    "short": "Så spelar du",
    "title": "Så spelar du",
-   "rule": "Målet är att få bort alla talen. Ett tal hoppar precis så många rutor som det visar, åt sidan eller upp och ner. Det måste landa på ett annat tal. Det största minus det minsta blir kvar, och lika tal försvinner båda.",
+   "rule": "Målet är att få bort alla talen. Ett tal hoppar precis så många rutor som det visar, åt sidan eller upp och ner. Det måste landa på ett annat tal. Det största minus det minsta blir kvar. Om talen är lika försvinner båda.",
    "check": "Räkna rutorna: en 3:a når ett tal som står exakt 3 rutor bort i samma rad eller kolumn.",
    "recall": "Räkna rutorna innan du hoppar och tänk på vad som blir kvar där du landar.",
    "learned": "Nu kan du reglerna: ett tal hoppar precis så långt som det visar, det största minus det minsta blir kvar, och lika tal försvinner.",
@@ -4020,7 +4020,7 @@ const LESSON_TEXT = /*LTEXTS*/{
        "go": "Visa hoppet"
       },
       {
-       "text": "Ordningen är viktig. Fel ordning kan lämna kvar tal som aldrig möts. Det är det de nästa lektionerna handlar om."
+       "text": "Ordningen är viktig. Fel ordning kan lämna kvar tal som aldrig möts. Det är det de kommande lektionerna handlar om."
       }
      ]
     }
@@ -4069,7 +4069,7 @@ const LESSON_TEXT = /*LTEXTS*/{
    "ask": "Om {move}, blir då ett tal omöjligt att nå?",
    "pick": "Vilket tal kan inget annat nå? Tryck på det på brädet.",
    "none": "Nej. Alla talen kan fortfarande nås, och brädet går fortfarande att lösa.",
-   "hint": "Tänk dig brädet efter hoppet. Räkna avståndet mellan talen som står på samma linje. Är något av dem lika stort som avståndet, eller kan de bli det?",
+   "hint": "Tänk dig brädet efter hoppet. Räkna avståndet mellan talen som står på samma linje. Är något av dem lika stort som avståndet, eller kan något av dem bli det?",
    "learned": "Räkna avståndet mellan tal på samma linje och kolla om något av dem kan bli så stort.",
    "steps": {
     "0": {
@@ -4215,9 +4215,9 @@ const LESSON_TEXT = /*LTEXTS*/{
    "rule": "Tal som aldrig kan nå resten av brädet måste försvinna med hjälp av varandra. Då måste deras summa vara ett jämnt tal. Är den ett udda tal blir minst ett tal kvar.",
    "check": "Blir några tal avskilda från resten av brädet? Lägg ihop dem. Är summan ett udda tal går det inte.",
    "recall": "Leta efter tal som blir avskilda från resten. Lägg ihop dem. Är summan ett udda tal blir minst ett tal kvar.",
-   "ask": "Om {move}, blir då några tal avskilda från resten med en udda summa?",
+   "ask": "Om {move}, blir då en grupp tal med udda summa avskild från resten?",
    "pick": "Tryck på ett av talen i den gruppen på brädet.",
-   "none": "Nej. Inga tal blir avskilda från resten med en udda summa, och brädet går fortfarande att lösa.",
+   "none": "Nej. Ingen grupp tal med udda summa blir avskild från resten, och brädet går fortfarande att lösa.",
    "hint": "Tänk dig brädet efter hoppet. Blir några tal avskilda från resten? Lägg ihop dem.",
    "learned": "Tal som är avskilda från resten måste ha en jämn summa för att kunna försvinna allihop.",
    "steps": {
@@ -4254,12 +4254,12 @@ const LESSON_TEXT = /*LTEXTS*/{
    "short": "Se framåt",
    "title": "Vad händer sedan?",
    "rule": "Vissa fällor ser säkra ut. Inget står ensamt, och alla har något att möta. Först efter ett par drag sitter ett tal fast. Då hjälper det att följa ett tal några drag framåt.",
-   "check": "Hitta ett tal som bara har en sak det kan göra. Spela det i huvudet: var hamnar det, och vad kan hända med det där?",
-   "recall": "Följ tal som bara har ett val. Spela dem några drag framåt i huvudet och se om de hamnar någonstans där inget kan nå dem.",
+   "check": "Hitta ett tal som bara har en sak det kan göra. Gör dragen i huvudet: var hamnar talet, och vad kan hända med det där?",
+   "recall": "Följ tal som bara har ett val. Tänk dig några drag framåt och se om talen hamnar någonstans där inget kan nå dem.",
    "ask": "Titta på draget: {move}. Det ser säkert ut. Är det säkert, eller är det en fälla som visar sig senare?",
    "none": "Säkert. Brädet går fortfarande att lösa efter det draget.",
    "hint": "Följ ett tal som bara har ett val efter draget och se var det hamnar.",
-   "learned": "Följ tal som bara har ett val några drag framåt och se om de hamnar någonstans där inget kan nå dem.",
+   "learned": "Följ tal som bara har ett val och tänk några drag framåt. Se om de hamnar någonstans där inget kan nå dem.",
    "steps": {
     "0": {
      "frames": [
@@ -4317,8 +4317,8 @@ const LESSON_TEXT = /*LTEXTS*/{
   "test": {
    "short": "Prov",
    "title": "Prov",
-   "rule": "Tio drag från alla lektionerna, blandade, utan namn på mönstret och utan ledtrådar. Titta på draget och svara: säkert eller fälla?",
-   "check": "Blir något ensamt? Kan de mötas? Behöver två samma partner? Måste något hända först? Går summan jämnt upp? Vad händer sedan?"
+   "rule": "Tio drag från alla lektionerna i blandad ordning, utan namn på mönstren och utan ledtrådar. Titta på draget och svara: säkert eller fälla?",
+   "check": "Blir något tal ensamt? Kan talen mötas? Behöver två tal samma partner? Måste något hända först? Går summan jämnt upp? Vad händer sedan?"
   }
  },
  "da": {
@@ -4501,12 +4501,12 @@ const LESSON_TEXT = /*LTEXTS*/{
    "short": "Rækkefølge",
    "title": "Hvad skal ske først?",
    "rule": "Nogle gange er trækket rigtigt, men kommer for tidligt: et andet tal skal lande på feltet først. Og et tomt felt får aldrig et tal igen.",
-   "check": "Skal flere tal hoppe til eller fra det samme felt? Find ud af, hvilket der skal først, og tøm ikke et felt, der stadig er brug for.",
+   "check": "Skal flere tal hoppe til eller fra det samme felt? Find ud af, hvilket der skal hoppe først, og tøm ikke et felt, som der stadig er brug for.",
    "recall": "Skal flere tal bruge det samme felt, skal du finde rækkefølgen. Og tøm aldrig et felt, som noget stadig skal hoppe til eller fra.",
    "ask": "Se på trækket: {move}. Er det sikkert nu, eller er det en fælde?",
    "none": "Sikkert. Brættet kan stadig løses efter det træk.",
    "hint": "Skal noget andet hoppe til eller fra de samme felter senere?",
-   "learned": "Når flere tal skal bruge det samme felt, er rækkefølgen afgørende. Og tøm aldrig et felt, der stadig er brug for.",
+   "learned": "Når flere tal skal bruge det samme felt, er rækkefølgen afgørende. Og tøm aldrig et felt, som der stadig er brug for.",
    "steps": {
     "0": {
      "frames": [
@@ -4698,7 +4698,7 @@ const LESSON_TEXT = /*LTEXTS*/{
    "short": "Yksin",
    "title": "Mikä luku jää yksin?",
    "rule": "Luku voi kadota vain, kun toinen luku samalla rivillä tai sarakkeella pienentää sitä. Jos siellä ei ole enää muita lukuja, se jää paikalleen ikuisesti.",
-   "check": "Onko siirrettävän luvun kanssa samalla rivillä tai sarakkeella toinen luku? Jos sillä ei ole muita lukuja, joita se voisi kohdata, se jää yksin, kun siirrät.",
+   "check": "Onko siirrettävän luvun kanssa samalla rivillä tai sarakkeella toinen luku? Jos tuo toinen luku voi kohdata vain siirrettävän luvun, se jää yksin siirron jälkeen.",
    "recall": "Etsi lukuja, jotka ovat samalla rivillä tai sarakkeella kuin siirrettävä luku. Jos jokin niistä ei voi kohdata muita lukuja, se jää yksin.",
    "ask": "Jos {move}, jääkö jokin luku yksin?",
    "pick": "Mikä luku jää yksin? Napauta sitä laudalla.",
@@ -4731,7 +4731,7 @@ const LESSON_TEXT = /*LTEXTS*/{
   "meet": {
    "short": "Etäisyys",
    "title": "Mihin lukuun ei voi koskaan päästä?",
-   "rule": "Kaksi samalla linjalla olevaa lukua kohtaavat vain, kun toinen niistä on yhtä suuri kuin niiden välinen etäisyys. Ruudun luku muuttuu vain, kun toinen luku laskeutuu siihen. Siksi siitä ei joskus voi koskaan tulla tarvittavaa lukua.",
+   "rule": "Kaksi samalla linjalla olevaa lukua kohtaavat vain, kun toinen niistä on yhtä suuri kuin niiden välinen etäisyys. Ruudun luku muuttuu vain, kun toinen luku laskeutuu siihen. Joskus luku ei siis voi muuttua tarvittavan suuruiseksi.",
    "check": "Laske samalla linjalla olevien lukujen välinen etäisyys. Onko toinen niistä yhtä suuri kuin etäisyys, tai voiko siitä tulla niin suuri?",
    "recall": "Laske etäisyys samalla linjalla oleviin lukuihin. Voiko jostakin niistä koskaan tulla yhtä suuri kuin etäisyys?",
    "ask": "Jos {move}, jääkö jokin luku niin, ettei siihen voi enää päästä?",
@@ -4761,11 +4761,11 @@ const LESSON_TEXT = /*LTEXTS*/{
        "text": "Mitkään muut luvut eivät voi laskeutua niiden päälle ja muuttaa niitä. Ne pysyvät kolmosina ikuisesti, eikä mikään niistä voi kadota."
       },
       {
-       "text": "Takaisin alkuun. Kokeile sen sijaan, että ruudun B1 1 hyppää ruudun C1 luvun 3 päälle.",
+       "text": "Takaisin alkuun. Kokeile nyt siirtoa, jossa ruudun B1 1 hyppää ruudun C1 luvun 3 päälle.",
        "go": "Kokeile toista siirtoa"
       },
       {
-       "text": "3 − 1 = 2. Nyt ruudussa C1 on 2, ja ruutu A1 on 2 ruudun päässä. Siksi se voi hypätä sinne.",
+       "text": "3 − 1 = 2. Nyt ruudussa C1 on 2, ja ruutu A1 on 2 ruudun päässä. Siksi kakkonen voi hypätä sinne.",
        "go": "Näytä hyppy"
       }
      ]
@@ -4922,7 +4922,7 @@ const LESSON_TEXT = /*LTEXTS*/{
    "short": "Katso eteenpäin",
    "title": "Mitä tapahtuu sen jälkeen?",
    "rule": "Jotkin ansat näyttävät turvallisilta. Mikään luku ei ole yksin, ja kaikilla on toinen luku, jonka ne voivat kohdata. Vasta parin siirron jälkeen jokin luku jää jumiin. Silloin auttaa, kun seuraat yhtä lukua muutaman siirron eteenpäin.",
-   "check": "Etsi luku, jolla on vain yksi mahdollinen toiminto. Pelaa se mielessäsi: minne se päätyy, ja mitä sille voi tapahtua siellä?",
+   "check": "Etsi luku, jolla on vain yksi vaihtoehto. Pelaa mielessäsi: minne se päätyy ja mitä sille voi tapahtua siellä?",
    "recall": "Seuraa lukuja, joilla on vain yksi vaihtoehto. Pelaa niitä mielessäsi muutama siirto eteenpäin ja katso, päätyvätkö ne paikkaan, johon mikään ei pääse.",
    "ask": "Katso siirtoa: {move}. Se näyttää turvalliselta. Onko se turvallinen vai ansa, joka paljastuu myöhemmin?",
    "none": "Turvallinen. Laudan voi yhä tyhjentää tuon siirron jälkeen.",
@@ -5034,7 +5034,7 @@ const LESSON_TEXT = /*LTEXTS*/{
    "rule": "Eine Zahl kann nur verschwinden, wenn eine andere Zahl in derselben Zeile oder Spalte sie verringert. Ist dort keine andere Zahl mehr, bleibt sie für immer stehen.",
    "check": "Steht eine Zahl in derselben Zeile oder Spalte wie die Zahl, die du bewegen willst? Kann diese Zahl sonst keine andere treffen, bleibt sie nach deinem Zug allein.",
    "recall": "Achte auf Zahlen in derselben Zeile oder Spalte wie die Zahl, die du bewegen willst. Kann eine davon sonst keine andere treffen, bleibt sie allein.",
-   "ask": "Bei diesem Zug: {move}. Bleibt dann eine Zahl allein stehen?",
+   "ask": "Schau dir den Zug an: {move}. Bleibt danach eine Zahl allein stehen?",
    "pick": "Welche Zahl bleibt allein stehen? Tippe sie auf dem Brett an.",
    "none": "Keine bleibt allein. Alle Zahlen haben noch eine andere Zahl in ihrer Zeile oder Spalte, und das Brett lässt sich noch lösen.",
    "hint": "Schau auf die Zeile und Spalte der springenden Zahl. Steht dort eine Zahl, die keine andere mehr treffen kann, wenn die springende Zahl weg ist?",
@@ -5068,8 +5068,8 @@ const LESSON_TEXT = /*LTEXTS*/{
    "rule": "Zwei Zahlen in derselben Zeile oder Spalte treffen sich nur, wenn eine so groß ist wie der Abstand zwischen ihnen. Die Zahl auf einem Feld ändert sich nur, wenn eine andere Zahl dort landet. Deshalb kann sie manchmal nie den nötigen Wert bekommen.",
    "check": "Zähle den Abstand zwischen Zahlen in derselben Zeile oder Spalte. Ist eine so groß wie der Abstand, oder kann sie so groß werden?",
    "recall": "Zähle den Abstand zu den Zahlen in derselben Zeile oder Spalte. Kann eine von ihnen jemals so groß werden wie der Abstand?",
-   "ask": "Bei diesem Zug: {move}. Wird dann eine Zahl unerreichbar?",
-   "pick": "Welche Zahl kann keine andere erreichen? Tippe sie auf dem Brett an.",
+   "ask": "Schau dir den Zug an: {move}. Wird danach eine Zahl unerreichbar?",
+   "pick": "Welche Zahl kann von keiner anderen erreicht werden? Tippe sie auf dem Brett an.",
    "none": "Nein. Alle Zahlen sind noch erreichbar, und das Brett lässt sich noch lösen.",
    "hint": "Stell dir das Brett nach dem Sprung vor. Zähle den Abstand zwischen Zahlen in derselben Zeile oder Spalte. Ist eine so groß wie der Abstand, oder kann sie so groß werden?",
    "learned": "Zähle den Abstand zwischen Zahlen in derselben Zeile oder Spalte und prüfe, ob eine so groß werden kann.",
@@ -5084,7 +5084,7 @@ const LESSON_TEXT = /*LTEXTS*/{
        "go": "Sprung zeigen"
       },
       {
-       "text": "Von A1 nach C1 sind es 2 Felder. Beide Zahlen sind eine 3, also kann keine auf die andere springen.",
+       "text": "Von A1 nach C1 sind es 2 Felder. Auf beiden Feldern steht eine 3, also kann keine auf die andere springen.",
        "go": "Zählen"
       },
       {
@@ -5112,7 +5112,7 @@ const LESSON_TEXT = /*LTEXTS*/{
    "rule": "Wenn zwei Zahlen nur mit derselben Zahl verschwinden können, bekommt nur eine von ihnen diesen Partner. Die andere bleibt stehen.",
    "check": "Haben zwei Zahlen nur noch einen möglichen Partner, und ist es derselbe?",
    "recall": "Achte auf zwei Zahlen, die nur einen Partner zum Verschwinden haben. Ist es derselbe, geht es nicht.",
-   "ask": "Bei diesem Zug: {move}. Brauchen dann zwei Zahlen denselben Partner?",
+   "ask": "Schau dir den Zug an: {move}. Brauchen danach zwei Zahlen denselben Partner?",
    "pick": "Welche Zahl brauchen beide? Tippe sie auf dem Brett an.",
    "none": "Nein. Keine zwei Zahlen sind auf denselben Partner angewiesen, und das Brett lässt sich noch lösen.",
    "hint": "Stell dir das Brett nach dem Sprung vor. Finde zwei Zahlen, die nur mit einer einzigen Zahl verschwinden können. Ist es dieselbe Zahl?",
@@ -5143,7 +5143,7 @@ const LESSON_TEXT = /*LTEXTS*/{
        "go": "Sprung zeigen"
       },
       {
-       "text": "Egal welches Paar du entfernst, die dritte 2 bleibt übrig. Beide brauchten D4, und D4 kann nur einmal verschwinden."
+       "text": "Egal, welches Paar du entfernst, die dritte 2 bleibt übrig. Beide brauchten D4, und D4 kann nur einmal verschwinden."
       },
       {
        "text": "Die richtige Reihenfolge: Lass eine der Zweien nach D4 springen, bevor die 3 es tut. Wir nehmen zuerst D2.",
@@ -5213,11 +5213,11 @@ const LESSON_TEXT = /*LTEXTS*/{
   },
   "parity": {
    "short": "Gerade Zahlen",
-   "title": "Geht die Gruppe auf?",
+   "title": "Geht die Summe auf?",
    "rule": "Zahlen, die den Rest des Bretts nie erreichen können, müssen sich gegenseitig entfernen. Dafür muss ihre Summe gerade sein. Ist sie ungerade, bleibt mindestens eine Zahl übrig.",
    "check": "Werden Zahlen vom Rest des Bretts abgeschnitten? Rechne sie zusammen. Ist die Summe ungerade, geht es nicht.",
    "recall": "Achte auf Zahlen, die vom Rest abgeschnitten werden. Rechne sie zusammen. Ist die Summe ungerade, bleibt mindestens eine Zahl übrig.",
-   "ask": "Bei diesem Zug: {move}. Werden dann Zahlen mit einer ungeraden Summe vom Rest abgeschnitten?",
+   "ask": "Schau dir den Zug an: {move}. Werden danach Zahlen mit einer ungeraden Summe vom Rest abgeschnitten?",
    "pick": "Tippe auf dem Brett eine der Zahlen in dieser Gruppe an.",
    "none": "Nein. Es werden keine Zahlen mit einer ungeraden Summe vom Rest abgeschnitten, und das Brett lässt sich noch lösen.",
    "hint": "Stell dir das Brett nach dem Sprung vor. Werden Zahlen vom Rest abgeschnitten? Rechne sie zusammen.",
@@ -5233,7 +5233,7 @@ const LESSON_TEXT = /*LTEXTS*/{
        "go": "Sprung zeigen"
       },
       {
-       "text": "Jetzt sind die 1 auf C3 und die 2 auf D3 für sich. Keine andere Zahl kann jemals auf sie springen oder sie als Sprungziel aufnehmen. Sie können nur einander treffen."
+       "text": "Jetzt sind die 1 auf C3 und die 2 auf D3 für sich. Keine andere Zahl kann jemals auf sie springen, und sie können auf keiner anderen Zahl landen. Sie können nur einander treffen."
       },
       {
        "text": "2 − 1 = 1. Jetzt bleibt eine einzelne 1 übrig, und niemand kann helfen.",
@@ -5310,7 +5310,7 @@ const LESSON_TEXT = /*LTEXTS*/{
        "text": "Jetzt stehen zwei Zweien nur 1 Feld voneinander entfernt. Keine kann auf die andere springen, und es sind keine anderen Zahlen mehr übrig."
       },
       {
-       "text": "Egal was du tust, es bleiben Zahlen stehen, die niemand entfernen kann. Der Zug war eine Falle, aber das zeigt sich erst nach ein paar Zügen."
+       "text": "Egal, was du tust, es bleiben Zahlen stehen, die niemand entfernen kann. Der Zug war eine Falle, aber das zeigt sich erst nach ein paar Zügen."
       }
      ]
     }
