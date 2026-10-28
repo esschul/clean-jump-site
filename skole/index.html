@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Hiku-skolen</title>
 <meta name="description" content="Hiku-skolen: lær å se fellene i Hiku. Sju korte leksjoner på små brett du spiller selv, og en prøve til slutt.">
 <link rel="canonical" href="https://hikupuzzle.com/skole/">
@@ -113,6 +113,12 @@ details.earlier ol{margin:6px 0 0;padding-left:20px}
 .step .feedback.telling:empty{display:block;visibility:hidden}
 .step .feedback.telling:empty{min-height:6.4em}
 .step .actions{min-height:48px}
+/* On a phone a demonstration reads top down: its sentence and button under the title, the board below them, so the
+   button is in sight as soon as the card is. */
+@media (max-width:600px){.step.demo{display:flex;flex-direction:column}
+  .step.demo .stephead,.step.demo h3{order:0}.step.demo .feedback{order:1}.step.demo .actions{order:2;margin-top:4px}
+  .step.demo .host{order:3}.step.demo .boardlabel{order:4}.step.demo .extras{order:5}
+  .step.demo .feedback.telling,.step.demo .feedback.telling:empty{min-height:3.4em;margin-top:8px}}
 .extras{display:grid;gap:8px}
 .extras:empty{display:none}
 .feedback.good{background:var(--good-soft)}
@@ -5802,9 +5808,15 @@ function demo(k, s, b, label, acts, fb) {
     if (next) {
       const go = document.createElement("button");
       go.type = "button"; go.className = "btn main"; go.textContent = next.go || tr("on");
-      go.onclick = () => { f++; frame(); };
+      go.onclick = () => { f++; frame(); seen(); };
       acts.append(go);
     } else finish(k, true);
+  };
+  // On a phone the board stands under the sentence and its button: once the demonstration is under way, the card is
+  // brought up so the board it talks about is in sight too.
+  const seen = () => {
+    const r = acts.closest(".step").getBoundingClientRect();
+    if (innerWidth <= 600 && r.bottom > innerHeight) scrollBy({top: Math.min(r.top - 12, r.bottom - innerHeight + 24), behavior: "smooth"});
   };
   frame();
 }
@@ -5815,7 +5827,7 @@ function show(k, extra = null) {
   current = k; drawProgress();
   const steps = lesson.steps, s = extra || steps[k], n = s.n, cells = s.cells.slice();
   const was = cardTop();
-  const el = document.createElement("article"); el.className = "step";
+  const el = document.createElement("article"); el.className = s.type === "demo" ? "step demo" : "step";
   const label = s.type === "example" || s.type === "demo" ? tr("label.example") : extra ? tr("label.similar") : tr("label.task", {k, n: steps.length - 1});
   const banner = s.type === "findTrap" ? `<p class="goal trap"><span class="icon" aria-hidden="true">✕</span><span>${tr("goal.trap")}</span></p>`
     : s.type === "solve" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>${tr("goal.solve")}</span></p>`
