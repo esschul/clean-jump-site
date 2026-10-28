@@ -94,7 +94,7 @@ footer a{color:var(--link,var(--accent))}
 /* Why the board can no longer be cleared, laid over the board as the result is: the short reason, more on asking, and
    the board it is about, with the number it is about filled in and the ones it depends on ringed, as in the apps. */
 .whycard{position:absolute;inset:0;z-index:8;background:var(--bg);border-radius:18px;box-shadow:0 0 0 1px var(--edge);padding:12px 16px 16px;
-  overflow:auto;touch-action:pan-y;display:flex;flex-direction:column;gap:10px;font-size:15px}
+  overflow:auto;touch-action:pan-y;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:10px;font-size:15px}
 /* Only when it opens: it is put back after every redraw of the board, and must not fade in again each time. */
 .whycard.opening{animation:settle .25s ease both}
 .whycard .bar{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -428,6 +428,7 @@ footer a{color:var(--link,var(--accent))}
     if (!whyCard) return;
     whyCard.remove();
     whyCard = null;
+    boardEl.style.touchAction = '';
     whyLink.setAttribute('aria-expanded', 'false');
     whyLink.focus();
   }
@@ -456,6 +457,9 @@ footer a{color:var(--link,var(--accent))}
     body.textContent = words('explain.loading');
     card.append(bar, body);
     boardEl.appendChild(card);
+    // The board stops touch gestures so tiles can be dragged; Safari on the iPhone lets that stop the card's scrolling
+    // too, so while the card covers the board, the board lets an up and down swipe through.
+    boardEl.style.touchAction = 'pan-y';
     whyLink.setAttribute('aria-expanded', 'true');
     done.focus();
     const positions = [...history, cells], moves = played.slice(), size = n, asked = checkToken;
