@@ -27,7 +27,8 @@ a{color:var(--link)}
 .band nav{display:flex;align-items:center;gap:12px;padding-block:16px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--on-navy);font:400 24px Georgia,serif}
 .brand img{width:30px;height:30px;border-radius:7px}
-.band .where{margin-left:auto;color:var(--on-navy-muted);font-size:15px}
+.band .langpick{margin-left:auto;font:inherit;font-size:14px;color:var(--on-navy);background:transparent;border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:4px 10px}
+.band .langpick option{color:#2b2f45;background:#fffaf2}
 h1{font:400 clamp(30px,5vw,40px)/1.1 Georgia,serif;letter-spacing:-.8px;margin:26px 0 4px}
 h2{font-weight:750;letter-spacing:-.02em;font-size:22px;margin:22px 0 6px;text-wrap:balance}
 .lead{font-size:16px;color:var(--muted);margin:0;max-width:36em}
@@ -145,28 +146,176 @@ footer{margin-top:40px;padding-block:18px;border-top:1px solid var(--rule);color
 </style>
 </head>
 <body>
-<header class="band"><div class="wrap"><nav><a class="brand" href="/"><img src="../icon.png" alt="">Hiku</a><span class="where">Skolen</span></nav></div></header>
+<header class="band"><div class="wrap"><nav><a class="brand" href="/"><img src="/icon.png" alt="">Hiku</a><select class="langpick" id="langpick" aria-label="Språk"></select></nav></div></header>
 <main class="wrap">
-<h1>Hiku-skolen</h1>
-<p class="lead">Her øver du på å se fellene før du går i dem. Hver leksjon er et spørsmål du kan stille deg selv før du flytter.</p>
+<h1 data-t="h1">Hiku-skolen</h1>
+<p class="lead" data-t="lead">Her øver du på å se fellene før du går i dem. Hver leksjon er et spørsmål du kan stille deg selv før du flytter.</p>
 
-<nav class="lessons" aria-label="Leksjoner"><ol id="lessons"></ol></nav>
+<nav class="lessons" aria-label="Leksjoner" data-t-label="lessons"><ol id="lessons"></ol></nav>
 <section aria-labelledby="lesson-title">
 <h2 id="lesson-title"></h2>
 <p class="rule" id="lesson-rule"></p>
-<p class="check"><b>Sjekk før du flytter</b><span id="lesson-check"></span></p>
+<p class="check"><b data-t="check">Sjekk før du flytter</b><span id="lesson-check"></span></p>
 <div id="steps"></div>
 </section>
 </main>
-<footer><div class="wrap">Hiku-skolen er under arbeid. Forklaringene kommer fra den samme motoren som «Hvorfor?» i spillet.</div></footer>
+<footer><div class="wrap" data-t="footer">Hiku-skolen er under arbeid. Forklaringene kommer fra den samme motoren som «Hvorfor?» i spillet.</div></footer>
 
 <script type="module">
-import {targets, moved, solvable, trap, say, followGraph} from "../daily/explain.js";
+import {targets, moved, solvable, trap, say, followGraph} from "/daily/explain.js";
 
-const LANG = "nb";
+// One address for every language: ?lang= from the link (or the menu below), else the browser's language, else Norwegian.
+const LANGS = ["nb", "en", "sv", "da", "fi", "de"];
+const LANG = (() => {
+  const asked = new URLSearchParams(location.search).get("lang");
+  if (LANGS.includes(asked)) return asked;
+  for (const l of navigator.languages || [navigator.language || ""]) {
+    const code = l.toLowerCase().slice(0, 2);
+    if (code === "no" || code === "nn" || code === "nb") return "nb";
+    if (LANGS.includes(code)) return code;
+  }
+  return "nb";
+})();
+/** The page's words in its language, Norwegian where a text is missing, with {name} filled in. */
+const TEXT = /*TEXTS*/{
+ "nb": {
+  "list.and": " og ",
+  "tile": "{v} på {sq}",
+  "sum.gone": "{a} − {b} = borte",
+  "more": "Vis hele forklaringen",
+  "undo": "\\\\s*Angre, og [^.]*\\\\.",
+  "squares.one": "1 rute",
+  "squares": "{d} ruter",
+  "parity.why": "Når et tall hopper på et annet, blir forskjellen igjen. Begge tallene mister like mye, det minste tallet, så summen minker med det dobbelte: alltid et partall. Fra et oddetall kommer summen aldri ned til 0.",
+  "alone": "{x} blir stående alene.",
+  "alone.one": "{a} var det eneste tallet i samme rad eller kolonne.",
+  "alone.two": "{a} og {b} var de eneste tallene i samme rad eller kolonne.",
+  "alone.none": "Det er ingen andre tall igjen i raden eller kolonnen.",
+  "meet": "{a} og {b} står {apart} fra hverandre. Ingen av dem er {d}, og ingen av dem kan bli det. Da kan de aldri møtes.",
+  "partner": "{x} og {y} kan bare forsvinne sammen med {c}. Når den ene gjør det, blir den andre igjen.",
+  "why": "Vis hvorfor",
+  "parity": "De markerte tallene kan ikke møte resten av brettet. Summen er {sum}. Det er et oddetall, så de kan aldri forsvinne alle sammen.",
+  "needs": "En tom rute får aldri et tall igjen.",
+  "needs.at": "Her brukes {sq}.",
+  "needs.end": "Dette er bare én måte å rydde brettet på, men alle måter bruker {sq} slik. Etter trekket ditt er ruta tom, og en tom rute får aldri et tall igjen.",
+  "early.first": "Først måtte dette skje:",
+  "early.at": "Først nå lander {x} på {sq}.",
+  "early.end": "Dette er bare én måte å rydde brettet på, men i alle lander et annet tall på {sq} før {x} gjør det.",
+  "follow.stuck": "{x} står fast: det kan ikke hoppe, og ingenting kan lande på det.",
+  "follow.jumps": "{x} hopper til {sq}",
+  "follow.lands": "{x} lander på {sq}",
+  "follow": "Tallet på {start} kan aldri forsvinne. Hvis {steps}, blir det stående en {v} på {end} som ingen kan fjerne.",
+  "way.intro": "Følg {x} etter trekket ditt. Hva kan skje med det?",
+  "way.label": "Følg tallet",
+  "show.jump": "Vis hoppet",
+  "back.answer": "Tilbake til svaret",
+  "jump": "{x} hopper på {y}: {sum}.",
+  "way.end": "Nå kan {x} ikke hoppe, og ingenting kan lande på det, uansett hva som skjer på resten av brettet. Det blir stående.",
+  "earlier": "Tidligere steg",
+  "sum.vanish": "{a} − {b} = 0, så begge forsvinner",
+  "example.intro": "Slik kan brettet ryddes fra stillingen før trekket ditt. Følg med på {sq}.",
+  "example.label": "Ett eksempel",
+  "empty": "Brettet er tomt.",
+  "after": "Etter trekket",
+  "recall": "Hva bør du sjekke før neste trekk?",
+  "on": "Videre",
+  "label.example": "Eksempel",
+  "label.similar": "En lignende oppgave",
+  "label.task": "Oppgave {k} av {n}",
+  "goal.trap": "Du leter etter fellen: trekket som gjør at brettet ikke kan løses.",
+  "goal.solve": "Få bort alle tallene.",
+  "goal.safe": "Du leter etter det trygge trekket: det eneste som ikke ødelegger brettet.",
+  "progress": "Fremgang",
+  "title.demo": "Se hva som skjer",
+  "title.predict": "Hva tror du?",
+  "title.predict2": "Og her?",
+  "title.findTrap": "Finn fellen",
+  "title.findSafe": "Finn det trygge trekket",
+  "title.solve": "Rydd brettet",
+  "text.example": "Se hva som skjer når {mv}.",
+  "text.findTrap": "Finn et trekk som gjør at brettet ikke kan løses. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
+  "text.findSafe": "Her er nesten alle trekk feller. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
+  "text.solve": "Trykk på tallet som skal hoppe, og så på ruta det skal lande på. Spill til brettet er tomt.",
+  "right": "Riktig!",
+  "notquite": "Ikke helt.",
+  "similar": "Prøv en lignende",
+  "safe": "Trygt",
+  "trap": "Felle",
+  "think": "Ikke helt. Tenk deg om en gang til.",
+  "again": "Ikke helt. Prøv igjen.",
+  "yes": "Ja",
+  "no": "Nei",
+  "back": "Tilbake",
+  "solved": "Brettet er tomt!",
+  "solved.text": "Du fikk bort alle tallene. Det er hele spillet: finn en rekkefølge der ingen blir stående igjen.",
+  "lost": "Nå kan ikke brettet løses lenger.",
+  "lost.text": "Tallene som er igjen, kan ikke lenger fjerne hverandre.",
+  "restart": "Start på nytt",
+  "cannot": "{x} kan ikke hoppe noen steder nå.",
+  "move.short": "{x} til {sq}",
+  "unchecked": "Det trekket rakk vi ikke å sjekke. Prøv et annet.",
+  "found.trap": "Riktig, det var fellen.",
+  "found.safe": "Riktig, det trekket er trygt.",
+  "still": "Brettet kan fortsatt løses etter det.",
+  "tried.safe": "Det trekket er trygt. Du leter etter fellen.",
+  "tried.safe.text": "{move}: brettet kan fortsatt løses etter det.",
+  "tried.trap": "Det var en felle. Du leter etter det trygge trekket.",
+  "not.solvable": "Brettet kan ikke løses etter det.",
+  "try.other": "Prøv et annet trekk",
+  "lesson.n": "Leksjon {k}",
+  "lesson.done": "Leksjonen er ferdig!",
+  "how.one": "Du fikk det til.",
+  "how.all": "Alt riktig på første forsøk. Sterkt!",
+  "how.none": "Du fikk det til etter å ha prøvd igjen. Det er sånn man lærer.",
+  "how.some": "Du klarte {r} av {n} på første forsøk, og resten etter å ha prøvd igjen. Det er sånn man lærer.",
+  "lesson.finished": "{k}. {name}, ferdig",
+  "step": "Steg {k}",
+  "step.done": "Steg {k}, ferdig",
+  "move": "{x} hopper til {sq}",
+  "next": "Neste",
+  "done": "Ferdig",
+  "next.lesson": "Neste leksjon",
+  "redo": "Ta leksjonen på nytt",
+  "test.q": "Spørsmål {i} av {n}",
+  "test.h": "Trygt eller felle?",
+  "test.text": "Se på trekket: {mv}.",
+  "move.label": "Trekk: {mv}",
+  "test.wrong.safe": "Feil. Trekket er trygt.",
+  "test.wrong.trap": "Feil. Det er en felle.",
+  "test.safe": "Brettet kan fortsatt løses etter det trekket.",
+  "test.pattern": "Mønster: {p}. {t}",
+  "test.next": "Neste spørsmål",
+  "test.result": "Se resultatet",
+  "test.title": "Prøve",
+  "test.score": "Du fikk {r} av {n}.",
+  "test.all": "Alt riktig. Du ser fellene før du går i dem.",
+  "test.good": "Godt jobbet. Øv litt mer på mønstrene du bommet på.",
+  "test.more": "Ta en runde til med leksjonene der du bommet, og prøv igjen.",
+  "test.row": "{p}: {r} av {n}",
+  "test.safes": "Trygge trekk",
+  "test.practice": "Øv på {p}",
+  "test.again": "Ta prøven på nytt",
+  "test.none": "Prøven kunne ikke settes opp.",
+  "h1": "Hiku-skolen",
+  "lead": "Her øver du på å se fellene før du går i dem. Hver leksjon er et spørsmål du kan stille deg selv før du flytter.",
+  "lessons": "Leksjoner",
+  "check": "Sjekk før du flytter",
+  "footer": "Hiku-skolen er under arbeid. Forklaringene kommer fra den samme motoren som «Hvorfor?» i spillet.",
+  "title": "Hiku-skolen",
+  "lang.label": "Språk"
+ }
+}/*TEXTSEND*/;
+// Pieces that go inside a sentence keep their first letter as it is; every other text starts with a capital.
+const PIECES = new Set(["list.and", "squares", "squares.one", "follow.jumps", "follow.lands", "sum.vanish", "move.short", "move", "tile", "undo"]);
+const tr = (k, vars = {}) => {
+  const t = ((TEXT[LANG] || {})[k] ?? TEXT.nb[k]).replace(/\{(\w+)\}/g, (_, v) => vars[v]);
+  return PIECES.has(k) ? t : t.charAt(0).toLocaleUpperCase(LANG) + t.slice(1);
+};
 const COLS = "ABCDEFGH";
 const sq = (n, i) => COLS[i % n] + (Math.floor(i / n) + 1);
-const num = (n, cells, i) => `${cells[i]}-tallet på ${sq(n, i)}`;
+// "3-tallet på A1", "the 3 on A1": the engine's own words for a number, in every language.
+const num = (n, cells, i) => say({key: "explain.number", args: [{count: cells[i]}, {plain: sq(n, i)}]}, LANG);
+const list = items => items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + tr("list.and") + items[items.length - 1];
 const inLine = (n, a, b) => Math.floor(a / n) === Math.floor(b / n) || a % n === b % n;
 const alone = (n, cells) => cells.map((v, i) => v && !cells.some((w, j) => w && j !== i && inLine(n, i, j)) ? i : -1).filter(i => i >= 0);
 const at = (n, name) => (Number(name.slice(1)) - 1) * n + COLS.indexOf(name[0]);
@@ -316,7 +465,7 @@ const LESSONS = /*LESSONS*/[
       }
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "2-tallet på B3 hopper to ruter opp og lander på 3-tallet på B1. 3 − 2 = 1, så det står 1 der.",
       "play": "B3-B1",
       "line": "A3",
@@ -557,7 +706,7 @@ const LESSONS = /*LESSONS*/[
       "text": "Fire 3-ere og to 1-ere. Et 3-tall hopper nøyaktig 3 ruter. Se på hoppet fra B1 til B2."
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "1-tallet på B1 hopper på 1-tallet på B2. 1 − 1 = 0, så begge forsvinner.",
       "play": "B1-B2"
      },
@@ -600,7 +749,7 @@ const LESSONS = /*LESSONS*/[
       "text": "Tilbake til start. Prøv heller at 1-tallet på B1 hopper på 3-tallet på C1."
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "3 − 1 = 2. Nå er det en 2-er på C1, og A1 står 2 ruter unna. Da kan den hoppe dit.",
       "play": "B1-C1",
       "count": [
@@ -810,7 +959,7 @@ const LESSONS = /*LESSONS*/[
       "text": "Se på trekket: 3-tallet på D1 hopper til 1-tallet på D4."
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "3 − 1 = 2. Nå står det tre 2-ere: D2, B4 og D4.",
       "play": "D1-D4"
      },
@@ -819,7 +968,7 @@ const LESSONS = /*LESSONS*/[
       "marks": {}
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "2 − 2 = 0, så begge forsvinner. B4 står igjen alene.",
       "play": "D2-D4",
       "marks": {
@@ -834,7 +983,7 @@ const LESSONS = /*LESSONS*/[
       "text": "Tilbake til de tre 2-erne. Prøv nå B4."
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "2 − 2 = 0. Nå er det D2 som står igjen alene.",
       "play": "B4-D4",
       "marks": {
@@ -853,17 +1002,17 @@ const LESSONS = /*LESSONS*/[
       "text": "Riktig rekkefølge: la en av 2-erne hoppe til D4 før 3-tallet gjør det. Vi tar D2 først."
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "2 − 1 = 1 på D4.",
       "play": "D2-D4"
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "3 − 1 = 2 på D4.",
       "play": "D1-D4"
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "2 − 2 = 0. Brettet er tomt.",
       "play": "B4-D4"
      }
@@ -1066,12 +1215,12 @@ const LESSONS = /*LESSONS*/[
       "text": "Både 2-tallet på D3 og 3-tallet på D4 skal lande på 1-tallet på D1. Rekkefølgen avgjør hva som blir igjen der. Først D3."
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "2 − 1 = 1 på D1.",
       "play": "D3-D1"
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "3 − 1 = 2 på D1.",
       "play": "D4-D1",
       "marks": {
@@ -1098,12 +1247,12 @@ const LESSONS = /*LESSONS*/[
       "text": "Tilbake til start. Nå hopper 3-tallet på D4 først."
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "3 − 1 = 2 på D1.",
       "play": "D4-D1"
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "2 − 2 = 0. Begge forsvinner, og D1 er tom.",
       "play": "D3-D1",
       "marks": {
@@ -1346,7 +1495,7 @@ const LESSONS = /*LESSONS*/[
       "text": "Se på trekket: 4-tallet på E3 hopper til 3-tallet på A3."
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "4 − 3 = 1 på A3.",
       "play": "E3-A3"
      },
@@ -1358,7 +1507,7 @@ const LESSONS = /*LESSONS*/[
       }
      },
      {
-      "go": "Prøv hoppet",
+      "go": "Vis hoppet",
       "text": "2 − 1 = 1. Nå står én 1-er igjen, og ingen kan hjelpe.",
       "play": "C3-D3",
       "marks": {
@@ -2872,6 +3021,30 @@ const ANSWERS = {
   parity: e => e.focus,
 };
 
+// The lessons' words in this page's language, laid over the Norwegian ones by lesson and step.
+const LESSON_TEXT = /*LTEXTS*/{}/*LTEXTSEND*/;
+for (const l of LESSONS) {
+  const o = (LESSON_TEXT[LANG] || {})[l.id];
+  if (!o) continue;
+  for (const [k, v] of Object.entries(o)) if (k !== "steps" && k !== "extra") l[k] = v;
+  for (const [i, so] of Object.entries(o.steps || {})) {
+    const st = l.steps[i];
+    if (so.text) st.text = so.text;
+    if (so.title) st.title = so.title;
+    (so.frames || []).forEach((fo, j) => { if (fo.text) st.frames[j].text = fo.text; if (fo.go) st.frames[j].go = fo.go; });
+  }
+}
+document.documentElement.lang = LANG;
+document.title = tr("title");
+for (const el of document.querySelectorAll("[data-t]")) el.textContent = tr(el.dataset.t);
+for (const el of document.querySelectorAll("[data-t-label]")) el.setAttribute("aria-label", tr(el.dataset.tLabel));
+const NATIVE = {nb: "Norsk", en: "English", sv: "Svenska", da: "Dansk", fi: "Suomi", de: "Deutsch"};
+const pickEl = document.getElementById("langpick");
+pickEl.setAttribute("aria-label", tr("lang.label"));
+pickEl.innerHTML = LANGS.map(l => `<option value="${l}"${l === LANG ? " selected" : ""}>${NATIVE[l]}</option>`).join("");
+// The same address, with the language asked for; the lesson in the hash stays.
+pickEl.onchange = () => { const u = new URL(location.href); u.searchParams.set("lang", pickEl.value); location.href = u.href; };
+
 const lessonsEl = document.getElementById("lessons"), stepsEl = document.getElementById("steps");
 let lesson, saved, current;
 const load = key => { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } };
@@ -2885,7 +3058,7 @@ function drawLessons() {
     b.type = "button";
     b.innerHTML = `<span class="no">${finished(l) ? "✓" : k + 1}</span>`;
     b.append(l.short);
-    if (finished(l)) { b.classList.add("done"); b.setAttribute("aria-label", `${k + 1}. ${l.short}, ferdig`); }
+    if (finished(l)) { b.classList.add("done"); b.setAttribute("aria-label", tr("lesson.finished", {k: k + 1, name: l.short})); }
     b.setAttribute("aria-current", String(l === lesson));
     b.onclick = () => open(k);
     li.append(b); lessonsEl.append(li);
@@ -2908,7 +3081,7 @@ function open(k) {
 function drawProgress() {
   const progress = document.getElementById("progress");
   if (!progress) return;
-  progress.innerHTML = lesson.steps.map((_, k) => `<li class="${saved.done.includes(k) ? "done" : k === current ? "now" : ""}" aria-label="Steg ${k + 1}${saved.done.includes(k) ? ", ferdig" : ""}"></li>`).join("");
+  progress.innerHTML = lesson.steps.map((_, k) => `<li class="${saved.done.includes(k) ? "done" : k === current ? "now" : ""}" aria-label="${tr(saved.done.includes(k) ? "step.done" : "step", {k: k + 1})}"></li>`).join("");
 }
 
 /** A board on the page: square names, numbers as tiles, an arc for a move, and taps on the squares when wanted. */
@@ -2930,8 +3103,8 @@ function board(host, n) {
         el.className = "sq" + (v ? " num" : "") + (marks[i] ? " " + marks[i] : "");
         el.textContent = v || "";
         if (counts && counts[i]) { el.classList.add("counted"); el.insertAdjacentHTML("beforeend", `<span class="count">${counts[i]}</span>`); }
-        if (el.tagName === "BUTTON") { el.type = "button"; el.setAttribute("aria-label", `${v} på ${sq(n, i)}`); el.onclick = () => tap(i); }
-        else if (v) el.setAttribute("aria-label", `${v} på ${sq(n, i)}`);
+        if (el.tagName === "BUTTON") { el.type = "button"; el.setAttribute("aria-label", tr("tile", {v, sq: sq(n, i)})); el.onclick = () => tap(i); }
+        else if (v) el.setAttribute("aria-label", tr("tile", {v, sq: sq(n, i)}));
         grid.append(el); squares[i] = el;
       }
     }
@@ -2944,7 +3117,7 @@ function board(host, n) {
       const [to, a, b] = sum, box = wrap.getBoundingClientRect(), r = squares[to].getBoundingClientRect();
       const eq = document.createElement("div");
       eq.className = "eq"; eq.setAttribute("aria-hidden", "true");
-      eq.textContent = a === b ? `${a} − ${b} = borte` : `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}`;
+      eq.textContent = a === b ? tr("sum.gone", {a, b}) : `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}`;
       eq.style.left = r.left - box.left + r.width / 2 + "px";
       // Above the square, as in the game, unless that hides a number and below would not.
       const above = to - n >= 0 && cells[to - n], below = to + n < cells.length && cells[to + n];
@@ -2988,7 +3161,7 @@ function board(host, n) {
   return {draw};
 }
 
-function verdict(box, cls, head, why, steps = [], more = "", moreLabel = "Vis hele forklaringen") {
+function verdict(box, cls, head, why, steps = [], more = "", moreLabel = tr("more")) {
   box.className = "feedback " + cls;
   box.innerHTML = `<p class="verdict"></p>` + (why ? `<p class="why"></p>` : "");
   box.querySelector(".verdict").textContent = head;
@@ -3009,14 +3182,13 @@ function verdict(box, cls, head, why, steps = [], more = "", moreLabel = "Vis he
 function explain(n, cells, from, to) {
   const e = trap(cells, n, {from, to, jumper: cells[from], target: cells[to]});
   // There is no undo button at school: its advice to undo is left out.
-  const why = say(e ? e.reason : {plain: ""}, LANG).replace(/\s*Angre, og [^.]*\./g, "");
+  const why = say(e ? e.reason : {plain: ""}, LANG).replace(new RegExp(tr("undo"), "g"), "");
   return e && {kind: e.kind, focus: e.focus, cells: e.cells, head: say(e.headline, LANG), why,
     steps: (e.steps || []).map(st => say(st.text, LANG))};
 }
 
 const Cap = t => t[0].toUpperCase() + t.slice(1);
-const ruter = d => d === 1 ? "1 rute" : `${d} ruter`;
-const PARITY_WHY = "Når et tall hopper på et annet, blir forskjellen igjen. Begge tallene mister like mye, det minste tallet, så summen minker med det dobbelte: alltid et partall. Fra et oddetall kommer summen aldri ned til 0.";
+const ruter = d => tr(d === 1 ? "squares.one" : "squares", {d});
 
 /**
  * What a trap does, said in a sentence or two about this board, with the numbers to mark on the board after the move.
@@ -3031,54 +3203,47 @@ function teach(e, n, cells, after, from, to) {
       // The numbers in its row and column that this move took away: they were its last ones.
       const gone = [from, to].filter(i => i !== x && cells[i] && !after[i] && inLine(n, i, x)).sort((p, q) => p - q);
       const names = gone.map(i => num(n, cells, i));
-      return {marks, more, text: `${Cap(num(n, after, x))} blir stående alene. ` +
-        (gone.length === 1 ? `${Cap(names[0])} var det eneste tallet i samme rad eller kolonne.`
-          : gone.length === 2 ? `${Cap(names[0])} og ${names[1]} var de eneste tallene i samme rad eller kolonne.`
-          : "Det er ingen andre tall igjen i raden eller kolonnen.")};
+      return {marks, more, text: tr("alone", {x: num(n, after, x)}) + " " +
+        (gone.length === 1 ? tr("alone.one", {a: names[0]}) : gone.length === 2 ? tr("alone.two", {a: names[0], b: names[1]}) : tr("alone.none"))};
     }
     case "unreachable": {
       const [a, m] = f, d = Math.abs(a % n - m % n) + Math.abs(Math.floor(a / n) - Math.floor(m / n));
       marks[a] = "alone"; marks[m] = "alone";
-      return {marks, more, count: [a, m], text: `${Cap(num(n, after, a))} og ${num(n, after, m)} står ${ruter(d)} fra hverandre. Ingen av dem er ${d}, og ingen av dem kan bli det. Da kan de aldri møtes.`};
+      return {marks, more, count: [a, m], text: tr("meet", {a: num(n, after, a), b: num(n, after, m), apart: ruter(d), d})};
     }
     case "shared": {
       const [c, x, y] = f; marks[x] = "alone"; marks[y] = "alone"; marks[c] = "good";
-      return {marks, more, text: `${Cap(num(n, after, x))} og ${num(n, after, y)} kan bare forsvinne sammen med ${num(n, after, c)}. Når den ene gjør det, blir den andre igjen.`};
+      return {marks, more, text: tr("partner", {x: num(n, after, x), y: num(n, after, y), c: num(n, after, c)})};
     }
     case "oddGroup": {
       for (const i of f) marks[i] = "alone";
       const vals = f.map(i => after[i]), sum = vals.reduce((a, b) => a + b, 0);
-      return {marks, more: PARITY_WHY, moreLabel: "Vis hvorfor", text: `De markerte tallene kan ikke møte resten av brettet. Summen er ${vals.join(" + ")} = ${sum}. Det er et oddetall, så de kan aldri forsvinne alle sammen.`};
+      return {marks, more: tr("parity.why"), moreLabel: tr("why"), text: tr("parity", {sum: `${vals.join(" + ")} = ${sum}`})};
     }
     case "needsSquare": {
       const [, square, x] = f; marks[square] = "alone"; marks[x] = "picked";
-      return {marks, text: `${e.head} En tom rute får aldri et tall igjen.`, why: {square,
+      return {marks, text: e.head + " " + tr("needs"), why: {square,
         until: ([a, b]) => (a === x && b === square) || (a === square && b === x),
-        at: `Her brukes ${sq(n, square)}.`,
-        end: `Dette er bare én måte å rydde brettet på, men alle måter bruker ${sq(n, square)} slik. Etter trekket ditt er ruta tom, og en tom rute får aldri et tall igjen.`}};
+        at: tr("needs.at", {sq: sq(n, square)}), end: tr("needs.end", {sq: sq(n, square)})}};
     }
     case "wrongMoment": {
       marks[to] = "alone";
-      return {marks, steps: e.steps.length ? ["Først måtte dette skje:", ...e.steps] : [], text: e.head, why: {square: to,
+      return {marks, steps: e.steps.length ? [tr("early.first"), ...e.steps] : [], text: e.head, why: {square: to,
         until: ([a, b]) => a === from && b === to,
-        at: `Først nå lander ${num(n, cells, from)} på ${sq(n, to)}.`,
-        end: `Dette er bare én måte å rydde brettet på, men i alle lander et annet tall på ${sq(n, to)} før ${num(n, cells, from)} gjør det.`}};
+        at: tr("early.at", {x: num(n, cells, from), sq: sq(n, to)}), end: tr("early.end", {x: num(n, cells, from), sq: sq(n, to)})}};
     }
     case "follow": {
       // Told of the square, since what stands there changes on the way: what ends up there, and that nobody clears it.
       const start = f[0], way = wayToStuck(after, n, start) || [];
       marks[start] = "alone";
-      if (!way.length) return {marks, way: start, text: `${Cap(num(n, after, start))} står fast: det kan ikke hoppe, og ingenting kan lande på det.`};
+      if (!way.length) return {marks, way: start, text: tr("follow.stuck", {x: num(n, after, start)})};
       let p = after.slice(), token = start;
       const said = [];
       for (const [a, z] of way) {
-        said.push(a === token ? `${num(n, p, a)} hopper til ${sq(n, z)}` : `${num(n, p, a)} lander på ${sq(n, z)}`);
+        said.push(tr(a === token ? "follow.jumps" : "follow.lands", {x: num(n, p, a), sq: sq(n, z)}));
         p = moved(p, a, z); token = a === token ? z : token;
       }
-      const end = `blir det stående en ${p[token]} på ${sq(n, token)} som ingen kan fjerne`;
-      return {marks, way: start, text: way.length === 1
-        ? `Tallet på ${sq(n, start)} kan aldri forsvinne. Hvis ${said[0]}, ${end}.`
-        : `Tallet på ${sq(n, start)} kan aldri forsvinne. Hvis ${said.slice(0, -1).join(", ")} og ${said[said.length - 1]}, ${end}.`};
+      return {marks, way: start, text: tr("follow", {start: sq(n, start), steps: list(said), v: p[token], end: sq(n, token)})};
     }
     default:
       for (const i of f) if (after[i]) marks[i] = "alone";
@@ -3133,22 +3298,22 @@ function offerWay(fb, b, label, n, after, t, back) {
     box.innerHTML = `<div class="saying"></div><div class="actions"></div>`;
     fb.parentElement.querySelector(".extras").prepend(box);
     let p = after.slice(), token = t.way, k = 0, sum = null;
-    const said = [`Følg ${num(n, p, token)} etter trekket ditt. Hva kan skje med det?`];
+    const said = [tr("way.intro", {x: num(n, p, token)})];
     const frame = () => {
       const coming = way[k] || null, marks = {[token]: coming ? "picked" : "alone"};
       if (coming) marks[coming[0]] = "from";
       b.draw(p, {marks, sum, arc: coming});
-      label.textContent = "Følg tallet";
+      label.textContent = tr("way.label");
       tell(box.querySelector(".saying"), said);
       const acts = box.querySelector(".actions"); acts.innerHTML = "";
       const go = document.createElement("button");
-      go.type = "button"; go.className = "btn main"; go.textContent = coming ? "Vis hoppet" : "Tilbake til svaret";
+      go.type = "button"; go.className = "btn main"; go.textContent = coming ? tr("show.jump") : tr("back.answer");
       go.onclick = () => {
         if (!coming) { box.remove(); back(); offerWay(fb, b, label, n, after, t, back); return; }
         const [a, z] = coming;
-        said.push(`${Cap(num(n, p, a))} hopper på ${num(n, p, z)}: ${sumText(p[a], p[z])}.`);
+        said.push(tr("jump", {x: num(n, p, a), y: num(n, p, z), sum: sumText(p[a], p[z])}));
         sum = [z, p[a], p[z]]; p = moved(p, a, z); token = a === token ? z : token; k++;
-        if (k === way.length) said.push(`Nå kan ${num(n, p, token)} ikke hoppe, og ingenting kan lande på det, uansett hva som skjer på resten av brettet. Det blir stående.`);
+        if (k === way.length) said.push(tr("way.end", {x: num(n, p, token)}));
         frame();
       };
       acts.append(go);
@@ -3166,7 +3331,7 @@ function tell(host, said) {
   host.firstChild.textContent = said[said.length - 1];
   if (said.length > 1) {
     const d = document.createElement("details"); d.className = "earlier";
-    d.innerHTML = `<summary>Tidligere steg</summary><ol></ol>`;
+    d.innerHTML = `<summary>${tr("earlier")}</summary><ol></ol>`;
     for (const t of said.slice(0, -1)) { const li = document.createElement("li"); li.textContent = t; d.lastChild.append(li); }
     host.append(d);
   }
@@ -3188,7 +3353,7 @@ function solutionLine(n, cells) {
   return line;
 }
 
-const sumText = (a, b) => a === b ? `${a} − ${b} = 0, så begge forsvinner` : `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}`;
+const sumText = (a, b) => a === b ? tr("sum.vanish", {a, b}) : `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}`;
 
 /**
  * "Vis hvorfor" for a move that emptied a needed square or came too early: one real way to clear the board from before
@@ -3210,24 +3375,24 @@ function offerWhy(fb, b, label, n, cells, t, back) {
     box.innerHTML = `<div class="saying"></div><div class="actions"></div>`;
     fb.parentElement.querySelector(".extras").prepend(box);
     let p = cells.slice(), k = 0, sum = null;
-    const said = [`Slik kan brettet ryddes fra stillingen før trekket ditt. Følg med på ${sq(n, t.why.square)}.`];
+    const said = [tr("example.intro", {sq: sq(n, t.why.square)})];
     const frame = () => {
       // The whole way, to an empty board, so it is seen to work; the square is marked while it is in use.
       const marks = {}, coming = k < line.length ? line[k] : null;
       if (k <= end) marks[t.why.square] = "picked";
       if (coming) marks[coming[0]] = "from";
       b.draw(p, {marks, sum, arc: coming});
-      label.textContent = "Ett eksempel";
+      label.textContent = tr("example.label");
       tell(box.querySelector(".saying"), said);
       const acts = box.querySelector(".actions"); acts.innerHTML = "";
       const go = document.createElement("button");
-      go.type = "button"; go.className = "btn main"; go.textContent = coming ? "Vis hoppet" : "Tilbake til svaret";
+      go.type = "button"; go.className = "btn main"; go.textContent = coming ? tr("show.jump") : tr("back.answer");
       go.onclick = () => {
         if (!coming) { box.remove(); back(); offerWhy(fb, b, label, n, cells, t, back); return; }
         const [a, z] = coming;
-        said.push(`${Cap(num(n, p, a))} hopper på ${num(n, p, z)}: ${sumText(p[a], p[z])}.` + (k === end ? " " + t.why.at : ""));
+        said.push(tr("jump", {x: num(n, p, a), y: num(n, p, z), sum: sumText(p[a], p[z])}) + (k === end ? " " + t.why.at : ""));
         sum = [z, p[a], p[z]]; p = moved(p, a, z); k++;
-        if (k === line.length) said.push("Brettet er tomt. " + t.why.end);
+        if (k === line.length) said.push(tr("empty") + " " + t.why.end);
         frame();
       };
       acts.append(go);
@@ -3246,12 +3411,12 @@ function showResult(b, label, n, cells, after, t, extra = {}, move = null) {
     counts = {}; for (let i = a + step, c = 1; ; i += step, c++) { counts[i] = c; if (i === z) break; }
   }
   b.draw(after, {marks, counts, sum: move ? [move[1], cells[move[0]], cells[move[1]]] : null});
-  label.textContent = "Etter trekket";
+  label.textContent = tr("after");
 }
 
 function recall(host) {
   const extras = host.parentElement.querySelector(".extras");
-  extras.insertAdjacentHTML("beforeend", `<details class="recall"><summary>Hva bør du sjekke før neste trekk?</summary><p></p></details>`);
+  extras.insertAdjacentHTML("beforeend", `<details class="recall"><summary>${tr("recall")}</summary><p></p></details>`);
   extras.lastElementChild.querySelector("p").textContent = lesson.recall;
 }
 
@@ -3261,7 +3426,7 @@ function miss(k) {
 }
 const extraAt = {};
 
-let nextStep = () => {}, nextLabel = "Neste";
+let nextStep = () => {}, nextLabel = "";
 
 /** Where the step card stands on the screen now, or null when there is none. */
 const cardTop = () => stepsEl.firstElementChild ? stepsEl.firstElementChild.getBoundingClientRect().top : null;
@@ -3335,7 +3500,7 @@ function demo(k, s, b, label, acts, fb) {
     acts.innerHTML = "";
     if (next) {
       const go = document.createElement("button");
-      go.type = "button"; go.className = "btn main"; go.textContent = (next.go || "Videre").replace("Prøv hoppet", "Vis hoppet");
+      go.type = "button"; go.className = "btn main"; go.textContent = next.go || tr("on");
       go.onclick = () => { f++; frame(); };
       acts.append(go);
     } else finish(k, true);
@@ -3343,35 +3508,33 @@ function demo(k, s, b, label, acts, fb) {
   frame();
 }
 
-const moveText = (n, cells, from, to) => `${num(n, cells, from)} hopper til ${sq(n, to)}`;
+const moveText = (n, cells, from, to) => tr("move", {x: num(n, cells, from), sq: sq(n, to)});
 
 function show(k, extra = null) {
   current = k; drawProgress();
   const steps = lesson.steps, s = extra || steps[k], n = s.n, cells = s.cells.slice();
   const was = cardTop();
   const el = document.createElement("article"); el.className = "step";
-  const label = s.type === "example" || s.type === "demo" ? "Eksempel" : extra ? "En lignende oppgave" : `Oppgave ${k} av ${steps.length - 1}`;
-  const banner = s.type === "findTrap" ? `<p class="goal trap"><span class="icon" aria-hidden="true">✕</span><span>Du leter etter fellen: trekket som gjør at brettet ikke kan løses.</span></p>`
-    : s.type === "solve" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>Få bort alle tallene.</span></p>`
-    : s.type === "findSafe" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>Du leter etter det trygge trekket: det eneste som ikke ødelegger brettet.</span></p>` : "";
-  el.innerHTML = `<div class="stephead"><p class="kind">${label}</p><ol class="progress" id="progress" aria-label="Fremgang"></ol></div><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div><div class="extras"></div>`;
+  const label = s.type === "example" || s.type === "demo" ? tr("label.example") : extra ? tr("label.similar") : tr("label.task", {k, n: steps.length - 1});
+  const banner = s.type === "findTrap" ? `<p class="goal trap"><span class="icon" aria-hidden="true">✕</span><span>${tr("goal.trap")}</span></p>`
+    : s.type === "solve" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>${tr("goal.solve")}</span></p>`
+    : s.type === "findSafe" ? `<p class="goal safe"><span class="icon" aria-hidden="true">✓</span><span>${tr("goal.safe")}</span></p>` : "";
+  el.innerHTML = `<div class="stephead"><p class="kind">${label}</p><ol class="progress" id="progress" aria-label="${tr("progress")}"></ol></div><h3></h3>${banner}<p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="feedback" aria-live="polite"></div><div class="actions"></div><div class="extras"></div>`;
   const from = s.move ? at(n, s.move[0]) : -1, to = s.move ? at(n, s.move[1]) : -1;
   const mv = s.move ? moveText(n, cells, from, to) : "";
-  el.querySelector("h3").textContent = s.title || {demo: "Se hva som skjer", example: "Se hva som skjer", predict: k === 1 ? "Hva tror du?" : "Og her?",
-    findTrap: "Finn fellen", findSafe: "Finn det trygge trekket", solve: "Rydd brettet"}[s.type];
+  el.querySelector("h3").textContent = s.title || tr({demo: "title.demo", example: "title.demo", predict: k === 1 ? "title.predict" : "title.predict2",
+    findTrap: "title.findTrap", findSafe: "title.findSafe", solve: "title.solve"}[s.type]);
   el.querySelector(".text").textContent = s.text || {
     demo: "",
-    example: `Se hva som skjer når ${mv}.`,
+    example: tr("text.example", {mv}),
     predict: lesson.ask.replace("{move}", mv),
-    findTrap: "Finn et trekk som gjør at brettet ikke kan løses. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
-    findSafe: "Her er nesten alle trekk feller. Trykk på tallet som skal hoppe, og så på ruta det skal lande på.",
-    solve: "Trykk på tallet som skal hoppe, og så på ruta det skal lande på. Spill til brettet er tomt."}[s.type];
+    findTrap: tr("text.findTrap"), findSafe: tr("text.findSafe"), solve: tr("text.solve")}[s.type];
   place(el, was);
   drawProgress();
 
   const b = board(el.querySelector(".host"), n), label2 = el.querySelector(".boardlabel"), acts = el.querySelector(".actions"), fb = el.querySelector(".feedback");
   nextStep = () => k < steps.length - 1 ? show(k + 1) : allDone();
-  nextLabel = k === steps.length - 1 ? "Ferdig" : "Neste";
+  nextLabel = k === steps.length - 1 ? tr("done") : tr("next");
 
   if (s.type === "demo") return demo(k, s, b, label2, acts, fb);
   // In an exercise the buttons sit right under the board and the answer comes below them, however long it is.
@@ -3379,7 +3542,7 @@ function show(k, extra = null) {
 
   if (s.type === "example" || s.type === "predict") {
     const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000), e = ok ? null : explain(n, cells, from, to);
-    label2.textContent = `Trekk: ${mv}`;
+    label2.textContent = tr("move.label", {mv});
     const reveal = picked => {
       if (s.type === "example") {
         const t = e && teach(e, n, cells, after, from, to);
@@ -3390,14 +3553,14 @@ function show(k, extra = null) {
       const right = judge(picked);
       const t = e && teach(e, n, cells, after, from, to);
       showResult(b, label2, n, cells, after, t, picked >= 0 && !(t && t.marks[picked]) ? {[picked]: "picked"} : {}, [from, to]);
-      verdict(fb, right ? "good" : "bad", right ? "Riktig!" : "Ikke helt.", t ? t.text : lesson.none, t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
+      verdict(fb, right ? "good" : "bad", right ? tr("right") : tr("notquite"), t ? t.text : lesson.none, t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
       offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
       offerWay(fb, b, label2, n, after, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
       // Missed once: before going on, one more of the same kind on a new board, so the answer just seen gets used.
       if ((!right || missed) && !extra && lesson.extra && lesson.extra.length) {
         miss(k);
-        acts.innerHTML = `<button type="button" class="btn main">Prøv en lignende</button>`;
+        acts.innerHTML = `<button type="button" class="btn main">${tr("similar")}</button>`;
         acts.firstChild.onclick = () => show(k, lesson.extra[extraAt[lesson.id] = ((extraAt[lesson.id] ?? -1) + 1) % lesson.extra.length]);
         return;
       }
@@ -3420,10 +3583,10 @@ function show(k, extra = null) {
     if (lesson.predict === "trap") {
       // Safe or a trap: answered with the two buttons, and the move is played at once.
       b.draw(cells, {marks: {[from]: "from"}, arc: [from, to]});
-      acts.innerHTML = `<button type="button" class="btn">Trygt</button><button type="button" class="btn">Felle</button>`;
+      acts.innerHTML = `<button type="button" class="btn">${tr("safe")}</button><button type="button" class="btn">${tr("trap")}</button>`;
       const [safe, bad] = acts.children;
       const answer = a => {
-        if (!judge(a) && !missed) { missed = true; miss(k); return verdict(fb, "bad", "Ikke helt. Tenk deg om en gang til.", lesson.hint); }
+        if (!judge(a) && !missed) { missed = true; miss(k); return verdict(fb, "bad", tr("think"), lesson.hint); }
         acts.innerHTML = ""; reveal(a);
       };
       safe.onclick = () => answer("safe");
@@ -3438,21 +3601,21 @@ function show(k, extra = null) {
         const marks = {[from]: "from"};
         if (lesson.id === "alone") cells.forEach((v, i) => { if (v && i !== from && inLine(n, i, from)) marks[i] = "line"; });
         b.draw(cells, {marks, arc: [from, to]});
-        verdict(fb, "bad", "Ikke helt. Prøv igjen.", lesson.hint);
+        verdict(fb, "bad", tr("again"), lesson.hint);
         ask();
         return;
       }
       acts.innerHTML = ""; reveal(picked);
     };
     const ask = () => {
-      acts.innerHTML = `<button type="button" class="btn">Ja</button><button type="button" class="btn">Nei</button>`;
+      acts.innerHTML = `<button type="button" class="btn">${tr("yes")}</button><button type="button" class="btn">${tr("no")}</button>`;
       const [yes, no] = acts.children;
       no.onclick = () => answer(-1);
       yes.onclick = () => {
         // Now the board takes the answer: every number but the one about to jump can be tapped.
         b.draw(cells, {marks: {[from]: "from"}, arc: [from, to], tap: i => i !== from && answer(i)});
         verdict(fb, "info", lesson.pick);
-        acts.innerHTML = `<button type="button" class="btn">Tilbake</button>`;
+        acts.innerHTML = `<button type="button" class="btn">${tr("back")}</button>`;
         acts.firstChild.onclick = () => { b.draw(cells, {marks: {[from]: "from"}, arc: [from, to]}); fb.className = "feedback"; fb.innerHTML = ""; ask(); };
       };
     };
@@ -3474,15 +3637,15 @@ function show(k, extra = null) {
         chosen = null; p = moved(p, a, i);
         if (p.every(v => !v)) {
           redrawSolve(sum);
-          verdict(fb, "good", "Brettet er tomt!", "Du fikk bort alle tallene. Det er hele spillet: finn en rekkefølge der ingen blir stående igjen.");
+          verdict(fb, "good", tr("solved"), tr("solved.text"));
           return finish(k, !missed);
         }
         if (solvable(p, n, new Map(), 500_000) === false) {
           lost = true; missed = true; miss(k);
           const e = explain(n, before, a, i), t = e && teach(e, n, before, p, a, i);
           showResult(b, label2, n, before, p, t, {}, [a, i]);
-          verdict(fb, "bad", "Nå kan ikke brettet løses lenger.", t ? t.text : "Tallene som er igjen, kan ikke lenger fjerne hverandre.");
-          acts.innerHTML = `<button type="button" class="btn main">Start på nytt</button>`;
+          verdict(fb, "bad", tr("lost"), t ? t.text : tr("lost.text"));
+          acts.innerHTML = `<button type="button" class="btn main">${tr("restart")}</button>`;
           acts.firstChild.onclick = () => { p = cells.slice(); lost = false; acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; redrawSolve(); };
           return;
         }
@@ -3490,7 +3653,7 @@ function show(k, extra = null) {
         return redrawSolve(sum);
       }
       chosen = targets(p, n, i).length ? i : null;
-      if (chosen == null) verdict(fb, "info", `${Cap(num(n, p, i))} kan ikke hoppe noen steder nå.`);
+      if (chosen == null) verdict(fb, "info", tr("cannot", {x: num(n, p, i)}));
       redrawSolve();
     }
     let missed = false;
@@ -3510,7 +3673,7 @@ function show(k, extra = null) {
   function tap(i) {
     if (selected != null && targets(cells, n, selected).includes(i)) return play(selected, i);
     selected = targets(cells, n, i).length ? i : null;
-    if (selected == null) verdict(fb, "info", `${num(n, cells, i)} kan ikke hoppe noen steder nå.`);
+    if (selected == null) verdict(fb, "info", tr("cannot", {x: num(n, cells, i)}));
     redraw();
   }
   function play(from, to) {
@@ -3518,26 +3681,26 @@ function show(k, extra = null) {
     // Saved at once, so leaving and coming back does not wipe out a wrong try.
     const won0 = ok => goal === "findTrap" ? !ok : ok;
     const after = moved(cells, from, to), ok = solvable(after, n, new Map(), 500_000);
-    const move = `${num(n, cells, from)} til ${sq(n, to)}`, Move = move[0].toUpperCase() + move.slice(1);
-    if (ok === null) { verdict(fb, "info", "Det trekket rakk vi ikke å sjekke. Prøv et annet."); return redraw(); }
+    const Move = tr("move.short", {x: num(n, cells, from), sq: sq(n, to)});
+    if (ok === null) { verdict(fb, "info", tr("unchecked")); return redraw(); }
     const e = ok ? null : explain(n, cells, from, to);
     // The move is shown as the explanation sees it, since that is what the words are about.
     const t = e && teach(e, n, cells, after, from, to);
     showResult(b, label2, n, cells, after, t, {}, [from, to]);
     if (!won0(ok)) miss(k);
     if (won0(ok)) {
-      verdict(fb, "good", goal === "findTrap" ? "Riktig, det var fellen." : "Riktig, det trekket er trygt.",
-        t ? t.text : "Brettet kan fortsatt løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
+      verdict(fb, "good", goal === "findTrap" ? tr("found.trap") : tr("found.safe"),
+        t ? t.text : tr("still"), t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
       recall(fb);
       offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
       offerWay(fb, b, label2, n, after, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
       return finish(k, tries === 1);
     }
-    if (goal === "findTrap") verdict(fb, "info", "Det trekket er trygt. Du leter etter fellen.", `${Move}: brettet kan fortsatt løses etter det.`);
-    else verdict(fb, "bad", "Det var en felle. Du leter etter det trygge trekket.", t ? t.text : "Brettet kan ikke løses etter det.", t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
+    if (goal === "findTrap") verdict(fb, "info", tr("tried.safe"), tr("tried.safe.text", {move: Move}));
+    else verdict(fb, "bad", tr("tried.trap"), t ? t.text : tr("not.solvable"), t ? t.steps || [] : [], t ? t.more : "", t && t.moreLabel);
     offerWhy(fb, b, label2, n, cells, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
     offerWay(fb, b, label2, n, after, t, () => showResult(b, label2, n, cells, after, t, {}, [from, to]));
-    acts.innerHTML = `<button type="button" class="btn">Prøv et annet trekk</button>`;
+    acts.innerHTML = `<button type="button" class="btn">${tr("try.other")}</button>`;
     acts.firstChild.onclick = () => { acts.innerHTML = ""; fb.className = "feedback"; fb.innerHTML = ""; label2.textContent = ""; el.querySelectorAll(".whyextra").forEach(x => x.remove()); redraw(); };
   }
   redraw();
@@ -3545,19 +3708,17 @@ function show(k, extra = null) {
 
 function allDone() {
   const k = LESSONS.indexOf(lesson), next = LESSONS[k + 1];
-  stepsEl.innerHTML = `<article class="step"><p class="kind">Leksjon ${k + 1}</p><h3>Leksjonen er ferdig!</h3><p class="learned"></p><p class="how"></p><div class="actions"></div></article>`;
+  stepsEl.innerHTML = `<article class="step"><p class="kind">${tr("lesson.n", {k: k + 1})}</p><h3>${tr("lesson.done")}</h3><p class="learned"></p><p class="how"></p><div class="actions"></div></article>`;
   // What was learned first, then how it went, told as encouragement: a retry is part of learning, not a failure.
   stepsEl.querySelector(".learned").textContent = lesson.learned;
   // The example is no exercise, so it is not counted.
   const asked = lesson.steps.map((s, i) => i).filter(i => !["example", "demo"].includes(lesson.steps[i].type));
   const right = asked.filter(i => saved.first[i]).length;
-  stepsEl.querySelector(".how").textContent = asked.length < 2 ? "Du fikk det til."
-    : right === asked.length ? "Alt riktig på første forsøk. Sterkt!"
-    : right === 0 ? "Du fikk det til etter å ha prøvd igjen. Det er sånn man lærer."
-    : `Du klarte ${right} av ${asked.length} på første forsøk, og resten etter å ha prøvd igjen. Det er sånn man lærer.`;
+  stepsEl.querySelector(".how").textContent = asked.length < 2 ? tr("how.one")
+    : right === asked.length ? tr("how.all") : right === 0 ? tr("how.none") : tr("how.some", {r: right, n: asked.length});
   const acts = stepsEl.querySelector(".actions");
-  if (next) { acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn main">Neste leksjon</button>`); acts.lastChild.onclick = () => { open(k + 1); scrollTo({top: 0}); }; }
-  acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn">Ta leksjonen på nytt</button>`);
+  if (next) { acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn main">${tr("next.lesson")}</button>`); acts.lastChild.onclick = () => { open(k + 1); scrollTo({top: 0}); }; }
+  acts.insertAdjacentHTML("beforeend", `<button type="button" class="btn">${tr("redo")}</button>`);
   acts.lastChild.onclick = () => { saved.done = []; saved.first = {}; store(); drawLessons(); show(0); };
   current = lesson.steps.length; drawProgress();
 }
@@ -3600,14 +3761,14 @@ function runTest() {
     const q = qs[i], n = q.n, cells = q.cells;
     const was = cardTop();
     const el = document.createElement("article"); el.className = "step";
-    el.innerHTML = `<div class="stephead"><p class="kind">Spørsmål ${i + 1} av ${qs.length}</p><ol class="progress" aria-label="Fremgang">` +
+    el.innerHTML = `<div class="stephead"><p class="kind">${tr("test.q", {i: i + 1, n: qs.length})}</p><ol class="progress" aria-label="${tr("progress")}">` +
       qs.map((_, j) => `<li class="${j < i ? (answers[j] ? "done" : "missed") : j === i ? "now" : ""}"></li>`).join("") + `</ol></div>` +
-      `<h3>Trygt eller felle?</h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>`;
-    el.querySelector(".text").textContent = `Se på trekket: ${moveText(n, cells, q.from, q.to)}.`;
+      `<h3>${tr("test.h")}</h3><p class="text"></p><div class="host"></div><p class="boardlabel"></p><div class="actions"></div><div class="feedback" aria-live="polite"></div>`;
+    el.querySelector(".text").textContent = tr("test.text", {mv: moveText(n, cells, q.from, q.to)});
     place(el, was);
     const b = board(el.querySelector(".host"), n), label = el.querySelector(".boardlabel"), fb = el.querySelector(".feedback"), acts = el.querySelector(".actions");
     b.draw(cells, {marks: {[q.from]: "from"}, arc: [q.from, q.to]});
-    label.textContent = `Trekk: ${moveText(n, cells, q.from, q.to)}`;
+    label.textContent = tr("move.label", {mv: moveText(n, cells, q.from, q.to)});
     acts.innerHTML = `<button type="button" class="btn">Trygt</button><button type="button" class="btn">Felle</button>`;
     const answer = a => {
       const right = a === (q.ok ? "safe" : "trap");
@@ -3615,9 +3776,9 @@ function runTest() {
       const t = q.e && teach(q.e, n, cells, q.after, q.from, q.to);
       showResult(b, label, n, cells, q.after, t, {}, [q.from, q.to]);
       const home = q.home && LESSONS.find(l => l.id === q.home);
-      verdict(fb, right ? "good" : "bad", right ? "Riktig!" : q.ok ? "Feil. Trekket er trygt." : "Feil. Det er en felle.",
-        q.ok ? "Brettet kan fortsatt løses etter det trekket." : `Mønster: ${home.short}. ${t ? t.text : ""}`, t ? t.steps || [] : []);
-      acts.innerHTML = `<button type="button" class="btn main">${i < qs.length - 1 ? "Neste spørsmål" : "Se resultatet"}</button>`;
+      verdict(fb, right ? "good" : "bad", right ? tr("right") : q.ok ? tr("test.wrong.safe") : tr("test.wrong.trap"),
+        q.ok ? tr("test.safe") : tr("test.pattern", {p: home.short, t: t ? t.text : ""}), t ? t.steps || [] : []);
+      acts.innerHTML = `<button type="button" class="btn main">${i < qs.length - 1 ? tr("test.next") : tr("test.result")}</button>`;
       acts.firstChild.onclick = () => i < qs.length - 1 ? show(i + 1) : result();
     };
     acts.children[0].onclick = () => answer("safe");
@@ -3627,30 +3788,29 @@ function runTest() {
     const right = answers.filter(Boolean).length, rows = {};
     qs.forEach((q, i) => { const key = q.home || "safe"; rows[key] ||= [0, 0]; rows[key][1]++; if (answers[i]) rows[key][0]++; });
     saved.best = Math.max(saved.best ?? 0, right); saved.last = right; store(); drawLessons();
-    stepsEl.innerHTML = `<article class="step"><p class="kind">Prøve</p><h3></h3><p class="lead2"></p><ul class="scores"></ul><div class="actions"></div></article>`;
-    stepsEl.querySelector("h3").textContent = `Du fikk ${right} av ${qs.length}.`;
-    stepsEl.querySelector(".lead2").textContent = right === qs.length ? "Alt riktig. Du ser fellene før du går i dem."
-      : right >= qs.length * .7 ? "Godt jobbet. Øv litt mer på mønstrene du bommet på." : "Ta en runde til med leksjonene der du bommet, og prøv igjen.";
+    stepsEl.innerHTML = `<article class="step"><p class="kind">${tr("test.title")}</p><h3></h3><p class="lead2"></p><ul class="scores"></ul><div class="actions"></div></article>`;
+    stepsEl.querySelector("h3").textContent = tr("test.score", {r: right, n: qs.length});
+    stepsEl.querySelector(".lead2").textContent = right === qs.length ? tr("test.all") : right >= qs.length * .7 ? tr("test.good") : tr("test.more");
     const ul = stepsEl.querySelector(".scores"), acts = stepsEl.querySelector(".actions");
     const order = key => key === "safe" ? 99 : LESSONS.findIndex(l => l.id === key);
     for (const [key, [r, all]] of Object.entries(rows).sort((a, b) => order(a[0]) - order(b[0]))) {
       const l = LESSONS.find(x => x.id === key), li = document.createElement("li");
-      li.textContent = `${l ? l.short : "Trygge trekk"}: ${r} av ${all}`;
+      li.textContent = tr("test.row", {p: l ? l.short : tr("test.safes"), r, n: all});
       if (r < all) li.className = "missed";
       ul.append(li);
       if (l && r < all) {
         const k = LESSONS.indexOf(l), go = document.createElement("button");
-        go.type = "button"; go.className = "btn"; go.textContent = `Øv på ${l.short}`;
+        go.type = "button"; go.className = "btn"; go.textContent = tr("test.practice", {p: l.short});
         go.onclick = () => { const st = load(l.key); st.done = [0]; try { localStorage.setItem(l.key, JSON.stringify(st)); } catch (e) {} open(k); scrollTo({top: 0}); };
         acts.append(go);
       }
     }
     const again = document.createElement("button");
-    again.type = "button"; again.className = "btn main"; again.textContent = "Ta prøven på nytt";
+    again.type = "button"; again.className = "btn main"; again.textContent = tr("test.again");
     again.onclick = () => runTest();
     acts.append(again);
   };
-  if (!qs.length) { stepsEl.innerHTML = `<article class="step"><h3>Prøven kunne ikke settes opp.</h3></article>`; return; }
+  if (!qs.length) { stepsEl.innerHTML = `<article class="step"><h3>${tr("test.none")}</h3></article>`; return; }
   show(0);
 }
 
