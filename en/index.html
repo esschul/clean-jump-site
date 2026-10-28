@@ -164,6 +164,9 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 @media (max-width:820px){.hero,.two{grid-template-columns:1fr}.hero{gap:28px;padding-top:12px}
   nav.top{flex-wrap:wrap}nav.top .tools{margin-left:auto;order:2}nav.top .links{order:3;flex-basis:100%;margin-left:0;gap:6px 18px}
   .game{padding:10px 4px 4px;margin:0 -8px}.game h2{margin-left:12px;margin-right:12px}}
+/* On a phone the buttons are a tidy column of one width, their words in the middle. */
+@media (max-width:560px){.ctas{flex-direction:column;align-items:stretch;gap:12px}.ctas .btn{justify-content:center}}
+.note{font-size:14px;color:var(--muted);margin-top:-4px}
 </style>
 </head>
 <body>
@@ -172,7 +175,7 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
 <header class="wrap">
 <nav class="top" aria-label="Menu">
   <a class="brand" href="../en/" aria-label="Hiku"><img src="../icon-102.png" alt="" width="34" height="34"><b>Hiku<span>.</span></b></a>
-  <div class="links"><a href="../en/#spill">Play</a><a href="../en/rules/">Rules</a><a href="../en/#appen">The app</a><a href="../en/#aviser">For publishers</a></div>
+  <div class="links"><a href="../en/#spill">Play</a><a href="../en/rules/">Rules</a><a href="../en/#appen">The app</a><a href="../skole/#leksjon-1">School</a><a href="../en/#aviser">For publishers</a></div>
   <div class="tools"><select class="lang" id="lang" aria-label="Language"><option value="../" lang="nb">Norsk</option><option value="../en/" lang="en" selected>English</option><option value="../sv/" lang="sv">Svenska</option><option value="../da/" lang="da">Dansk</option><option value="../fi/" lang="fi">Suomi</option><option value="../de/" lang="de">Deutsch</option></select><button class="theme" id="theme" type="button"></button></div>
 </nav>
 </header>
@@ -213,6 +216,18 @@ footer.band a[aria-current]{color:var(--on-navy);font-weight:600;text-decoration
   <div class="chat" role="img" aria-label="You: Why can't I move the 1 on E1 down onto E2? ChatGPT: Both 1s would vanish, and the 3 on E5 would be left on its own: no other number in row 5 or column E can reach it.">
     <p class="you"><span>You</span>Why can't I move the 1 on E1 down onto E2?</p>
     <p class="them"><span>ChatGPT</span>Both 1s would vanish, and the 3 on E5 would be left on its own: no other number in row 5 or column E can reach it.</p>
+  </div>
+</div></section>
+
+<section id="skolen"><div class="wrap two flip">
+  <div class="minitrap" role="img" aria-label="A small board: the 2 on B3 is about to jump to B1, which leaves the 1 on A3 alone.">
+    <div class="miniboard"><span class="sq"></span><span class="sq num">3</span><span class="sq"></span><span class="sq num">2</span><span class="sq"></span><span class="sq num">2</span><span class="sq"></span><span class="sq"></span><span class="sq num alone">1</span><span class="sq num from">2</span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span></div>
+    <svg viewBox="0 0 200 200" aria-hidden="true"><defs><marker id="minitip" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z"/></marker></defs><path d="M58 117 Q20 75 58 33" marker-end="url(#minitip)"/></svg>
+  </div>
+  <div>
+    <h2>The Hiku school</h2>
+    <p>Why was that number left behind? Seven short lessons show you the patterns behind the traps, on small boards you play yourself, with a test at the end.</p><p class="note">The lessons are in Norwegian for now.</p>
+    <div class="ctas"><a class="btn tile" href="../skole/#leksjon-1">Start the school</a></div>
   </div>
 </div></section>
 
