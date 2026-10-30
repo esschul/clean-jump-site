@@ -105,6 +105,10 @@ footer a{color:var(--link,var(--accent))}
 .whycard .head{font-weight:600}
 .whycard .reason{color:var(--muted)}
 .whycard .linky{align-self:flex-start}
+.whycard .school{align-self:flex-start;font-weight:600;color:var(--accent);min-height:44px;display:flex;align-items:center;gap:8px}
+.whycard .school::before{content:"";width:16px;height:16px;flex:none;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 2 0 6l8 4 6-3v4h1.5V6z M3 8.6V11c0 1.2 2.2 2.5 5 2.5s5-1.3 5-2.5V8.6L8 11z'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 2 0 6l8 4 6-3v4h1.5V6z M3 8.6V11c0 1.2 2.2 2.5 5 2.5s5-1.3 5-2.5V8.6L8 11z'/%3E%3C/svg%3E") center/contain no-repeat}
 /* What has to happen first, numbered; each one shows on the board, and again goes back to the board before the move. */
 .whycard ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .whycard ol button{font:inherit;color:var(--ink);background:none;border:0;padding:2px 0;display:flex;gap:10px;align-items:baseline;text-align:left;cursor:pointer;width:100%;min-height:44px}
@@ -513,7 +517,7 @@ footer a{color:var(--link,var(--accent))}
       tip.textContent = words('explain.tip.' + found.kind);
       if (aboutMove) {
         when.textContent = words('explain.beforeMove');
-        card.append(reason, tip, when, board);
+        card.append(reason, tip, when, board, schoolLink(found.kind));
         return;
       }
       reason.hidden = true;
@@ -522,8 +526,20 @@ footer a{color:var(--link,var(--accent))}
       more.className = 'linky';
       more.textContent = words('explain.more');
       more.onclick = () => { reason.hidden = false; more.remove(); };
-      card.append(more, reason, tip, board);
+      card.append(more, reason, tip, board, schoolLink(found.kind));
     }, 30);
+  }
+
+  // The lesson of Hiku-skolen that teaches each kind of trap, as in the apps: practised right after falling into it.
+  const SCHOOL_LESSON = {stranded: 2, unreachable: 3, shared: 4, rivals: 4, wrongMoment: 5, needsSquare: 5, oddGroup: 6, follow: 7, alwaysLeft: 7};
+  function schoolLink(kind) {
+    const a = document.createElement('a'), k = SCHOOL_LESSON[kind] || 1;
+    a.className = 'school';
+    a.href = `https://hikupuzzle.com/skole/?lang=${lang}#leksjon-${k}`;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = words('explain.school.' + k);
+    return a;
   }
 
   // The board the reason is told on, or a step of it, with A, B, C … above and 1, 2, 3 … beside it. Screen readers get
